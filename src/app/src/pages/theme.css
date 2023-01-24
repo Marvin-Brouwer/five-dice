@@ -1,8 +1,19 @@
 :root {
     --theme-foreground-primary: black;
     --theme-background-primary: white;
+    --theme-background-focus: rgb(135, 214, 135);
     
     font-size: 2em;
+}
+
+::-moz-selection { 
+    color: var(--theme-foreground-primary);
+    background:  var(--theme-background-focus);
+}
+
+::selection {
+    color: var(--theme-foreground-primary);
+    background:  var(--theme-background-focus);
 }
 
 h1 {

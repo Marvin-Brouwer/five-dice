@@ -15,16 +15,16 @@ import TextDie from "../components/die/text-die.astro";
 		<title>Five dice</title>
 	</head>
 	<body>
-		<h1 aria-label="Five dice">
+		<h1 aria-label="Five dice" tabindex="0">
 			<NumberDie amount={5} description="Five"/> 
 			<TextDie value="D" /><TextDie value="i" /><TextDie value="c" /><TextDie value="e" />
 		</h1>
 		<div>
 			<h2>Default size</h2>
 			<p>
-				<NumberDie amount={0} /><br/>
-				<NumberDie amount={1} /><NumberDie amount={2} /><NumberDie amount={3} /><br/>
-				<NumberDie amount={4} /><NumberDie amount={5} /><NumberDie amount={6} />
+				<NumberDie amount={0} tabindex={0} /><br/>
+				<NumberDie amount={1} tabindex={0}  /><NumberDie amount={2} tabindex={0}  /><NumberDie amount={3} tabindex={0}  /><br/>
+				<NumberDie amount={4} tabindex={0}  /><NumberDie amount={5} tabindex={0}  /><NumberDie amount={6} tabindex={0}  />
 			</p>
 			<p>
 				<NumberDie amount={5} /> 
