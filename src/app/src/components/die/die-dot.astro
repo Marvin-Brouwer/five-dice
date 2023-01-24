@@ -6,8 +6,6 @@ interface Props {
     columnName: keyof Row
 }
 
-const bullet = String.fromCharCode(8226);
-
 const { row, columnName } = Astro.props;
 
 var showDot = row[columnName];
@@ -23,6 +21,6 @@ var showDot = row[columnName];
         aria-hidden="true" 
         unselectable="on"
     >
-        {bullet}
+        <!-- • -->
     </span>
 }
