@@ -18,3 +18,8 @@
     --dice-color-foreground: black;
     --dice-color-background: white;
 }
+
+.die:focus{
+    outline:none;
+    background-color: var(--theme-background-focus);
+}

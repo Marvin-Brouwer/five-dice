@@ -3,12 +3,13 @@ import "./die.css";
 import "./text-die.css";
 
 interface Props {
-    value: string
+    value: string,
+    tabindex?: number 
 }
 
-const { value } = Astro.props;
+const { value, tabindex } = Astro.props;
 ---
 
-<span class="die" aria-valuetext={value}>
+<span class="die" aria-valuetext={value} tabindex={tabindex?.toString()}>
     <span class="text">{value}</span>
 </span>
