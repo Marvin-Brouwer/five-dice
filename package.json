@@ -1,0 +1,9 @@
+{
+  "name": "five-dice",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "astro": "^2.0.0"
+  }
+}
