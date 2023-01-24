@@ -1,0 +1,13 @@
+:root {
+    --theme-foreground-primary: black;
+    --theme-background-primary: white;
+    
+    font-size: 2em;
+}
+
+h1 {
+    font-size: 5ex;
+}
+h2 {
+    font-size: 3ex;
+}

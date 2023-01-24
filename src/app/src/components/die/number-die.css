@@ -1,0 +1,44 @@
+.die .value {
+    color: transparent;
+    user-select: contain;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    font-size: calc(var(--dice-size) * 10);
+}
+
+.die .face {
+    
+    width: calc(100% -2ex);
+    height: calc(100% -2ex);
+    margin: calc(var(--dice-padding) / 2);
+    position: absolute;
+    left: var(--dice-padding);
+    top: var(--dice-padding);
+    right: var(--dice-padding);
+    bottom: var(--dice-padding);
+
+    display: grid;
+    gap: var(--dice-padding);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: 
+        "top-left top-middle top-right"
+        "middle-left middle-middle middle-right"
+        "bottom-left bottom-middle bottom-right";
+}
+
+.dot {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    user-select: none;
+
+    overflow: hidden;
+    color: var(--dice-color-foreground);
+    color: transparent;
+    border: 0px solid transparent;
+    background-color: var(--dice-color-foreground);
+    border-radius: 100%;
+}

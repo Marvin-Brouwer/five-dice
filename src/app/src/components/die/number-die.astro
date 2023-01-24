@@ -1,0 +1,23 @@
+---
+import "./die.css";
+import "./number-die.css";
+import DieFace from "./die-face.astro";
+import type { calculateFace } from "./die";
+
+interface Props {
+    amount: Parameters<typeof calculateFace>[0],
+    description?: string
+}
+
+const { amount, description } = Astro.props;
+---
+
+<span class="die" data-amount={amount} 
+    aria-role="article"
+    aria-valuetext={amount.toString()}
+    aria-label={description || `${amount}-die,`}
+    aria-details={description || `A die displaying ${amount} dot${amount !==1 ? 's' : ''} on its face`}
+>
+    <DieFace amount={amount} />
+    <span class="value" aria-hidden="true">{amount}</span>
+</span>
