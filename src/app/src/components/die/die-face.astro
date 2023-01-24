@@ -1,0 +1,17 @@
+---
+import DieRow from "./die-row.astro";
+import { calculateFace, } from "./die";
+
+interface Props {
+    amount: Parameters<typeof calculateFace>[0]
+}
+
+const { amount } = Astro.props;
+const face = calculateFace(amount);
+---
+
+<span class="face">
+    <DieRow face={face} rowName="top" />
+    <DieRow face={face} rowName="middle" />
+    <DieRow face={face} rowName="bottom" />
+</span>

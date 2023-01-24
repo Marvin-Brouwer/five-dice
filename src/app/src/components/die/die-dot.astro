@@ -1,0 +1,28 @@
+---
+import type { Row } from "./die";
+
+interface Props {
+    row: Row, 
+    columnName: keyof Row
+}
+
+const bullet = String.fromCharCode(8226);
+
+const { row, columnName } = Astro.props;
+
+var showDot = row[columnName];
+
+---
+{ 
+    showDot && 
+    <span 
+        class="dot" 
+        style={`grid-area:${row.name}-${columnName}`} 
+        aria-atomic="true" 
+        aria-role="presentation"
+        aria-hidden="true" 
+        unselectable="on"
+    >
+        {bullet}
+    </span>
+}
