@@ -1,0 +1,41 @@
+---
+import "./theme.css";
+import "./main.css";
+
+import NumberDie from "../components/die/number-die.astro";
+import TextDie from "../components/die/text-die.astro";
+import LanguageSelector from "../components/language-selector/language-selector.astro";
+import ThemeSelector from "../components/theme-selector/theme-selector.astro";
+
+interface Props {
+    title: string
+}
+
+const { title } = Astro.props
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Five dice - {title}</title>
+	</head>
+	<body>
+		<header>
+			<h1 aria-label="Five dice" tabindex="0">
+				<NumberDie amount={5} description="Five"/> 
+				<TextDie value="D" /><TextDie value="i" /><TextDie value="c" /><TextDie value="e" />
+			</h1>
+			<nav role="menubar">
+				<!-- TODO Button skip to content -->
+				<ul>
+					<li><LanguageSelector value="en" /></li>
+					<li><ThemeSelector /></li>
+				</ul>
+			</nav>
+		</header>
+		<slot />
+	</body>
+</html>

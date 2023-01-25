@@ -1,0 +1,15 @@
+---
+interface Props {
+    tabindex?: number 
+}
+
+const { tabindex } = Astro.props;
+---
+
+<span class="language-selector" tabindex={tabindex?.toString()}>
+   <select>
+        <option value="auto" selected>⚙️ System preference</option>
+        <option value="light">🌞 Light theme</option>
+        <option value="dark">🌒 Dark theme</option>
+    </select>
+</span>

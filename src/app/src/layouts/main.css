@@ -1,0 +1,56 @@
+header {
+    font-size: 3ex;
+    display: flex;
+    margin: 0;
+    position: sticky;
+    left: 0;
+    top: 1.8ex;
+    z-index: inherit;
+    right: 0;
+    width: 100%;
+    background-color: var(--theme-foreground-primary);
+    margin-bottom: 3.5ex;
+}
+header::before {
+    display: block;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -2ex;
+    right: 0;
+    bottom: 2ex;
+    height: 2ex;
+    width: 100%;
+    background-color: var(--theme-background-primary);
+}
+header::after {
+    display: block;
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2ex;
+    z-index: -1;
+    height: 2ex;
+    width: 100%;
+    overflow: hidden;
+    background: rgb(255,255,255);
+    background: -moz-linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
+}
+
+header h1 {
+    margin: .5ex 0 .5ex 1ex ;
+    padding 0;
+    font-size: 3ex; 
+    height: 2ex;
+}
+
+header nav {
+    /*  todo style nav */
+    height: 3ex;
+    width: 2ex;
+    overflow: hidden;
+}
