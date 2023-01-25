@@ -1,0 +1,22 @@
+---
+import "./theme.css";
+import "./content.css";
+
+import MainLayout from "./main.astro";
+
+interface Props {
+    title: string
+}
+
+const { title } = Astro.props
+---
+
+<MainLayout title={title}>
+	<aside role="banner">
+		<!-- TODO start game button -->
+	</aside>
+	<section role="main"><slot /></section>
+	<footer>
+		<!-- TODO doormat -->
+	</footer>
+</MainLayout>

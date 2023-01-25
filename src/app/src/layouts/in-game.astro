@@ -1,0 +1,15 @@
+---
+import "./theme.css";
+
+import MainLayout from "./main.astro";
+
+interface Props {
+    title: string
+}
+
+const { title } = Astro.props
+---
+
+<MainLayout title={title}>
+	<section role="main"><slot /></section>
+</MainLayout>

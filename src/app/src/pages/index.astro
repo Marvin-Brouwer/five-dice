@@ -1,47 +1,9 @@
 ---
-import "./theme.css";
-import "./index.css";
-
-import NumberDie from "../components/die/number-die.astro";
-import TextDie from "../components/die/text-die.astro";
+import ContentLayout from '../layouts/content.astro';
+import Filler from '../components/content/lorem-ipsum.md';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Five dice</title>
-	</head>
-	<body>
-		<h1 aria-label="Five dice" tabindex="0">
-			<NumberDie amount={5} description="Five"/> 
-			<TextDie value="D" /><TextDie value="i" /><TextDie value="c" /><TextDie value="e" />
-		</h1>
-		<div>
-			<h2>Default size</h2>
-			<p>
-				<NumberDie amount={0} tabindex={0} /><br/>
-				<NumberDie amount={1} tabindex={0}  /><NumberDie amount={2} tabindex={0}  /><NumberDie amount={3} tabindex={0}  /><br/>
-				<NumberDie amount={4} tabindex={0}  /><NumberDie amount={5} tabindex={0}  /><NumberDie amount={6} tabindex={0}  />
-			</p>
-			<p>
-				<NumberDie amount={5} /> 
-				<TextDie value="D" /><TextDie value="i" /><TextDie value="c" /><TextDie value="e" />
-			</p>
-		</div>
-		<h2>Size override</h2>
-		<div style="font-size: 5ex;">
-			<p>
-				<NumberDie amount={0} /><br/>
-				<NumberDie amount={1} /><NumberDie amount={2} /><NumberDie amount={3} /><br/>
-				<NumberDie amount={4} /><NumberDie amount={5} /><NumberDie amount={6} />
-			</p>
-			<p>
-				<NumberDie amount={5} /> <TextDie value="D" /><TextDie value="i" /><TextDie value="c" /><TextDie value="e" />
-			</p>
-		</div>
-		<h2>Document end</h2>
-	</body>
-</html>
+<ContentLayout title="Home Page">
+  <p>TODO: This is where the game instructions are shown</p>
+  <Filler />
+</ContentLayout>
