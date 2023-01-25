@@ -3,6 +3,8 @@
     width: var(--dice-size);
     height: var(--dice-size);
     
+    position: relative;
+    z-index: 1;
     text-transform: uppercase;
     text-align: center;
     display: inline-block;
