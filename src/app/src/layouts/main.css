@@ -4,22 +4,22 @@ header {
     margin: 0;
     position: sticky;
     left: 0;
-    top: 1.8ex;
+    top: 1.3ex;
     z-index: inherit;
     right: 0;
     width: 100%;
     background-color: var(--theme-foreground-primary);
-    margin-bottom: 3.5ex;
+    margin-bottom: 3ex;
 }
 header::before {
     display: block;
     content: '';
     position: absolute;
     left: 0;
-    top: -2ex;
+    top: -1.5ex;
     right: 0;
-    bottom: 2ex;
-    height: 2ex;
+    bottom: 1.5ex;
+    height: 1.5ex;
     width: 100%;
     background-color: var(--theme-background-primary);
 }
@@ -43,9 +43,18 @@ header::after {
 
 header h1 {
     margin: .5ex 0 .5ex 1ex ;
-    padding 0;
+    padding: 0;
     font-size: 3ex; 
     height: 2ex;
+}
+
+header h1 a, header h1 a::selection, header h1 a:hover {
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    margin: -.5ex;
+    padding:.5ex;
 }
 
 header nav {
@@ -53,4 +62,5 @@ header nav {
     height: 3ex;
     width: 2ex;
     overflow: hidden;
+    visibility: hidden;
 }
