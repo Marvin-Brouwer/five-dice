@@ -60,7 +60,20 @@ header h1 a, header h1 a::selection, header h1 a:hover {
 header nav {
     /*  todo style nav */
     height: 3ex;
-    width: 2ex;
-    overflow: hidden;
-    visibility: hidden;
+    width: 10ex;
+    /* overflow: hidden; */
+}
+
+header nav ul {
+    list-style: outside none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    float: right;
+}
+header nav ul li {
+    margin: 0;
+    padding: 0;
 }
