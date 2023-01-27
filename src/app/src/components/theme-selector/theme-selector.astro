@@ -1,13 +1,24 @@
 ---
+import "../die/die.css"
+import "./theme-selector.css"
+
 interface Props {
     tabindex?: number 
 }
 
 const { tabindex } = Astro.props;
----
 
-<span class="language-selector" tabindex={tabindex?.toString()}>
-   <select>
+// TODO: auto select based on cookie
+---
+<script src="./theme-selector.ts"></script>
+
+<span class="theme-selector" tabindex={tabindex?.toString()}>
+    <span role="img" class="theme-icon die">
+        <span aria-hidden="false" class="small-icon">⚙️</span>
+        <span aria-hidden="false">🌞</span>
+        <span aria-hidden="true">🌒</span>
+    </span>
+    <select id="theme">
         <option value="auto" selected>⚙️ System preference</option>
         <option value="light">🌞 Light theme</option>
         <option value="dark">🌒 Dark theme</option>
