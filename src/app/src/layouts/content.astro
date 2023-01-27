@@ -11,12 +11,57 @@ interface Props {
 const { title } = Astro.props
 ---
 
+<script src="./content.ts" ></script>
 <MainLayout title={title}>
 	<aside role="banner">
 		<!-- TODO start game button -->
 	</aside>
-	<section role="main"><slot /></section>
+	<section role="main"><a id="top" tabindex={-1}/><slot /></section>
 	<footer>
-		<!-- TODO doormat -->
+		<ul class="doormat" role="navigation">
+			<li>
+				<a href="/new" title="start new game">
+					<picture class="new-game-icon" role="img">+</picture>
+					Start new game
+				</a>
+			</li>	
+			<li>
+				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Fork me on GitHub" target="_blank" rel="nofollow">
+					<img src="iconmonstr-github-1.svg" alt="GitHub logo"
+					class="icon" width="25" height="25" loading="lazy"  />
+					Fork me on GitHub
+				</a>
+			</li>	
+			<li>
+				<!-- TODO: change to issue of type bug -->
+				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report a bug" target="_blank" rel="nofollow">
+					<img src="iconmonstr-github-1.svg" alt="GitHub logo" 
+					class="icon" width="25" height="25" loading="lazy"  />
+					Report a bug
+				</a>
+			</li>	
+			
+			<li>
+				<button title="Scroll to top" id="topScroller">
+					<picture class="scroll-to-top-icon" role="img" >&#11205;</picture>
+					Scroll to top
+				</button>
+			</li>	
+			<li>
+				<a href="/accessibility" title="Accessibility" target="_blank">
+					<img src="iconmonstr-accessibility-circle-lined.svg" alt="Accessibility icon" 
+					class="icon accessibility-icon" width="25" height="25" loading="lazy"  />
+					Accessibility
+				</a>
+			</li>	
+			<li>
+				<!-- TODO: change to issue of type accessibility issue -->
+				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report accessibility issues" target="_blank" rel="nofollow">
+					<img src="iconmonstr-github-1.svg" alt="GitHub logo" 
+					class="icon" width="25" height="25" loading="lazy"  />
+					Report accessibility issues
+				</a>
+			</li>	
+		</ul>
 	</footer>
 </MainLayout>
