@@ -1,3 +1,78 @@
+
+aside[role="banner"] {
+    margin: 0 2ex 1ex 2ex;
+    width: calc(100% - 4ex);
+    display: flex;
+    position: relative;
+    z-index: 1;
+    font-size: 1.4ex;
+    font-family: monospace;
+    text-transform: uppercase;
+}
+
+aside[role="banner"] ul {
+    display: flex;
+    width: 100%;
+    position: relative;
+    flex-direction: column;
+    flex-wrap: wrap;
+    column-count: 2;
+    list-style: outside none;
+    margin: 0;
+    padding: 0;
+}
+
+aside[role="banner"] ul li {
+    min-height: 3ex;
+    line-height: 2ex;
+    margin: 0;
+    padding: 0 .5ex;
+    overflow-y: hidden;
+}
+
+aside[role="banner"] ul li a {
+    display: inline-flex;
+    min-height: 3ex;
+    margin: 0;
+    padding: 0 .5ex;
+    background: transparent none;
+    border: 0 none;
+    cursor: pointer ;
+    font-size: 2ex;
+    font-family: monospace;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--theme-foreground-primary);
+}
+aside[role="banner"] ul li a:hover {
+    color: var(--theme-foreground-hover);
+}
+
+aside[role="banner"] ul li picture[role="img"], 
+aside[role="banner"] ul li picture[role="img"]:hover {
+    width: 2ex;
+    height: 2ex;
+    border: 1px solid var(--theme-foreground-primary);
+    border-radius: .5ex;
+    color: var(--theme-foreground-primary);
+    text-decoration: none;
+    text-align: center;
+    margin: 0;
+    margin-right: 1ex;
+    padding: 0;
+    display: inline-block;
+}
+
+aside[role="banner"] ul li picture.new-game-icon{
+    font-weight: bolder;
+    font-size: 2.4ex;
+    line-height: 1.2ex;
+    width: 1.5ex;
+    height: 1.5ex;
+    margin-right: .6ex;
+}
+
+
 section[role="main"] {
     margin: 1ex 2ex 0 2ex;
 }

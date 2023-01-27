@@ -12,11 +12,20 @@ const { title } = Astro.props
 ---
 
 <script src="./content.ts" ></script>
+
 <MainLayout title={title}>
+	<a id="top" tabindex={-1}/>	
 	<aside role="banner">
-		<!-- TODO start game button -->
+		<ul class="top-banner" role="navigation">
+			<li>
+				<a href="/new" title="start new game">
+					<picture class="new-game-icon" role="img">+</picture>
+					Start new game
+				</a>
+			</li>	
+		</ul>
 	</aside>
-	<section role="main"><a id="top" tabindex={-1}/><slot /></section>
+	<section role="main"><slot /></section>
 	<footer>
 		<ul class="doormat" role="navigation">
 			<li>
