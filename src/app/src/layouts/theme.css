@@ -1,10 +1,15 @@
 :root {
     --theme-foreground-primary: black;
+    --theme-foreground-secondary: rgb(48, 48, 48);
+    --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-primary: rgb(244, 244, 244);
     --theme-background-focus: rgb(135, 214, 135);
     
     font-size: 1.5em;
     background-color: var(--theme-background-primary);
+    @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+    }
 }
 
 ::-moz-selection { 
@@ -17,11 +22,28 @@
     background:  var(--theme-background-focus);
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-delay: -1ms !important;
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      background-attachment: initial !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+    }
+  }
+
 html, body {
     margin:0;
     padding: 0;
     position: relative;
     background-color: var(--theme-background-primary);
+    @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+    }
 }
 h1 {
     font-size: 5ex;
