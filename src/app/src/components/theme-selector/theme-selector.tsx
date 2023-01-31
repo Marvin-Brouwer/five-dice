@@ -7,9 +7,10 @@ import Cookie from "js-cookie";
 
 interface Props {
     initialTheme: 'auto' | 'dark' | 'light'
+    initialPreference: 'dark' | 'light' | 'no-preference'
 }
 
-export const ThemeSelector: Component<Props> = ({ initialTheme }) => {
+export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreference }) => {
 
     function setPreferredTheme(theme: 'auto' | 'light' | 'dark') {
 
@@ -21,7 +22,7 @@ export const ThemeSelector: Component<Props> = ({ initialTheme }) => {
     }
 
     const [selectedTheme, setSelectedTheme] = createSignal(initialTheme);
-    const [preferredColorScheme, setPreferredColorScheme] = createSignal(initialTheme);
+    const [preferredColorScheme, setPreferredColorScheme] = createSignal(initialPreference);
         
     const handleColorSchemeChange = (event: MediaQueryListEvent) => {
         setPreferredColorScheme(event.matches ? 'dark' : 'light');
@@ -67,6 +68,8 @@ export const ThemeSelector: Component<Props> = ({ initialTheme }) => {
     return (
         <span class="theme-selector">
             <span role="img" class="theme-icon die">
+                {/* The optical disk is just here to give some image when no preference is found on page load */}
+                <span aria-hidden={!autoSelected()}>💿</span>
                 <span aria-hidden={!autoSelected()} class="small-icon">⚙️</span>
                 <span aria-hidden={!lightActive()}>🌞</span>
                 <span aria-hidden={!darkActive()}>🌒</span>
