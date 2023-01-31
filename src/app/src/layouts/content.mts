@@ -5,20 +5,20 @@ mediaQuery.addEventListener('change', () => {
     prefersReducedMotion = mediaQuery.matches;
 });
 
-const topElement = document.getElementById('top')!;
-const topScroller = document.getElementById('topScroller')!;
+const topElement = document.getElementById('top');
+const topScroller = document.getElementById('topScroller');
 
 function scrollToTop() {
-    topScroller.blur();
+    topScroller?.blur();
 
     if (prefersReducedMotion) {
         window.scrollTo({ top: 0 });
-        topElement.focus();
+        topElement?.focus();
     }
     else {
-        topElement.focus({ preventScroll: true });
+        topElement?.focus({ preventScroll: true });
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 
-topScroller.addEventListener('click', scrollToTop);
+topScroller?.addEventListener('click', scrollToTop);

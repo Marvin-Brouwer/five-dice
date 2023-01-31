@@ -8,7 +8,7 @@ header {
     z-index: 9;
     right: 0;
     width: 100%;
-    background-color: var(--theme-foreground-primary);
+    background-color: var(--theme-background-header);
     margin-bottom: 3ex;
 }
 header::before {
@@ -34,10 +34,10 @@ header::after {
     height: 2ex;
     width: 100%;
     overflow: hidden;
-    background: rgb(255,255,255);
-    background: -moz-linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: -webkit-linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
-    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: var(--theme-background-primary);
+    background: -moz-linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--theme-background-primary) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--theme-background-primary) 100%);
+    background: linear-gradient(0deg, rgba(255,255,255,0) 0%, var(--theme-background-primary) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#ffffff",GradientType=1);
 }
 

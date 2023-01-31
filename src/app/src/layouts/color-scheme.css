@@ -1,0 +1,55 @@
+[data-theme="light"] {
+    color-scheme: light;
+    --theme-foreground-primary: black;
+    --theme-foreground-secondary: rgb(48, 48, 48);
+    --theme-foreground-hover: rgb(78, 189, 78);
+    --theme-background-header: rgb(48, 48, 48);
+    --theme-background-primary: rgb(244, 244, 244);
+    --theme-background-focus: rgb(135, 214, 135);
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+    --theme-foreground-primary: white;
+    --theme-foreground-secondary: rgb(208, 208, 208);
+    --theme-foreground-hover: rgb(78, 189, 78);
+    --theme-background-header: black;
+    --theme-background-primary: rgb(63, 63, 63);
+    --theme-background-focus: rgb(135, 214, 135);
+}
+
+[data-theme="auto"]  {
+    color-scheme: light;
+    --theme-foreground-primary: black;
+    --theme-foreground-secondary: rgb(48, 48, 48);
+    --theme-foreground-hover: rgb(78, 189, 78);
+    --theme-background-header: rgb(48, 48, 48);
+    --theme-background-primary: rgb(244, 244, 244);
+    --theme-background-focus: rgb(135, 214, 135);
+}
+
+@media (prefers-color-scheme:dark) {
+    [data-theme="auto"]  {
+        color-scheme: dark;
+        --theme-foreground-primary: white;
+        --theme-foreground-secondary: rgb(208, 208, 208);
+        --theme-foreground-hover: rgb(78, 189, 78);
+        --theme-background-header: black;
+        --theme-background-primary: rgb(63, 63, 63);
+        --theme-background-focus: rgb(135, 214, 135);
+    }
+}
+
+select option {
+    display: block;
+    background-color: var(--theme-background-primary);
+}
+select option:checked {
+    background-color: var(--theme-background-primary) !important;
+}
+select option:hover,
+    select option:focus,
+    select option:active {
+    outline-color: var(--theme-background-focus);
+    background-color: var(--theme-background-focus)  !important;
+}

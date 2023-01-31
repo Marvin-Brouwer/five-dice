@@ -2,6 +2,8 @@
 import "./theme.css";
 import "./content.css";
 
+import Svg from "@jasikpark/astro-svg-loader";
+
 import MainLayout from "./main.astro";
 
 interface Props {
@@ -36,16 +38,22 @@ const { title } = Astro.props
 			</li>	
 			<li>
 				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Fork me on GitHub" target="_blank" rel="nofollow">
-					<img src="iconmonstr-github-1.svg" alt="GitHub logo"
-					class="icon" width="25" height="25" loading="lazy"  />
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-github-1.svg?raw")}
+						role="img" />	
 					Fork me on GitHub
 				</a>
 			</li>	
 			<li>
 				<!-- TODO: change to issue of type bug -->
 				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report a bug" target="_blank" rel="nofollow">
-					<img src="iconmonstr-github-1.svg" alt="GitHub logo" 
-					class="icon" width="25" height="25" loading="lazy"  />
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-github-1.svg?raw")}
+						role="img" />	
 					Report a bug
 				</a>
 			</li>	
@@ -58,16 +66,22 @@ const { title } = Astro.props
 			</li>	
 			<li>
 				<a href="/accessibility" title="Accessibility" target="_blank">
-					<img src="iconmonstr-accessibility-circle-lined.svg" alt="Accessibility icon" 
-					class="icon accessibility-icon" width="25" height="25" loading="lazy"  />
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-accessibility-circle-lined.svg?raw")}
+						role="img" />	
 					Accessibility
 				</a>
 			</li>	
 			<li>
 				<!-- TODO: change to issue of type accessibility issue -->
 				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report accessibility issues" target="_blank" rel="nofollow">
-					<img src="iconmonstr-github-1.svg" alt="GitHub logo" 
-					class="icon" width="25" height="25" loading="lazy"  />
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-github-1.svg?raw")}
+						role="img" />	
 					Report accessibility issues
 				</a>
 			</li>	

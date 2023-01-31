@@ -128,7 +128,7 @@ footer ul li a, footer ul li button {
     background: transparent none;
     border: 0 none;
     cursor: pointer ;
-    font-size: 2ex;
+    font-size: 1.9ex;
     font-family: monospace;
     text-transform: uppercase;
     text-decoration: none;
@@ -138,12 +138,12 @@ footer ul li a:hover, footer ul li button:hover {
     color: var(--theme-foreground-hover);
 }
 
-footer ul li img.icon {
+footer ul li svg.icon {
     width: 2ex;
     height: 2ex;
     margin-right: 1ex;
 }
-footer ul li img.accessibility-icon {
+footer ul li svg.accessibility-icon {
     width: 2.5ex;
     height: 2.5ex;
     

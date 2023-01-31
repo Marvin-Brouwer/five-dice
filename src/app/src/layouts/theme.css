@@ -1,10 +1,4 @@
-:root {
-    --theme-foreground-primary: black;
-    --theme-foreground-secondary: rgb(48, 48, 48);
-    --theme-foreground-hover: rgb(78, 189, 78);
-    --theme-background-primary: rgb(244, 244, 244);
-    --theme-background-focus: rgb(135, 214, 135);
-    
+:root {    
     font-size: 1.5em;
     background-color: var(--theme-background-primary);
     @media (prefers-reduced-motion: no-preference) {

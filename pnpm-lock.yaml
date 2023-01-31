@@ -12,6 +12,7 @@ importers:
     specifiers:
       '@astrojs/solid-js': ^2.0.1
       '@babel/core': ^7.20.12
+      '@jasikpark/astro-svg-loader': ^0.1.0
       '@types/js-cookie': ^3.0.2
       astro: ^2.0.0
       js-cookie: ^3.0.1
@@ -23,6 +24,7 @@ importers:
       solid-js: 1.6.10
     devDependencies:
       '@babel/core': 7.20.12
+      '@jasikpark/astro-svg-loader': 0.1.0_astro@2.0.0
       '@types/js-cookie': 3.0.2
 
 packages:
@@ -512,6 +514,17 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@jasikpark/astro-svg-loader/0.1.0_astro@2.0.0:
+    resolution: {integrity: sha512-57blatU9yKm1WTHzVkba/A223Yq0Z9SFAR2TnaAFs0g1WprdLQzzHCuZsORHzgNqHamm3r7I2oxpYHzlErl2HQ==}
+    engines: {node: ^14.18.0 || >=16.12.0, pnpm: '>=7.9.5'}
+    requiresBuild: true
+    peerDependencies:
+      astro: ^2.0.0
+    dependencies:
+      astro: 2.0.0
+      ultrahtml: 1.2.0
+    dev: true
 
   /@jridgewell/gen-mapping/0.1.1:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}
@@ -2358,6 +2371,10 @@ packages:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+
+  /ultrahtml/1.2.0:
+    resolution: {integrity: sha512-vxZM2yNvajRmCj/SknRYGNXk2tqiy6kRNvZjJLaleG3zJbSh/aNkOqD1/CVzypw8tyHyhpzYuwQgMMhUB4ZVNQ==}
+    dev: true
 
   /undici/5.16.0:
     resolution: {integrity: sha512-KWBOXNv6VX+oJQhchXieUznEmnJMqgXMbs0xxH2t8q/FUAWSJvOSr/rMaZKnX5RIVq7JDn0JbP4BOnKG2SGXLQ==}
