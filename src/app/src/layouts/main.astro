@@ -14,6 +14,12 @@ interface Props {
 
 const { title } = Astro.props
 
+Astro.response.headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
+Astro.response.headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
+
+const initialPreference = 
+	Astro.request.headers.get('Sec-CH-Prefers-Color-Scheme') as 'dark' | 'light' ?? 'no-preference';
+
 const initialTheme = !Astro.cookies.has('theme') 
 	? 'auto' 
 	: Astro.cookies.get('theme').value as 'auto' | 'dark' | 'light';
@@ -40,7 +46,7 @@ const initialTheme = !Astro.cookies.has('theme')
 				<!-- TODO Button skip to content -->
 				<ul>
 					<li><LanguageSelector value="en" /></li>
-					<li><ThemeSelector client:load initialTheme={initialTheme} /></li>
+					<li><ThemeSelector client:load initialTheme={initialTheme} initialPreference={initialPreference} /></li>
 				</ul>
 			</nav>
 		</header>
