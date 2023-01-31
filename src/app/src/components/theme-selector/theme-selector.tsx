@@ -50,7 +50,7 @@ export const ThemeSelector: Component<Props> = ({ initialTheme }) => {
         setLightActive(isActive('light'));
         setDarkActive(isActive('dark'));
         
-    }, [selectedTheme, preferredColorScheme]);
+    }, [selectedTheme(), preferredColorScheme()]);
 
     onMount(() => {
         const colorSchemeMount = window.matchMedia('(prefers-color-scheme: dark)');
