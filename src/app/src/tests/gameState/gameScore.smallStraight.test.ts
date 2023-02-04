@@ -10,23 +10,7 @@ import { scoreValidator } from '../../gameState/gameScore.mjs';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(
-
-    (a, b, c, d, e) => [a, b, c, d, e],
-
-    (a, b, c, d) => [a, b, c, d, d],
-    (a, b, c, d) => [d, a, b, c, d],
-    (a, b, c, d) => [d, d, a, b, c],
-    (a, b, c, d) => [c, d, d, a, b],
-    (a, b, c, d) => [b, c, d, d, a],
-    (a, b, c, d) => [a, b, c, d, c],
-    (a, b, c, d) => [a, b, c, d, b],
-    (a, b, c, d) => [a, b, c, d, a],
-    (a, b, c, d) => [a, b, c, b, d],
-    (a, b, c, d) => [d, a, b, c, b],
-    (a, b, c, d) => [b, d, a, b, c],
-    (a, b, c, d) => [c, b, d, a, b],
-    (a, b, c, d) => [b, c, b, d, a],
-    (a, b, c, d) => [a, c, b, d, a],
+    'abcdd', 'abcde'
 );
 
 describe('scoreValidator', () => {

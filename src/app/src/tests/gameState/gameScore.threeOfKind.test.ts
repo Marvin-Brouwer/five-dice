@@ -10,37 +10,7 @@ import { scoreValidator } from '../../gameState/gameScore.mjs';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(
-    
-    (a, b, c) => [a, a, a, b, c],
-    (a, b, c) => [c, a, a, a, b],
-    (a, b, c) => [b, c, a, a, a],
-    (a, b, c) => [a, b, c, a, a],
-    (a, b, c) => [a, a, b, c, a],
-    (a, b, c) => [a, a, b, a, c],
-    (a, b, c) => [c, a, a, b, a],
-    (a, b, c) => [a, c, a, a, b],
-    (a, b, c) => [b, a, c, a, a],
-    (a, b, c) => [a, b, a, c, a],
-    
-    (a, b) => [a, a, a, b, b],
-    (a, b) => [b, a, a, a, b],
-    (a, b) => [b, b, a, a, a],
-    (a, b) => [a, b, b, a, a],
-    (a, b) => [a, a, b, b, a],
-    (a, b) => [a, a, b, a, b],
-    (a, b) => [b, a, a, b, a],
-    (a, b) => [a, b, a, a, b],
-    (a, b) => [b, a, b, a, a],
-    (a, b) => [a, b, a, b, a],
-    
-    (a, b) => [a, a, a, a, b],
-    (a, b) => [b, a, a, a, a],
-    (a, b) => [a, b, a, a, a],
-    (a, b) => [a, a, b, a, a],
-    (a, b) => [a, a, a, b, a],
-    (a, b) => [a, a, a, a, b],
-
-    (a) => [a, a, a, a, a],
+    'aaabc', 'aaabb', 'aaaab', 'aaaaa'
 );
 
 describe('scoreValidator', () => {
