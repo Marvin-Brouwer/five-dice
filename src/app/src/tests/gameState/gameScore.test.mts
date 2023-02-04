@@ -3,9 +3,9 @@
 
 import { DieValue, discardedScore, score, Score, ValidScore } from '../../gameState/gameScore.mjs';
 
-const allRolls = new Map(generate());
+const allRolls = new Map(generateAllPossibleNumbers());
 
-function* generate(): Generator<[string, ValidScore]> {
+function* generateAllPossibleNumbers(): Generator<[string, ValidScore]> {
     
     let a = 1 as DieValue;
     let b = 1 as DieValue;
@@ -46,6 +46,64 @@ function* generate(): Generator<[string, ValidScore]> {
     }
 }
 
+type PatternItem = 'a' | 'b' | 'c' | 'd' | 'e'; 
+type Pattern = [PatternItem, PatternItem, PatternItem, PatternItem, PatternItem]
+
+function shufflePatterns(patterns: Array<string>): Array<Pattern> {
+    return patterns.flatMap(shufflePattern)
+}
+function shufflePattern(pattern: string): Array<Pattern> {
+
+    let distinctPatterns = new Set(shuffleCharacters(pattern));
+    console.log(`possible patterns matching '${pattern}': `, JSON.stringify(Array.from(distinctPatterns)));
+    
+    return Array.from(distinctPatterns).map(p => p.split('') as Pattern);
+
+    function* slideCharacter(pattern: string, charToMove: number) {
+
+        for (let i = 0; i < pattern.length; i++){
+            let newValue = pattern.split('');
+
+            var newChar = newValue.at(charToMove)!
+            var oldChar = newValue.at(i)!
+
+            newValue[i] = newChar;
+            newValue[charToMove] = oldChar;
+
+            yield newValue.join('');
+            yield newValue.reverse().join('');
+        }
+        for (let i = 0; i < pattern.length; i++){
+            let newValue = pattern.split('').reverse();
+
+            var newChar = newValue.at(charToMove)!
+            var oldChar = newValue.at(i)!
+
+            newValue[i] = newChar;
+            newValue[charToMove] = oldChar;
+
+            yield newValue.join('');
+            yield newValue.reverse().join('');
+        }
+    }
+    function* shuffleCharacters(pattern: string) {
+
+        for (let i = 0; i < pattern.length; i++)
+        {
+            for(let item of slideCharacter(pattern, i)) yield item;
+        }
+    }
+}
+
+function toPatternGenerator(pattern: Array<string>): PatternDefinition {
+    return (a, b, c, d, e) => pattern.map(item => {
+        if (item === 'a') return a;
+        if (item === 'b') return b;
+        if (item === 'c') return c;
+        if (item === 'd') return d;
+        return e;
+    }) as ValidScore
+}
 
 function toPatternKey(pattern: ValidScore): string {
     return pattern
@@ -57,22 +115,22 @@ function toPatternKey(pattern: ValidScore): string {
         .replaceAll('5','e')
 }
 
-export type PatternDefinition = (a: DieValue, b: DieValue, c: DieValue, d: DieValue, e: DieValue) => ValidScore
-export function generateScores(...validPatterns: Array<PatternDefinition>): [
+type PatternDefinition = (a: DieValue, b: DieValue, c: DieValue, d: DieValue, e: DieValue) => ValidScore
+export function generateScores(...validPatterns: Array<string>): [
     patternKey: string,
     allowedScores: ReadonlySet<Score>,
     disallowedScores: ReadonlySet<Score>
 ] {
 
-    const patternKey = toPatternKey(validPatterns[0](1,2,3,4,5));
+    const patternKey = validPatterns[0];
 
-    const allowedScoreMap = 
-        validPatterns.reduce((accumulator, current) => {
+    const allowedScoreMap = shufflePatterns(validPatterns)
+        .reduce((accumulator, current) => {
 
             for (let rollAttempt of Array.from(allRolls.values())
                 .filter(scoreAttempt => new Set(scoreAttempt).size == 5)
             ){
-                const score = current.apply(undefined, rollAttempt);
+                const score = toPatternGenerator(current).apply(undefined, rollAttempt);
                 accumulator.set(score.join(''), score)
             }
 
