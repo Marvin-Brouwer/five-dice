@@ -3,9 +3,10 @@ import "./die.css";
 import "./number-die.css";
 import DieFace from "./die-face.astro";
 import type { calculateFace } from "./die";
+import type { DieValue } from "../../gameState/gameConstants";
 
 interface Props {
-    amount: Parameters<typeof calculateFace>[0],
+    amount: DieValue,
     description?: string,
     tabindex?: number 
 }

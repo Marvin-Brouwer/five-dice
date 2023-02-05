@@ -1,8 +1,8 @@
 // If you want to make the tests more fancy you can help by including permutations for patterns:
 // https://stackoverflow.com/questions/9960908/permutations-in-javascript
 
-import type { DieValue } from '../../src/gameState/gameConstants.mjs';
-import { discardedScore, score, Score, ValidScore } from '../../src/gameState/gameScore.mjs';
+import type { DieValue } from '../../src/gameState/gameConstants.js';
+import { discardedScore, score, Score, ValidScore } from '../../src/gameState/gameScore.js';
 
 const allRolls = new Map(generateAllPossibleNumbers());
 

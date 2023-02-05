@@ -1,8 +1,8 @@
 
-import { emptyScorePad, roundAmount } from "./gameConstants.mjs";
-import { ScoreField, ScoreFields, Score, validateScore } from "./gameScore.mjs";
-import { InvalidGameStateError } from './invalidGameStateError.mjs';
-import { InvalidScoreError } from "./invalidScoreError.mjs";
+import { emptyScorePad, roundAmount } from "./gameConstants";
+import { ScoreField, ScoreFields, Score, validateScore } from "./gameScore";
+import { InvalidGameStateError } from './invalidGameStateError.js';
+import { InvalidScoreError } from "./invalidScoreError";
 
 export type GameConfig = {
     players: ReadonlySet<number>

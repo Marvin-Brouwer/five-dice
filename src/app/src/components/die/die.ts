@@ -1,3 +1,5 @@
+import type { DieValue } from '../../gameState/gameConstants';
+
 export type Face = {
     top: Row,
     middle: Row,
@@ -29,7 +31,7 @@ function fromArray(input: FaceInput): Face {
     };
 }
 
-export function calculateFace(amount: 0 | 1 | 2 | 3 | 4 | 5 | 6): Face {
+export function calculateFace(amount: DieValue): Face {
 
     const _ = false;
     const x = true;

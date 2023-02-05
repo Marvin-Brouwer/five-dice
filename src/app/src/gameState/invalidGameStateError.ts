@@ -1,4 +1,4 @@
-import type { GameState } from "./gameState.mjs";
+import type { GameState } from "./gameState";
 
 export class InvalidGameStateError extends Error {
 

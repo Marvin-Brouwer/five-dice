@@ -1,6 +1,7 @@
 header {
     font-size: 3ex;
     display: flex;
+    justify-content: space-between;
     margin: 0;
     position: sticky;
     left: 0;
@@ -58,9 +59,11 @@ header h1 a, header h1 a::selection, header h1 a:hover {
 }
 
 header nav {
+    margin: 0 1ex .5ex 0 ;
     /*  todo style nav */
+    justify-self: flex-end;
     height: 3ex;
-    width: 10ex;
+    width: 6ex;
     /* overflow: hidden; */
 }
 

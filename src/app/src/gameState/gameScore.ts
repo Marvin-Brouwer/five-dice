@@ -1,4 +1,4 @@
-import { dice, DieValue } from "./gameConstants.mjs"
+import { dice, DieValue } from "./gameConstants.js"
 
 export type ScoreField = keyof ScoreFields
 

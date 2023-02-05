@@ -1,4 +1,4 @@
-import type { ScoreFields } from "./gameScore.mjs";
+import type { ScoreFields } from "./gameScore";
 
 export const roundAmount = 13;
 

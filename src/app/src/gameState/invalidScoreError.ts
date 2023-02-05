@@ -1,4 +1,4 @@
-import type { GameState, PlayerRoundApplication } from "./gameState.mjs";
+import type { GameState, PlayerRoundApplication } from "./gameState";
 
 export class InvalidScoreError extends Error {
     

@@ -1,9 +1,9 @@
-import { createSignal } from 'solid-js';
-import type { Accessor } from "solid-js";
+import { createSignal, Accessor } from 'solid-js';
 
-import { advance, applyRound, createGameState, isFinishedGameState, startGame } from "./gameState.mjs";
-import type { ActiveGameState, FinishedGameState, GameConfig, GameState, PendingGameState, PlayerRoundApplication } from "./gameState.mjs";
-import { discardedScore } from './gameScore.mjs';
+import { 
+    advance, applyRound, createGameState, isFinishedGameState, startGame,
+    ActiveGameState, FinishedGameState, GameConfig, GameState, PendingGameState, PlayerRoundApplication 
+} from "./gameState";
 
 export type GameStateAccessor =  Accessor<Readonly<GameState>>;
 export type GameStateSetter = {
