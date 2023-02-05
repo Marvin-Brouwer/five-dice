@@ -6,7 +6,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { createGameState, GameState, PendingGameState, startGame } from '../../gameState/gameState.mjs';
+import { createGameState, GameState, PendingGameState, startGame } from '../../src/gameState/gameState.mjs';
 
 describe('gameState', () => {
 

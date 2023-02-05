@@ -6,22 +6,22 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { validateScore } from '../../gameState/gameScore.mjs';
+import { validateScore } from '../../src/gameState/gameScore.mjs';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(
-    'aaaaa'
+    'abcde'
 );
 
 describe('scoreValidator', () => {
 
-    test(`flush ${pattern}`, async testContext => {
+    test(`largeStraight ${pattern}`, async testContext => {
 
         for(let score of allowedScores) {
             await testContext.test(`validTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => validateScore(score, 'flush');
+                const sut = () => validateScore(score, 'largeStraight');
 
                 // Act
                 const result = sut();
@@ -35,7 +35,7 @@ describe('scoreValidator', () => {
             await testContext.test(`inValidTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => validateScore(score, 'flush');
+                const sut = () => validateScore(score, 'largeStraight');
 
                 // Act
                 const result = sut();

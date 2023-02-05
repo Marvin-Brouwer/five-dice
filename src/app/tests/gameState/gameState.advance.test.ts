@@ -6,9 +6,9 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { ActiveGameState, advance, applyRound, createGameState, isFinishedGameState, PlayerRoundApplication, startGame } from '../../gameState/gameState.mjs';
-import { score } from '../../gameState/gameScore.mjs';
-import { roundAmount } from '../../gameState/gameConstants.mjs';
+import { ActiveGameState, advance, applyRound, createGameState, isFinishedGameState, PlayerRoundApplication, startGame } from '../../src/gameState/gameState.mjs';
+import { score } from '../../src/gameState/gameScore.mjs';
+import { roundAmount } from '../../src/gameState/gameConstants.mjs';
 
 const initialState = createGameState({
     playerId: 123,

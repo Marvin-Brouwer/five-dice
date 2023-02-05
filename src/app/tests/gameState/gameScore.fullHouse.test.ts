@@ -6,22 +6,22 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { validateScore } from '../../gameState/gameScore.mjs';
+import { validateScore } from '../../src/gameState/gameScore.mjs';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(
-    'aaaab', 'aaaaa'
+    'aaabb'
 );
 
 describe('scoreValidator', () => {
 
-    test(`fourOfKind ${pattern}`, async testContext => {
+    test(`fullHouse ${pattern}`, async testContext => {
 
         for(let score of allowedScores) {
             await testContext.test(`validTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => validateScore(score, 'fourOfKind');
+                const sut = () => validateScore(score, 'fullHouse');
 
                 // Act
                 const result = sut();
@@ -35,7 +35,7 @@ describe('scoreValidator', () => {
             await testContext.test(`inValidTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => validateScore(score, 'fourOfKind');
+                const sut = () => validateScore(score, 'fullHouse');
 
                 // Act
                 const result = sut();
