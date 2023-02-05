@@ -25,6 +25,7 @@
 }
 #score-card table thead td {
     text-align: left;
+    text-transform: uppercase;
 }
 #score-card table td {
     padding-right: 1ex;
@@ -56,11 +57,13 @@
 
 span.smallGroup {
     margin-right: 1ex;
-    font-size: 1.8ex;
     --dice-padding: calc((var(--dice-size) / 4));
-}
-span.smallGroup.dim {
-    --dice-color-foreground: rgb(75, 75, 75);
+    --dice-color-foreground: rgb(43, 43, 43);
     font-size: 1.5ex;
     opacity: .9;
+}
+span.many {
+    font-size: 1.5ex;
+    margin-left: .7ex;
+    margin-right: -.5ex;
 }

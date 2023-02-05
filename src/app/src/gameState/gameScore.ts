@@ -1,36 +1,93 @@
 import { dice, DieValue } from "./gameConstants.js"
 
+abstract class GameScore { }
+
+type ValidScoreRoll = [DieValue, DieValue, DieValue, DieValue, DieValue]
+export class ValidScore extends GameScore {
+    constructor(private roll: ValidScoreRoll) {
+        super();
+    }
+
+    includes(die: DieValue): boolean {
+        return this.roll.includes(die);
+    }
+
+    reduce<T>(callbackfn: (previousValue: T, currentValue: DieValue, currentIndex: number, array: DieValue[]) => T, reducer: T): T {
+        return this.roll.reduce<T>(callbackfn, reducer);
+    }
+
+    filter(predicate: (value: DieValue, index: number, array: DieValue[]) => boolean) {
+        return this.roll.filter(predicate)
+    }
+
+    map<T> (callbackfn: (value: DieValue, index: number, array: DieValue[]) => T) {
+        return this.roll.map<T>(callbackfn)
+    }
+
+    sort(compareFn: (a: DieValue, b: DieValue) => number) {
+        return this.roll.sort(compareFn)
+    }
+
+    toArray(){
+        return this.roll;
+    }
+
+    toString() {
+        return `${this.roll.join(' ')}`;
+    }
+}
+export class DiscardedScore extends GameScore {
+
+    // This is here to satisfy compiler
+    public readonly isDiscarded = true;
+    
+    constructor() {
+        super();
+    }
+
+    toString() {
+        return "/";
+    }
+}
+export class FlushScore extends ValidScore {
+
+    constructor(roll: ValidScore, public discardField: Exclude<ScoreField, 'flush'>) {
+        super(roll.toArray());
+    }
+
+    toString() {
+        return `${super.toString()} - ${this.discardField}`;
+    }
+}
+
 export type ScoreField = keyof ScoreFields
 
-export type ValidScore = [DieValue, DieValue, DieValue, DieValue, DieValue]
-export type DiscardedScore = []
-
-export type Score = ValidScore | DiscardedScore
+export type Score  = ValidScore | DiscardedScore
 
 export type ScoreFields = {
-    aces: Score | undefined
-    deuces: Score | undefined
-    threes: Score | undefined
-    fours: Score | undefined
-    fives: Score | undefined
-    sixes: Score | undefined
+    aces: ValidScore | DiscardedScore | undefined
+    deuces: ValidScore | DiscardedScore | undefined
+    threes: ValidScore | DiscardedScore | undefined
+    fours: ValidScore | DiscardedScore | undefined
+    fives: ValidScore | DiscardedScore | undefined
+    sixes: ValidScore | DiscardedScore | undefined
 
-    threeOfKind: Score | undefined
-    fourOfKind: Score | undefined
-    fullHouse: Score | undefined
-    smallStraight: Score | undefined
-    largeStraight: Score | undefined
-    flush: Array<[Score, Exclude<ScoreField, 'flush'>]>
-    chance: Score | undefined
+    threeOfKind: ValidScore | DiscardedScore | undefined
+    fourOfKind: ValidScore | DiscardedScore | undefined
+    fullHouse: ValidScore | DiscardedScore | undefined
+    smallStraight: ValidScore | DiscardedScore | undefined
+    largeStraight: ValidScore | DiscardedScore | undefined
+    flush:  Array<FlushScore> | DiscardedScore
+    chance: ValidScore | DiscardedScore | undefined
 }
 
-export const discardedScore = [] as DiscardedScore;
+export const discardedScore = new DiscardedScore();
 export function score(one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue): ValidScore {
-    return [one, two, three, four, five]
+    return new ValidScore([one, two, three, four, five])
 }
 
-export function isDiscarded(score: Score): score is DiscardedScore {
-    return score == discardedScore;
+export function isDiscarded(score: Array<ValidScore> | ValidScore | DiscardedScore): score is DiscardedScore {
+    return score === discardedScore
 }
 
 export function validateScore(score: Score, field: ScoreField): boolean {
@@ -64,62 +121,6 @@ function hasSomeOfKind(amount: number, score: ValidScore): boolean {
         .some(value => value >= amount)
 }
 
-type Group = {
-    values: Array<DieValue>,
-    value: DieValue
-} 
-function groupBy(array: Score) {
-    const groupedArray =  (array as Array<DieValue>).reduce((accumulator, die) => {
-       
-        if (accumulator.has(die)) {
-            const group = accumulator.get(die)!;
-            group.values.push(die);
-
-            accumulator.set(die, group);
-        }
-        else {
-            accumulator.set(die, { value: die, values: [die] })
-        }
-
-        return accumulator;
-        
-    }, new Map<DieValue, Group>());
-    
-    return Array.from(groupedArray.values());
-        
-};
-export type ScoreGroup = [smallGroup: Array<DieValue>, largeGroup: Array<DieValue>]
-
-export function sortSimpleScore(amount: number, score: ValidScore):  ScoreGroup{
-
-    const groupedResults = groupBy(score);
-
-    const smallGroup = groupedResults
-        .filter(group => group.value != amount)
-        .sort((a, b) => a.value - b.value)
-        .flatMap(group => group.values);
-    const largeGroup = groupedResults
-        .filter(group => group.value == amount)
-        .flatMap(group => group.values);
-
-    return [smallGroup, largeGroup] 
-}
-
-export function sortSomeOfKind(amount: number, score: ValidScore):  ScoreGroup{
-
-    const groupedResults = groupBy(score);
-
-    const smallGroup = groupedResults
-        .filter(group => group.values.length != amount)
-        .sort((a, b) => a.value - b.value)
-        .flatMap(group => group.values);
-    const largeGroup = groupedResults
-        .filter(group => group.values.length == amount)
-        .flatMap(group => group.values);
-
-    return [smallGroup, largeGroup] 
-}
-
 function isFullHouse(score: ValidScore): boolean {
 
     const grouped = score.reduce<Array<number>>(
@@ -138,14 +139,14 @@ function isFullHouse(score: ValidScore): boolean {
 
 function isStraight(amount: number, score: ValidScore): boolean {
 
-    const distinct = new Set(score)
+    const distinct = new Set(score.toArray())
     
     return distinct.size >= amount
 }
 
 function isFlush(score: ValidScore): boolean {
 
-    const distinct = new Set(score)
+    const distinct = new Set(score.toArray())
 
     return distinct.size == 1
 }
