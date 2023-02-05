@@ -1,8 +1,17 @@
+:root{
+    --dice-color-foreground: black;
+    --dice-padding: calc(var(--dice-size) / 12);
+    --dice-size: 1em;
+    /* The dice are exempt from theme colors */
+    --dice-color-background: white;
+}
+
 .die {
     width: var(--dice-size);
     height: var(--dice-size);
     font-family: monospace;
     white-space: nowrap;
+    font-weight: normal !important;
 
     display: inline-block;
     position: relative;
@@ -11,12 +20,6 @@
     background-color: rgb(234,234,234);
     border: 1px solid var(--dice-color-foreground);
     border-radius: calc(var(--dice-size) / 4);
-
-    --dice-padding: calc(var(--dice-size) / 12);
-    --dice-size: 1em;
-    /* The dice are exempt from theme colors */
-    --dice-color-foreground: black;
-    --dice-color-background: white;
 }
 
 .die::before {

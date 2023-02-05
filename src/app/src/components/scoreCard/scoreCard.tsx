@@ -5,6 +5,7 @@ import { useGameState } from "../../gameState/useGameState";
 import { PartOne } from './scoreCard.partOne';
 import type { PendingGameState, ActiveGameState, FinishedGameState } from '../../gameState/gameState';
 import { score, discardedScore } from '../../gameState/gameScore';
+import { PartTwo } from './scoreCard.partTwo';
 
 interface Props { }
 
@@ -48,6 +49,18 @@ accessGameState.applyScore({
     field: 'threes',
     score: discardedScore
 })
+fakeSocket.advance(gameState() as ActiveGameState);
+fakeSocket.advance(gameState() as ActiveGameState);
+accessGameState.applyScore({
+    field: 'threeOfKind',
+    score: score(6,4,4,1,4)
+})
+fakeSocket.advance(gameState() as ActiveGameState);
+fakeSocket.advance(gameState() as ActiveGameState);
+accessGameState.applyScore({
+    field: 'fourOfKind',
+    score: score(5,5,5,5,3)
+})
 
 export const ScoreCard: Component<Props> = () => {
 
@@ -57,7 +70,7 @@ export const ScoreCard: Component<Props> = () => {
                 <PartOne gameState={gameState() as ActiveGameState} />
             </article>
             <article id="part2" role="presentation">
-                TODO: Part 2
+                <PartTwo gameState={gameState() as ActiveGameState} />
             </article>
             <article id="score" role="presentation">
                 TODO: Total
