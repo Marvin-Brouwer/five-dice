@@ -6,9 +6,9 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { validateScore } from '../../gameState/gameScore.mjs';
+import { validateScore } from '../../src/gameState/gameScore.mjs';
 import { generateSimpleScores } from './gameScore.test.mjs';
-import { dice, Dice } from '../../gameState/gameConstants.mjs';
+import { dice, Dice } from '../../src/gameState/gameConstants.mjs';
 
 type TestFn = Exclude<Parameters<typeof test>[0], undefined>
 type TestContext = Parameters<TestFn>[0]

@@ -6,8 +6,8 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { applyRound, createGameState, PlayerRoundApplication, startGame } from '../../gameState/gameState.mjs';
-import { score } from '../../gameState/gameScore.mjs';
+import { applyRound, createGameState, PlayerRoundApplication, startGame } from '../../src/gameState/gameState.mjs';
+import { score } from '../../src/gameState/gameScore.mjs';
 
 const initialState = createGameState({
     playerId: 123,

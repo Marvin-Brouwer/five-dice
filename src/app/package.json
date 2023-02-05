@@ -9,8 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "tsc --noEmit && globstar -- node --loader tsx --test \"./src/tests/**/*.test.ts\"",
-    "test-out": "pnpm test > \"./src/tests/test-results.log\""
+    "test": "tsc --noEmit && globstar -- node --loader tsx --test \"./tests/**/*.test.ts\"",
+    "test-out": "pnpm test > \"./tests/test-results.log\""
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.0.1",
