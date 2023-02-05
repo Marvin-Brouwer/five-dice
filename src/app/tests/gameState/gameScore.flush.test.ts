@@ -6,7 +6,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { validateScore } from '../../src/gameState/gameScore.mjs';
+import { validateScore } from '../../src/gameState/gameScore.js';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(

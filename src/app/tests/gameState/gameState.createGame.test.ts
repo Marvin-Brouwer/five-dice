@@ -6,8 +6,8 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { createGameState, GameConfig } from '../../src/gameState/gameState.mjs';
-import { roundAmount } from '../../src/gameState/gameConstants.mjs';
+import { createGameState, GameConfig } from '../../src/gameState/gameState.js';
+import { roundAmount } from '../../src/gameState/gameConstants.js';
 
 describe('gameState', () => {
 
