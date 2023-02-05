@@ -1,7 +1,8 @@
 :root{
     --dice-color-foreground: black;
-    --dice-padding: calc(var(--dice-size) / 12);
+    --dice-padding: clamp(2px, calc((var(--dice-size) / 10)), calc((var(--dice-size) / 10)));
     --dice-size: 1em;
+    --dice-border-size: 1px;
     /* The dice are exempt from theme colors */
     --dice-color-background: white;
 }
@@ -18,7 +19,8 @@
     overflow: hidden;
 
     background-color: rgb(234,234,234);
-    border: 1px solid var(--dice-color-foreground);
+    border: solid var(--dice-color-foreground);
+    border-width: var(--dice-border-size);
     border-radius: calc(var(--dice-size) / 4);
 }
 
