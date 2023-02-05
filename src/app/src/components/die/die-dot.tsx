@@ -10,15 +10,15 @@ export const DieDot : Component<Props> = ({ row, columnName }) => {
 
     const showDot = row[columnName];
 
-    return (showDot && 
+    return (
         <span 
-            class="dot" 
+            class={showDot ? "dot" : "dot-space"} 
             style={`grid-area:${row.name}-${columnName}`} 
             aria-atomic="true" 
             aria-role="presentation"
             aria-hidden="true" 
             onselect={(e) => { e.preventDefault(); return false; }}
-            innerHTML={"<!-- • -->"}
+            innerHTML={showDot && "<!-- • -->" || ""}
         />
     )
 };

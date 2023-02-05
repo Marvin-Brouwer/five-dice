@@ -64,7 +64,7 @@ const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
         const [smallGroup, largeGroup] = sortSimpleScore(dice[field], fieldScore);
 
         return (<>
-            <span class="smallGroup">{smallGroup.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
+            <span class="smallGroup dim">{smallGroup.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
             <span>{largeGroup.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
         </>);
     }
