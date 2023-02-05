@@ -1,120 +1,197 @@
 
-import type { Accessor } from "solid-js";
-import { createSignal } from 'solid-js';
-import type { Score, ScoreField, ScoreFields, ValidScore } from "./gameScore.mjs";
-import { InvalidGameStateError } from './invalidGameStateError';
+import { emptyScorePad, roundAmount } from "./gameConstants.mjs";
+import { ScoreField, ScoreFields, Score, validateScore } from "./gameScore.mjs";
+import { InvalidGameStateError } from './invalidGameStateError.mjs';
+import { InvalidScoreError } from "./invalidScoreError.mjs";
 
 export type GameConfig = {
     players: ReadonlySet<number>
     playerId: Readonly<number>
+    trace?: Readonly<boolean>
 }
 
-export type GameStateAccessor =  Accessor<GameState>
-export type GameStateSetter = {
-    applyScore: (score: Score, field: ScoreField) => void
-}
-
-type GameStateHook = [state: GameStateAccessor, stateSetter: GameStateSetter]
-
-export type GameState =  {
-    config:Readonly<GameConfig>
-    gameStarted: boolean
-    currentPlayersTurn: boolean
-    currentRound: undefined | number
-
-    rounds: {
-        [round: number]: Record<keyof GameConfig['players'], Round | undefined>
-    }
-}
-
-export type Round = {
-    score: ValidScore,
+export type PlayerRound = {
+    score: Score,
     field: ScoreField,
     fields: ScoreFields
 }
+export type PlayerRoundApplication = 
+    | Pick<PlayerRound, 'score'> & {
+        field: Exclude<ScoreField, 'flush'>
+    }
+    | Pick<PlayerRound, 'score'> & { 
+        field: 'flush',
+        discard: Exclude<ScoreField, 'flush'>
+    }
+export type GameRound = Record<number, PlayerRound | undefined>;
 
-export type GameSocket = {
-    onGameStart: (handler: () => void) => void
-    onNextTurn: (handler: (previousTurn: number) => void) => void
+export type GameState = PendingGameState | ActiveGameState | FinishedGameState;
 
-    sendNextTurn: (config: GameConfig) => void
-    sendGameEnd: () => void
+type BaseGameState = 
+{
+    config: () => Required<Readonly<GameConfig>>
+    rounds: Array<GameRound>
 }
 
-export function useGameState(config: GameConfig, socket: GameSocket): GameStateHook {
+export type PendingGameState = BaseGameState & {
+    gameStarted: false
+    gameFinished: false
+    currentPlayer: undefined
+    currentPlayersTurn: false
+    currentRound: undefined
+};
+export type ActiveGameState = BaseGameState & {
+    gameStarted: true
+    gameFinished: false
+    currentPlayer: number
+    currentPlayersTurn: boolean
+    currentRound: number
+};
+export type FinishedGameState = BaseGameState & {
+    gameStarted: true
+    gameFinished: true
+    currentPlayer: undefined
+    currentPlayersTurn: false
+    currentRound: undefined
+};
 
-    const players = Array.from(config.players);
-    const [currentGameState, setGameState] = createSignal<GameState>({
+export function isActiveGameState(gameState: GameState): gameState is ActiveGameState {
+    if (!gameState.gameStarted) return false;
+    if (gameState.gameFinished) return false;
+    if (gameState.currentRound === undefined) return false;
+
+    return true;
+}
+export function isFinishedGameState(gameState: GameState): gameState is FinishedGameState {
+    if (!gameState.gameStarted) return false;
+
+    return gameState.gameFinished;
+}
+
+
+export function createGameState(gameConfig: GameConfig): PendingGameState {
+
+    const players = Array.from(gameConfig.players);
+    
+    const rounds = players.map((player) => (
+        [player, undefined] as [number, PlayerRound | undefined] 
+    ));
+
+    const config = () => ({
+        ...gameConfig,
+        trace: gameConfig.trace ?? false
+    });
+    return {
         config,
         gameStarted: false,
+        gameFinished: false,
+        currentPlayer: undefined,
         currentPlayersTurn: false,
         currentRound: undefined,
 
-        rounds: new Array(12).fill(
-            players.reduce(((p, player) => ({ ...p, [player]: undefined })), { })
+        rounds: new Array(roundAmount).fill(
+            Object.fromEntries(rounds)
         )
-    });
-    const changeGameState = (stateOverride: Partial<GameState>) => {
-        setGameState(prev => ({
-            ... prev,
-            ... stateOverride
-        }))
+    }
+}
+
+export function startGame(gameState: PendingGameState): ActiveGameState {
+
+    if (isActiveGameState(gameState as GameState)) throw InvalidGameStateError.gameAlreadyStarted(gameState);
+
+    const firstPlayer = gameState.config().players.values().next().value;
+    return {
+        ...gameState,
+        gameStarted: true,
+        currentPlayer: firstPlayer,
+        currentPlayersTurn: gameState.config().playerId == firstPlayer,
+        currentRound: 0
+    }
+}
+
+export function applyRound(gameState: ActiveGameState, score: PlayerRoundApplication): ActiveGameState {
+
+    if (!isActiveGameState(gameState as GameState)) throw InvalidGameStateError.gameNotStarted(gameState);
+
+    let rounds = gameState.rounds;
+    rounds[gameState.currentRound][gameState.currentPlayer] = processRound(gameState, score);
+
+    return {
+        ...gameState,
+        rounds
+    }
+}
+
+function processRound(gameState: ActiveGameState, score: PlayerRoundApplication): PlayerRound {
+
+    const previousFields = gameState.currentRound === 0
+        ? emptyScorePad
+        : gameState.rounds[gameState.currentRound! -1][gameState.currentPlayer]?.fields!;
+
+    if (!validateScore(score.score, score.field)) 
+        throw InvalidScoreError.invalidScore(score, gameState);
+    
+    const fields = {
+        ...previousFields,
     };
 
-    socket.onGameStart(() => {
-        if (currentGameState().gameStarted)
-            throw InvalidGameStateError.gameAlreadyStarted(currentGameState());
+    if (score.field === 'flush') {
+        if (!!!score.discard) 
+            throw InvalidScoreError.noDiscardOnFlush(score, gameState);
 
-            changeGameState({
-                gameStarted: true,
-                currentPlayersTurn: config.playerId == players[0],
-                currentRound: 1
-            });
-    })
+        fields[score.field].push([score.score, score.discard])
+    }
+    else {
+        if (previousFields[score.field] !== undefined)
+            throw InvalidScoreError.scoreAlreadyApplied(score, gameState);
 
-    socket.onNextTurn((previousTurn) => {
-        if (!currentGameState().gameStarted)
-            throw InvalidGameStateError.gameNotStarted(currentGameState());
+        fields[score.field] = score.score!;
+    }
 
-        const previousPlayerIndex = players.indexOf(previousTurn);
-        const nextPlayerIndex = previousPlayerIndex +1;
-
-        if (nextPlayerIndex < players.length) {
-            changeGameState({
-                currentPlayersTurn: config.playerId == players[nextPlayerIndex]
-            });
-            return;
-        }
-        if (currentGameState().currentRound! < 2) {
-            setGameState(prev => ({
-                ... prev,
-                currentPlayersTurn: config.playerId == players[nextPlayerIndex],
-                currentRound: (prev.currentRound! +1 as 0 | 1 | 2)
-            }))
-        }
-
-        const isLastPlayer = currentGameState().config.playerId == players.reverse()[0]
-        setGameState(prev => ({
-            ... prev,
-            currentPlayersTurn: config.playerId == players[nextPlayerIndex],
-            currentRound: undefined,
-            // end the game if last player
-            gameStarted: !isLastPlayer
-        }))
-
-        if (isLastPlayer) socket.sendGameEnd();
-    })
-
-    const gameStateSetter: GameStateSetter = {
-        applyScore(score, field) {
-            if (!currentGameState().currentPlayersTurn)
-            throw InvalidGameStateError.gameNotStarted(currentGameState());
-
-            // todo validate gamescore
-            // todo update game score
-            // todo implement rounds
-            socket.sendNextTurn(config)
-        }
+    return  {
+        field: score.field,
+        score: score.score,
+        fields
     };
-    return [currentGameState, gameStateSetter];
+}
+
+export function advance(gameState: ActiveGameState): ActiveGameState | FinishedGameState {
+
+    if (!isActiveGameState(gameState as GameState)) throw InvalidGameStateError.gameNotStarted(gameState);
+    // todo check if players turn everywhere
+
+    const players = Array.from(gameState.config().players);
+    gameState.config().trace && console.log('advance', 'gameState', JSON.stringify(gameState))
+
+
+    if(gameState.currentPlayer !== players.at(-1)) {
+        gameState.config().trace && console.log('advance', 'advance player');
+
+        return {
+            ...gameState,
+            currentPlayer: players[players.indexOf(gameState.currentPlayer) +1],
+            currentPlayersTurn: false
+        };
+    }
+    if(gameState.currentRound < roundAmount -1)  {
+        gameState.config().trace && console.log('advance', 'advance round');
+
+        return {
+            ...gameState,
+            currentPlayer: players[0],
+            currentPlayersTurn: gameState.config().playerId === players[0],
+            currentRound: gameState.currentRound +1
+        };
+    }
+
+    gameState.config().trace && console.log('advance', 'finish game');
+    return {
+        config: gameState.config,
+        rounds: gameState.rounds,
+        gameStarted: true,
+        gameFinished: true,
+        currentPlayer: undefined,
+        currentPlayersTurn: false,
+        currentRound: undefined
+    };
 }

@@ -6,8 +6,9 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { Dice, dice, DieValue, scoreValidator } from '../../gameState/gameScore.mjs';
+import { validateScore } from '../../gameState/gameScore.mjs';
 import { generateSimpleScores } from './gameScore.test.mjs';
+import { dice, Dice } from '../../gameState/gameConstants.mjs';
 
 type TestFn = Exclude<Parameters<typeof test>[0], undefined>
 type TestContext = Parameters<TestFn>[0]
@@ -35,7 +36,7 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
             await testContext.test(`validTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => scoreValidator(score, field);
+                const sut = () => validateScore(score, field);
 
                 // Act
                 const result = sut();
@@ -49,7 +50,7 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
             await testContext.test(`inValidTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => scoreValidator(score, field);
+                const sut = () => validateScore(score, field);
 
                 // Act
                 const result = sut();
