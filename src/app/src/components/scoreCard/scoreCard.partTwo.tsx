@@ -2,8 +2,8 @@ import "./scoreCard.css";
 
 import type { Component } from "solid-js";
 import type { ActiveGameState } from '../../gameState/gameState';
-import { dice, Dice } from '../../gameState/gameConstants';
-import { discardedScore, sortSimpleScore, isDiscarded } from '../../gameState/gameScore';
+import type { Dice } from '../../gameState/gameConstants';
+import { discardedScore, ScoreField, sortSomeOfKind, ValidScore, isDiscarded } from '../../gameState/gameScore';
 import type { PlayerRound } from '../../gameState/gameState';
 import { NumberDie } from "../die/number-die";
 
@@ -11,7 +11,7 @@ interface Props {
     gameState: ActiveGameState
 }
 
-export const PartOne: Component<Props> = ({ gameState }) => {
+export const PartTwo: Component<Props> = ({ gameState }) => {
 
     const currentRound = gameState.rounds[gameState.currentRound][gameState.currentPlayer];
     if (currentRound === undefined) return undefined;
@@ -20,35 +20,34 @@ export const PartOne: Component<Props> = ({ gameState }) => {
         <table>
             <thead>
                 <tr>
-                    <td class="sectionName">Part one</td> <td>Roll</td> <td>Score</td>
+                    <td class="sectionName">Part two</td> <td>Roll</td> <td>Score</td>
                 </tr>
             </thead>
             <tbody>
-                <PartOneRow field="aces" currentRound={currentRound} />
-                <PartOneRow field="deuces" currentRound={currentRound} />
-                <PartOneRow field="threes" currentRound={currentRound} />
-                <PartOneRow field="fours" currentRound={currentRound} />
-                <PartOneRow field="fives" currentRound={currentRound} />
-                <PartOneRow field="sixes" currentRound={currentRound} />
+                <SomeOfKindRow field='threeOfKind' currentRound={currentRound} />
+                <SomeOfKindRow field='fourOfKind' currentRound={currentRound} />
             </tbody>
         </table>
     );
 }
 
-const labels: Record<Dice, string> = {
-    'aces': "Aces",
-    'deuces': "Deuces",
-    'threes': "Threes",
-    'fours': "Fours",
-    'fives': "Fives",
-    'sixes': "Sixes"
+const labels: Record<Exclude<ScoreField, Dice>, string> = {
+    'threeOfKind' : "Three of a kind",
+    'fourOfKind' : "Four of a kind",
+    'fullHouse' : "Full house",
+    'smallStraight' : "Small straight",
+    'largeStraight' : "Large straight",
+    'flush' : "Flush",
+    'chance' : "Chance",
 }
 
 type PartOneRowProps = {
-    field: Dice,
+    field: Extract<ScoreField, 'threeOfKind' | 'fourOfKind'>,
     currentRound: PlayerRound
 }
-const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
+const SomeOfKindRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
+
+    const amount = field === 'threeOfKind' ? 3 : 4;
 
     // This will be replaced by i8n anyway
     const displayLabel = () => labels[field];
@@ -61,7 +60,7 @@ const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
             <span class="discard">/</span>
         );
 
-        const [smallGroup, largeGroup] = sortSimpleScore(dice[field], fieldScore);
+        const [smallGroup, largeGroup] = sortSomeOfKind(amount, fieldScore);
 
         return (<>
             <span class="smallGroup">{smallGroup.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
@@ -75,15 +74,14 @@ const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
         if (fieldScore === undefined) return ".";
         if (fieldScore === discardedScore) return "/";
 
-        const targetDice =  fieldScore.filter(value => value === dice[field]!)?.length;
-        return targetDice * dice[field];
+        return (fieldScore as Array<number>)
+            .reduce((accumulator, currentDie) => accumulator + currentDie, 0);
     }
     
     return (
 
         <tr>
             <td>
-                <NumberDie amount={dice[field]} />{" "}
                 {displayLabel}
             </td>
             <td>

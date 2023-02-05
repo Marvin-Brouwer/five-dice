@@ -29,7 +29,7 @@ export function score(one: DieValue, two: DieValue, three: DieValue, four: DieVa
     return [one, two, three, four, five]
 }
 
-function isDiscarded(score: Score): score is DiscardedScore {
+export function isDiscarded(score: Score): score is DiscardedScore {
     return score == discardedScore;
 }
 
@@ -62,6 +62,62 @@ function hasSomeOfKind(amount: number, score: ValidScore): boolean {
 
     return grouped
         .some(value => value >= amount)
+}
+
+type Group = {
+    values: Array<DieValue>,
+    value: DieValue
+} 
+function groupBy(array: Score) {
+    const groupedArray =  (array as Array<DieValue>).reduce((accumulator, die) => {
+       
+        if (accumulator.has(die)) {
+            const group = accumulator.get(die)!;
+            group.values.push(die);
+
+            accumulator.set(die, group);
+        }
+        else {
+            accumulator.set(die, { value: die, values: [die] })
+        }
+
+        return accumulator;
+        
+    }, new Map<DieValue, Group>());
+    
+    return Array.from(groupedArray.values());
+        
+};
+export type ScoreGroup = [smallGroup: Array<DieValue>, largeGroup: Array<DieValue>]
+
+export function sortSimpleScore(amount: number, score: ValidScore):  ScoreGroup{
+
+    const groupedResults = groupBy(score);
+
+    const smallGroup = groupedResults
+        .filter(group => group.value != amount)
+        .sort((a, b) => a.value - b.value)
+        .flatMap(group => group.values);
+    const largeGroup = groupedResults
+        .filter(group => group.value == amount)
+        .flatMap(group => group.values);
+
+    return [smallGroup, largeGroup] 
+}
+
+export function sortSomeOfKind(amount: number, score: ValidScore):  ScoreGroup{
+
+    const groupedResults = groupBy(score);
+
+    const smallGroup = groupedResults
+        .filter(group => group.values.length != amount)
+        .sort((a, b) => a.value - b.value)
+        .flatMap(group => group.values);
+    const largeGroup = groupedResults
+        .filter(group => group.values.length == amount)
+        .flatMap(group => group.values);
+
+    return [smallGroup, largeGroup] 
 }
 
 function isFullHouse(score: ValidScore): boolean {

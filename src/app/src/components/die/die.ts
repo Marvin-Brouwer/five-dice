@@ -36,12 +36,6 @@ export function calculateFace(amount: DieValue): Face {
     const _ = false;
     const x = true;
 
-    if (amount === 0) return fromArray([
-        [_,_,_],
-        [_,_,_],
-        [_,_,_]
-    ]);
-
     if (amount === 1) return fromArray([
         [_,_,_],
         [_,x,_],
