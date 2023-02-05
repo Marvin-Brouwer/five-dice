@@ -6,7 +6,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { scoreValidator } from '../../gameState/gameScore.mjs';
+import { validateScore } from '../../gameState/gameScore.mjs';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(
@@ -21,7 +21,7 @@ describe('scoreValidator', () => {
             await testContext.test(`validTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => scoreValidator(score, 'fullHouse');
+                const sut = () => validateScore(score, 'fullHouse');
 
                 // Act
                 const result = sut();
@@ -35,7 +35,7 @@ describe('scoreValidator', () => {
             await testContext.test(`inValidTheory [${score.join('')}]`, () => {
 
                 // Arrange
-                const sut = () => scoreValidator(score, 'fullHouse');
+                const sut = () => validateScore(score, 'fullHouse');
 
                 // Act
                 const result = sut();

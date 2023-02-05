@@ -1,13 +1,4 @@
-export type Dice = keyof Pick<ScoreFields, 'aces' | 'deuces' | 'threes' | 'fours' | 'fives' | 'sixes'>
-export type DieValue = 1 | 2 | 3 | 4 | 5 | 6;
-export const dice: Record<Dice, DieValue> = { 
-    aces: 1,
-    deuces: 2,
-    threes: 3,
-    fours: 4,
-    fives: 5,
-    sixes: 6
-};
+import { dice, DieValue } from "./gameConstants.mjs"
 
 export type ScoreField = keyof ScoreFields
 
@@ -29,7 +20,7 @@ export type ScoreFields = {
     fullHouse: Score | undefined
     smallStraight: Score | undefined
     largeStraight: Score | undefined
-    flush: Array<Score | undefined>
+    flush: Array<[Score, Exclude<ScoreField, 'flush'>]>
     chance: Score | undefined
 }
 
@@ -42,7 +33,7 @@ function isDiscarded(score: Score): score is DiscardedScore {
     return score == discardedScore;
 }
 
-export function scoreValidator(score: Score, field: ScoreField): boolean {
+export function validateScore(score: Score, field: ScoreField): boolean {
 
     if (isDiscarded(score)) return true;
 
