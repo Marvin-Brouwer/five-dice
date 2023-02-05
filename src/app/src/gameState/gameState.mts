@@ -2,6 +2,7 @@
 import type { Accessor } from "solid-js";
 import { createSignal } from 'solid-js';
 import type { Score, ScoreField, ScoreFields, ValidScore } from "./gameScore.mjs";
+import { InvalidGameStateError } from './invalidGameStateError';
 
 export type GameConfig = {
     players: ReadonlySet<number>
@@ -62,7 +63,7 @@ export function useGameState(config: GameConfig, socket: GameSocket): GameStateH
 
     socket.onGameStart(() => {
         if (currentGameState().gameStarted)
-            throw 'invalid state' //todo custom error
+            throw InvalidGameStateError.gameAlreadyStarted(currentGameState());
 
             changeGameState({
                 gameStarted: true,
@@ -73,7 +74,7 @@ export function useGameState(config: GameConfig, socket: GameSocket): GameStateH
 
     socket.onNextTurn((previousTurn) => {
         if (!currentGameState().gameStarted)
-            throw 'invalid state' //todo custom error
+            throw InvalidGameStateError.gameNotStarted(currentGameState());
 
         const previousPlayerIndex = players.indexOf(previousTurn);
         const nextPlayerIndex = previousPlayerIndex +1;
@@ -107,7 +108,7 @@ export function useGameState(config: GameConfig, socket: GameSocket): GameStateH
     const gameStateSetter: GameStateSetter = {
         applyScore(score, field) {
             if (!currentGameState().currentPlayersTurn)
-                throw 'invalidstate' // todo custom error
+            throw InvalidGameStateError.gameNotStarted(currentGameState());
 
             // todo validate gamescore
             // todo update game score
