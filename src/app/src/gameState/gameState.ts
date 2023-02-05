@@ -1,6 +1,7 @@
 
+import { isArray } from "xstate/lib/utils";
 import { emptyScorePad, roundAmount } from "./gameConstants";
-import { ScoreField, ScoreFields, Score, validateScore } from "./gameScore";
+import { ScoreField, ScoreFields, Score, validateScore, isDiscarded, discardedScore, ValidScore, FlushScore, DiscardedScore } from './gameScore';
 import { InvalidGameStateError } from './invalidGameStateError.js';
 import { InvalidScoreError } from "./invalidScoreError";
 
@@ -15,14 +16,29 @@ export type PlayerRound = {
     field: ScoreField,
     fields: ScoreFields
 }
-export type PlayerRoundApplication = 
-    | Pick<PlayerRound, 'score'> & {
-        field: Exclude<ScoreField, 'flush'>
-    }
-    | Pick<PlayerRound, 'score'> & { 
-        field: 'flush',
-        discard: Exclude<ScoreField, 'flush'>
-    }
+export type PlayerRoundApplication = PlayerRoundFieldApplication | PlayerRoundAppendFlushApplication | PlayerRoundDiscardFlushApplication
+export type PlayerRoundFieldApplication = {
+    score: Score
+    field: ScoreField
+}
+export type PlayerRoundAppendFlushApplication = { 
+    field: 'flush',
+    score: FlushScore
+}
+export type PlayerRoundDiscardFlushApplication = {  
+    field: 'flush',
+    score: DiscardedScore
+}
+
+function isAppendedFlushApplication(application: PlayerRoundApplication): application is PlayerRoundAppendFlushApplication {
+
+    return application.field === 'flush' && !isDiscarded(application.score);
+}
+function isDiscardedFlushApplication(application: PlayerRoundApplication): application is PlayerRoundDiscardFlushApplication {
+
+    return application.field === 'flush' && isDiscarded(application.score);
+}
+
 export type GameRound = Record<number, PlayerRound | undefined>;
 
 export type GameState = PendingGameState | ActiveGameState | FinishedGameState;
@@ -125,28 +141,74 @@ export function applyRound(gameState: ActiveGameState, score: PlayerRoundApplica
 function processRound(gameState: ActiveGameState, score: PlayerRoundApplication): PlayerRound {
 
     const previousFields = gameState.currentRound === 0
-        ? emptyScorePad
+        ? emptyScorePad()
         : gameState.rounds[gameState.currentRound! -1][gameState.currentPlayer]?.fields!;
 
     if (!validateScore(score.score, score.field)) 
         throw InvalidScoreError.invalidScore(score, gameState);
-    
-    const fields = {
-        ...previousFields,
+
+    if (isAppendedFlushApplication(score)) {
+        return processFlushAppendScore(gameState, previousFields, score);
+    }
+    if (isDiscardedFlushApplication(score)) {
+        return processFlushDiscardScore(gameState, previousFields, score);
+    }
+
+    return processNormalScore(gameState, previousFields, score);
+}
+
+function processFlushAppendScore(gameState: ActiveGameState, previousFields: ScoreFields, score: PlayerRoundAppendFlushApplication): PlayerRound {
+
+    const fields = { ...previousFields };
+        
+    const scoreField = fields[score.field];
+    // Lock the flush after discarding
+    if(isDiscarded(scoreField))
+        throw InvalidScoreError.flushDiscarded(score, gameState);
+
+    if (!!!score.score.discardField) 
+        throw InvalidScoreError.noDiscardOnFlush(score, gameState);
+
+    scoreField.push(score.score);
+
+    if (fields[score.score.discardField] !== undefined)
+        throw InvalidScoreError.scoreAlreadyApplied(score, gameState);
+
+    fields[score.score.discardField] = discardedScore;
+;
+
+    return  {
+        field: score.field,
+        score: score.score,
+        fields
     };
+}
+function processFlushDiscardScore(gameState: ActiveGameState, previousFields: ScoreFields, score: PlayerRoundDiscardFlushApplication): PlayerRound {
 
-    if (score.field === 'flush') {
-        if (!!!score.discard) 
-            throw InvalidScoreError.noDiscardOnFlush(score, gameState);
+    const fields = { ...previousFields };
 
-        fields[score.field].push([score.score, score.discard])
-    }
-    else {
-        if (previousFields[score.field] !== undefined)
-            throw InvalidScoreError.scoreAlreadyApplied(score, gameState);
+    if (isDiscarded(previousFields['flush']))
+        throw InvalidScoreError.scoreAlreadyApplied(score, gameState);
+    if ((previousFields[score.field] as Array<FlushScore>).length != 0)
+        throw InvalidScoreError.cannotDiscardFlush(score, gameState);
 
-        fields[score.field] = score.score!;
-    }
+    (fields[score.field] as Score) = score.score!;
+
+    return  {
+        field: score.field,
+        score: score.score,
+        fields
+    };
+}
+function processNormalScore(gameState: ActiveGameState, previousFields: ScoreFields, score: PlayerRoundFieldApplication): PlayerRound {
+
+    const fields = { ...previousFields };
+
+    if (fields[score.field] !== undefined)
+        throw InvalidScoreError.scoreAlreadyApplied(score, gameState);
+
+    (fields[score.field] as Score) = score.score!;
+
 
     return  {
         field: score.field,

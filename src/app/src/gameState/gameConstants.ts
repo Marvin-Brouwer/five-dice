@@ -13,19 +13,21 @@ export const dice: Record<Dice, DieValue> = {
     sixes: 6
 };
 
-export const emptyScorePad: ScoreFields = {
-    aces: undefined,
-    deuces: undefined,
-    threes: undefined,
-    fours: undefined,
-    fives: undefined,
-    sixes: undefined,
+export function emptyScorePad (): ScoreFields {
+    return {
+        aces: undefined,
+        deuces: undefined,
+        threes: undefined,
+        fours: undefined,
+        fives: undefined,
+        sixes: undefined,
 
-    threeOfKind: undefined,
-    fourOfKind: undefined,
-    fullHouse: undefined,
-    smallStraight: undefined,
-    largeStraight: undefined,
-    flush: new Array(),
-    chance: undefined,
+        threeOfKind: undefined,
+        fourOfKind: undefined,
+        fullHouse: undefined,
+        smallStraight: undefined,
+        largeStraight: undefined,
+        flush: new Array(),
+        chance: undefined,
+    };
 }

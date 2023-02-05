@@ -3,9 +3,11 @@ import "./scoreCard.css";
 import type { Component } from "solid-js";
 import type { ActiveGameState } from '../../gameState/gameState';
 import { dice, Dice } from '../../gameState/gameConstants';
-import { discardedScore, sortSimpleScore, isDiscarded } from '../../gameState/gameScore';
+import { discardedScore, isDiscarded } from '../../gameState/gameScore';
 import type { PlayerRound } from '../../gameState/gameState';
 import { NumberDie } from "../die/number-die";
+import { RowDisplay } from './scoreCard.rowDisplay';
+import { sortSimpleScore } from './scoreCard.sorter';
 
 interface Props { 
     gameState: ActiveGameState
@@ -51,7 +53,9 @@ type PartOneRowProps = {
 const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
 
     // This will be replaced by i8n anyway
-    const displayLabel = () => labels[field];
+    const displayLabel = () => (<>
+        <NumberDie amount={dice[field]} />{" "} {labels[field]}
+    </>);
 
     const displayRoll = () => {
         if (currentRound === undefined) return undefined;
@@ -73,25 +77,14 @@ const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
         if (currentRound === undefined) return ".";
         const fieldScore = currentRound.fields[field];
         if (fieldScore === undefined) return ".";
-        if (fieldScore === discardedScore) return "/";
+        if (isDiscarded(fieldScore)) return "/";
 
         const targetDice =  fieldScore.filter(value => value === dice[field]!)?.length;
         return targetDice * dice[field];
     }
     
     return (
-
-        <tr>
-            <td>
-                <NumberDie amount={dice[field]} />{" "}
-                {displayLabel}
-            </td>
-            <td>
-                {displayRoll}
-            </td>
-            <td>
-                {displayScore}
-            </td>
-        </tr>
+        <RowDisplay 
+            displayLabel={displayLabel} displayRoll={displayRoll} displayScore={displayScore} />
     );
 };
