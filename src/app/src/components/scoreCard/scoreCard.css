@@ -2,13 +2,17 @@
     
     display: block;
     width: calc(100% - 2ex);
-    padding: 1ex;
+    padding: 0 1ex 1ex 1ex;
 }
 #score-card article {
     
     display: block;
     width: 100%;
-    margin-bottom: 4.5ex;
+    margin-bottom: 2.5ex;
+}
+#score-card article:last-child {
+    
+    margin-bottom: .2ex;
 }
 
 #score-card table {
@@ -19,27 +23,40 @@
 }
 
 #score-card table td {
+    position: relative;
     text-align: right;
     padding: .5ex;
     border: 1px solid var(--theme-foreground-primary);
 }
 #score-card table thead td {
+    font-weight: bold !important;
     text-align: left;
     text-transform: uppercase;
 }
 #score-card table td {
     padding-right: 1ex;
 }
-#score-card table td:first-child {
+#score-card table td.label-column {
     font-weight: bold;
     text-align: left;
     text-transform: uppercase;
-    width: 45%;
 }
-#score-card table td:last-child {
-    width: 5%;
+#score-card table td.roll-column {
+    margin: 0;
+    padding-right: .5ex;
+    width: 14ex;
 }
-#score-card table td:first-child .die {
+#score-card table >:not(thead) td.roll-column {
+    padding-left: 0;
+}
+#score-card table td.score-column {
+    width: 5ex;
+    padding-right: .5ex;
+}
+#score-card table td.totals-column {
+    width: calc(14ex + 5ex + 1.5ex);
+}
+#score-card table td.label-column .die {
     font-weight: normal !important;
     font-size: 2.8ex;
     margin-bottom: -.5ex;
@@ -47,7 +64,7 @@
     --dice-padding: .2ex !important;
 }
 
-#score-card table td:not(:first-child) .die {
+#score-card table td.roll-column .die {
     font-weight: normal !important;
     margin-bottom: -.5ex;
     margin-left: .2ex;
@@ -63,7 +80,11 @@ span.smallGroup {
     opacity: .9;
 }
 span.many {
+    font-weight: bold;
+    display: block;
+    float:left;
     font-size: 1.5ex;
-    margin-left: .7ex;
-    margin-right: -.5ex;
+    margin-right: 0;
+    width: 2.5ex;
+    text-align: right;
 }

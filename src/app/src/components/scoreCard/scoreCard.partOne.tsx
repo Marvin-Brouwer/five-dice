@@ -18,7 +18,7 @@ export const PartOne: Component<Props> = ({ scorePad }) => {
         <table>
             <thead>
                 <tr>
-                    <td class="sectionName">Part one</td> <td>Roll</td> <td>Score</td>
+                    <td class="sectionName label-column">Part one</td> <td class="roll-column">Roll</td> <td class="score-column">Score</td>
                 </tr>
             </thead>
             <tbody>
