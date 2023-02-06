@@ -2,7 +2,7 @@ import "./die.css";
 import "./number-die.css";
 
 import { DieFace } from "./die-face";
-import type { DieValue } from "../../gameState/gameConstants";
+import type { DieValue } from "../../game/gameConstants";
 import type { Component } from 'solid-js';
 
 interface Props {

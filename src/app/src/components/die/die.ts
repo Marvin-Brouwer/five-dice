@@ -1,4 +1,4 @@
-import type { DieValue } from '../../gameState/gameConstants';
+import type { DieValue } from '../../game/gameConstants';
 
 export type Face = {
     top: Row,

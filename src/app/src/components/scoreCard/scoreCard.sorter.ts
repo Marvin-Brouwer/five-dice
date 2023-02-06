@@ -1,12 +1,12 @@
-import type { ValidScore, Score } from "../../gameState/gameScore";
-import type { DieValue } from '../../gameState/gameConstants';
+import type { ValidScore, ScoreContainer } from "../../game/score/score";
+import type { DieValue } from '../../game/gameConstants';
 
 type Group = {
     values: Array<DieValue>,
     value: DieValue
 } 
-function groupBy(array: Score) {
-    const groupedArray =  (array as Array<DieValue>).reduce((accumulator, die) => {
+function groupBy(array: ValidScore) {
+    const groupedArray =  array.reduce((accumulator, die) => {
        
         if (accumulator.has(die)) {
             const group = accumulator.get(die)!;

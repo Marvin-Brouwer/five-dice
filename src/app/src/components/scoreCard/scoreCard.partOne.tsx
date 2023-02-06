@@ -1,22 +1,18 @@
 import "./scoreCard.css";
 
-import type { Component } from "solid-js";
-import type { ActiveGameState } from '../../gameState/gameState';
-import { dice, Dice } from '../../gameState/gameConstants';
-import { discardedScore, isDiscarded } from '../../gameState/gameScore';
-import type { PlayerRound } from '../../gameState/gameState';
+import type { Accessor, Component } from "solid-js";
+import { dice, Dice } from '../../game/gameConstants';
+import type { ScorePad } from '../../game/score/scorePad';
 import { NumberDie } from "../die/number-die";
 import { RowDisplay } from './scoreCard.rowDisplay';
 import { sortSimpleScore } from './scoreCard.sorter';
+import { isDiscarded } from '../../game/score/score';
 
 interface Props { 
-    gameState: ActiveGameState
+    scorePad: Accessor<Readonly<ScorePad>>
 }
 
-export const PartOne: Component<Props> = ({ gameState }) => {
-
-    const currentRound = gameState.rounds[gameState.currentRound][gameState.currentPlayer];
-    if (currentRound === undefined) return undefined;
+export const PartOne: Component<Props> = ({ scorePad }) => {
 
     return (
         <table>
@@ -26,12 +22,12 @@ export const PartOne: Component<Props> = ({ gameState }) => {
                 </tr>
             </thead>
             <tbody>
-                <PartOneRow field="aces" currentRound={currentRound} />
-                <PartOneRow field="deuces" currentRound={currentRound} />
-                <PartOneRow field="threes" currentRound={currentRound} />
-                <PartOneRow field="fours" currentRound={currentRound} />
-                <PartOneRow field="fives" currentRound={currentRound} />
-                <PartOneRow field="sixes" currentRound={currentRound} />
+                <PartOneRow field="aces" scorePad={scorePad} />
+                <PartOneRow field="deuces" scorePad={scorePad} />
+                <PartOneRow field="threes" scorePad={scorePad} />
+                <PartOneRow field="fours" scorePad={scorePad} />
+                <PartOneRow field="fives" scorePad={scorePad} />
+                <PartOneRow field="sixes" scorePad={scorePad} />
             </tbody>
         </table>
     );
@@ -46,11 +42,10 @@ const labels: Record<Dice, string> = {
     'sixes': "Sixes"
 }
 
-type PartOneRowProps = {
-    field: Dice,
-    currentRound: PlayerRound
+type PartOneRowProps = Props & {
+    field: Dice
 }
-const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
+const PartOneRow : Component<PartOneRowProps> = ({ field, scorePad }) => {
 
     // This will be replaced by i8n anyway
     const displayLabel = () => (<>
@@ -58,8 +53,7 @@ const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
     </>);
 
     const displayRoll = () => {
-        if (currentRound === undefined) return undefined;
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return undefined;
         if (isDiscarded(fieldScore)) return (
             <span class="discard">/</span>
@@ -74,8 +68,7 @@ const PartOneRow : Component<PartOneRowProps> = ({ field, currentRound }) => {
     }
 
     const displayScore = () => {
-        if (currentRound === undefined) return ".";
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return ".";
         if (isDiscarded(fieldScore)) return "/";
 

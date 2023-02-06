@@ -8,7 +8,7 @@ import assert from 'node:assert';
 
 import { ActiveGameState, advance, applyRound, createGameState, isFinishedGameState, PlayerRoundApplication, startGame } from '../../src/gameState/gameState.js';
 import { score } from '../../src/gameState/gameScore.js';
-import { roundAmount } from '../../src/gameState/gameConstants.js';
+import { roundAmount } from '../../src/game/gameConstants.js';
 
 const initialState = createGameState({
     playerId: 123,

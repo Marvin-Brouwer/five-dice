@@ -7,7 +7,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
 import { createGameState, GameConfig } from '../../src/gameState/gameState.js';
-import { roundAmount } from '../../src/gameState/gameConstants.js';
+import { roundAmount } from '../../src/game/gameConstants.js';
 
 describe('gameState', () => {
 
