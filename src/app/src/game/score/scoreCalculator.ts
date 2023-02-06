@@ -4,7 +4,9 @@ import type { ScorePad } from './scorePad';
 import { InvalidScoreError } from "./invalidScoreError.js";
 import { isFlushScore } from './score';
 
-export function calculateScore(score: ScoreContainer | undefined, field: ScoreField): number {
+export function calculateScore(scorePad: ScorePad, field: ScoreField): number {
+
+    const score = scorePad[field];
 
     if (score === undefined) return 0;
     if (isDiscarded(score)) return 0;
@@ -47,19 +49,15 @@ function calculateFlush(score: Array<ValidScore>): number {
         .reduce((reducer, _) => reducer + additionalFlushScore, firstFlushScore);
 }
 
-function calculateScoreForPad(scorePad: ScorePad, field: ScoreField) {
-    return calculateScore(scorePad[field], field);
-}
-
 export function calculatePartOneSubTotal(scorePad: ScorePad): number {
 
     return (
-        calculateScoreForPad(scorePad, 'aces') + 
-        calculateScoreForPad(scorePad, 'deuces') + 
-        calculateScoreForPad(scorePad, 'threes') + 
-        calculateScoreForPad(scorePad, 'fours') + 
-        calculateScoreForPad(scorePad, 'fives') + 
-        calculateScoreForPad(scorePad, 'sixes')
+        calculateScore(scorePad, 'aces') + 
+        calculateScore(scorePad, 'deuces') + 
+        calculateScore(scorePad, 'threes') + 
+        calculateScore(scorePad, 'fours') + 
+        calculateScore(scorePad, 'fives') + 
+        calculateScore(scorePad, 'sixes')
     );    
 }
 
@@ -78,13 +76,13 @@ export function calculatePartOneTotal(partOneSubTotal: number): number {
 export function calculatePartTwoTotal(scorePad: ScorePad): number {
 
     return (
-        calculateScoreForPad(scorePad, 'threeOfKind') + 
-        calculateScoreForPad(scorePad, 'fourOfKind') + 
-        calculateScoreForPad(scorePad, 'fullHouse') + 
-        calculateScoreForPad(scorePad, 'smallStraight') + 
-        calculateScoreForPad(scorePad, 'largeStraight') + 
-        calculateScoreForPad(scorePad, 'flush') + 
-        calculateScoreForPad(scorePad, 'chance')
+        calculateScore(scorePad, 'threeOfKind') + 
+        calculateScore(scorePad, 'fourOfKind') + 
+        calculateScore(scorePad, 'fullHouse') + 
+        calculateScore(scorePad, 'smallStraight') + 
+        calculateScore(scorePad, 'largeStraight') + 
+        calculateScore(scorePad, 'flush') + 
+        calculateScore(scorePad, 'chance')
     );    
 }
 
