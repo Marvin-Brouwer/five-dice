@@ -1,22 +1,20 @@
 import "./scoreCard.css";
 
 import type { Component } from "solid-js";
-import type { ActiveGameState } from '../../gameState/gameState';
-import type { Dice, DieValue } from '../../gameState/gameConstants';
-import { discardedScore, ScoreField, isDiscarded } from '../../gameState/gameScore';
-import type { PlayerRound } from '../../gameState/gameState';
+import type { Dice } from '../../game/gameConstants';
 import { NumberDie } from "../die/number-die";
 import { RowDisplay } from './scoreCard.rowDisplay';
 import { sortSomeOfKind, sortFullHouse, sortStraight } from './scoreCard.sorter';
+import type { Accessor } from 'solid-js';
+import type { ScorePad } from "../../game/score/scorePad";
+import type { ScoreField } from '../../game/gameConstants';
+import { isDiscarded } from '../../game/score/score';
 
 interface Props { 
-    gameState: ActiveGameState
+    scorePad: Accessor<Readonly<ScorePad>>
 }
 
-export const PartTwo: Component<Props> = ({ gameState }) => {
-
-    const currentRound = gameState.rounds[gameState.currentRound][gameState.currentPlayer];
-    if (currentRound === undefined) return undefined;
+export const PartTwo: Component<Props> = ({ scorePad }) => {
 
     return (
         <table>
@@ -26,13 +24,13 @@ export const PartTwo: Component<Props> = ({ gameState }) => {
                 </tr>
             </thead>
             <tbody>
-                <SomeOfKindRow field='threeOfKind' currentRound={currentRound} />
-                <SomeOfKindRow field='fourOfKind' currentRound={currentRound} />
-                <FullHouseRow currentRound={currentRound} />
-                <SomeStraightRow field='smallStraight' currentRound={currentRound} />
-                <SomeStraightRow field='largeStraight' currentRound={currentRound} />
-                <FlushRow currentRound={currentRound} />
-                <ChanceRow currentRound={currentRound} />
+                <SomeOfKindRow field='threeOfKind' scorePad={scorePad} />
+                <SomeOfKindRow field='fourOfKind' scorePad={scorePad} />
+                <FullHouseRow scorePad={scorePad} />
+                <SomeStraightRow field='smallStraight' scorePad={scorePad} />
+                <SomeStraightRow field='largeStraight' scorePad={scorePad} />
+                <FlushRow scorePad={scorePad} />
+                <ChanceRow scorePad={scorePad} />
             </tbody>
         </table>
     );
@@ -48,11 +46,10 @@ const labels: Record<Exclude<ScoreField, Dice>, string> = {
     'chance' : "Chance",
 }
 
-type SomeOfKindRowProps = {
-    field: Extract<ScoreField, 'threeOfKind' | 'fourOfKind'>,
-    currentRound: PlayerRound
+type SomeOfKindRowProps = Props & {
+    field: Extract<ScoreField, 'threeOfKind' | 'fourOfKind'>
 }
-const SomeOfKindRow : Component<SomeOfKindRowProps> = ({ field, currentRound }) => {
+const SomeOfKindRow : Component<SomeOfKindRowProps> = ({ field, scorePad }) => {
 
     const amount = field === 'threeOfKind' ? 3 : 4;
 
@@ -60,8 +57,7 @@ const SomeOfKindRow : Component<SomeOfKindRowProps> = ({ field, currentRound }) 
     const displayLabel = () => labels[field];
 
     const displayRoll = () => {
-        if (currentRound === undefined) return undefined;
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return undefined;
         if (isDiscarded(fieldScore)) return (
             <span class="discard">/</span>
@@ -76,8 +72,7 @@ const SomeOfKindRow : Component<SomeOfKindRowProps> = ({ field, currentRound }) 
     }
 
     const displayScore = () => {
-        if (currentRound === undefined) return ".";
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return ".";
         if (isDiscarded(fieldScore)) return "/";
 
@@ -91,10 +86,8 @@ const SomeOfKindRow : Component<SomeOfKindRowProps> = ({ field, currentRound }) 
     );
 };
 
-type FullHouseRowProps = {
-    currentRound: PlayerRound
-}
-const FullHouseRow : Component<FullHouseRowProps> = ({ currentRound }) => {
+type FullHouseRowProps = Props
+const FullHouseRow : Component<FullHouseRowProps> = ({ scorePad }) => {
 
     const field = 'fullHouse';
 
@@ -102,8 +95,7 @@ const FullHouseRow : Component<FullHouseRowProps> = ({ currentRound }) => {
     const displayLabel = () => labels[field];
 
     const displayRoll = () => {
-        if (currentRound === undefined) return undefined;
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return undefined;
         if (isDiscarded(fieldScore)) return (
             <span class="discard">/</span>
@@ -118,10 +110,9 @@ const FullHouseRow : Component<FullHouseRowProps> = ({ currentRound }) => {
     }
 
     const displayScore = () => {
-        if (currentRound === undefined) return ".";
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return ".";
-        if (fieldScore === discardedScore) return "/";
+        if (isDiscarded(fieldScore)) return "/";
 
         return 25;
     }
@@ -133,11 +124,10 @@ const FullHouseRow : Component<FullHouseRowProps> = ({ currentRound }) => {
 };
 
 
-type SomeStraightRowProps = {
+type SomeStraightRowProps = Props & {
     field: Extract<ScoreField, 'smallStraight' | 'largeStraight'>,
-    currentRound: PlayerRound
 }
-const SomeStraightRow : Component<SomeStraightRowProps> = ({ field, currentRound }) => {
+const SomeStraightRow : Component<SomeStraightRowProps> = ({ field, scorePad }) => {
 
     const amount = field === 'smallStraight' ? 4 : 5;
     const score = field === 'smallStraight' ? 30 : 40;
@@ -146,8 +136,7 @@ const SomeStraightRow : Component<SomeStraightRowProps> = ({ field, currentRound
     const displayLabel = () => labels[field];
 
     const displayRoll = () => {
-        if (currentRound === undefined) return undefined;
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return undefined;
         if (isDiscarded(fieldScore)) return (
             <span class="discard">/</span>
@@ -162,8 +151,7 @@ const SomeStraightRow : Component<SomeStraightRowProps> = ({ field, currentRound
     }
 
     const displayScore = () => {
-        if (currentRound === undefined) return ".";
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return ".";
         if (isDiscarded(fieldScore)) return "/";
 
@@ -176,10 +164,8 @@ const SomeStraightRow : Component<SomeStraightRowProps> = ({ field, currentRound
     );
 };
 
-type FlushRowProps = {
-    currentRound: PlayerRound
-}
-const FlushRow : Component<FlushRowProps> = ({ currentRound }) => {
+type FlushRowProps = Props
+const FlushRow : Component<FlushRowProps> = ({ scorePad }) => {
 
     const field = 'flush';
 
@@ -187,8 +173,7 @@ const FlushRow : Component<FlushRowProps> = ({ currentRound }) => {
     const displayLabel = () => labels[field];
 
     const displayRoll = () => {
-        if (currentRound === undefined) return undefined;
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return undefined;
         if (isDiscarded(fieldScore)) return (
             <span class="discard">/</span>
@@ -205,8 +190,7 @@ const FlushRow : Component<FlushRowProps> = ({ currentRound }) => {
     }
 
     const displayScore = () => {
-        if (currentRound === undefined) return ".";
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return ".";
         if (isDiscarded(fieldScore)) return "/";
 
@@ -219,10 +203,8 @@ const FlushRow : Component<FlushRowProps> = ({ currentRound }) => {
     );
 };
 
-type ChanceRowProps = {
-    currentRound: PlayerRound
-}
-const ChanceRow : Component<ChanceRowProps> = ({ currentRound }) => {
+type ChanceRowProps = Props
+const ChanceRow : Component<ChanceRowProps> = ({ scorePad }) => {
 
     const field = 'chance';
 
@@ -230,8 +212,7 @@ const ChanceRow : Component<ChanceRowProps> = ({ currentRound }) => {
     const displayLabel = () => labels[field];
 
     const displayRoll = () => {
-        if (currentRound === undefined) return undefined;
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return undefined;
         if (isDiscarded(fieldScore)) return (
             <span class="discard">/</span>
@@ -244,8 +225,7 @@ const ChanceRow : Component<ChanceRowProps> = ({ currentRound }) => {
     }
 
     const displayScore = () => {
-        if (currentRound === undefined) return ".";
-        const fieldScore = currentRound.fields[field];
+        const fieldScore = scorePad()[field];
         if (fieldScore === undefined) return ".";
         if (isDiscarded(fieldScore)) return "/";
 

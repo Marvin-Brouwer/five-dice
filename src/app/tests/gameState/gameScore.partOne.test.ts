@@ -8,7 +8,7 @@ import assert from 'node:assert';
 
 import { validateScore } from '../../src/gameState/gameScore.js';
 import { generateSimpleScores } from './gameScore.test.mjs';
-import { dice, Dice } from '../../src/gameState/gameConstants.js';
+import { dice, Dice } from '../../src/game/gameConstants.js';
 
 type TestFn = Exclude<Parameters<typeof test>[0], undefined>
 type TestContext = Parameters<TestFn>[0]
