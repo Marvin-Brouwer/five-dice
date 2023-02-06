@@ -6,6 +6,7 @@ import type { Component } from "solid-js";
 import { PartOne } from './scoreCard.partOne';
 import { PartTwo } from './scoreCard.partTwo';
 import { score, discard } from '../../game/score/score';
+import { Totals } from './scoreCard.totals';
 
 interface Props { }
 const [scorePad, applyScore] = useScorePad();
@@ -70,7 +71,7 @@ export const ScoreCard: Component<Props> = () => {
                 <PartTwo scorePad={scorePad} />
             </article>
             <article id="score" role="presentation">
-                TODO: Total
+                <Totals scorePad={scorePad} />
             </article>
         </section>
     );

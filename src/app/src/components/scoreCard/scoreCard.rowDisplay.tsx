@@ -43,13 +43,13 @@ export const RowDisplay : Component<Props> = ({ icon, field, scorePad, displayRo
 
     return (
         <tr>
-            <td>
+            <td class="label-column">
                 {icon}{labels[field]}
             </td>
-            <td>
+            <td class="roll-column">
                 {displayRoll}
             </td>
-            <td>
+            <td class="score-column">
                 {displayScore}
             </td>
         </tr>

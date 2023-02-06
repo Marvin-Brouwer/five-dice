@@ -18,7 +18,7 @@ export const PartTwo: Component<Props> = ({ scorePad }) => {
         <table>
             <thead>
                 <tr>
-                    <td class="sectionName">Part two</td> <td>Roll</td> <td>Score</td>
+                <td class="sectionName label-column">Part two</td> <td class="roll-column">Roll</td> <td class="score-column">Score</td>
                 </tr>
             </thead>
             <tbody>
@@ -129,8 +129,8 @@ const FlushRow : Component<FlushRowProps> = ({ scorePad }) => {
         if (lastScore === undefined) return undefined;
         
         return (<>
-            <span>{lastScore.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
             {plural && <span class="many">+{fieldScore.length -1}</span>}
+            <span>{lastScore.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
         </>);
     }
     

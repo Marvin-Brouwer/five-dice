@@ -68,9 +68,9 @@ export function hasPartOneBonus(partOneSubTotal: number): boolean {
     
 }
 
-export function calculatePartOneTotal(partOneSubTotal: number): number {
-    if (!hasPartOneBonus(partOneSubTotal)) return partOneSubTotal;
-    return partOneSubTotal + partOneBonus;
+export function calculatePartOneBonus(partOneSubTotal: number): number {
+    if (!hasPartOneBonus(partOneSubTotal)) return 0;
+    return partOneBonus;
 }
 
 export function calculatePartTwoTotal(scorePad: ScorePad): number {
@@ -86,6 +86,6 @@ export function calculatePartTwoTotal(scorePad: ScorePad): number {
     );    
 }
 
-export function calculateGameTotal(partOneTotal: number, partTwoTotal: number): number {
-    return partOneTotal + partTwoTotal;
+export function calculateGameTotal(partOneTotal: number, bonus: number, partTwoTotal: number): number {
+    return partOneTotal + bonus + partTwoTotal;
 }
