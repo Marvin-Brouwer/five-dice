@@ -88,3 +88,46 @@ span.many {
     width: 2.5ex;
     text-align: right;
 }
+
+span.score-display {
+    display: block;
+    float: right;
+    text-transform: none;
+    font-style: italic;
+    font-weight: lighter;
+    color: var(--theme-foreground-hint);
+    font-size: 1.7ex;
+    width: fit-content;
+}
+span.score-display.responsive-score-display .long {
+    display: none;
+}
+
+@media only screen and (max-width: 390px) {
+    span.score-display {
+        display: none;
+    }
+    #score-card {
+        margin-left: -1ex;
+        width: 100%;
+        padding: 0 0 .5 0;
+    }
+}
+@media only screen and (max-width: 420px) {
+    span.score-display {
+        font-size: 1.5ex;
+    }
+    #score-card {
+        margin-left: -1ex;
+        width: 100%;
+        padding: 0 0 .5 0;
+    }
+}
+@media only screen and (min-width: 500px) {
+    span.score-display.responsive-score-display .short {
+        display: none;
+    }
+    span.score-display.responsive-score-display .long {
+        display: block !important;
+    }
+}
