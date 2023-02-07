@@ -6,6 +6,7 @@
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
+    --theme-background-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgb(135, 214, 135);
 }
 
@@ -17,6 +18,7 @@
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(34 34 34);
     --theme-background-primary: rgb(74 74 74);
+    --theme-background-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgb(135, 214, 135);
 }
 
@@ -28,6 +30,7 @@
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
+    --theme-background-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgb(135, 214, 135);
 }
 

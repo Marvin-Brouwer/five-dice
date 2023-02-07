@@ -1,8 +1,42 @@
 #score-card {
-    
     display: block;
     width: calc(100% - 2ex);
     padding: 0 1ex 1ex 1ex;
+}
+#score-card aside {
+    display: none;
+    font-size: 2.8ex;
+    margin: -.5ex 0 1.5ex .0;
+    padding: 0 0 .5ex 0;
+}
+#score-card aside span {
+    display: inline-block;
+    font-size: 2.8ex;
+    margin:0;
+    padding: 0;
+}
+#score-card aside .name {
+    display: inline-block;
+    width: calc(100% - 4.7ex);
+    margin-top: .7ex;
+    margin-bottom: -.7ex;
+    border-bottom: 1px solid var(--theme-foreground-primary);
+}
+#score-card aside .round-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom:.5ex;
+    font-size: .8ex;
+    text-transform: uppercase;
+}
+#score-card aside .round-number {
+    text-align: center;
+    float: right;
+    width: 3.5ex;
+    height: 3.5ex;
+    position: relative;
+    background-color: var(--theme-background-secondary);
 }
 #score-card article {
     
@@ -129,5 +163,13 @@ span.score-display.responsive-score-display .long {
     }
     span.score-display.responsive-score-display .long {
         display: block !important;
+    }
+}
+@media only screen and (min-height: 750px) {
+    #score-card aside {
+        display: block;
+    }
+    #score-card article {
+        margin-bottom: 3ex;
     }
 }
