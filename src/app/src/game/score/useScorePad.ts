@@ -5,7 +5,7 @@ import { ScoreApplication, applyScore } from './scoreApplicationProcessor';
 export type ScorePadAccessor =  Accessor<Readonly<ScorePad>>;
 export type ScorePadModifier = (score: ScoreApplication) => (Readonly<ScorePad> | void)
 
-type ScorePadSignal = [state: ScorePadAccessor, stateSetter: ScorePadModifier];
+export type ScorePadSignal = [state: ScorePadAccessor, stateSetter: ScorePadModifier];
 
 export function useScorePad(): ScorePadSignal {
 
