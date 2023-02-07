@@ -14,11 +14,11 @@
     color-scheme: dark;
     --theme-foreground-primary: white;
     --theme-foreground-secondary: rgb(208, 208, 208);
-    --theme-foreground-hint: rgb(158, 158, 158);
+    --theme-foreground-hint: rgb(117, 117, 117);
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(34 34 34);
     --theme-background-primary: rgb(74 74 74);
-    --theme-background-secondary: rgb(208, 208, 208);
+    --theme-background-secondary: rgb(115, 115, 115);
     --theme-background-focus: rgb(135, 214, 135);
 }
 
@@ -43,6 +43,7 @@
         --theme-foreground-hover: rgb(78, 189, 78);
         --theme-background-header: rgb(34 34 34);
         --theme-background-primary: rgb(74 74 74);
+        --theme-background-secondary: rgb(115, 115, 115);
         --theme-background-focus: rgb(135, 214, 135);
     }
 }
