@@ -27,7 +27,16 @@ export const Totals: Component<Props> = ({ scorePad }) => {
                     <td class="label-column">Total part 1</td> <td class="totals-column">{partOneSubTotal}</td>
                 </tr>
                 <tr>
-                    <td class="label-column">Bonus</td> <td class="totals-column">{bonus != 0 ? bonus : "."}</td>
+                    <td class="label-column">
+                        Bonus
+                        <span class="score-display responsive-score-display" aria-label="Adds 63 if part one ≥ 63">
+                            <span class="short"> +35 if part1 ≥ 63</span>
+                            <span class="long">Adds 63 if part one ≥ 63</span>
+                        </span>
+                    </td> 
+                    <td class="totals-column">
+                        {bonus != 0 ? bonus : "."}
+                    </td>
                 </tr>
                 <tr>
                     <td class="label-column">Total part 2</td> <td class="totals-column">{partTwoTotal}</td>

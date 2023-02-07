@@ -2,6 +2,7 @@
     color-scheme: light;
     --theme-foreground-primary: rgb(48, 48, 48);
     --theme-foreground-secondary: rgb(48, 48, 48);
+    --theme-foreground-hint: rgb(109, 109, 109);
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
@@ -12,6 +13,7 @@
     color-scheme: dark;
     --theme-foreground-primary: white;
     --theme-foreground-secondary: rgb(208, 208, 208);
+    --theme-foreground-hint: rgb(158, 158, 158);
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(34 34 34);
     --theme-background-primary: rgb(74 74 74);
@@ -22,6 +24,7 @@
     color-scheme: light;
     --theme-foreground-primary: rgb(48, 48, 48);
     --theme-foreground-secondary: rgb(48, 48, 48);
+    --theme-foreground-hint: rgb(109, 109, 109);
     --theme-foreground-hover: rgb(78, 189, 78);
     --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
@@ -33,6 +36,7 @@
         color-scheme: dark;
         --theme-foreground-primary: white;
         --theme-foreground-secondary: rgb(208, 208, 208);
+        --theme-foreground-hint: rgb(158, 158, 158);
         --theme-foreground-hover: rgb(78, 189, 78);
         --theme-background-header: rgb(34 34 34);
         --theme-background-primary: rgb(74 74 74);
