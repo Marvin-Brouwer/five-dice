@@ -1,0 +1,51 @@
+.die-button {
+    display: inline-flex;
+    box-sizing: border-box;
+    border-color: var(--dice-color-foreground);
+    border-width: 0;
+    border-radius: calc(var(--dice-size) / 4);
+    min-width: 1.7ex;
+    min-height: 1.7ex;
+    margin: .4ex;
+    overflow: visible;
+    padding: 0;
+    position: relative;
+    left: 0;
+    top: 0;
+    background: none;
+}
+.die-button:active {
+    outline:0;
+    border-width: 0;
+    background: none;
+    width: calc(1.7ex +2px);
+    height: calc(1.7ex +2px);
+}   
+.die-button:focus-visible,
+.die-button:hover {
+    outline:0;
+    border-width: 0;
+    background: none;
+}   
+.die-button:focus-visible .die,
+.die-button:hover .die {
+    outline:0;
+    border-width: 1px;
+    border-color: var(--theme-foreground-hover);
+}   
+.die-button:active .die {
+    border-color: var(--theme-foreground-hover);
+}   
+.die-button:active {
+    outline:0;
+    border-width: 2px;
+    border-color: var(--theme-foreground-hover);
+}   
+
+.die-button .die {
+    display: inline-block;
+    position: absolute;
+    padding: 0;
+    left: 0;
+    top: 0;
+}

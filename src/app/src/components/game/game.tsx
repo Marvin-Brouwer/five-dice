@@ -2,7 +2,7 @@ import { createSignal, Component } from 'solid-js';
 import { useScorePad } from '../../game/score/useScorePad';
 import { score, discard } from '../../game/score/score';
 import { ScoreCard } from '../scoreCard/scoreCard';
-import { ScoreInputDialog } from '../scoreInput_old/scoreInputDialog';
+import { ScoreInputDialog } from '../scoreInput/scoreInputDialog';
 
 const [round, setRound] = createSignal(1);
 const [scorePad, applyScore] = useScorePad();

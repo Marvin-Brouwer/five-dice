@@ -1,13 +1,14 @@
 :root{
-    --dice-color-foreground: black;
     --dice-padding: clamp(2px, calc((var(--dice-size) / 10)), calc((var(--dice-size) / 10)));
     --dice-size: 1em;
     --dice-border-size: 1px;
     /* The dice are exempt from theme colors */
     --dice-color-background: white;
+    --dice-color-foreground: black;
 }
 
 .die {
+    color: currentColor;
     width: var(--dice-size);
     height: var(--dice-size);
     font-family: monospace;
