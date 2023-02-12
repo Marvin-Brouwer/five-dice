@@ -1,0 +1,67 @@
+span.die-input {
+    display: inline-flex;
+    border-color: var(--dice-color-foreground);
+    border-width: 1px;
+    width: calc(var(--dice-size) - (var(--dice-padding) *2));
+    height: calc(var(--dice-size) - (var(--dice-padding) *1.5));
+    margin: .4ex;
+    overflow: visible;
+    padding: 0;
+    position: relative;
+    background: none;
+    font-size: inherit;
+}
+
+span.die-input input::-moz-selection,
+span.die-input input::selection {
+    color: transparent;
+    background:  var(--dice-color-background);
+}
+
+.die-input input[type="number"]:active,
+.die-input input[type="number"]:focus,
+.die-input input[type="number"]:focus-visible,
+.die-input input[type="number"]:hover,
+.die-input[data-keyboard-visible="true"] input[type="number"] {
+    outline: 1px solid;
+    outline-color:  var(--theme-foreground-hover);
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    border-width: 1px;
+    border-color: var(--theme-foreground-hover);
+}   
+
+.die-input .die {
+    padding: 0;
+    margin: 0;
+    width: var(--dice-size);
+    height: var(--dice-size);
+    position: relative;
+    z-index: 1;
+}
+.die-input input[type="number"]::-webkit-outer-spin-button,
+.die-input input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.die-input input[type="number"] {
+    -moz-appearance: textfield;
+    
+    display: inline-block;
+    box-sizing: border-box;
+    background-color: transparent;
+    text-align: center;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    color: transparent;
+    border: none;
+    border: 0px none;
+    border-radius: calc(var(--dice-size));
+}

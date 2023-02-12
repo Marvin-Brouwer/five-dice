@@ -3,11 +3,11 @@
     --theme-foreground-primary: rgb(48, 48, 48);
     --theme-foreground-secondary: rgb(48, 48, 48);
     --theme-foreground-hint: rgb(109, 109, 109);
-    --theme-foreground-hover: rgb(78, 189, 78);
+    --theme-foreground-hover: rgb(176, 0, 117);
     --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
     --theme-background-secondary: rgb(208, 208, 208);
-    --theme-background-focus: rgb(135, 214, 135);
+    --theme-background-focus: rgb(255, 153, 0);
 }
 
 [data-theme="dark"] {
@@ -15,11 +15,11 @@
     --theme-foreground-primary: white;
     --theme-foreground-secondary: rgb(208, 208, 208);
     --theme-foreground-hint: rgb(117, 117, 117);
-    --theme-foreground-hover: rgb(78, 189, 78);
+    --theme-foreground-hover: rgb(176, 0, 117);
     --theme-background-header: rgb(34 34 34);
     --theme-background-primary: rgb(74 74 74);
     --theme-background-secondary: rgb(115, 115, 115);
-    --theme-background-focus: rgb(135, 214, 135);
+    --theme-background-focus: rgb(255, 153, 0);
 }
 
 [data-theme="auto"]  {
@@ -27,11 +27,11 @@
     --theme-foreground-primary: rgb(48, 48, 48);
     --theme-foreground-secondary: rgb(48, 48, 48);
     --theme-foreground-hint: rgb(109, 109, 109);
-    --theme-foreground-hover: rgb(78, 189, 78);
+    --theme-foreground-hover: rgb(176, 0, 117);
     --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
     --theme-background-secondary: rgb(208, 208, 208);
-    --theme-background-focus: rgb(135, 214, 135);
+    --theme-background-focus: rgb(255, 153, 0);
 }
 
 @media (prefers-color-scheme:dark) {
@@ -40,11 +40,11 @@
         --theme-foreground-primary: white;
         --theme-foreground-secondary: rgb(208, 208, 208);
         --theme-foreground-hint: rgb(158, 158, 158);
-        --theme-foreground-hover: rgb(78, 189, 78);
+        --theme-foreground-hover: rgb(176, 0, 117);
         --theme-background-header: rgb(34 34 34);
         --theme-background-primary: rgb(74 74 74);
         --theme-background-secondary: rgb(115, 115, 115);
-        --theme-background-focus: rgb(135, 214, 135);
+        --theme-background-focus: rgb(255, 153, 0);
     }
 }
 
@@ -60,8 +60,8 @@ select option:checked {
     background-color: var(--theme-background-primary) !important;
 }
 select option:hover,
-    select option:focus,
-    select option:active {
+select option:focus,
+select option:active {
     outline-color: var(--theme-background-focus);
     background-color: var(--theme-background-focus)  !important;
 }
