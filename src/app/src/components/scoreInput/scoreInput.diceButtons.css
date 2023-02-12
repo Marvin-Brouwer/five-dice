@@ -1,0 +1,16 @@
+.score-input .dice-buttons {
+    position: absolute;
+    bottom: 0;
+    z-index: 3;
+    display: grid;
+    width: fit-content;
+    gap: 1ex;
+    grid-template-columns: 8ex 8ex 8ex 8ex 8ex;
+    grid-template-rows: 12ex 10ex 10ex;
+    grid-template-areas: 
+        "a b c d e"
+        "value value value value value";
+    overflow: visible;
+    margin: 0 0 2ex 0;
+    padding: 1ex;
+}

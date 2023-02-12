@@ -1,7 +1,8 @@
-import { Accessor, createSignal, Component } from 'solid-js';
+import { createSignal, Component } from 'solid-js';
 import { useScorePad } from '../../game/score/useScorePad';
 import { score, discard } from '../../game/score/score';
 import { ScoreCard } from '../scoreCard/scoreCard';
+import { ScoreInputDialog } from '../scoreInput/scoreInputDialog';
 
 const [round, setRound] = createSignal(1);
 const [scorePad, applyScore] = useScorePad();
@@ -68,7 +69,8 @@ setRound((previous) => previous +1);
 
 export const Game: Component = () => {
     
-    return (
+    return (<>
         <ScoreCard playerName={() => "Marvin"} round={round} scorePad={scorePad} />
-    )
+        <ScoreInputDialog setRound={setRound} applyScore={applyScore} />
+    </>);
 }
