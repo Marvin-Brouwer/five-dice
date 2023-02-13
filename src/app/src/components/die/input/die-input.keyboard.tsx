@@ -25,7 +25,7 @@ export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialo
     createEffect(() => {
         if (!dialogOpen()) return;
         setTimeout(() => {
-            const input = keyboardReference.querySelector(`input[type="radio"][value="${getValue() ?? 0}"]`) as HTMLInputElement
+            const input = keyboardReference.querySelector(`input[type="radio"][value="${getValue() ?? 1}"]`) as HTMLInputElement
             input?.focus();
             input?.select();
         });
@@ -58,31 +58,32 @@ export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialo
         if (e.key === "5") { setValue(5); setItemFocus(5); }
         if (e.key === "6") { setValue(6); setItemFocus(6); }
 
+        if (itemFocus() === 0) setItemFocus(1);
         if (e.key === "ArrowLeft" || (e.shiftKey && e.key === "Tab")) {
             if (itemFocus() === 1) setItemFocus(6);
             else setItemFocus(itemFocus => itemFocus -1);
         }
         if (e.key === "ArrowRight" || e.key === "Tab") {
             if (itemFocus() === 6) setItemFocus(1);
-            else setItemFocus(itemFocus => itemFocus +1);
+            else setItemFocus(itemFocus => (itemFocus ?? 0) + 1);
         }
         if (e.key === "ArrowUp" || e.key === "ArrowDown") {
             if (itemFocus() <= 3) setItemFocus(itemFocus => itemFocus +3);
             else setItemFocus(itemFocus => itemFocus -3);
         }
 
-        const input = keyboardReference.querySelector(`input[type="radio"][value="${itemFocus()}"]`) as HTMLInputElement
+        const input = keyboardReference.querySelector(`input[type="radio"][value="${itemFocus() ?? 1}"]`) as HTMLInputElement
         input?.focus();
         input?.select();
 
         if (e.key === " ") {
-            setValue(Number(input.value) as DieValue)
             input?.click();
+            setValue(Number(input?.value ?? 1) as DieValue)
             openDialog(false);
             return handled();
         }
         if (e.key === "Enter"){ 
-            setValue(Number(input.value) as DieValue)
+            setValue(Number(input?.value ?? 1) as DieValue)
             openDialog(false);
             return handled();
         }

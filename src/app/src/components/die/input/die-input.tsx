@@ -1,6 +1,6 @@
 import "./die-input.css"
 
-import { Component, createMemo, JSX, Signal, createSignal, onMount, onCleanup, createEffect, createReaction, createComputed } from 'solid-js';
+import { Component, createMemo, JSX, Signal, createSignal, onMount, onCleanup, createEffect, createReaction, createComputed, Accessor } from 'solid-js';
 import type { DieValue } from '../../../game/gameConstants';
 import { NumberDie } from "../number-die";
 import { TextDie } from "../text-die";
@@ -11,11 +11,12 @@ type Props = JSX.HTMLAttributes<HTMLInputElement>
 & {
     name: string
     value: Signal<DieValue | undefined>,
+    disabled?: Accessor<boolean>
 }
 
-export const DieInput : Component<Props> = ({ value, name, ...props }) => {
+export const DieInput : Component<Props> = ({ value, name, disabled, ...props }) => {
 
-    let inputReference: HTMLInputElement;
+    let inputReference = props.ref! as HTMLInputElement;
 
     const [getValue, setValue] = value;
     const keyboardDialogState = createSignal(false);
@@ -29,7 +30,8 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
     }
     , getValue);
 
-    const handleInput = () => {     
+    const handleInput = () => {    
+        if (disabled?.()) return true; 
         if (inputReference.value === undefined || inputReference.value === '') return true;   
         if (Number.isNaN(inputReference.valueAsNumber)) return false;
         if (inputReference.valueAsNumber <= 1 && inputReference.valueAsNumber >= 6) { 
@@ -46,6 +48,16 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
             e.stopPropagation();
             return false;
         };
+        if (disabled?.()) return true;
+        if (keyboardVisible()) return true; 
+
+        if (e.shiftKey && (!Number.isInteger(e.key) && e.key !== "Tab"))  return true;
+        if (e.key === "1") { setValue(1); return handled(); }
+        if (e.key === "2") { setValue(2); return handled(); }
+        if (e.key === "3") { setValue(3); return handled(); }
+        if (e.key === "4") { setValue(4); return handled(); }
+        if (e.key === "5") { setValue(5); return handled(); }
+        if (e.key === "6") { setValue(6); return handled(); }
 
         if (e.key === " ") {
             setKeyBoardVisible(true);
@@ -59,6 +71,21 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
         return true;
     };
 
+    const handleClick = (e: MouseEvent) => {
+        const handled = () => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+
+            return false;
+        }
+        if (disabled?.()) return true;
+
+        setKeyBoardVisible(true);
+
+        return handled();
+    }
+
     const handleInputEvent = (e: Event) => {
         const handled = () => {
             e.preventDefault();
@@ -67,6 +94,7 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
 
             return false;
         }
+        if (disabled?.()) return true;
 
         if (handleInput())
             return handled();
@@ -89,16 +117,18 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
     }
     
     return (
-        <span class="die-input" data-name={name} data-keyboard-visible={keyboardVisible()}>
+        <span class="die-input" data-name={name} data-disabled={disabled?.()} data-keyboard-visible={keyboardVisible()}>
             {die}
-            <input type="number" value={getValue()} {...props}
+            <input type="number" 
+                value={getValue()} {...props}
                 ref={inputReference!} 
                 name={name}
+                disabled={disabled?.()}
                 onInput={handleInputEvent} 
                 onChange={handleInputEvent} 
                 onSelect={handleSelect}
                 onKeyDown={handleKeyEvent}
-                onClick={() => setKeyBoardVisible(true)}
+                onClick={handleClick}
             />
 
             <DieInputKeyboard value={value} name={name} keyboardDialogState={keyboardDialogState} />

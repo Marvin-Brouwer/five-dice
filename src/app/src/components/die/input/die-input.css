@@ -22,10 +22,10 @@ span.die-input input::selection {
     background:  var(--dice-color-background);
 }
 
-.die-input input[type="number"]:active,
+.die-input:not([data-disabled="true"]) input[type="number"]:active,
 .die-input input[type="number"]:focus,
 .die-input input[type="number"]:focus-visible,
-.die-input input[type="number"]:hover,
+.die-input:not([data-disabled="true"]) input[type="number"]:hover,
 .die-input[data-keyboard-visible="true"] input[type="number"] {
     outline: 1px solid;
     outline-color:  var(--theme-foreground-hover);
@@ -68,4 +68,8 @@ span.die-input input::selection {
     border: none;
     border: 0px none;
     border-radius: calc(var(--dice-size));
+}
+
+.die-input[data-disabled="true"] {
+    opacity: .5;
 }

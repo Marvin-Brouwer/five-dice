@@ -19,7 +19,7 @@ export const ScoreInputDialog: Component<Props> = () => {
 
     // const dieValue = createSignal<DieValue | undefined>(undefined)
     const dialogState = createSignal(false);
-    const [, openDialog] = dialogState;
+    const [dialogOpened, openDialog] = dialogState;
     const inputState = createScoreInputState();
 
     return (
@@ -29,7 +29,7 @@ export const ScoreInputDialog: Component<Props> = () => {
                 openDialog(true);
             }}/>
             <Dialog modal={true} dialogState={dialogState}>
-                <ScoreInputButtons inputState={inputState} />
+                <ScoreInputButtons inputState={inputState} dialogOpened={dialogOpened} />
             </Dialog>
         </section>
     );
