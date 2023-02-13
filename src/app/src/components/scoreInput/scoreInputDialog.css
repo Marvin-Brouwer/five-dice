@@ -1,0 +1,23 @@
+section.score-input > dialog[open] {
+    position: sticky;
+    left: 0;
+    right: 0;
+    width:100%;
+    max-width: unset;
+    max-height: unset;
+    margin:0;
+    padding: 0;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-content: center;
+    align-items: center;
+    inset-block-start: auto;
+    inset-block-end: revert;
+    background-color: transparent;
+}
+
+section.score-input > .die-button {
+    font-size: 8ex;
+}

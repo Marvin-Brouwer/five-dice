@@ -29,7 +29,8 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
     }
     , getValue);
 
-    const handleInput = () => {        
+    const handleInput = () => {     
+        if (inputReference.value === undefined || inputReference.value === '') return true;   
         if (Number.isNaN(inputReference.valueAsNumber)) return false;
         if (inputReference.valueAsNumber <= 1 && inputReference.valueAsNumber >= 6) { 
             setValue(inputReference.valueAsNumber as DieValue); 
@@ -83,13 +84,12 @@ export const DieInput : Component<Props> = ({ value, name, ...props }) => {
         (e.currentTarget as HTMLInputElement).selectionEnd = 0;
         (e.currentTarget as HTMLInputElement).setSelectionRange(0, 0, "none");
         (e.currentTarget as HTMLInputElement).type = 'number';
-        setKeyBoardVisible(true);
 
         return false;
     }
     
     return (
-        <span class="die-input" data-keyboard-visible={keyboardVisible()}>
+        <span class="die-input" data-name={name} data-keyboard-visible={keyboardVisible()}>
             {die}
             <input type="number" value={getValue()} {...props}
                 ref={inputReference!} 

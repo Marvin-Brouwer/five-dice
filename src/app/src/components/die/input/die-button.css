@@ -1,48 +1,38 @@
-.die-button {
+button.die-button {
+    font-size: inherit;
     display: inline-flex;
-    box-sizing: border-box;
     border-color: var(--dice-color-foreground);
     border-width: 0;
     border-radius: calc(var(--dice-size) / 4);
-    min-width: 1.7ex;
-    min-height: 1.7ex;
+    width: calc((var(--dice-size) - var(--dice-padding)) - 2px);
+    height: calc((var(--dice-size) - var(--dice-padding)) - 2px);
     margin: .4ex;
-    overflow: visible;
     padding: 0;
     position: relative;
-    left: 0;
-    top: 0;
     background: none;
-}
-.die-button:active {
-    outline:0;
-    border-width: 0;
-    background: none;
-    width: calc(1.7ex +2px);
-    height: calc(1.7ex +2px);
-}   
-.die-button:focus-visible,
-.die-button:hover {
-    outline:0;
-    border-width: 0;
-    background: none;
-}   
-.die-button:focus-visible .die,
-.die-button:hover .die {
-    outline:0;
     border-width: 1px;
-    border-color: var(--theme-foreground-hover);
-}   
-.die-button:active .die {
-    border-color: var(--theme-foreground-hover);
-}   
-.die-button:active {
+}
+button.die-button:focus,
+button.die-button:focus-visible,
+button.die-button:hover {
     outline:0;
     border-width: 2px;
+    background: none;
     border-color: var(--theme-foreground-hover);
 }   
+button.die-button:active {
+    outline:0;
+    border-width: 2px !important;
+    background: none;
+    font-weight: bold;
+    color: var(--theme-foreground-hover) !important;
+    --dice-color-foreground: var(--theme-foreground-hover) !important;
+}     
 
-.die-button .die {
+button.die-button .die {
+    outline:0;
+    border-width: 0;
+    background: none;
     display: inline-block;
     position: absolute;
     padding: 0;
