@@ -23,7 +23,11 @@ export const DieRadioButton : Component<Props> = ({ value, die, group, ...props 
         <label class={`die-radio-button die-${die}`} data-checked={checked()} {...props}>
             <NumberDie amount={dieValue} />
             <input type="radio" name={group} value={dieValue} checked={checked()} 
-                onClick={() => setValue(dieValue)}
+                onClick={() => { 
+                    // Always trigger an update
+                    setValue(undefined); 
+                    setValue(dieValue);
+                }}
             />
         </label>
     );

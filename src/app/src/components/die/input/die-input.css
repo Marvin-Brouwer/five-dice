@@ -12,6 +12,10 @@ span.die-input {
     font-size: inherit;
 }
 
+span.die-input[data-keyboard-visible="true"] > .die {
+    --dice-color-foreground: var(--theme-foreground-hover);
+}
+
 span.die-input input::-moz-selection,
 span.die-input input::selection {
     color: transparent;
