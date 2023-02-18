@@ -7,7 +7,7 @@ type Props = {
     dialogState: Signal<boolean>
     modal: boolean
     id?: string,
-    showBackdrop?: boolean,
+    showBackdrop?: Accessor<boolean>,
     class?: string | undefined,
     hide?: Accessor<boolean>,
 }
@@ -55,7 +55,7 @@ export const Dialog: Component<ParentProps<Props>> = ({
     const unwrappedChildren = children(() => childElements);
     return (
         <dialog id={id} ref={dialogReference!} 
-            data-show-backdrop={showBackdrop ?? true}
+            data-show-backdrop={showBackdrop?.() ?? true}
             aria-open={open()}
             onClose={() => setOpen(false)}
             class={className} aria-hidden={hide?.() ? true : false}>

@@ -34,10 +34,19 @@ html, body {
     margin:0;
     padding: 0;
     position: relative;
+    height: 100%;
     background-color: var(--theme-background-primary);
     @media (prefers-reduced-motion: no-preference) {
         scroll-behavior: smooth;
     }
+}
+html {
+    overflow: hidden;
+}
+body {
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 h1 {
     font-size: 5ex;
