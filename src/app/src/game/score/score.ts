@@ -22,9 +22,9 @@ const discardedScore: DiscardedScore = {
 }
 
 export function discard(): DiscardedScore { return discardedScore; }
-export function score(one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue): ValidScore {
+export function score(value: [one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue]): ValidScore {
     return Object.assign<any, any>(
-        [one, two, three, four, five], {
+        value, {
 
             [scoreSymbol]: 'validScore',
 

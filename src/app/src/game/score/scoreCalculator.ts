@@ -42,6 +42,7 @@ const firstFlushScore = 50;
 const additionalFlushScore = 100;
 function calculateFlush(score: Array<ValidScore>): number {
 
+    if (score.length === 0) return 0;
     if (score.length === 1) return firstFlushScore;
 
     return score

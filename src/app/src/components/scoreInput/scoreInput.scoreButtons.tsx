@@ -1,27 +1,30 @@
 import './scoreInput.scoreButtons.css';
 
-import { Accessor, Component, createRenderEffect, createSignal, createReaction, Setter } from 'solid-js';
+import { Accessor, Component, createReaction, Setter } from 'solid-js';
 import type { ScoreInputState } from "./scoreInput.state"
 import { DieInput } from '../die/input/die-input';
-import { createMemo, createEffect } from 'solid-js';
+import { createMemo } from 'solid-js';
 
 type Props = {
     inputState: ScoreInputState,
     dialogOpened: Accessor<boolean>,
+    scoreSet: Accessor<boolean>,
     closeButtonRef: Accessor<HTMLButtonElement>,
     submitButtonRef: Accessor<HTMLButtonElement>,
     setFirstDiceRef: Setter<HTMLInputElement>,
 }
 
-export const ScoreInputButtons: Component<Props> = ({ inputState, dialogOpened, setFirstDiceRef, submitButtonRef }) => {
+export const ScoreInputButtons: Component<Props> = ({ 
+    inputState, dialogOpened, setFirstDiceRef, submitButtonRef, scoreSet
+}) => {
 
     const fieldsDisabled = createMemo(() => ([
-        () => false,
-        () => inputState.getScoreForField(0) === undefined,
-        () => inputState.getScoreForField(1) === undefined,
-        () => inputState.getScoreForField(2) === undefined,
-        () => inputState.getScoreForField(3) === undefined
-    ]), inputState.score);
+        () => scoreSet(),
+        () => scoreSet() || inputState.getScoreForField(0) === undefined,
+        () => scoreSet() || inputState.getScoreForField(1) === undefined,
+        () => scoreSet() || inputState.getScoreForField(2) === undefined,
+        () => scoreSet() || inputState.getScoreForField(3) === undefined
+    ]), [inputState.score(), scoreSet()]);
 
     const firstEmptyField = createMemo(() => inputState.score().findIndex(value => value === undefined), inputState.score);
 

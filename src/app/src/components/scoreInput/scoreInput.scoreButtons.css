@@ -9,6 +9,7 @@ div.score-input-buttons {
     margin: auto auto 2ex auto;
     padding: 0;
     overflow: hidden;
+    z-index: 2;
 }
 
 div.score-input-buttons > .die-input {

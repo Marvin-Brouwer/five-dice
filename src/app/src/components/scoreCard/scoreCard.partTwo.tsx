@@ -124,6 +124,7 @@ const FlushRow : Component<FlushRowProps> = ({ scorePad }) => {
             <span class="discard">/</span>
         );
 
+        if (fieldScore.length === 0) return undefined;
         const plural = fieldScore.length > 1;
         const lastScore = fieldScore.reverse()?.[0];
         if (lastScore === undefined) return undefined;

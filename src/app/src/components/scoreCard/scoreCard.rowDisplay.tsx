@@ -21,11 +21,13 @@ export const RowDisplay : Component<Props> = ({ icon, field, scorePad, displayRo
         if (fieldScore === undefined) return ".";
         if (isDiscarded(fieldScore)) return "/";
 
-        return calculateScore(scorePad(), field);
+        const score = calculateScore(scorePad(), field);
+        if (score === 0) return ".";
+        return score;   
     }
 
     return (
-        <tr>
+        <tr class="row-display" data-for-field={field}>
             <td class="label-column">
                 {icon}{rowDisplayLabels[field].title}
                 <ScoreLabel field={field} />
