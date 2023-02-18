@@ -12,21 +12,27 @@ button.die-button {
     background: none;
     border-width: 1px;
 }
-button.die-button:focus,
-button.die-button:focus-visible,
-button.die-button:hover {
+button.die-button:not(:disabled):focus,
+button.die-button:not(:disabled):focus-visible,
+button.die-button:not(:disabled):hover {
     outline:0;
     border-width: 2px;
     background: none;
     border-color: var(--theme-foreground-hover);
 }   
-button.die-button:active {
+button.die-button:not(:disabled):active {
     outline:0;
     border-width: 2px !important;
     background: none;
     font-weight: bold;
     color: var(--theme-foreground-hover) !important;
     --dice-color-foreground: var(--theme-foreground-hover) !important;
+}     
+
+button.die-button:disabled {
+    outline:0;
+    border-width: 1px !important;
+    background: none;
 }     
 
 button.die-button .die {

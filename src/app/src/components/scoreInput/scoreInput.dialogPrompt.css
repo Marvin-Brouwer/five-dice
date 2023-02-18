@@ -1,0 +1,57 @@
+div.score-input-dialog-prompt {
+    background-color: var(--theme-background-secondary);
+    width: 100%;
+    height: 12ex;
+    display: flex;
+    margin: 0;
+    padding: 1ex;
+    overflow: hidden;
+}
+
+div.score-input-dialog-prompt .grid {
+    height: 12ex;
+    display: grid;
+    gap: 1ex;
+    grid-template-columns: 8ex 8ex 8ex 8ex 8ex;
+    grid-template-rows: 12ex;
+    grid-template-areas: 
+        "close . . reset submit";
+    margin: 1ex auto 2ex auto;
+    padding: 0;
+    overflow: hidden;
+}
+div.score-input-dialog-prompt label{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+div.score-input-dialog-prompt label[aria-disabled="true"]{
+    opacity: .5;
+}
+div.score-input-dialog-prompt button,
+div.score-input-dialog-prompt button .die{
+    margin: 0;
+    padding: 0;
+}
+
+div.score-input-dialog-prompt label:nth-child(3) {
+    grid-area: close;
+}
+div.score-input-dialog-prompt label:nth-child(1) {
+    grid-area: reset;
+}
+div.score-input-dialog-prompt label:nth-child(2) {
+    grid-area: submit;
+}
+
+div.score-input-dialog-prompt label button {
+    font-size: 7.5ex;
+}
+div.score-input-dialog-prompt label button .text {
+    font-size: 1.5ex;
+}
+
+div.score-input-dialog-prompt label button .text {
+    font-size: 1.5ex;
+    line-height: 2.5ex;
+}
