@@ -93,7 +93,7 @@ export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialo
 
     return (
         <Dialog modal={true} dialogState={keyboardDialogState}>
-            <span class="die-input-keyboard" onKeyDown={handleKeyEvent} ref={keyboardReference!}>
+            <span class="die-input-keyboard" onKeyDown={handleKeyEvent} ref={keyboardReference!} role="toolbar">
                 <DieRadioButton die='aces' value={value} group={`keyboard-${name}`} />
                 <DieRadioButton die='deuces' value={value} group={`keyboard-${name}`} />
                 <DieRadioButton die='threes' value={value} group={`keyboard-${name}`} />
