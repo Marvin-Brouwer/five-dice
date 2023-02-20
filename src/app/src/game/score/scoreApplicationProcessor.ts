@@ -28,6 +28,7 @@ function isDiscardedFlushApplication(application: ScoreApplication): application
     
 export function applyScore(scorePad: Readonly<ScorePad>, application: ScoreApplication) {
 
+    console.log('applyScore', application)
     const { field, score } = application; 
 
     if (!isScoreApplicableToField(score, field))
@@ -60,11 +61,10 @@ function processFlushAppendScore(scorePad: Readonly<ScorePad>, application: Flus
     if (scorePad[discard] !== undefined)
         throw InvalidScoreApplicationError.scoreAlreadyApplied(scorePad, application);
 
-    return  {
-        ...scorePad,
+    return Object.assign({},  scorePad, { 
         [field]: [...scoreField, score],
         [discard]: discardScore()
-    };
+     });
 }
 function processFlushDiscardScore(scorePad: Readonly<ScorePad>, application: DiscardFlushApplication): ScorePad {
 
@@ -75,20 +75,15 @@ function processFlushDiscardScore(scorePad: Readonly<ScorePad>, application: Dis
     if ((scorePad[field] as Array<ValidScore>).length != 0)
         throw InvalidScoreApplicationError.cannotDiscardFlush(scorePad, application);
 
-    return  {
-        ... scorePad,
-        [field]: score
-    };
+    return Object.assign({},  scorePad, { [field]: score });
 }
 function processSimpleScore(scorePad: Readonly<ScorePad>, application: SimpleScoreApplication): ScorePad {
 
+    console.log('processSimpleScore', application, scorePad)
     const { field, score } = application; 
 
     if (scorePad[field] !== undefined)
         throw InvalidScoreApplicationError.scoreAlreadyApplied(scorePad, application);
 
-    return  {
-        ... scorePad,
-        [field]: score
-    };
+    return Object.assign({},  scorePad, { [field]: score });
 }

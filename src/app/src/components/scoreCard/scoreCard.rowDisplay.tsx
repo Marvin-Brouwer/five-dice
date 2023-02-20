@@ -1,64 +1,31 @@
-import "./scoreCard.css";
-
-import type { Accessor, Component, JSX } from "solid-js";
+import type { Component, JSX } from "solid-js";
 import type { ScoreField } from '../../game/gameConstants';
-import { isDiscarded } from '../../game/score/score';
-import { calculateScore } from '../../game/score/scoreCalculator';
 import type { ScorePadAccessor } from "../../game/score/useScorePad";
-import { rowDisplayLabels } from './scoreCard.rowDisplay.labels';
+import { RollDisplay } from "./scoreCard.rollDisplay";
+import { ScoreDisplay } from './scoreCard.scoreDisplay';
+import { LabelDisplay } from "./scoreCard.labelDisplay";
+import { createMemo } from 'solid-js';
 
 type Props = {
     icon?: JSX.Element;
     field: ScoreField,
-    scorePad: ScorePadAccessor,
-    displayRoll: Accessor<string | undefined | JSX.Element>
+    scorePad: ScorePadAccessor
 }
 
-export const RowDisplay : Component<Props> = ({ icon, field, scorePad, displayRoll }) => {
+export const RowDisplay : Component<Props> = ({ icon, field, scorePad }) => {
 
-    const displayScore = () => {
-        const fieldScore = scorePad()[field];
-        if (fieldScore === undefined) return ".";
-        if (isDiscarded(fieldScore)) return "/";
-
-        const score = calculateScore(scorePad(), field);
-        if (score === 0) return ".";
-        return score;   
-    }
-
+    const score = createMemo(() => scorePad()[field], scorePad);
     return (
         <tr class="row-display" data-for-field={field}>
             <td class="label-column">
-                {icon}{rowDisplayLabels[field].title}
-                <ScoreLabel field={field} />
+                <LabelDisplay icon={icon} field={field} />
             </td>
             <td class="roll-column">
-                {displayRoll}
+                <RollDisplay field={field} score={score}/>
             </td>
             <td class="score-column">
-                {displayScore}
+                <ScoreDisplay field={field} scorePad={scorePad} />
             </td>
         </tr>
     );
 };
-
-type ScoreDescriptionProps = {
-    field: ScoreField
-}
-const ScoreLabel: Component<ScoreDescriptionProps> = ({ field }) => {
-
-    if (rowDisplayLabels[field].scoreDescription.short === undefined) return (
-        <span class="score-display simple-score-display">
-            {rowDisplayLabels[field].scoreDescription.long}
-        </span>
-    )
-
-    const { short, long } = rowDisplayLabels[field].scoreDescription;
-
-    return (
-        <span class="score-display responsive-score-display" aria-label={long}>
-            <span class="short">{short}</span>
-            <span class="long">{long}</span>
-        </span>
-    )
-}

@@ -12,7 +12,11 @@ export function useScorePad(): ScorePadSignal {
     const [currentScorePad, setScorePad] = createSignal<ScorePad>(createScorePad());
     
     function modifyScorePad(application: ScoreApplication) {
-        setScorePad(state => applyScore(state, application))
+        setScorePad(state => {
+            var test = applyScore(state, application)
+            console.log('test', test)
+            return test;
+        })
     }
     return [currentScorePad, modifyScorePad];
 }

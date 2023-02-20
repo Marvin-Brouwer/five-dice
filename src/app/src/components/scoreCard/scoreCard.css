@@ -56,36 +56,37 @@
     border: 2px solid var(--theme-foreground-primary);
 }
 
+:root{
+    --score-card-row-height: 2.5ex;
+    --score-card-column-roll-width: 14ex;
+    --score-card-column-score-width:  5ex;
+    --score-card-column-padding:  .5ex;
+    --score-card-column-padding-right:  1ex;
+}
+
 #score-card table td {
     position: relative;
     text-align: right;
-    padding: .5ex;
+    padding: 0;
+    height: var( --score-card-row-height);
     border: 1px solid var(--theme-foreground-primary);
 }
 #score-card table thead td {
     font-weight: bold !important;
     text-align: left;
     text-transform: uppercase;
-}
-#score-card table td {
     padding-right: 1ex;
+    padding-left: 1ex;
+    padding: .5ex;
 }
 #score-card table td.label-column {
-    font-weight: bold;
     text-align: left;
-    text-transform: uppercase;
 }
-#score-card table td.roll-column {
-    margin: 0;
-    padding-right: .5ex;
-    width: 14ex;
-}
-#score-card table >:not(thead) td.roll-column {
-    padding-left: 0;
+#score-card table tbody td.roll-column {
+    width: var( --score-card-column-roll-width);
 }
 #score-card table td.score-column {
-    width: 5ex;
-    padding-right: .5ex;
+    width: var( --score-card-column-score-width);
 }
 #score-card table td.totals-column {
     width: calc(14ex + 5ex + 1.5ex);
@@ -98,73 +99,6 @@
     --dice-padding: .2ex !important;
 }
 
-#score-card table td.roll-column .die {
-    font-weight: normal !important;
-    margin-bottom: -.5ex;
-    margin-left: .2ex;
-    --dice-size: 2.5ex;
-    --dice-padding: .2ex !important;
-}
-
-span.smallGroup {
-    margin-right: 1ex;
-    --dice-padding: calc((var(--dice-size) / 4));
-    --dice-color-foreground: rgb(43, 43, 43);
-    font-size: 1.5ex;
-    opacity: .9;
-}
-span.many {
-    font-weight: bold;
-    display: block;
-    float:left;
-    font-size: 1.5ex;
-    margin-right: 0;
-    width: 2.5ex;
-    text-align: right;
-}
-
-span.score-display {
-    display: block;
-    float: right;
-    text-transform: none;
-    font-style: italic;
-    font-weight: lighter;
-    color: var(--theme-foreground-hint);
-    font-size: 1.7ex;
-    width: fit-content;
-}
-span.score-display.responsive-score-display .long {
-    display: none;
-}
-
-@media only screen and (max-width: 390px) {
-    span.score-display {
-        display: none;
-    }
-    #score-card {
-        margin-left: -1ex;
-        width: 100%;
-        padding: 0 0 .5 0;
-    }
-}
-@media only screen and (max-width: 420px) {
-    span.score-display {
-        font-size: 1.5ex;
-    }
-    #score-card {
-        margin-left: -1ex;
-        width: 100%;
-        padding: 0 0 .5 0;
-    }
-}
-@media only screen and (min-width: 500px) {
-    span.score-display.responsive-score-display .short {
-        display: none;
-    }
-    span.score-display.responsive-score-display .long {
-        display: block !important;
-    }
-}
 @media only screen and (min-height: 750px) {
     #score-card aside {
         display: block;

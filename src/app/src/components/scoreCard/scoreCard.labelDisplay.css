@@ -1,0 +1,54 @@
+span.label-display {
+    display: block;
+    margin: 0;
+    height: var(--score-card-row-height);
+    padding: var(--score-card-column-padding);
+    padding-right: var(--score-card-column-padding-right);
+    font-weight: bold;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+span.description-label {
+    display: block;
+    float: right;
+    text-transform: none;
+    font-style: italic;
+    font-weight: lighter;
+    color: var(--theme-foreground-hint);
+    font-size: 1.7ex;
+    width: fit-content;
+}
+
+span.description-label.responsive-description-label .long {
+    display: none;
+}
+
+@media only screen and (max-width: 390px) {
+    span.description-label {
+        display: none;
+    }
+    #score-card {
+        margin-left: -1ex;
+        width: 100%;
+        padding: 0 0 .5 0;
+    }
+}
+@media only screen and (max-width: 420px) {
+    span.description-label {
+        font-size: 1.5ex;
+    }
+    #score-card {
+        margin-left: -1ex;
+        width: 100%;
+        padding: 0 0 .5 0;
+    }
+}
+@media only screen and (min-width: 500px) {
+    span.description-label.responsive-description-label .short {
+        display: none;
+    }
+    span.description-label.responsive-description-label .long {
+        display: block !important;
+    }
+}
