@@ -2,19 +2,19 @@ import "./scoreCard.css";
 
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 
-import type { Component } from "solid-js";
+import type { Component, Signal } from "solid-js";
 import { PartOne } from './scoreCard.partOne';
 import { PartTwo } from './scoreCard.partTwo';
 import { Totals } from './scoreCard.totals';
 import type { Accessor } from 'solid-js';
 
 interface Props {
-    round: Accessor<number>,
+    round: Signal<number>,
     playerName: Accessor<string>,
     scorePad: ScorePadAccessor
 }
 
-export const ScoreCard: Component<Props> = ({ playerName, round, scorePad }) => {
+export const ScoreCard: Component<Props> = ({ playerName, round: [getRound], scorePad }) => {
 
     return (
         <section id="score-card" role="document">
@@ -22,7 +22,7 @@ export const ScoreCard: Component<Props> = ({ playerName, round, scorePad }) => 
                 <span class="name">{playerName}</span>
                 <span class="round-number">
                     <span class="round-label">Round</span>
-                    {round}
+                    {getRound}
                 </span>
             </aside>
             <article id="part1" role="presentation">

@@ -24,25 +24,46 @@ export const Totals: Component<Props> = ({ scorePad }) => {
             </thead>
             <tbody>
                 <tr>
-                    <td class="label-column">Total part 1</td> <td class="totals-column">{partOneSubTotal}</td>
-                </tr>
-                <tr>
                     <td class="label-column">
-                        Bonus
-                        <span class="score-display responsive-score-display" aria-label="Adds 63 if part one ≥ 63">
-                            <span class="short"> +35 if part1 ≥ 63</span>
-                            <span class="long">Adds 63 if part one ≥ 63</span>
-                        </span>
+                        <span class="label-display">Total part 1</span>
                     </td> 
                     <td class="totals-column">
-                        {bonus != 0 ? bonus : "."}
+                        <span class="score-display">{partOneSubTotal}</span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="label-column">Total part 2</td> <td class="totals-column">{partTwoTotal}</td>
+                    <td class="label-column">
+                        <span class="label-display">
+                            Bonus
+                            <span class="description-label responsive-description-label" aria-label="Adds 63 if part one ≥ 63">
+                                <span class="short"> +35 if part1 ≥ 63</span>
+                                <span class="long">Adds 63 if part one ≥ 63</span>
+                            </span>
+                        </span>
+                    </td> 
+                    <td class="totals-column">
+                        <span class="score-display">{bonus != 0 ? bonus : "."}</span>
+                    </td>
                 </tr>
                 <tr>
-                    <td class="label-column">Final score</td> <td class="totals-column">{gameTotal}</td>
+                    <td class="label-column">
+                        <span class="label-display">
+                            Total part 2
+                        </span>
+                    </td> 
+                    <td class="totals-column">
+                        <span class="score-display">{partTwoTotal}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label-column">
+                        <span class="label-display">
+                            Final score
+                        </span>
+                    </td> 
+                    <td class="totals-column">
+                        <span class="score-display">{gameTotal}</span>
+                    </td>
                 </tr>
             </tbody>
         </table>

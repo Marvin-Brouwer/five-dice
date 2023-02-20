@@ -1,6 +1,6 @@
 import "./scoreInputDialog.css";
 
-import type { Accessor, Component, Setter } from "solid-js";
+import type { Accessor, Component, Setter, Signal } from "solid-js";
 import type { ScorePadAccessor, ScorePadModifier } from "../../game/score/useScorePad";
 import { DieButton } from "../die/input/die-button";
 import { DieInput } from "../die/input/die-input";
@@ -15,19 +15,19 @@ import { not } from "../../helpers/memoHelpers";
 import { SelectorBackdrop } from "./scoreInput.selectorBackdrop";
 
 type Props = {
-    setRound: Setter<number>
+    round: Signal<number>
     currentScore: ScorePadAccessor
     applyScore: ScorePadModifier
 }
 
-export const ScoreInputDialog: Component<Props> = ({ setRound, applyScore, currentScore }) => {
+export const ScoreInputDialog: Component<Props> = ({ round:[getRound, setRound], applyScore, currentScore }) => {
 
-    // const dieValue = createSignal<DieValue | undefined>(undefined)
     const dialogState = createSignal(false);
     const [dialogOpened, openDialog] = dialogState;
     const inputState = createScoreInputState();
     const [scoreInput, setScoreInput] = createSignal<ScoreInput | undefined>(undefined);
     const scoreSet = createMemo(() => scoreInput() !== undefined, scoreInput);
+    // todo close dialog on score
 
     const [closeButtonRef, setCloseButtonRef] = createSignal<HTMLButtonElement>(undefined!);
     const [submitButtonRef, setSubmitButtonRef] = createSignal<HTMLButtonElement>(undefined!);

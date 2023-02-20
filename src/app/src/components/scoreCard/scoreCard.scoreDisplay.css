@@ -1,0 +1,9 @@
+span.score-display {
+    display: inline-block;
+    background-color: var(--theme-background-primary);
+    margin: 0;
+    height: var(--score-card-row-height);
+    width: calc(var(--score-card-column-score-width) + var(--score-card-column-padding));
+    padding: var(--score-card-column-padding);
+    padding-right: var(--score-card-column-padding-right);
+}

@@ -1,10 +1,11 @@
 import type { ScoreField } from "../gameConstants.js"
-import { ValidScore, isDiscarded, ScoreContainer } from '../../game/score/score';
+import { ValidScore, isDiscarded } from '../../game/score/score';
 import type { ScorePad } from './scorePad';
 import { InvalidScoreError } from "./invalidScoreError.js";
 import { isFlushScore } from './score';
+import type { DieValue } from '../gameConstants';
 
-export function calculateScore(scorePad: ScorePad, field: ScoreField): number {
+export function calculateScoreForPad(scorePad: ScorePad, field: ScoreField): number {
 
     const score = scorePad[field];
 
@@ -15,24 +16,36 @@ export function calculateScore(scorePad: ScorePad, field: ScoreField): number {
         return calculateFlush(score);
     }
 
+    return calculateScore(score, field);
+}
+
+export function calculateScore(score: ValidScore, field: ScoreField): number {
+
     switch (field) {
-        case 'aces': return diceTotal(score);
-        case 'deuces': return diceTotal(score);
-        case 'threes': return diceTotal(score);
-        case 'fours': return diceTotal(score);
-        case 'fives': return diceTotal(score);
-        case 'sixes': return diceTotal(score);
+        case 'aces': return diceSum(score, 1);
+        case 'deuces': return diceSum(score, 2);
+        case 'threes': return diceSum(score, 3);
+        case 'fours': return diceSum(score, 4);
+        case 'fives': return diceSum(score, 5);
+        case 'sixes': return diceSum(score, 6);
 
         case "threeOfKind": return diceTotal(score);
         case "fourOfKind": return diceTotal(score);
         case 'fullHouse': return 25;
         case 'smallStraight': return 30;
         case 'largeStraight': return 40;
-        case 'flush': throw InvalidScoreError.flushCannotBeNormalScore(score);
+        case 'flush': return calculateFlush([score]);
         case 'chance': return diceTotal(score);
     }
 }
 
+function diceSum(score: ValidScore, value: DieValue): number {
+
+    return score.reduce((reducer, currentDie) => currentDie === value 
+        ? reducer + value 
+        : reducer, 
+    0);
+}
 function diceTotal(score: ValidScore): number {
 
     return score.reduce((reducer, currentDie) => reducer + currentDie, 0);
@@ -40,7 +53,7 @@ function diceTotal(score: ValidScore): number {
 
 const firstFlushScore = 50;
 const additionalFlushScore = 100;
-function calculateFlush(score: Array<ValidScore>): number {
+export function calculateFlush(score: Array<ValidScore>): number {
 
     if (score.length === 0) return 0;
     if (score.length === 1) return firstFlushScore;
@@ -53,12 +66,12 @@ function calculateFlush(score: Array<ValidScore>): number {
 export function calculatePartOneSubTotal(scorePad: ScorePad): number {
 
     return (
-        calculateScore(scorePad, 'aces') + 
-        calculateScore(scorePad, 'deuces') + 
-        calculateScore(scorePad, 'threes') + 
-        calculateScore(scorePad, 'fours') + 
-        calculateScore(scorePad, 'fives') + 
-        calculateScore(scorePad, 'sixes')
+        calculateScoreForPad(scorePad, 'aces') + 
+        calculateScoreForPad(scorePad, 'deuces') + 
+        calculateScoreForPad(scorePad, 'threes') + 
+        calculateScoreForPad(scorePad, 'fours') + 
+        calculateScoreForPad(scorePad, 'fives') + 
+        calculateScoreForPad(scorePad, 'sixes')
     );    
 }
 
@@ -77,13 +90,13 @@ export function calculatePartOneBonus(partOneSubTotal: number): number {
 export function calculatePartTwoTotal(scorePad: ScorePad): number {
 
     return (
-        calculateScore(scorePad, 'threeOfKind') + 
-        calculateScore(scorePad, 'fourOfKind') + 
-        calculateScore(scorePad, 'fullHouse') + 
-        calculateScore(scorePad, 'smallStraight') + 
-        calculateScore(scorePad, 'largeStraight') + 
-        calculateScore(scorePad, 'flush') + 
-        calculateScore(scorePad, 'chance')
+        calculateScoreForPad(scorePad, 'threeOfKind') + 
+        calculateScoreForPad(scorePad, 'fourOfKind') + 
+        calculateScoreForPad(scorePad, 'fullHouse') + 
+        calculateScoreForPad(scorePad, 'smallStraight') + 
+        calculateScoreForPad(scorePad, 'largeStraight') + 
+        calculateScoreForPad(scorePad, 'flush') + 
+        calculateScoreForPad(scorePad, 'chance')
     );    
 }
 
