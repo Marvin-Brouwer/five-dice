@@ -3,21 +3,20 @@ import "./die-input.keyboard.css"
 import type { Component, Signal } from 'solid-js';
 import type { DieValue } from "../../../game/gameConstants";
 import { DieRadioButton } from "./die-radio";
-import { dice } from '../../../game/gameConstants';
-import { createSignal, createEffect, onMount, createDeferred } from 'solid-js';
-import { Dialog } from "../../hacks/dialog";
+import { createSignal, createEffect } from 'solid-js';
+import { Dialog, DialogState } from '../../hacks/dialog';
 
 type Props = {
     name: string
     value: Signal<DieValue | undefined>,
-    keyboardDialogState: Signal<boolean>
+    keyboardDialogState: DialogState
 }
 
 export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialogState }) => {
 
     const [getValue, setValue] = value;
     const initialValue = getValue();
-    const [dialogOpen, openDialog] = keyboardDialogState;
+    const { isOpen: dialogOpen, closeDialog }= keyboardDialogState;
     const [itemFocus, setItemFocus] = createSignal(getValue() as number ?? 1);
 
     let keyboardReference: HTMLSpanElement;
@@ -33,13 +32,13 @@ export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialo
 
     createEffect(() => {
         setItemFocus(getValue() ?? 0)
-        openDialog(false);
+        closeDialog();
     }, getValue)
 
     const handleKeyEvent = (e: KeyboardEvent) => { 
         if (e.key === "Escape") {
             setValue(initialValue);
-            openDialog(false);
+            closeDialog();
             return true;
         }
 
@@ -79,12 +78,12 @@ export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialo
         if (e.key === " ") {
             input?.click();
             setValue(Number(input?.value ?? 1) as DieValue)
-            openDialog(false);
+            closeDialog();
             return handled();
         }
         if (e.key === "Enter"){ 
             setValue(Number(input?.value ?? 1) as DieValue)
-            openDialog(false);
+            closeDialog();
             return handled();
         }
 

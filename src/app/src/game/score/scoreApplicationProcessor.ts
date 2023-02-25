@@ -55,7 +55,8 @@ function processFlushAppendScore(scorePad: Readonly<ScorePad>, application: Flus
     if(isDiscarded(scoreField))
         throw InvalidScoreApplicationError.flushDiscarded(scorePad, application);
 
-    if (!!!discard) 
+    const currentFlushValue = scorePad.flush;
+    if (!!!discard && !isDiscarded(currentFlushValue) && currentFlushValue.length > 0) 
         throw InvalidScoreApplicationError.noDiscardOnFlush(scorePad, application);
 
     if (scorePad[discard] !== undefined)
@@ -79,7 +80,6 @@ function processFlushDiscardScore(scorePad: Readonly<ScorePad>, application: Dis
 }
 function processSimpleScore(scorePad: Readonly<ScorePad>, application: SimpleScoreApplication): ScorePad {
 
-    console.log('processSimpleScore', application, scorePad)
     const { field, score } = application; 
 
     if (scorePad[field] !== undefined)

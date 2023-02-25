@@ -13,7 +13,7 @@ export class InvalidScoreApplicationError extends Error {
         return new InvalidScoreApplicationError(message, application, scorePad);
     }
     public static noDiscardOnFlush(scorePad: Readonly<ScorePad>, application: ScoreApplication) {
-        const message = `when applying for a 'flush', a discard is required`;
+        const message = `when applying for multiple 'flush's, a discard is required`;
         return new InvalidScoreApplicationError(message, application, scorePad);
     }
     public static flushDiscarded(scorePad: Readonly<ScorePad>, application: ScoreApplication) {

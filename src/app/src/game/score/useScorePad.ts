@@ -14,7 +14,7 @@ export function useScorePad(): ScorePadSignal {
     function modifyScorePad(application: ScoreApplication) {
         setScorePad(state => {
             var test = applyScore(state, application)
-            console.log('test', test)
+            console.log('currentScore', test)
             return test;
         })
     }

@@ -1,5 +1,6 @@
 dialog:not([open]) {
     display: none;
+    overflow: hidden;
 }
 dialog {
     margin: auto;

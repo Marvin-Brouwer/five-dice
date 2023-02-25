@@ -39,15 +39,13 @@ export const SingleScoreDisplay : Component<SingleProps> = ({ field, score, scor
         if (score === undefined) return ".";
         if (isDiscarded(score)) return "/";
 
-        if (isFlushScore(score)) {
-            if (field !== 'flush') return ".";
+        if (field === 'flush') {
             const padFlush = scorePad()['flush'];
             const existingFlush = isDiscarded(padFlush) ? [] : padFlush;
             const flushScore = calculateFlush([...existingFlush, score]);
             if (flushScore === 0) return ".";
             return flushScore;   
         }
-        if (field === 'flush') return ".";
 
         const actualScore = calculateScore(score, field);
         if (actualScore === 0) return ".";
