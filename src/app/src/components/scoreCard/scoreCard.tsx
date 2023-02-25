@@ -11,10 +11,10 @@ import type { Accessor } from 'solid-js';
 interface Props {
     round: Signal<number>,
     playerName: Accessor<string>,
-    scorePad: ScorePadAccessor
+    getScorePad: ScorePadAccessor
 }
 
-export const ScoreCard: Component<Props> = ({ playerName, round: [getRound], scorePad }) => {
+export const ScoreCard: Component<Props> = ({ playerName, round: [getRound], getScorePad: scorePad }) => {
 
     return (
         <section id="score-card" role="document">

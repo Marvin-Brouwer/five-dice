@@ -4,8 +4,10 @@ div.score-input-dialog-prompt {
     height: 12ex;
     display: flex;
     margin: 0;
-    padding: 1ex;
+    padding: 1ex 0;
     overflow: hidden;
+    position: relative;
+    z-index: 90;
 }
 
 div.score-input-dialog-prompt .grid {

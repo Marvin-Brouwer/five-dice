@@ -2,10 +2,11 @@ import { createSignal, Component } from 'solid-js';
 import { useScorePad } from '../../game/score/useScorePad';
 import { score, discard } from '../../game/score/score';
 import { ScoreCard } from '../scoreCard/scoreCard';
-import { ScoreInputDialog } from '../scoreInput/scoreInputDialog';
+import { ScoreInputDialog } from '../scoreInput/scoreInput';
 
 const round = createSignal(1);
-const [scorePad, applyScore] = useScorePad();
+const scorePad = useScorePad();
+const [getScorePad, applyScore] = scorePad;
 
 // TODO check scores with outliers (3 of a kind with 4 or 5 values)
 // applyScore({
@@ -70,7 +71,7 @@ applyScore({
 export const Game: Component = () => {
     
     return (<>
-        <ScoreCard playerName={() => "Marvin"} round={round} scorePad={scorePad} />
-        <ScoreInputDialog round={round} applyScore={applyScore} currentScore={scorePad} />
+        <ScoreCard playerName={() => "Marvin"} round={round} getScorePad={getScorePad} />
+        <ScoreInputDialog round={round} scorePad={scorePad}  />
     </>);
 }

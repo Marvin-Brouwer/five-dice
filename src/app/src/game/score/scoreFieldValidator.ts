@@ -27,7 +27,6 @@ export function isScoreApplicableToField(score: ScoreValue, field: ScoreField): 
 
 function hasSomeOfKind(amount: number, score: ValidScore): boolean {
 
-    console.log('someOfKind', amount, score.toString())
     const grouped = score.reduce<Array<number>>(
         (counter, currentDie) => (counter[currentDie] = counter[currentDie] + 1 || 1, counter), []);
 
@@ -40,7 +39,6 @@ function isFullHouse(score: ValidScore): boolean {
     const grouped = score.reduce<Array<number>>(
         (counter, currentDie) => (counter[currentDie] = counter[currentDie] + 1 || 1, counter), []);
 
-    console.log('fh', grouped)
     const smallGroup = grouped
         .filter(groupValue => groupValue <= 2)
     if (smallGroup.length >= 3 ) return false;

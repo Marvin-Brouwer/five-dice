@@ -6,15 +6,18 @@ import type { ScoreInput, ScoreInputState } from "./scoreInput.state";
 
 type Props = {
     inputState: ScoreInputState,
-    closeDialog: () => void,
-    setScoreInput: Setter<ScoreInput>,
+    submitLabel: string,
+    submitDescription: string,
+    onSubmit: () => void,
+    submitEnabled: Accessor<boolean>,
     setCloseButtonRef: Setter<HTMLButtonElement>,
     setSubmitButtonRef: Setter<HTMLButtonElement>,
-    firstDiceRef: Accessor<HTMLInputElement>,
+    getFirstInputRef: Accessor<HTMLInputElement | undefined>,
 }
 
 export const ScoreDialogPrompt: Component<Props> = ({ 
-    inputState, closeDialog, setCloseButtonRef, setSubmitButtonRef, firstDiceRef, setScoreInput
+    inputState, onSubmit, submitEnabled, setCloseButtonRef, setSubmitButtonRef, getFirstInputRef,
+    submitLabel, submitDescription
 }) => {
 
     const submit = (e: MouseEvent) => {
@@ -22,20 +25,21 @@ export const ScoreDialogPrompt: Component<Props> = ({
         e.stopImmediatePropagation();
         e.stopPropagation();
 
-        setScoreInput(inputState.score());
+        if (inputState.diceSelector.getScore().some(value => value === undefined))
+            return false;
+        
+        onSubmit();
 
         return false;
     }
 
     const close = () => {
-        closeDialog();
-        inputState.reset();
+        inputState.resetAndClose();
     };
 
     const reset = () =>{
-        console.log(firstDiceRef());
         inputState.reset();
-        firstDiceRef()?.focus();
+        getFirstInputRef()?.focus();
     }
 
     return (
@@ -45,11 +49,11 @@ export const ScoreDialogPrompt: Component<Props> = ({
                     <DieButton value="⭯" type="reset" onClick={reset} />
                     reset
                 </label>
-                <label aria-label="Submit the score" aria-disabled={!inputState.allFieldsSet()}>
+                <label aria-label={submitDescription} aria-disabled={!submitEnabled()}>
                     <DieButton value="✓" type="submit" 
                         onClick={submit}
-                        ref={setSubmitButtonRef} disabled={() => !inputState.allFieldsSet()} />
-                    submit
+                        ref={setSubmitButtonRef} disabled={() => !submitEnabled()} />
+                    {submitLabel}
                 </label>
                 <label>
                     <DieButton value="🗙" type="reset" onClick={close} ref={setCloseButtonRef} />

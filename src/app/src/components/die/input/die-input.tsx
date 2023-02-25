@@ -4,7 +4,7 @@ import { Component, createMemo, JSX, Signal, createSignal, onMount, onCleanup, c
 import type { DieValue } from '../../../game/gameConstants';
 import { NumberDie } from "../number-die";
 import { TextDie } from "../text-die";
-import { Dialog } from "../../hacks/dialog";
+import { createDialogSignal, Dialog } from "../../hacks/dialog";
 import { DieInputKeyboard } from './die-input.keyboard';
 
 type Props = JSX.HTMLAttributes<HTMLInputElement> 
@@ -19,8 +19,8 @@ export const DieInput : Component<Props> = ({ value, name, disabled, ...props })
     let inputReference = props.ref! as HTMLInputElement;
 
     const [getValue, setValue] = value;
-    const keyboardDialogState = createSignal(false);
-    const [keyboardVisible, setKeyBoardVisible] = keyboardDialogState;
+    const keyboardDialogState = createDialogSignal();
+    const { isOpen: keyboardVisible, openDialog: showKeyboard, closeDialog: hideKeyboard }= keyboardDialogState;
 
     const die = createMemo(() =>  {
         const dieValue = getValue();
@@ -36,7 +36,7 @@ export const DieInput : Component<Props> = ({ value, name, disabled, ...props })
         if (Number.isNaN(inputReference.valueAsNumber)) return false;
         if (inputReference.valueAsNumber <= 1 && inputReference.valueAsNumber >= 6) { 
             setValue(inputReference.valueAsNumber as DieValue); 
-            setKeyBoardVisible(false);
+            hideKeyboard();
             return true;
         }
         return false;
@@ -60,11 +60,11 @@ export const DieInput : Component<Props> = ({ value, name, disabled, ...props })
         if (e.key === "6") { setValue(6); return handled(); }
 
         if (e.key === " ") {
-            setKeyBoardVisible(true);
+            showKeyboard();
             return handled();
         }
         if (e.key === "Enter"){ 
-            setKeyBoardVisible(true);
+            showKeyboard();
             return handled();
         }
 
@@ -81,7 +81,7 @@ export const DieInput : Component<Props> = ({ value, name, disabled, ...props })
         }
         if (disabled?.()) return true;
 
-        setKeyBoardVisible(true);
+        showKeyboard();
 
         return handled();
     }
