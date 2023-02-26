@@ -50,7 +50,15 @@ export const RowSelector: Component<Props> = ({ inputState, getScorePad }) => {
     );
     const discardRows = createMemo(() =>
         availableRows()
-            .filter(row => !isScoreApplicableToField(scoreValue(), row)), 
+            .filter(row => {
+                if (isScoreApplicableToField(scoreValue(), row)) return false;
+                if (row === 'flush') {
+                    const currentFlush = getScorePad().flush;
+                    if (!isFlushScore(currentFlush)) return false;
+                    return currentFlush.length === 0
+                }
+                return true;
+            }), 
         scoreValue
     );
 

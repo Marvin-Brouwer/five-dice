@@ -8,6 +8,7 @@ import { ScoreDialogPrompt } from './scoreInput.dialogPrompt';
 import { Selector } from './scoreInput.selector';
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 import type { ScoreField } from '../../game/gameConstants';
+import { SelectorFlushFake } from './scoreInput.selectorButtons.flushFake';
 
 type Props = {
     inputState: ScoreInputState,
@@ -43,6 +44,8 @@ export const FlushDiscardSelector: Component<Props> = ({ inputState, getScorePad
                 <p>You need to throw away a row, when you have more than one discard</p>
             </section>
 
+            <SelectorFlushFake 
+                getScorePad={getScorePad} inputState={inputState} />
             <Selector id="flushDiscard"
                 getScorePad={getScorePad}
                 selectedField={inputState.flushDiscard} inputState={inputState} 
