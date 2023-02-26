@@ -69,6 +69,12 @@ export const RowSelector: Component<Props> = ({ inputState, getScorePad }) => {
 
     return (
         <Dialog modal={true} dialogState={inputState.dialogs.rowSelector} showBackdrop={() => false}>
+            
+            <section class="title-section">
+                <h2>Please select a row</h2>
+                <p>Select a row your score applies to</p>
+            </section>
+
             <Selector id="row"
                 getScorePad={getScorePad}
                 selectedField={inputState.row} inputState={inputState} 

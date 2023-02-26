@@ -19,6 +19,12 @@ export const DiceSelector: Component<Props> = ({ inputState }) => {
 
     return (
         <Dialog modal={true} dialogState={inputState.dialogs.diceSelector}>
+            
+            <section class="title-section">
+                <h2>Please set your score</h2>
+                <p>Configure the score of your current round</p>
+            </section>
+            
             <ScoreInputButtons 
                 inputState={inputState} scoreSet={inputState.diceSelector.getAllDiceSet} 
                 getCloseButtonRef={getCloseButtonRef} getSubmitButtonRef={getSubmitButtonRef}
