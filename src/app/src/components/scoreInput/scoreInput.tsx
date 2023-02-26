@@ -7,7 +7,8 @@ import { DiceSelector } from "./scoreInput.diceSelector";
 import { RowSelector } from './scoreInput.rowSelector';
 import { FlushDiscardSelector } from './scoreInput.flushDiscard';
 import { roundAmount } from '../../game/gameConstants';
-import { createMemo } from 'solid-js';
+import { createMemo, onMount, createEffect } from 'solid-js';
+import JSConfetti from 'js-confetti'
 
 type Props = ScoreInputStateProps
 
@@ -19,6 +20,14 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
     // Put into memo to force rerender on change
     const gameEnded = createMemo(() => getRound() > roundAmount, getRound);
+
+    onMount(() => {
+        const confetti = new JSConfetti();
+        createEffect(() => {
+            if (gameEnded())
+                confetti.addConfetti();
+        }, gameEnded)
+    })
 
     return (
         <section class="score-input">

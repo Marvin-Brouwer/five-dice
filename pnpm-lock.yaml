@@ -17,6 +17,7 @@ importers:
       '@types/node': ^18.11.18
       astro: ^2.0.0
       globstar: ^1.0.0
+      js-confetti: ^0.11.0
       js-cookie: ^3.0.1
       solid-js: ^1.4.3
       tsx: ^3.12.2
@@ -25,6 +26,7 @@ importers:
     dependencies:
       '@astrojs/solid-js': 2.0.1_djtxfjplgbmk3ulcsober43dru
       astro: 2.0.0_@types+node@18.11.18
+      js-confetti: 0.11.0
       js-cookie: 3.0.1
       solid-js: 1.6.10
       xstate: 4.35.4
@@ -1829,6 +1831,10 @@ packages:
 
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  /js-confetti/0.11.0:
+    resolution: {integrity: sha512-Hc7I3VI4r4H0nq5q/oQK+JJwGoYRYVHK72fGk8E9Ay1dbh+aiZ9yl0yFp1K4oYeq7YFDQAndYChwqLPA3QWQuA==}
+    dev: false
 
   /js-cookie/3.0.1:
     resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}

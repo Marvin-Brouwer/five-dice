@@ -64,6 +64,9 @@
     bottom: -.5ex;
     z-index: 3;
 }
+#score-card aside .clear-name:disabled {
+    display: none;
+}
 #score-card aside .clear-name {
     background-color: transparent;
     position: absolute;
