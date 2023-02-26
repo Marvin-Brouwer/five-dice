@@ -1,0 +1,47 @@
+.theme-selector {
+    margin-top: .8ex;
+    width: 2.7ex;
+    height: 2.7ex;
+    overflow: hidden;
+    display: inline-block;
+    position: relative;
+}
+
+.theme-icon {
+    font-size: 3ex;
+    
+    position: relative;
+    z-index: 9;
+    user-select: none;
+    pointer-events: none;
+    touch-action: none;
+}
+.theme-icon > span {
+    position: absolute;
+    font-size: 1.2ex;
+    top: .3ex;
+    left: .3ex;
+}
+.theme-icon > span.small-icon {
+    position: absolute;
+    font-size: .8ex;
+    top: .1ex;
+    left: 2.5ex;
+    z-index: 9;
+}
+.theme-icon > span[aria-hidden="true"]{
+    display: none;
+}
+
+.theme-selector select {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border: 1ex solid transparent;
+    background-color: transparent;
+    border-radius: calc(var(--dice-size) / 4);
+    z-index: 0;
+}

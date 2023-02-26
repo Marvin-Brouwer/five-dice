@@ -1,0 +1,27 @@
+section.selector-backdrop,
+section.selector-backdrop svg {
+    pointer-events: none;
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+}
+section.selector-backdrop svg {
+    z-index: 1;
+}
+
+.selector-backdrop .main-screen {
+    display: block;
+    fill: rgba(0,0,0,.7);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+}

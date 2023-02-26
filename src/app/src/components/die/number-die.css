@@ -1,0 +1,70 @@
+.die .value {
+    color: transparent;
+    user-select: contain;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    font-size: calc(var(--dice-size) * 10);
+    z-index: 2;
+    position: relative;
+}
+
+.die .face {
+    
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    z-index: 3;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: 
+        "top-left top-middle top-right"
+        "middle-left middle-middle middle-right"
+        "bottom-left bottom-middle bottom-right";
+
+    border: var(--dice-padding) solid transparent;
+}
+
+.dot {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    width: var(--dot-size);
+    height: var(--dot-size);
+
+    overflow: hidden;
+    color: var(--dice-color-foreground);
+    color: transparent;
+    border: 0px transparent;
+    background-color: var(--dice-color-foreground);
+    border-radius: 100%;
+}
+
+.dot-space {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    display: inline-block;
+    width: var(--dot-size);
+    height: var(--dot-size);
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    z-index: -1;
+
+    overflow: hidden;
+    color: transparent;
+    border: 0px solid transparent;
+    background-color: var(transparent);
+    border-radius: 100%;
+}

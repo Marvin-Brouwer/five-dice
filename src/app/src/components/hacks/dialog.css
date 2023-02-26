@@ -1,0 +1,15 @@
+dialog:not([open]) {
+    display: none;
+    overflow: hidden;
+}
+dialog {
+    margin: auto;
+    padding: 0;
+    background-color: var(--theme-background-secondary);
+}
+dialog::backdrop {
+    background-color: rgba(0,0,0,.7);
+}
+dialog[data-show-backdrop="false"]::backdrop {
+    background-color: rgba(0,0,0,0);
+}

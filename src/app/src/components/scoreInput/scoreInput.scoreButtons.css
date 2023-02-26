@@ -1,0 +1,27 @@
+div.score-input-buttons {
+    height: 8ex;
+    display: grid;
+    gap: 1ex;
+    grid-template-columns: 8ex 8ex 8ex 8ex 8ex;
+    grid-template-rows: 2ex;
+    grid-template-areas: 
+        "die-1 die-2 die-3 die-4 die-5";
+    margin: auto auto 2ex auto;
+    padding: 0;
+    overflow: hidden;
+    z-index: 2;
+}
+
+div.score-input-buttons > .die-input {
+    font-size: 8ex;
+    margin: auto;
+}
+div.score-input-buttons [data-name="die-1"] {
+    grid-area: die-1;
+}
+
+div.score-input-buttons dialog:not([open]) {
+    display: none;
+    top: 0;
+    left: 0;
+}
