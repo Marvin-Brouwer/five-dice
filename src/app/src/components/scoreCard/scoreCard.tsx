@@ -33,6 +33,7 @@ export const ScoreCard: Component<Props> = ({
                         placeholder={getNameDisabled() ? "..." : "Your name here" }
                         value={getPlayerName()} onInput={e => setPlayerName(e.currentTarget.value)} />
                     <button 
+                        disabled={getNameDisabled()} 
                         class="clear-name" aria-label="Clear the name value" innerHTML={EraserIcon} 
                         onClick={() => {
                             setPlayerName("");
