@@ -117,23 +117,23 @@ export function createScoreInputState({
     }
 
     function reset(reopen: boolean = true) {
+        rowSelectorDialogSignal.closeDialog(false);
+        flushDiscardDialogSignal.closeDialog(false);
         setScoreInput(createEmptyScore());
         setRow(undefined);
         setFlushDiscard(undefined);
         if (reopen) {
             setSelectedDie(0);
-            setStep('rowSelector')
+            setStep('diceSelector')
             diceSelectorDialogSignal.openDialog();
         } else {
             setSelectedDie(undefined);
             setStep('closed')
-            diceSelectorDialogSignal.closeDialog(false);
         }
-        rowSelectorDialogSignal.closeDialog(false);
-        flushDiscardDialogSignal.closeDialog(false);
     }
     function resetAndClose() {
         setStep('closed');
+        diceSelectorDialogSignal.closeDialog(false);
         reset(false);
     }
     function submitAndClose() {
@@ -170,6 +170,7 @@ export function createScoreInputState({
     function open() {
         reset();
         setStep('diceSelector');
+        diceSelectorDialogSignal.openDialog();
     }
 
     function nextStep() {
