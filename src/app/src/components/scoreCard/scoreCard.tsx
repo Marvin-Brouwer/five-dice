@@ -1,5 +1,6 @@
 import "./scoreCard.css";
 import EraserIcon from "../../../public/iconmonstr-eraser-1.svg?raw";
+import FinishedIcon from "../../../public/iconmonstr-party-7.svg?raw";
 
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 
@@ -7,7 +8,8 @@ import type { Component, Signal } from "solid-js";
 import { PartOne } from './scoreCard.partOne';
 import { PartTwo } from './scoreCard.partTwo';
 import { Totals } from './scoreCard.totals';
-import { createSignal, createEffect, onMount } from 'solid-js';
+import { createSignal, onMount, Accessor } from 'solid-js';
+import { roundAmount } from '../../game/gameConstants';
 
 interface Props {
     round: Signal<number>,
@@ -40,10 +42,7 @@ export const ScoreCard: Component<Props> = ({
                             getNameInputRef()?.focus();
                         }} />
                 </span>
-                <span class="round-number">
-                    <span class="round-label">Round</span>
-                    {getRound}
-                </span>
+                <RoundLabel getRound={getRound} />
             </aside>
             <article id="part1" role="presentation">
                 <PartOne scorePad={scorePad} />
@@ -56,4 +55,25 @@ export const ScoreCard: Component<Props> = ({
             </article>
         </section>
     );
+}
+
+type RoundLabelProps = {
+    getRound: Accessor<number>
+}
+const RoundLabel: Component<RoundLabelProps> =({ getRound }) => {
+    
+    return <>
+        {
+            getRound() > roundAmount ? (
+                <span class="round-number finished" 
+                    aria-label="Game finished"
+                    innerHTML={FinishedIcon} />
+            ) : (
+                <span class="round-number">
+                    <span class="round-label">Round</span>
+                    {getRound}
+                </span>
+            )
+        }
+    </>
 }
