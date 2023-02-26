@@ -1,0 +1,34 @@
+span.roll-display {
+    display: block;
+    background-color: var(--theme-background-primary);
+    margin: 0;
+    height: var(--score-card-row-height);
+    width: calc(var(--score-card-column-roll-width) + var(--score-card-column-padding));
+    padding: var(--score-card-column-padding);
+    padding-left: 0;
+}
+
+span.roll-display .die {
+    font-weight: normal !important;
+    margin-bottom: -.5ex;
+    margin-left: .2ex;
+    --dice-size: 2.5ex;
+    --dice-padding: .2ex !important;
+}
+
+span.smallGroup {
+    margin-right: 1ex;
+    --dice-padding: calc((var(--dice-size) / 4));
+    --dice-color-foreground: rgb(43, 43, 43);
+    font-size: 1.5ex;
+    opacity: .9;
+}
+span.many {
+    font-weight: bold;
+    display: block;
+    float:left;
+    font-size: 1.5ex;
+    margin-right: 0;
+    width: 2.5ex;
+    text-align: right;
+}

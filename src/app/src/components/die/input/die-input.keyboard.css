@@ -1,0 +1,18 @@
+span.die-input-keyboard {
+    font-size: .5ex;
+    background-color: var(--theme-background-secondary);
+    border: 0px none;
+    display: grid;
+    grid-area: value;
+    gap: 1ex;
+    grid-template-columns: 10ex 10ex 10ex;
+    grid-template-rows: 10ex 10ex;
+    grid-template-areas: 
+        "aces deuces threes"
+        "fours fives sixes";
+    overflow: visible;
+    margin: 0 auto 2ex auto;
+    padding: 1ex;
+
+    width:32ex;
+}
