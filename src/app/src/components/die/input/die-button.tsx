@@ -1,7 +1,7 @@
 import "./die-button.css"
 import type { Accessor, Component, JSX } from "solid-js";
 import type { DieValue } from '../../../game/gameConstants';
-import { createMemo, children } from 'solid-js';
+import { createMemo } from 'solid-js';
 import { TextDie } from '../text-die';
 import { NumberDie } from "../number-die";
 

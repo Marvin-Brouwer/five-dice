@@ -1,13 +1,11 @@
 import "./scoreInput.css";
 
-import type { Component, Signal } from "solid-js";
+import type { Component } from "solid-js";
 import { DieButton } from "../die/input/die-button";
 import { createScoreInputState, ScoreInputStateProps } from "./scoreInput.state";
-import { createMemo } from 'solid-js';
 import { DiceSelector } from "./scoreInput.diceSelector";
 import { RowSelector } from './scoreInput.rowSelector';
 import { FlushDiscardSelector } from './scoreInput.flushDiscard';
-import type { ScorePadAccessor } from "../../game/score/useScorePad";
 
 type Props = ScoreInputStateProps
 
@@ -19,9 +17,13 @@ export const ScoreInputDialog: Component<Props> = (props) => {
     return (
         <section class="score-input">
             <div class="set-score">
-                <DieButton value="+" disabled={inputState.isOpen} onClick={() => {
-                    inputState.open();
-                }}/>
+                <DieButton 
+                    value={<img src="/iconmonstr-plus-lined.svg" /> as Element} 
+                    label="Enter a new round's value" disabled={inputState.isOpen} 
+                    onClick={() => {
+                        inputState.open();
+                    }}
+                />
             </div>
             <DiceSelector inputState={inputState} />
             <RowSelector inputState={inputState} getScorePad={getScorePad} />
