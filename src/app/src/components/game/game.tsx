@@ -1,4 +1,4 @@
-import { createSignal, Component } from 'solid-js';
+import { createSignal, Component, onMount, createEffect } from 'solid-js';
 import { useScorePad } from '../../game/score/useScorePad';
 import { score, discard } from '../../game/score/score';
 import { ScoreCard } from '../scoreCard/scoreCard';
@@ -68,10 +68,29 @@ applyScore({
 // })
 // setRound((previous) => previous +1);
 
+const createPlayerNameSignal = () => {
+    
+    const playerName = createSignal("");
+    const [getPlayerName, setPlayerName] = playerName;
+
+    onMount(() => {
+        const playerName = localStorage.getItem('playerName');
+        setPlayerName(playerName ?? '');
+        
+        createEffect(() => {
+            localStorage.setItem('playerName', getPlayerName());
+        }, getPlayerName)
+    })
+
+    return playerName;
+}
+
 export const Game: Component = () => {
+
+    const playerName = createPlayerNameSignal();
     
     return (<>
-        <ScoreCard playerName={() => "Marvin"} round={round} getScorePad={getScorePad} />
+        <ScoreCard playerName={playerName} round={round} getScorePad={getScorePad} />
         <ScoreInputDialog round={round} scorePad={scorePad}  />
     </>);
 }
