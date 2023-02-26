@@ -129,8 +129,8 @@
 
 :root{
     --score-card-row-height: 2.5ex;
-    --score-card-column-roll-width: 14ex;
-    --score-card-column-score-width:  5ex;
+    --score-card-column-roll-width: 14.5ex;
+    --score-card-column-score-width: 5ex;
     --score-card-column-padding:  .5ex;
     --score-card-column-padding-right:  1ex;
 }
@@ -160,7 +160,7 @@
     width: var( --score-card-column-score-width);
 }
 #score-card table td.totals-column {
-    width: calc(14ex + 5ex + 1.5ex);
+    width: calc(14.5ex + 5ex + 1.5ex);
 }
 #score-card table td.label-column .die {
     font-weight: normal !important;
