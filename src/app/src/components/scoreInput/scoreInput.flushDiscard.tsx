@@ -37,6 +37,12 @@ export const FlushDiscardSelector: Component<Props> = ({ inputState, getScorePad
     
     return (
         <Dialog modal={true} dialogState={inputState.dialogs.flushDiscard} showBackdrop={() => false}>
+            
+            <section class="title-section">
+                <h2>Select a row to discard</h2>
+                <p>You need to throw away a row, when you have more than one discard</p>
+            </section>
+
             <Selector id="flushDiscard"
                 getScorePad={getScorePad}
                 selectedField={inputState.flushDiscard} inputState={inputState} 

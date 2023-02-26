@@ -58,3 +58,25 @@ section.score-input .set-score button {
     width: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
     height: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
 }
+
+section.title-section{
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    z-index: 9;
+}
+section.title-section h2{
+    margin: 0ex 1ex;
+    margin-top: 3ex;
+    margin-bottom: .2ex;
+    font-size: 4.5ex;
+    text-align: center;
+    color: var(--theme-background-primary)
+}
+section.title-section p{
+    margin: 0ex 1ex;
+    text-align: center;
+    font-size: 3ex;
+    color: var(--theme-background-secondary)
+}
