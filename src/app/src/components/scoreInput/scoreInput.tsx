@@ -28,7 +28,7 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                         
                         <DieButton 
                             value={<img src="/iconmonstr-plus-lined.svg" /> as Element} 
-                            label="Enter a new round's value" disabled={inputState.isOpen} 
+                            description="Enter a new round's value" disabled={inputState.isOpen} 
                             onClick={() => {
                                 inputState.open();
                             }}

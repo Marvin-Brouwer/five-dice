@@ -8,19 +8,19 @@ import { NumberDie } from "../number-die";
 type Props = JSX.HTMLAttributes<HTMLButtonElement> 
 & {
     value: Accessor<DieValue | undefined> | string | Element,
-    label: Accessor<DieValue | undefined> | string,
+    description: Accessor<DieValue | undefined> | string,
     disabled?: Accessor<boolean>
     type?: 'button' | 'submit' | 'reset'
 }
 
-export const DieButton : Component<Props> = ({ value, label, disabled, type, ...props }) => {
+export const DieButton : Component<Props> = ({ value, description, disabled, type, ...props }) => {
 
     const die = createMemo(() =>  {
         if (value === undefined) return undefined;
-        if (typeof value === typeof "string") return <TextDie value={value as string} label={label as string} />;
+        if (typeof value === typeof "string") return <TextDie value={value as string} description={description as string} />;
        
         if ((value as Element)?.tagName !== undefined || (value as any)['t'] !== undefined) {
-            return <TextDie value={value as Element} label={label as string} />
+            return <TextDie value={value as Element} description={description as string} />
         }
 
         const dieValue = (value as () => DieValue | undefined)();

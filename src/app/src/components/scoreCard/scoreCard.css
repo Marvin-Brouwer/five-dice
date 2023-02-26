@@ -160,7 +160,7 @@
     width: var( --score-card-column-score-width);
 }
 #score-card table td.totals-column {
-    width: calc(14.5ex + 5ex + 1.5ex);
+    width: calc(14.5ex + 5ex + 2ex);
 }
 #score-card table td.label-column .die {
     font-weight: normal !important;
