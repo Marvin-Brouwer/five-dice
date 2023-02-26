@@ -1,9 +1,8 @@
 import "./scoreCard.css";
 
-import { Component, createComputed, createEffect, createMemo, createSignal } from 'solid-js';
+import { Component, createMemo } from 'solid-js';
 import type { ScorePadAccessor } from "../../game/score/useScorePad";
 import { calculatePartOneSubTotal, calculateGameTotal, calculatePartOneBonus, calculatePartTwoTotal } from '../../game/score/scoreCalculator';
-import type { ScorePad } from "../../game/score/scorePad";
 
 interface Props { 
     scorePad: ScorePadAccessor
