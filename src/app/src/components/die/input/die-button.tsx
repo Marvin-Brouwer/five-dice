@@ -25,8 +25,8 @@ export const DieButton : Component<Props> = ({ value, description, disabled, typ
 
         const dieValue = (value as () => DieValue | undefined)();
 
-        if (dieValue === undefined) return <TextDie value="" label="" />;
-        return <NumberDie amount={dieValue} label={dieValue.toString()} />
+        if (dieValue === undefined) return <TextDie value="" description="" />;
+        return <NumberDie amount={dieValue} description={dieValue.toString()} />
     }
     , value)
 
