@@ -1,8 +1,9 @@
 import "./scoreCard.css";
 
-import type { Component } from "solid-js";
+import { Component, createComputed, createEffect, createMemo, createSignal } from 'solid-js';
 import type { ScorePadAccessor } from "../../game/score/useScorePad";
 import { calculatePartOneSubTotal, calculateGameTotal, calculatePartOneBonus, calculatePartTwoTotal } from '../../game/score/scoreCalculator';
+import type { ScorePad } from "../../game/score/scorePad";
 
 interface Props { 
     scorePad: ScorePadAccessor
@@ -10,10 +11,14 @@ interface Props {
 
 export const Totals: Component<Props> = ({ scorePad }) => {
 
-    const partOneSubTotal = calculatePartOneSubTotal(scorePad());
-    const bonus = calculatePartOneBonus(partOneSubTotal);
-    const partTwoTotal = calculatePartTwoTotal(scorePad());
-    const gameTotal = calculateGameTotal(partOneSubTotal, bonus, partTwoTotal)
+    // All of this needs to be memos to trigger updates
+    const partOneSubTotal = createMemo(() => calculatePartOneSubTotal(scorePad()), scorePad);
+    const bonus = createMemo(() => calculatePartOneBonus(partOneSubTotal()), partOneSubTotal);
+    const partTwoTotal = createMemo(() => calculatePartTwoTotal(scorePad()), scorePad);
+    const gameTotal = createMemo(
+        () => calculateGameTotal(partOneSubTotal(), bonus(), partTwoTotal()),
+        [partOneSubTotal(), bonus(), partTwoTotal()]
+    );
 
     return (
         <table>
@@ -42,7 +47,7 @@ export const Totals: Component<Props> = ({ scorePad }) => {
                         </span>
                     </td> 
                     <td class="totals-column">
-                        <span class="score-display">{bonus != 0 ? bonus : "."}</span>
+                        <span class="score-display">{bonus() != 0 ? bonus : "."}</span>
                     </td>
                 </tr>
                 <tr>
