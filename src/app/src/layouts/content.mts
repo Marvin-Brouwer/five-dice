@@ -12,12 +12,12 @@ function scrollToTop() {
     topScroller?.blur();
 
     if (prefersReducedMotion) {
-        window.scrollTo({ top: 0 });
+        window.document.body.scrollTo({ top: 0 });
         topElement?.focus();
     }
     else {
         topElement?.focus({ preventScroll: true });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.document.body.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 

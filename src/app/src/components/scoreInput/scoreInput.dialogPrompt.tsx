@@ -46,17 +46,17 @@ export const ScoreDialogPrompt: Component<Props> = ({
         <div class="score-input-dialog-prompt" role="toolbar">
             <div class="grid">
                 <label>
-                    <DieButton value="⭯" label="reset" type="reset" onClick={reset} />
+                    <DieButton value="⭯" description="reset" type="reset" onClick={reset} />
                     reset
                 </label>
                 <label aria-label={submitDescription} aria-disabled={!submitEnabled()}>
-                    <DieButton value="✓" label={submitLabel} type="submit" 
+                    <DieButton value="✓" description={submitLabel} type="submit" 
                         onClick={submit}
                         ref={setSubmitButtonRef} disabled={() => !submitEnabled()} />
                     {submitLabel}
                 </label>
                 <label>
-                    <DieButton value={<img src="/iconmonstr-x-mark-lined.svg" /> as Element} label="close" type="reset" onClick={close} ref={setCloseButtonRef} />
+                    <DieButton value={<img src="/iconmonstr-x-mark-lined.svg" /> as Element} description="close" type="reset" onClick={close} ref={setCloseButtonRef} />
                     close
                 </label>
             </div>

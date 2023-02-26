@@ -2,14 +2,32 @@
 WIP
 
 
-## TODO:
+## TODO
 
-Linking to draw.IO:
+### High importance  
 
-[diagram](https://app.diagrams.net/?lightbox=1#Uhttps://raw.githubusercontent.com/Marvin-Brouwer/five-dice/wip/Resource/Wireframes/select.drawio)
-![test](https://app.diagrams.net/?lightbox=1#Uhttps://raw.githubusercontent.com/Marvin-Brouwer/five-dice/wip/Resource/Wireframes/select.drawio)
+- Fix style inconsistencies
+  - Buttons should look similar to radiobuttons for dice selectors
+  - Fix transparent dice buttons
+  - Add responsiveness for larger screens like browsers (maybe smaller font?)
+  - Set max body width
+- Make diceinput keyboard integrated for the score selector
+- Fix keyboard input
+  - Make the rowSelector and flushDiscard react to keyboard input  
+- Fix todo's in code
+- Setup hosting pipeline to host on github.io
+- Create game description
+- Playtest
+- Make PWA
+  - Include offline capability
 
-<iframe frameborder="0" style="height:320px;" src="https://viewer.diagrams.net/?tags=%7B%7D&highlight=0000ff&layers=1&nav=1&title=select.drawio#Uhttps://raw.githubusercontent.com/Marvin-Brouwer/five-dice/wip/Resource/Wireframes/select.drawio"></iframe>
+### Low importance
+
+- Write readme
+- Setup routing to default to `/en` to prepare for multi-language
+- Add Linter
+- Add lighthouse pipeline
+- Add more tests
 
 
 ## Credits

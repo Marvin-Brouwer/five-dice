@@ -7,7 +7,6 @@ import type { Component } from 'solid-js';
 
 interface Props {
     amount: DieValue,
-    label: string,
     description?: string,
     tabindex?: number 
 }
