@@ -35,15 +35,6 @@ jobs:
         with:
           path: './src/app'
           package-manager: pnpm 
-      # - name: Setup pnpm
-      #   uses: pnpm/action-setup@v2.2.4
-      #   with:
-      #     version: latest
-      # - name: install dependencies
-      #   run: pnpm i --frozen-lockfile
-      # - name: build site
-      #   run: pnpm build
-      #   working-directory: './src/app'
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
