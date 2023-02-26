@@ -51,3 +51,10 @@ section.score-input .set-score button {
         rgba(0, 0, 0, 0.17) 0px 12px 13px, 
         rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
+
+.set-score button.die-button img  {
+    left: calc((var(--dice-padding) * 2) - 2px);
+    top: calc((var(--dice-padding) * 3) - 2px);
+    width: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
+    height: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
+}

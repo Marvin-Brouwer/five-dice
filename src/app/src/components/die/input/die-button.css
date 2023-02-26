@@ -44,3 +44,14 @@ button.die-button .die {
     left: 0;
     top: 0;
 }
+button.die-button img {
+    outline:0;
+    border-width: 0;
+    display: inline-block;
+    position: absolute;
+    padding: 0;
+    left: calc((var(--dice-padding)) - 2px);
+    top: calc((var(--dice-padding)) - 2px);
+    width: calc((var(--dice-size)) - 2px);
+    height: calc((var(--dice-size)) - 2px);
+}
