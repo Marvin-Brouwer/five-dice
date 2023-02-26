@@ -104,6 +104,13 @@
     font-size: .8ex;
     text-transform: uppercase;
 }
+#score-card aside .round-number.finished svg {
+    width: 2.5ex;
+    height: 2.5ex;
+    margin: .5ex;
+    display: block;
+    fill: var(--theme-foreground-primary)
+}
 #score-card aside .round-number {
     text-align: center;
     float: right;
