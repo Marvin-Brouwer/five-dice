@@ -31,6 +31,7 @@ jobs:
         with:
           path: './src/app'
           package-manager: pnpm 
+          node-version: 19
 
   deploy:
     needs: build
