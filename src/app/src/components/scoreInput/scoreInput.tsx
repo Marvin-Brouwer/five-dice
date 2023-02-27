@@ -1,5 +1,9 @@
 import "./scoreInput.css";
 
+import BallonPopAudio from '../../../public/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav?blob';
+import TrumpetAudio from '../../../public/383154__profcalla__re_frullato_tromba.mp3?blob';
+import PartyHornAudio from '../../../public/170583__audiosmedia__party-horn.wav?blob';
+
 import type { Component } from "solid-js";
 import { DieButton } from "../die/input/die-button";
 import { createScoreInputState, ScoreInputStateProps } from "./scoreInput.state";
@@ -11,7 +15,6 @@ import { createMemo, onMount, createEffect, createSignal } from 'solid-js';
 import JSConfetti from 'js-confetti'
 import { createEchoDelayEffect } from "../../audio/echoDelay";
 import { createAudioContextAccessor } from "../../audio/audioContextSignal";
-
 
 type Props = ScoreInputStateProps
 
@@ -36,9 +39,9 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                 audioContext.suspend();
 
                 try{
-                    await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
-                    await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
-                    await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
+                    await appendBuffer(audioContext, BallonPopAudio, createBalloonEffect(3))
+                    await appendBuffer(audioContext, TrumpetAudio,createPartyHornEffect(0))
+                    await appendBuffer(audioContext, PartyHornAudio, createPartyHornEffect(.06))
                     audioContext.resume();
                 } catch (e) {
                     console.warn(e);
@@ -89,21 +92,15 @@ const createPartyHornEffect = (delayTime: number): PitchShifter => (audioContext
     delay.delayTime.value = delayTime;
     return audioNode.connect(delay);
 }
-async function appendBuffer(audioContext: AudioContext, url: string, shifter?: PitchShifter) {
+async function appendBuffer(audioContext: AudioContext, blob: Blob, shifter?: PitchShifter) {
     
-    try{
-        const actualShifter = shifter ?? ((_, n) => n);
-        const bufferSource = audioContext.createBufferSource();
-        const audioBuffer = await fetch(url)
-            .then(res => res.arrayBuffer())
-            .then(b => audioContext.decodeAudioData(b));
-        bufferSource.buffer = audioBuffer
+    const actualShifter = shifter ?? ((_, n) => n);
+    const bufferSource = audioContext.createBufferSource();
+    const audioBuffer = await audioContext.decodeAudioData(await blob.arrayBuffer());
+    bufferSource.buffer = audioBuffer
 
-        actualShifter(audioContext, bufferSource)
-            .connect(audioContext.destination);
-        bufferSource.loop = false;
-        bufferSource.start();
-    } catch(err) {
-        console.warn(`failed to attach: ${url}`, err);
-    }
+    actualShifter(audioContext, bufferSource)
+        .connect(audioContext.destination);
+    bufferSource.loop = false;
+    bufferSource.start();
 }
