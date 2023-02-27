@@ -1,6 +1,6 @@
 import "./scoreInput.css";
 
-import { Component, onCleanup } from "solid-js";
+import type { Component } from "solid-js";
 import { DieButton } from "../die/input/die-button";
 import { createScoreInputState, ScoreInputStateProps } from "./scoreInput.state";
 import { DiceSelector } from "./scoreInput.diceSelector";
@@ -10,6 +10,7 @@ import { roundAmount } from '../../game/gameConstants';
 import { createMemo, onMount, createEffect, createSignal } from 'solid-js';
 import JSConfetti from 'js-confetti'
 import { createEchoDelayEffect } from "../../audio/echoDelay";
+import { createAudioContextAccessor } from "../../audio/audioContextSignal";
 
 
 type Props = ScoreInputStateProps
@@ -22,62 +23,30 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
     // Put into memo to force rerender on change
     const gameEnded = createMemo(() => getRound() > roundAmount, getRound);
-    const [getAudioContext, setAudioContext] = createSignal<AudioContext>();
-
-    const createAudioContext = () => {
-        setAudioContext(new (window.AudioContext || (window as any).webkitAudioContext)());
-        // TEMP
-        alert("AudioContext")
-        document.removeEventListener('mousemove', createAudioContext);
-        document.removeEventListener('click', createAudioContext);
-        document.removeEventListener('tap', createAudioContext);
-        document.removeEventListener('drag', createAudioContext);
-        document.removeEventListener('focus', createAudioContext);
-        document.removeEventListener('pointerdown', createAudioContext);
-        document.removeEventListener('scroll', createAudioContext);
-        document.removeEventListener('keypress', createAudioContext);
-    }
-    onMount(() => {
-        document.addEventListener('mousemove', createAudioContext);
-        document.addEventListener('click', createAudioContext);
-        document.addEventListener('tap', createAudioContext);
-        document.addEventListener('drag', createAudioContext);
-        document.addEventListener('focus', createAudioContext);
-        document.addEventListener('pointerdown', createAudioContext);
-        document.addEventListener('scroll', createAudioContext);
-        document.addEventListener('keypress', createAudioContext);
-    })
-    onCleanup(() => {
-        document.removeEventListener('click', createAudioContext);
-        document.removeEventListener('tap', createAudioContext);
-        document.removeEventListener('drag', createAudioContext);
-        document.removeEventListener('focus', createAudioContext);
-        document.removeEventListener('pointerdown', createAudioContext);
-        document.removeEventListener('scroll', createAudioContext);
-        document.removeEventListener('keypress', createAudioContext);
-    })
+    const getAudioContext = createAudioContextAccessor();
 
 
     onMount(() => {
         const confetti = new JSConfetti();
         createEffect(async () => {
             if (!gameEnded()) return;
-
-            confetti.addConfetti();
             
             const audioContext = getAudioContext();
-            if (!audioContext) return;
+            if (audioContext) {
+                audioContext.suspend();
 
-            audioContext.suspend();
-
-            try{
-                await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
-                await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
-                await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
-                audioContext.resume();
-            } catch (e) {
-                console.warn(e);
+                try{
+                    await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
+                    await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
+                    await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
+                    audioContext.resume();
+                } catch (e) {
+                    console.warn(e);
+                }
             }
+
+            confetti.addConfetti();
+
         }, [gameEnded, getAudioContext])
     })
 
