@@ -70,15 +70,13 @@
 #score-card aside .clear-name svg,
 #score-card aside .clear-name svg path {
     display: block;
-    height: 2.5ex;
-    width: 2.5ex;
 }
 #score-card aside .clear-name {
     background-color: transparent;
     position: absolute;
     top: .2ex;
     right: .2ex;
-    height: 3ex;
+    bottom: .2ex;
     width: 3ex;
     display: flex;
     margin: 0;

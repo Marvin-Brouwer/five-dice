@@ -6,7 +6,6 @@
     --theme-foreground-secondary: rgb(48, 48, 48);
     --theme-foreground-hint: rgb(109, 109, 109);
     --theme-foreground-hover: rgb(255, 153, 0);
-    --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
     --theme-background-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgba(255, 153, 0, 0.724);
@@ -18,7 +17,6 @@
     --theme-foreground-secondary: rgb(208, 208, 208);
     --theme-foreground-hint: rgb(117, 117, 117);
     --theme-foreground-hover: rgb(176, 0, 117);
-    --theme-background-header: rgb(34 34 34);
     --theme-background-primary: rgb(74 74 74);
     --theme-background-secondary: rgb(115, 115, 115);
     --theme-background-focus: rgba(203, 0, 135, 0.618);
@@ -30,7 +28,6 @@
     --theme-foreground-secondary: rgb(48, 48, 48);
     --theme-foreground-hint: rgb(109, 109, 109);
     --theme-foreground-hover: rgb(255, 153, 0);
-    --theme-background-header: rgb(48, 48, 48);
     --theme-background-primary: rgb(244, 244, 244);
     --theme-background-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgba(255, 153, 0, 0.724);
@@ -43,7 +40,6 @@
         --theme-foreground-secondary: rgb(208, 208, 208);
         --theme-foreground-hint: rgb(158, 158, 158);
         --theme-foreground-hover: rgb(176, 0, 117);
-        --theme-background-header: rgb(34 34 34);
         --theme-background-primary: rgb(74 74 74);
         --theme-background-secondary: rgb(115, 115, 115);
         --theme-background-focus: rgba(203, 0, 135, 0.618);
@@ -51,6 +47,7 @@
 }
 
 :root{
+    --theme-background-header: rgb(48, 48, 48);
     color: var(--theme-foreground-primary);
 }
 
