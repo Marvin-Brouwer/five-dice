@@ -25,10 +25,13 @@ export const ScoreInputDialog: Component<Props> = (props) => {
     const [getAudioContext, setAudioContext] = createSignal<AudioContext>();
 
     const createAudioContext = () => {
-        setAudioContext(new AudioContext());
+        setAudioContext(new (window.AudioContext || (window as any).webkitAudioContext)());
         document.removeEventListener('mousemove', createAudioContext);
         document.removeEventListener('click', createAudioContext);
         document.removeEventListener('tap', createAudioContext);
+        document.removeEventListener('drag', createAudioContext);
+        document.removeEventListener('focus', createAudioContext);
+        document.removeEventListener('pointerdown', createAudioContext);
         document.removeEventListener('scroll', createAudioContext);
         document.removeEventListener('keypress', createAudioContext);
     }
@@ -36,13 +39,18 @@ export const ScoreInputDialog: Component<Props> = (props) => {
         document.addEventListener('mousemove', createAudioContext);
         document.addEventListener('click', createAudioContext);
         document.addEventListener('tap', createAudioContext);
+        document.addEventListener('drag', createAudioContext);
+        document.addEventListener('focus', createAudioContext);
+        document.addEventListener('pointerdown', createAudioContext);
         document.addEventListener('scroll', createAudioContext);
         document.addEventListener('keypress', createAudioContext);
     })
     onCleanup(() => {
-        document.removeEventListener('mousemove', createAudioContext);
         document.removeEventListener('click', createAudioContext);
         document.removeEventListener('tap', createAudioContext);
+        document.removeEventListener('drag', createAudioContext);
+        document.removeEventListener('focus', createAudioContext);
+        document.removeEventListener('pointerdown', createAudioContext);
         document.removeEventListener('scroll', createAudioContext);
         document.removeEventListener('keypress', createAudioContext);
     })

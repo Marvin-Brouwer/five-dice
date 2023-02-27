@@ -47,6 +47,7 @@ body {
     overflow: auto;
     overflow-x: hidden;
     overflow-y: scroll;
+    overscroll-behavior-y: contain;
 }
 h1 {
     font-size: 5ex;
