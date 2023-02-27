@@ -5,7 +5,7 @@
 }
 #score-card aside {
     display: none;
-    font-size: 2.8ex;
+    font-size: 2.2ex;
     margin: -.5ex 0 1.5ex .0;
     padding: 0 0 .5ex 0;
 }
@@ -76,17 +76,16 @@
 #score-card aside .clear-name {
     background-color: transparent;
     position: absolute;
-    top: calc(.6ex + 1px);
-    right: 1.5ex;
-    height: 3.5ex;
-    width: 3.5ex;
+    top: .2ex;
+    right: .2ex;
+    height: 3ex;
+    width: 3ex;
     display: flex;
     margin: 0;
     padding: 0;
-    padding-bottom: .4ex;
     align-content: center;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     border: none;
     opacity: .5;
     z-index: 4;
