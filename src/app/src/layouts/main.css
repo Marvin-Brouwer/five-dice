@@ -5,24 +5,32 @@ header {
     margin: 0;
     position: sticky;
     left: 0;
-    top: 1.3ex;
     z-index: 9;
     right: 0;
     width: 100%;
     background-color: var(--theme-background-header);
-    margin-bottom: 3ex;
+    top: 0;
+    margin-bottom: 1.5ex;
 }
-header::before {
-    display: block;
-    content: '';
-    position: absolute;
-    left: 0;
-    top: -1.5ex;
-    right: 0;
-    bottom: 1.5ex;
-    height: 1.5ex;
-    width: 100%;
-    background-color: var(--theme-background-primary);
+@media only screen and (min-height: 630px) {
+    header{
+        top: 1.3ex!important;
+        margin-bottom: 3ex;
+    }
+}
+@media only screen and (min-height: 630px) {
+    header::before {
+        display: block;
+        content: '';
+        position: absolute;
+        left: 0;
+        top: -1.5ex;
+        right: 0;
+        bottom: 1.5ex;
+        height: 1.5ex;
+        width: 100%;
+        background-color: var(--theme-background-primary);
+    }
 }
 header::after {
     display: block;
