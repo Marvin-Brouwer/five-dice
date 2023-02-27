@@ -26,6 +26,8 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
     const createAudioContext = () => {
         setAudioContext(new (window.AudioContext || (window as any).webkitAudioContext)());
+        // TEMP
+        alert("AudioContext")
         document.removeEventListener('mousemove', createAudioContext);
         document.removeEventListener('click', createAudioContext);
         document.removeEventListener('tap', createAudioContext);
