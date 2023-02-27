@@ -67,19 +67,26 @@
 #score-card aside .clear-name:disabled {
     display: none;
 }
+#score-card aside .clear-name svg,
+#score-card aside .clear-name svg path {
+    display: block;
+    height: 2.5ex;
+    width: 2.5ex;
+}
 #score-card aside .clear-name {
     background-color: transparent;
     position: absolute;
-    top: calc(1ex - 1px);
+    top: calc(.6ex + 1px);
     right: 1.5ex;
-    height: 4.5ex;
-    width: 4.5ex;
+    height: 3.5ex;
+    width: 3.5ex;
     display: flex;
     margin: 0;
     padding: 0;
+    padding-bottom: .4ex;
     align-content: center;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     border: none;
     opacity: .5;
     z-index: 4;
@@ -180,7 +187,7 @@
     --dice-padding: .2ex !important;
 }
 
-@media only screen and (min-height: 750px) {
+@media only screen and (min-height: 600px) {
     #score-card aside {
         display: block;
     }
