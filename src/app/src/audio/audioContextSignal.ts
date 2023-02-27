@@ -24,8 +24,7 @@ export function createAudioContextAccessor() {
     function createAudioContext() {
         
         setAudioContext(new (window.AudioContext || (window as any).webkitAudioContext)());
-        // TEMP
-        alert("AudioContext")
+
         detachEventListeners();
     }
     onMount(attachEventListeners);

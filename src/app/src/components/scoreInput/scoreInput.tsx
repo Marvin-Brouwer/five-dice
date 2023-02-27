@@ -91,15 +91,19 @@ const createPartyHornEffect = (delayTime: number): PitchShifter => (audioContext
 }
 async function appendBuffer(audioContext: AudioContext, url: string, shifter?: PitchShifter) {
     
-    const actualShifter = shifter ?? ((_, n) => n);
-    const bufferSource = audioContext.createBufferSource();
-    const audioBuffer = await fetch(url)
-        .then(res => res.arrayBuffer())
-        .then(b => audioContext.decodeAudioData(b));
-    bufferSource.buffer = audioBuffer
+    try{
+        const actualShifter = shifter ?? ((_, n) => n);
+        const bufferSource = audioContext.createBufferSource();
+        const audioBuffer = await fetch(url)
+            .then(res => res.arrayBuffer())
+            .then(b => audioContext.decodeAudioData(b));
+        bufferSource.buffer = audioBuffer
 
-    actualShifter(audioContext, bufferSource)
-        .connect(audioContext.destination);
-    bufferSource.loop = false;
-    bufferSource.start();
+        actualShifter(audioContext, bufferSource)
+            .connect(audioContext.destination);
+        bufferSource.loop = false;
+        bufferSource.start();
+    } catch(err) {
+        console.warn(`failed to attach: ${url}`, err);
+    }
 }
