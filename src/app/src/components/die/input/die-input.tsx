@@ -120,6 +120,8 @@ export const DieInput : Component<Props> = ({ value, name, disabled, ...props })
         <span class="die-input" data-name={name} data-disabled={disabled?.()} data-keyboard-visible={keyboardVisible()}>
             {die}
             <input type="number" 
+                inputmode="none" 
+                readOnly={keyboardVisible()}
                 value={getValue()} {...props}
                 ref={inputReference!} 
                 name={name}
