@@ -56,7 +56,7 @@ export const ScoreDialogPrompt: Component<Props> = ({
                     {submitLabel}
                 </label>
                 <label>
-                    <DieButton value={<img src="/iconmonstr-x-mark-lined.svg" /> as Element} description="close" type="reset" onClick={close} ref={setCloseButtonRef} />
+                    <DieButton value={<img src={`${import.meta.env.BASE_URL}iconmonstr-x-mark-lined.svg`} /> as Element} description="close" type="reset" onClick={close} ref={setCloseButtonRef} />
                     close
                 </label>
             </div>

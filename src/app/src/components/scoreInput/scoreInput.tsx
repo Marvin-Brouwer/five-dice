@@ -26,9 +26,9 @@ export const ScoreInputDialog: Component<Props> = (props) => {
     onMount(async () => {
         const audioContext = new AudioContext();
         audioContext.suspend();
-        await appendBuffer(audioContext, '/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav', createBalloonEffect(3))
-        await appendBuffer(audioContext, '/383154__profcalla__re_frullato_tromba.mp3',createPartyHornEffect(0))
-        await appendBuffer(audioContext, '/170583__audiosmedia__party-horn.wav', createPartyHornEffect(.06))
+        await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
+        await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
+        await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
 
         const confetti = new JSConfetti();
         createEffect(() => {
@@ -46,7 +46,7 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                     <div class="set-score">
                         
                         <DieButton 
-                            value={<img src="/iconmonstr-plus-lined.svg" /> as Element} 
+                            value={<img src={`${import.meta.env.BASE_URL}iconmonstr-plus-lined.svg`} /> as Element} 
                             description="Enter a new round's value" disabled={inputState.isOpen} 
                             onClick={() => {
                                 inputState.open();
