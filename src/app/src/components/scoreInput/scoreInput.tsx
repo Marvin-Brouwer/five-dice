@@ -56,24 +56,26 @@ export const ScoreInputDialog: Component<Props> = (props) => {
     })
 
 
-    createEffect(async () => {
-        const audioContext = getAudioContext();
-        if (!audioContext) return;
-
-        audioContext.suspend();
-        await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
-        await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
-        await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
-
-    }, getAudioContext)
-
     onMount(() => {
         const confetti = new JSConfetti();
-        createEffect(() => {
+        createEffect(async () => {
             if (!gameEnded()) return;
 
             confetti.addConfetti();
-            getAudioContext()?.resume();
+            
+            const audioContext = getAudioContext();
+            if (!audioContext) return;
+
+            audioContext.suspend();
+
+            try{
+                await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
+                await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
+                await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
+                audioContext.resume();
+            } catch (e) {
+                console.warn(e);
+            }
         }, [gameEnded, getAudioContext])
     })
 
