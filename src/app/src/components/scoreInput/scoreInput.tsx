@@ -1,13 +1,13 @@
 import "./scoreInput.css";
 
-import type { Component } from "solid-js";
+import { Component, onCleanup } from "solid-js";
 import { DieButton } from "../die/input/die-button";
 import { createScoreInputState, ScoreInputStateProps } from "./scoreInput.state";
 import { DiceSelector } from "./scoreInput.diceSelector";
 import { RowSelector } from './scoreInput.rowSelector';
 import { FlushDiscardSelector } from './scoreInput.flushDiscard';
 import { roundAmount } from '../../game/gameConstants';
-import { createMemo, onMount, createEffect } from 'solid-js';
+import { createMemo, onMount, createEffect, createSignal } from 'solid-js';
 import JSConfetti from 'js-confetti'
 import { createEchoDelayEffect } from "../../audio/echoDelay";
 
@@ -22,21 +22,51 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
     // Put into memo to force rerender on change
     const gameEnded = createMemo(() => getRound() > roundAmount, getRound);
+    const [getAudioContext, setAudioContext] = createSignal<AudioContext>();
 
-    onMount(async () => {
-        const audioContext = new AudioContext();
+    const createAudioContext = () => {
+        setAudioContext(new AudioContext());
+        document.removeEventListener('mousemove', createAudioContext);
+        document.removeEventListener('click', createAudioContext);
+        document.removeEventListener('tap', createAudioContext);
+        document.removeEventListener('scroll', createAudioContext);
+        document.removeEventListener('keypress', createAudioContext);
+    }
+    onMount(() => {
+        document.addEventListener('mousemove', createAudioContext);
+        document.addEventListener('click', createAudioContext);
+        document.addEventListener('tap', createAudioContext);
+        document.addEventListener('scroll', createAudioContext);
+        document.addEventListener('keypress', createAudioContext);
+    })
+    onCleanup(() => {
+        document.removeEventListener('mousemove', createAudioContext);
+        document.removeEventListener('click', createAudioContext);
+        document.removeEventListener('tap', createAudioContext);
+        document.removeEventListener('scroll', createAudioContext);
+        document.removeEventListener('keypress', createAudioContext);
+    })
+
+
+    createEffect(async () => {
+        const audioContext = getAudioContext();
+        if (!audioContext) return;
+
         audioContext.suspend();
         await appendBuffer(audioContext, `${import.meta.env.BASE_URL}458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`, createBalloonEffect(3))
         await appendBuffer(audioContext, `${import.meta.env.BASE_URL}383154__profcalla__re_frullato_tromba.mp3`,createPartyHornEffect(0))
         await appendBuffer(audioContext, `${import.meta.env.BASE_URL}170583__audiosmedia__party-horn.wav`, createPartyHornEffect(.06))
 
+    }, getAudioContext)
+
+    onMount(() => {
         const confetti = new JSConfetti();
         createEffect(() => {
             if (!gameEnded()) return;
 
             confetti.addConfetti();
-            audioContext.resume();
-        }, gameEnded)
+            getAudioContext()?.resume();
+        }, [gameEnded, getAudioContext])
     })
 
     return (
