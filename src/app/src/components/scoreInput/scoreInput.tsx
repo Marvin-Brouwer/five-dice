@@ -1,8 +1,8 @@
 import "./scoreInput.css";
 
-import BallonPopAudio from '../../../public/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav?blob';
-import TrumpetAudio from '../../../public/383154__profcalla__re_frullato_tromba.mp3?blob';
-import PartyHornAudio from '../../../public/170583__audiosmedia__party-horn.wav?blob';
+import getBalloonPopAudio from '../../../public/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav?blob';
+import getTrumpetAudio from '../../../public/383154__profcalla__re_frullato_tromba.mp3?blob';
+import getPartyHornAudio from '../../audio/170583__audiosmedia__party-horn.wav?blob';
 
 import type { Component } from "solid-js";
 import { DieButton } from "../die/input/die-button";
@@ -39,9 +39,9 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                 audioContext.suspend();
 
                 try{
-                    await appendBuffer(audioContext, BallonPopAudio, createBalloonEffect(3))
-                    await appendBuffer(audioContext, TrumpetAudio,createPartyHornEffect(0))
-                    await appendBuffer(audioContext, PartyHornAudio, createPartyHornEffect(.06))
+                    await appendBuffer(audioContext, getBalloonPopAudio(), createBalloonEffect(3))
+                    await appendBuffer(audioContext, getTrumpetAudio(),createPartyHornEffect(0))
+                    await appendBuffer(audioContext, getPartyHornAudio(), createPartyHornEffect(.06))
                     audioContext.resume();
                 } catch (e) {
                     console.warn(e);
