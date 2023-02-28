@@ -1,0 +1,14 @@
+.die .text {
+    color: var(--dice-color-foreground);
+    width: var(--dice-size);
+    height: var(--dice-size);
+    
+    position: relative;
+    z-index: 1;
+    text-transform: uppercase;
+    text-align: center;
+    display: inline-block;
+    margin-top: calc((var(--dice-size) / 9) *-1); 
+    margin-bottom: calc((var(--dice-size) / 9)); 
+    overflow: hidden;
+}

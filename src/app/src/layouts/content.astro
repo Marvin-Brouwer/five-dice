@@ -1,0 +1,90 @@
+---
+import "./theme.css";
+import "./content.css";
+
+import Svg from "@jasikpark/astro-svg-loader";
+
+import MainLayout from "./main.astro";
+
+interface Props {
+    title: string
+}
+
+const { title } = Astro.props
+---
+
+<script src="./content.mts" ></script>
+
+<MainLayout title={title}>
+	<a id="top" tabindex={-1}/>	
+	<aside role="banner">
+		<ul class="top-banner" role="navigation">
+			<li>
+				<a href="score-card" title="start new game">
+					<picture class="new-game-icon" role="img">+</picture>
+					Start new game
+				</a>
+			</li>	
+		</ul>
+	</aside>
+	<section role="main"><slot /></section>
+	<footer>
+		<ul class="doormat" role="navigation">
+			<li>
+				<a href="score-card" title="start new game">
+					<picture class="new-game-icon" role="img">+</picture>
+					Start new game
+				</a>
+			</li>	
+			<li>
+				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Fork me on GitHub" target="_blank" rel="nofollow">
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-github-1.svg?raw")}
+						role="img" />	
+					Fork me on GitHub
+				</a>
+			</li>	
+			<li>
+				<!-- TODO: change to issue of type bug -->
+				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report a bug" target="_blank" rel="nofollow">
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-github-1.svg?raw")}
+						role="img" />	
+					Report a bug
+				</a>
+			</li>	
+			
+			<li>
+				<button title="Scroll to top" id="topScroller">
+					<picture class="scroll-to-top-icon" role="img" >&#11205;</picture>
+					Scroll to top
+				</button>
+			</li>	
+			<li>
+				<a href="/accessibility" title="Accessibility" target="_blank">
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-accessibility-circle-lined.svg?raw")}
+						role="img" />	
+					Accessibility
+				</a>
+			</li>	
+			<li>
+				<!-- TODO: change to issue of type accessibility issue -->
+				<a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report accessibility issues" target="_blank" rel="nofollow">
+					<Svg class="icon"
+						width={25}
+						height={25}
+						src={import("../../public/iconmonstr-github-1.svg?raw")}
+						role="img" />	
+					Report accessibility issues
+				</a>
+			</li>	
+		</ul>
+	</footer>
+</MainLayout>

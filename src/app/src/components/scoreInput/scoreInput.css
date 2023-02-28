@@ -1,0 +1,82 @@
+section.score-input {
+    position: sticky;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width:100%;
+    height: 8ex;
+    max-width: unset;
+    max-height: unset;
+    margin:0;
+    padding: 0;
+    border: 0px none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+section.score-input > dialog[open] {
+    position: sticky;
+    left: 0;
+    right: 0;
+    width:100%;
+    max-width: unset;
+    max-height: unset;
+    margin:0;
+    padding: 0;
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-content: center;
+    align-items: center;
+    inset-block-start: auto;
+    inset-block-end: revert;
+    background-color: transparent;
+}
+
+
+section.score-input .set-score {
+    font-size: 8ex;
+    line-height: 1ex;
+    margin:0;
+    padding: 0;
+}
+section.score-input .set-score button {
+    box-shadow: 
+        rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+        rgba(0, 0, 0, 0.12) 0px -12px 30px,
+        rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+        rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+        rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.set-score button.die-button img  {
+    left: calc((var(--dice-padding) * 2) - 2px);
+    top: calc((var(--dice-padding) * 3) - 2px);
+    width: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
+    height: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
+}
+
+section.title-section{
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    z-index: 9;
+}
+section.title-section h2{
+    margin: 0ex 1ex;
+    margin-top: 3ex;
+    margin-bottom: .2ex;
+    font-size: 4.5ex;
+    text-align: center;
+    color: var(--theme-background-primary)
+}
+section.title-section p{
+    margin: 0ex 1ex;
+    text-align: center;
+    font-size: 3ex;
+    color: var(--theme-background-secondary)
+}

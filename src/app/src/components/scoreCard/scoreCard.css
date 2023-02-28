@@ -1,0 +1,194 @@
+#score-card {
+    display: block;
+    width: calc(100% - 2ex);
+    padding: 0 1ex 1ex 1ex;
+}
+#score-card aside {
+    display: none;
+    font-size: 2.2ex;
+    margin: -.5ex 0 1.5ex .0;
+    padding: 0 0 .5ex 0;
+}
+#score-card aside span {
+    display: inline-block;
+    font-size: 2.8ex;
+    margin:0;
+    padding: 0;
+}
+#score-card aside .name {
+    display: inline-block;
+    height:  3ex;
+    width: calc(100% - 4.5ex);
+    position: relative;
+    z-index: 2;
+}
+#score-card aside .name::before { 
+    background-color: var(--theme-background-secondary);
+    position: absolute;
+    display: block;
+    content: '';
+    border: none;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: -.5ex;
+    z-index: 1;
+    opacity: .3;
+}
+#score-card aside .name::after { 
+    position: absolute;
+    display: block;
+    content: '';
+    border: none;
+    left: 1ex;
+    right: 1ex;
+    bottom: 0;
+    border-bottom: 1px solid var(--theme-foreground-primary);
+    z-index: 2;
+}
+#score-card aside .name-input {
+    font-family: 'Bradley Hand', 'Brush Script MT', 'Ink Free Regular', 'Gabriola Regular', Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2ex;
+    color: var(--theme-foreground-primary);
+    background-color: var(--theme-background-secondary);
+    line-height:  4.5ex;
+    padding: .5ex 3.5ex 0 1ex;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: -.5ex;
+    z-index: 3;
+}
+#score-card aside .clear-name:disabled {
+    display: none;
+}
+#score-card aside .clear-name svg,
+#score-card aside .clear-name svg path {
+    display: block;
+}
+#score-card aside .clear-name {
+    background-color: transparent;
+    position: absolute;
+    top: .2ex;
+    right: .2ex;
+    bottom: .2ex;
+    width: 3ex;
+    display: flex;
+    margin: 0;
+    padding: .2ex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    opacity: .5;
+    z-index: 4;
+}
+#score-card aside .clear-name:active,
+#score-card aside .clear-name:focus,
+#score-card aside .clear-name:hover {
+    opacity: 1;
+}
+
+#score-card aside .name-input::placeholder,
+#score-card aside .name-input:-ms-input-placeholder,
+#score-card aside .name-input::-ms-input-placeholder {
+    color: var(--theme-background-secondary);
+    font-weight: normal !important;
+}
+#score-card aside .round-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom:.5ex;
+    font-size: .8ex;
+    text-transform: uppercase;
+}
+#score-card aside .round-number.finished svg {
+    width: 2.5ex;
+    height: 2.5ex;
+    margin: .5ex;
+    display: block;
+    fill: var(--theme-foreground-primary)
+}
+#score-card aside .round-number {
+    text-align: center;
+    float: right;
+    width: 3.5ex;
+    height: 3.5ex;
+    position: relative;
+    background-color: var(--theme-background-secondary);
+}
+#score-card article {
+    
+    display: block;
+    width: 100%;
+    margin-bottom: 2.5ex;
+}
+#score-card article:last-child {
+    
+    margin-bottom: .2ex;
+}
+
+#score-card table {
+    
+    width: 100%;
+    border-spacing: 0;
+    border: 2px solid var(--theme-foreground-primary);
+}
+
+:root{
+    --score-card-row-height: 2.5ex;
+    --score-card-column-roll-width: 14.5ex;
+    --score-card-column-score-width: 5ex;
+    --score-card-column-padding:  .5ex;
+    --score-card-column-padding-right:  1ex;
+}
+
+#score-card table td {
+    position: relative;
+    text-align: right;
+    padding: 0;
+    height: var( --score-card-row-height);
+    border: 1px solid var(--theme-foreground-primary);
+}
+#score-card table thead td {
+    font-weight: bold !important;
+    text-align: left;
+    text-transform: uppercase;
+    padding-right: 1ex;
+    padding-left: 1ex;
+    padding: .5ex;
+}
+#score-card table td.label-column {
+    text-align: left;
+}
+#score-card table tbody td.roll-column {
+    width: var( --score-card-column-roll-width);
+}
+#score-card table td.score-column {
+    width: var( --score-card-column-score-width);
+}
+#score-card table td.totals-column {
+    width: calc(14.5ex + 5ex + 2ex);
+}
+#score-card table td.label-column .die {
+    font-weight: normal !important;
+    font-size: 2.8ex;
+    margin-bottom: -.5ex;
+    margin-right: .5ex;
+    --dice-padding: .2ex !important;
+}
+
+@media only screen and (min-height: 600px) {
+    #score-card aside {
+        display: block;
+    }
+    #score-card article {
+        margin-bottom: 3ex;
+    }
+}
