@@ -2,7 +2,7 @@
 
 import { onMount, onCleanup, createSignal } from 'solid-js';
 
-export function createBlobAccessor(url) {
+export function createBlobAccessor(url, baseUrl) {
     
     const dataSignal = createSignal();
     const [getDataSignal, setDataSignal] = dataSignal;
@@ -15,7 +15,6 @@ export function createBlobAccessor(url) {
     });
     onMount(async () => {
 
-        const baseUrl = import.meta.env.BASE_URL;
         const origin = document.location.origin;    
         
         try {
