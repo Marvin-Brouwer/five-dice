@@ -41,14 +41,12 @@ export const blobLoader = (extension: string): Plugin => {
                 source: byteArray,
                 type: 'asset'
             })
-
-            console.log(_config.base)
             const helperFile = await fs.promises.readFile('./src/plugins/blobImport.js', { encoding: 'utf8' });
             return {
                 code: `
                     ${helperFile}
                     const { default: url } = await import("${filePath}?url");
-                    export default createBlobAccessor(url, "${_config.base}");
+                    export default createBlobAccessor(url);
                 `};
         }
     });

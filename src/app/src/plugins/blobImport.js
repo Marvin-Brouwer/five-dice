@@ -1,24 +1,18 @@
 
 
-import { onMount, onCleanup, createSignal } from 'solid-js';
+import { createEffect, createSignal } from 'solid-js';
 
-export function createBlobAccessor(url, baseUrl) {
+export function createBlobAccessor(url) {
     
     const dataSignal = createSignal();
     const [getDataSignal, setDataSignal] = dataSignal;
 
-    const abortController = new AbortController();
-    const { signal } = abortController;
-
-    onCleanup(() => {
-        abortController.abort();
-    });
-    onMount(async () => {
+    createEffect(async () => {
 
         const origin = document.location.origin;    
         
         try {
-            const data = await fetch(origin + baseUrl + url, { signal })
+            const data = await fetch(origin + url)
                 .then(response => response.blob());
 
             setDataSignal(_ => data);
