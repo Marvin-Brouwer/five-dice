@@ -1,8 +1,10 @@
 import "./scoreInput.css";
 
-import getBalloonPopAudio from '../../../public/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav?blob';
-import getTrumpetAudio from '../../../public/383154__profcalla__re_frullato_tromba.mp3?blob';
+import getBalloonPopAudio from '../../audio/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav?blob';
+import getTrumpetAudio from '../../audio/383154__profcalla__re_frullato_tromba.mp3?blob';
 import getPartyHornAudio from '../../audio/170583__audiosmedia__party-horn.wav?blob';
+
+import PlusIcon from "../../icons/iconmonstr-plus-lined.svg?raw";
 
 import type { Component } from "solid-js";
 import { DieButton } from "../die/input/die-button";
@@ -60,7 +62,7 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                     <div class="set-score">
                         
                         <DieButton 
-                            value={<img src={`${import.meta.env.BASE_URL}iconmonstr-plus-lined.svg`} /> as Element} 
+                            value={<span class="illustration" innerHTML={PlusIcon} /> as Element} 
                             description="Enter a new round's value" disabled={inputState.isOpen} 
                             onClick={() => {
                                 inputState.open();

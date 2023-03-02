@@ -1,6 +1,6 @@
 import './scoreInput.scoreButtons.css';
 
-import { Accessor, Component, createReaction, Setter } from 'solid-js';
+import { Accessor, Component, createReaction, Setter, onMount } from 'solid-js';
 import type { ScoreInputState } from "./scoreInput.state"
 import { DieInput } from '../die/input/die-input';
 import { createMemo } from 'solid-js';
@@ -36,7 +36,9 @@ export const ScoreInputButtons: Component<Props> = ({
         requestAnimationFrame(setFocus);
     })
 
-    reaction(inputState.dialogs.diceSelector.isOpen);
+    onMount(() =>{
+        reaction(inputState.dialogs.diceSelector.isOpen);
+    })
 
     const setFocus = () =>{
         const field = firstEmptyField();
@@ -56,10 +58,10 @@ export const ScoreInputButtons: Component<Props> = ({
     // TODO make shift+tab and tab loop around
 
     return <div class="score-input-buttons">
-        <DieInput ref={(el) => { setFirstDiceRef(el); refs[0] = el; }} name='die-1' disabled={fieldsDisabled()[0]} value={inputState.diceSelector.getSignalForDie(0)} />
-        <DieInput ref={refs[1]!} name='die-2' disabled={fieldsDisabled()[1]} value={inputState.diceSelector.getSignalForDie(1)} />
-        <DieInput ref={refs[2]!} name='die-3' disabled={fieldsDisabled()[2]} value={inputState.diceSelector.getSignalForDie(2)} />
-        <DieInput ref={refs[3]!} name='die-4' disabled={fieldsDisabled()[3]} value={inputState.diceSelector.getSignalForDie(3)} />
-        <DieInput ref={refs[4]!} name='die-5' disabled={fieldsDisabled()[4]} value={inputState.diceSelector.getSignalForDie(4)} />
+        <DieInput modal={true} ref={(el) => { setFirstDiceRef(el); refs[0] = el; }} name='die-1' disabled={fieldsDisabled()[0]} value={inputState.diceSelector.getSignalForDie(0)} />
+        <DieInput modal={true} ref={refs[1]!} name='die-2' disabled={fieldsDisabled()[1]} value={inputState.diceSelector.getSignalForDie(1)} />
+        <DieInput modal={true} ref={refs[2]!} name='die-3' disabled={fieldsDisabled()[2]} value={inputState.diceSelector.getSignalForDie(2)} />
+        <DieInput modal={true} ref={refs[3]!} name='die-4' disabled={fieldsDisabled()[3]} value={inputState.diceSelector.getSignalForDie(3)} />
+        <DieInput modal={true} ref={refs[4]!} name='die-5' disabled={fieldsDisabled()[4]} value={inputState.diceSelector.getSignalForDie(4)} />
     </div>
 }

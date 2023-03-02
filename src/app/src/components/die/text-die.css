@@ -1,7 +1,10 @@
 .die .text {
     color: var(--dice-color-foreground);
-    width: var(--dice-size);
-    height: var(--dice-size);
+    width: 100%;
+    height: 100%;
+    font-size: 1.4ex;
+    line-height: calc(var(--dice-size) + (var(--dice-padding) * 3));
+    font-family: Roboto;
     
     position: relative;
     z-index: 1;
@@ -11,4 +14,13 @@
     margin-top: calc((var(--dice-size) / 9) *-1); 
     margin-bottom: calc((var(--dice-size) / 9)); 
     overflow: hidden;
+}
+
+.die .text svg {
+    position: absolute;
+    left: var(--dice-padding);
+    top: calc(var(--dice-padding) * 2);
+    bottom: var(--dice-padding);
+    right: var(--dice-padding);
+    
 }

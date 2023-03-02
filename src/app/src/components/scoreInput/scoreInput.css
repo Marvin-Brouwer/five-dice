@@ -53,10 +53,10 @@ section.score-input .set-score button {
 }
 
 .set-score button.die-button img  {
-    left: calc((var(--dice-padding) * 2) - 2px);
-    top: calc((var(--dice-padding) * 3) - 2px);
-    width: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
-    height: calc((var(--dice-size) - (var(--dice-padding) * 2)) - 2px);
+    top: calc(var(--dice-padding) * 2);
+    bottom: var(--dice-padding);
+    left: var(--dice-padding);
+    right: var(--dice-padding);
 }
 
 section.title-section{

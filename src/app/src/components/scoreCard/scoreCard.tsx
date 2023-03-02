@@ -1,6 +1,6 @@
 import "./scoreCard.css";
-import EraserIcon from "../../../public/iconmonstr-eraser-1.svg?raw";
-import FinishedIcon from "../../../public/iconmonstr-party-7.svg?raw";
+import EraserIcon from "../../icons/iconmonstr-eraser-1.svg?raw";
+import FinishedIcon from "../../icons/iconmonstr-party-7.svg?raw";
 
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 
