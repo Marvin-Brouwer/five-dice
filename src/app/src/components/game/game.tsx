@@ -24,9 +24,6 @@ const createPlayerNameSignal = () => {
     return playerName;
 }
 
-// TEMP test sound
-round[1](13);
-
 export const Game: Component = () => {
 
     const playerName = createPlayerNameSignal();
