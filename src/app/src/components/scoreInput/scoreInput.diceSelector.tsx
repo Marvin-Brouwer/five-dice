@@ -25,15 +25,17 @@ export const DiceSelector: Component<Props> = ({ inputState }) => {
                 <p>Configure the score of your current round</p>
             </section>
             
-            <ScoreInputButtons 
-                inputState={inputState} scoreSet={inputState.diceSelector.getAllDiceSet} 
-                getCloseButtonRef={getCloseButtonRef} getSubmitButtonRef={getSubmitButtonRef}
-                setFirstDiceRef={setFirstInputRef} />
-            <ScoreDialogPrompt 
-                inputState={inputState} onSubmit={inputState.nextStep} submitEnabled={inputState.diceSelector.getAllDiceSet}
-                submitLabel="select" submitDescription="Select the field to apply the current score to"
-                setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef} 
-                getFirstInputRef={getFirstInputRef} />
+            <section class='dice-selector'>
+                <ScoreInputButtons 
+                    inputState={inputState} scoreSet={inputState.diceSelector.getAllDiceSet} 
+                    getCloseButtonRef={getCloseButtonRef} getSubmitButtonRef={getSubmitButtonRef}
+                    setFirstDiceRef={setFirstInputRef} />
+                <ScoreDialogPrompt 
+                    inputState={inputState} onSubmit={inputState.nextStep} submitEnabled={inputState.diceSelector.getAllDiceSet}
+                    submitLabel="select" submitDescription="Select the field to apply the current score to"
+                    setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef} 
+                    getFirstInputRef={getFirstInputRef} />
+            </section>
         </Dialog>
     );
 }
