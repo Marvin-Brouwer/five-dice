@@ -6,7 +6,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
-import { validateScore } from '../../src/gameState/gameScore.js';
+import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
 import { generateScores } from './gameScore.test.mjs';
 
 const [pattern, allowedScores, disallowedScores] = generateScores(
@@ -18,10 +18,10 @@ describe('scoreValidator', () => {
     test(`fullHouse ${pattern}`, async testContext => {
 
         for(let score of allowedScores) {
-            await testContext.test(`validTheory [${score.join('')}]`, () => {
+            await testContext.test(`validTheory [${score}]`, () => {
 
                 // Arrange
-                const sut = () => validateScore(score, 'fullHouse');
+                const sut = () => isScoreApplicableToField(score, 'fullHouse');
 
                 // Act
                 const result = sut();
@@ -32,10 +32,10 @@ describe('scoreValidator', () => {
         }
 
         for(let score of disallowedScores) {
-            await testContext.test(`inValidTheory [${score.join('')}]`, () => {
+            await testContext.test(`inValidTheory [${score}]`, () => {
 
                 // Arrange
-                const sut = () => validateScore(score, 'fullHouse');
+                const sut = () => isScoreApplicableToField(score, 'fullHouse');
 
                 // Act
                 const result = sut();

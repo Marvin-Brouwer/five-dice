@@ -38,7 +38,7 @@ section.score-input > dialog[open] {
 
 
 section.score-input .set-score {
-    font-size: 8ex;
+    font-size: 10ex;
     line-height: 1ex;
     margin:0;
     padding: 0;
@@ -52,11 +52,11 @@ section.score-input .set-score button {
         rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-.set-score button.die-button img  {
-    top: calc(var(--dice-padding) * 2);
-    bottom: var(--dice-padding);
-    left: var(--dice-padding);
-    right: var(--dice-padding);
+.set-score button.die-button svg  {
+    top: calc(var(--dice-padding) * 3);
+    bottom: calc(var(--dice-padding) * 2);
+    left: calc(var(--dice-padding) * 2);
+    right: calc(var(--dice-padding) * 2);
 }
 
 section.title-section{
