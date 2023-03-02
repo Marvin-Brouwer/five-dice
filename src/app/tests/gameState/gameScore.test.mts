@@ -2,7 +2,7 @@
 // https://stackoverflow.com/questions/9960908/permutations-in-javascript
 
 import type { DieValue } from '../../src/game/gameConstants.js';
-import { discardedScore, score, Score, ValidScore } from '../../src/gameState/gameScore.js';
+import { score, ValidScore, ScoreValue, discard } from '../../src/game/score/score';
 
 const allRolls = new Map(generateAllPossibleNumbers());
 
@@ -15,7 +15,7 @@ function* generateAllPossibleNumbers(): Generator<[string, ValidScore]> {
     let e = 1 as DieValue;
 
     while(e <= 6) {
-        var generatedScore = score(a,b,c,d,e);
+        var generatedScore = score([a,b,c,d,e]);
         yield [generatedScore.join(''), generatedScore]
         
         if (a !== 6) {
@@ -119,8 +119,8 @@ function toPatternKey(pattern: ValidScore): string {
 type PatternDefinition = (a: DieValue, b: DieValue, c: DieValue, d: DieValue, e: DieValue) => ValidScore
 export function generateScores(...validPatterns: Array<string>): [
     patternKey: string,
-    allowedScores: ReadonlySet<Score>,
-    disallowedScores: ReadonlySet<Score>
+    allowedScores: ReadonlySet<ScoreValue>,
+    disallowedScores: ReadonlySet<ScoreValue>
 ] {
 
     const patternKey = validPatterns[0];
@@ -137,29 +137,29 @@ export function generateScores(...validPatterns: Array<string>): [
 
             return accumulator
 
-        }, new Map<string, Score>());
+        }, new Map<string, ScoreValue>());
 
-    const notAllowedScoreMap = new Map<string, Score>(
+    const notAllowedScoreMap = new Map<string, ScoreValue>(
         Array.from(allRolls.entries())
             .filter(([key]) => !allowedScoreMap.has(key))
     )
 
-    const allowedScores = new Set([...allowedScoreMap.values(), discardedScore]);
+    const allowedScores = new Set([...allowedScoreMap.values(), discard()]);
     const notAllowedScores = new Set(notAllowedScoreMap.values());
         
     return [ patternKey, allowedScores, notAllowedScores ];
 }
 
 export function generateSimpleScores(die: DieValue): [
-    allowedScores: ReadonlySet<Score>,
-    disallowedScores: ReadonlySet<Score>
+    allowedScores: ReadonlySet<ScoreValue>,
+    disallowedScores: ReadonlySet<ScoreValue>
 ] {
-    const allowedScores = new Set<Score>([
+    const allowedScores = new Set<ScoreValue>([
         ...Array.from(allRolls.values()).filter(score => score.includes(die)),
-        discardedScore
+        discard()
     ]);
     
-    const notAllowedScores = new Set<Score>(
+    const notAllowedScores = new Set<ScoreValue>(
         Array.from(allRolls.values()).filter(score => !score.includes(die))
     );
 
