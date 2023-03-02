@@ -18,11 +18,11 @@ export const ScoreInputButtons: Component<Props> = ({
 }) => {
 
     const fieldsDisabled = createMemo(() => ([
-        () => scoreSet(),
-        () => scoreSet() || inputState.diceSelector.getScoreForDie(0) === undefined,
-        () => scoreSet() || inputState.diceSelector.getScoreForDie(1) === undefined,
-        () => scoreSet() || inputState.diceSelector.getScoreForDie(2) === undefined,
-        () => scoreSet() || inputState.diceSelector.getScoreForDie(3) === undefined
+        () => false,
+        () => inputState.diceSelector.getScoreForDie(0) === undefined,
+        () => inputState.diceSelector.getScoreForDie(1) === undefined,
+        () => inputState.diceSelector.getScoreForDie(2) === undefined,
+        () => inputState.diceSelector.getScoreForDie(3) === undefined
     ]), [inputState.diceSelector.getScore(), scoreSet()]);
 
     const firstEmptyField = createMemo(() => inputState.diceSelector.getScore()
