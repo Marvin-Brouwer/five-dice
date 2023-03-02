@@ -47,14 +47,13 @@
     z-index: 2;
 }
 #score-card aside .name-input {
-    font-family: 'Bradley Hand', 'Brush Script MT', 'Ink Free Regular', 'Gabriola Regular', Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 2ex;
+    font-family: 'Fasthand', 'Bradley Hand', 'Brush Script MT', 'Ink Free Regular', 'Gabriola Regular', Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2.4ex;
     color: var(--theme-foreground-primary);
     background-color: var(--theme-background-secondary);
     line-height:  4.5ex;
     padding: .5ex 3.5ex 0 1ex;
     text-overflow: ellipsis;
-    font-weight: bold;
     position: absolute;
     background-color: transparent;
     border: none;
@@ -74,10 +73,9 @@
 #score-card aside .clear-name {
     background-color: transparent;
     position: absolute;
-    top: .2ex;
-    right: .2ex;
-    bottom: .2ex;
-    width: 3ex;
+    top: 1.6ex;
+    right: 1.7ex;
+    width: 3.5ex;
     display: flex;
     margin: 0;
     padding: .2ex;
@@ -119,7 +117,8 @@
     text-align: center;
     float: right;
     width: 3.5ex;
-    height: 3.5ex;
+    padding-top: .2ex;
+    height: 3.3ex;
     position: relative;
     background-color: var(--theme-background-secondary);
 }

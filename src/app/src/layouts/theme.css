@@ -1,3 +1,6 @@
+@import "@fontsource/roboto";
+@import "@fontsource/fasthand";
+
 :root {    
     font-size: 1em;
     background-color: var(--theme-background-primary);
@@ -48,6 +51,8 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
     overscroll-behavior-y: contain;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: "roboto";
 }
 h1 {
     font-size: 5ex;

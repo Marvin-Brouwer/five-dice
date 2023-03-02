@@ -12,6 +12,8 @@ importers:
     specifiers:
       '@astrojs/solid-js': ^2.0.1
       '@babel/core': ^7.20.12
+      '@fontsource/fasthand': ^4.5.11
+      '@fontsource/roboto': ^4.5.8
       '@jasikpark/astro-svg-loader': ^0.1.0
       '@types/js-cookie': ^3.0.2
       '@types/node': ^18.11.18
@@ -27,6 +29,8 @@ importers:
       xstate: ^4.35.4
     dependencies:
       '@astrojs/solid-js': 2.0.1_j2hp2g4edaorjfjynoeku7jfwy
+      '@fontsource/fasthand': 4.5.11
+      '@fontsource/roboto': 4.5.8
       astro: 2.0.0_@types+node@18.11.18
       js-confetti: 0.11.0
       js-cookie: 3.0.1
@@ -569,6 +573,14 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /@fontsource/fasthand/4.5.11:
+    resolution: {integrity: sha512-KbVbGs7K3iuHHo1DF8dySrWIolUlzycBppOAeZZagVB/Yz7Ecx91zt25me6vcf/wXYup+JmH8lQ2wOHGOoVUZA==}
+    dev: false
+
+  /@fontsource/roboto/4.5.8:
+    resolution: {integrity: sha512-CnD7zLItIzt86q4Sj3kZUiLcBk1dSk81qcqgMGaZe7SQ1P8hFNxhMl5AZthK1zrDM5m74VVhaOpuMGIL4gagaA==}
+    dev: false
 
   /@jasikpark/astro-svg-loader/0.1.0_astro@2.0.0:
     resolution: {integrity: sha512-57blatU9yKm1WTHzVkba/A223Yq0Z9SFAR2TnaAFs0g1WprdLQzzHCuZsORHzgNqHamm3r7I2oxpYHzlErl2HQ==}

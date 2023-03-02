@@ -12,7 +12,7 @@ header {
     top: 0;
     margin-bottom: 1.5ex;
 }
-@media only screen and (min-height: 630px) {
+@media only screen and (min-height: 900px) {
     header{
         top: 1.3ex!important;
         margin-bottom: 3ex;
