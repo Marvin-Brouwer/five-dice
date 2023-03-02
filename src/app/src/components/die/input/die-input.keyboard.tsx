@@ -9,10 +9,11 @@ import { Dialog, DialogState } from '../../hacks/dialog';
 type Props = {
     name: string
     value: Signal<DieValue | undefined>,
-    keyboardDialogState: DialogState
+    keyboardDialogState: DialogState,
+    modal?: boolean
 }
 
-export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialogState }) => {
+export const DieInputKeyboard : Component<Props> = ({ value,modal, name, keyboardDialogState }) => {
 
     const [getValue, setValue] = value;
     const initialValue = getValue();
@@ -91,7 +92,7 @@ export const DieInputKeyboard : Component<Props> = ({ value, name, keyboardDialo
     };
 
     return (
-        <Dialog modal={true} dialogState={keyboardDialogState}>
+        <Dialog modal={modal ?? true} dialogState={keyboardDialogState}>
             <span class="die-input-keyboard" onKeyDown={handleKeyEvent} ref={keyboardReference!} role="toolbar">
                 <DieRadioButton die='aces' value={value} group={`keyboard-${name}`} />
                 <DieRadioButton die='deuces' value={value} group={`keyboard-${name}`} />

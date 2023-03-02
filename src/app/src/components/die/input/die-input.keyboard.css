@@ -16,3 +16,9 @@ span.die-input-keyboard {
 
     width:32ex;
 }
+
+span.die-input > dialog {
+    position: fixed;
+    z-index: 100;
+    height: 100%;
+}

@@ -7,7 +7,7 @@ div.score-input-dialog-prompt {
     padding: 1ex 0;
     overflow: hidden;
     position: relative;
-    z-index: 90;
+    z-index: 9;
 }
 
 div.score-input-dialog-prompt .grid {
@@ -42,8 +42,20 @@ div.score-input-dialog-prompt label:nth-child(3) {
 div.score-input-dialog-prompt label:nth-child(1) {
     grid-area: reset;
 }
+div.score-input-dialog-prompt label:nth-child(1) svg {
+    left: calc(var(--dice-padding) * 2.2);
+    top: calc(var(--dice-padding) * 3.5);
+    right: calc(var(--dice-padding) * 2.2);
+    bottom: calc(var(--dice-padding) * 2.5);
+}
 div.score-input-dialog-prompt label:nth-child(2) {
     grid-area: submit;
+}
+div.score-input-dialog-prompt label:nth-child(2) svg {
+    left: calc(var(--dice-padding) * 1.5);
+    top: calc(var(--dice-padding) * 2.5);
+    right: calc(var(--dice-padding) * 1.5);
+    bottom: calc(var(--dice-padding) * 1.5);
 }
 
 div.score-input-dialog-prompt label button {

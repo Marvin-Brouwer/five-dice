@@ -22,6 +22,9 @@ section.selector-buttons {
     align-items: center;
     text-align: right;
 }
+.selector-buttons .row-selector.selected::after {
+    opacity: 1;
+}
 .selector-buttons .row-selector::after {
     position: absolute;
     display: block;
@@ -31,8 +34,9 @@ section.selector-buttons {
     border-left: .5ex solid;
     top:1px;
     bottom: 1px;
-    left: calc(-1 * (.5ex + 1px)) ;
+    left: calc(-1 * (.5ex + 2px)) ;
     z-index: 2;
+    opacity: .3;
 }
 .selector-buttons .row-selector:not(.discard)::after {
     border-color: var(--theme-foreground-hover);

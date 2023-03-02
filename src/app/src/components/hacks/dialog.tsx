@@ -1,18 +1,18 @@
 import './dialog.css'
 
-import { Component, onCleanup, onMount, Signal, ParentProps, children, Accessor, createSignal } from 'solid-js';
+import { Component, onCleanup, onMount, Signal, ParentProps, children, Accessor, createSignal, createReaction } from 'solid-js';
 import { createEffect } from 'solid-js';
 
 export type DialogSignal = DialogState & {
     openDialog: () => void;
 }
 export type DialogState = {
-    isOpen: Accessor<boolean>
+    isOpen: Accessor<boolean>,
     closeDialog: (fireEvents?: boolean) => void;
 }
 export const createDialogSignal = (onClose?: () => void | undefined) => {
-    const state = createSignal(false);
-    const [isOpen,setIsOpen] = state;
+    const openState = createSignal(false);
+    const [isOpen,setIsOpen] = openState;
     const openDialog = () => setIsOpen(true);
     const closeDialog = (fireEvents?: boolean) => {
         setIsOpen(false);
@@ -39,10 +39,16 @@ export const Dialog: Component<ParentProps<Props>> = ({
 }) => {
 
     let dialogReference: HTMLDialogElement;
+    
+    function show() {
+        if (dialogReference.getAttribute('open') === 'open') return;
 
-    const show = modal
-        ? () => dialogReference.showModal()
-        : () => dialogReference.show();
+        try{
+            modal ? dialogReference.showModal() : dialogReference.show();
+        } catch {
+            //
+        }
+    }
 
     function dialogClick(e:MouseEvent) {
         if (!e.target) return true;
@@ -57,7 +63,7 @@ export const Dialog: Component<ParentProps<Props>> = ({
 
     onMount(() => {
         if (modal) dialogReference.addEventListener('click', dialogClick);
-        
+
         if (!hide?.() && dialogState.isOpen()) show();
     })
     onCleanup(() => {
@@ -67,10 +73,11 @@ export const Dialog: Component<ParentProps<Props>> = ({
     })
     createEffect(() => {
         if (dialogState.isOpen()) {
-            show();
-            return;
+            setTimeout(show);
         }
-        dialogReference.close();
+        else {
+            dialogReference.close();
+        }
     }, dialogState.isOpen)
 
     const unwrappedChildren = children(() => childElements);
