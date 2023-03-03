@@ -1,6 +1,11 @@
 import "../die/die.css";
 import "./theme-selector.css";
 
+import ThemeNoneIcon from "../../icons/five-dice.color-scheme.none.svg?raw";
+import ThemeDarkIcon from "../../icons/five-dice.color-scheme.dark.svg?raw";
+import ThemeLightIcon from "../../icons/five-dice.color-scheme.light.svg?raw";
+import ThemeSystemIcon from "../../icons/five-dice.color-scheme.system.svg?raw";
+
 import { Component, onMount, onCleanup } from "solid-js";
 import { createSignal, createEffect } from "solid-js";
 import Cookie from "js-cookie";
@@ -94,10 +99,10 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
         <span class="theme-selector">
             <span role="img" class="theme-icon die">
                 {/* The optical disk is just here to give some image when no preference is found on page load */}
-                <span aria-hidden={!autoSelected()}>💿</span>
-                <span aria-hidden={!autoSelected()} class="small-icon">⚙️</span>
-                <span aria-hidden={!lightActive()}>🌞</span>
-                <span aria-hidden={!darkActive()}>🌒</span>
+                <span aria-hidden={!autoSelected()} innerHTML={ThemeNoneIcon} />
+                <span aria-hidden={!lightActive()} innerHTML={ThemeLightIcon} />
+                <span aria-hidden={!darkActive()} innerHTML={ThemeDarkIcon} />
+                <span aria-hidden={!autoSelected()} innerHTML={ThemeSystemIcon} />
             </span>
             <select id="theme" onChange={(e) => setPreferredTheme(e.currentTarget.value as any)}>
                 <option value="auto" selected={autoSelected()}>System preference</option>

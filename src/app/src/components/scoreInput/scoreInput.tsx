@@ -13,7 +13,7 @@ import { DiceSelector } from "./scoreInput.diceSelector";
 import { RowSelector } from './scoreInput.rowSelector';
 import { FlushDiscardSelector } from './scoreInput.flushDiscard';
 import { roundAmount } from '../../game/gameConstants';
-import { createMemo, onMount, createEffect, createSignal } from 'solid-js';
+import { createMemo, onMount, createEffect } from 'solid-js';
 import JSConfetti from 'js-confetti'
 import { createEchoDelayEffect } from "../../audio/echoDelay";
 import { createAudioContextAccessor } from "../../audio/audioContextSignal";
