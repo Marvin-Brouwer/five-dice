@@ -1,7 +1,5 @@
 header {
     font-size: 3ex;
-    display: flex;
-    justify-content: space-between;
     margin: 0;
     position: sticky;
     left: 0;
@@ -10,6 +8,7 @@ header {
     width: 100%;
     background-color: var(--theme-background-header);
     top: 0;
+    padding: 0;
     margin-bottom: 1.5ex;
 }
 @media only screen and (min-height: 900px) {
@@ -55,6 +54,14 @@ header h1 {
     padding: 0;
     font-size: 3ex; 
     height: 2ex;
+    width: 100%;
+}
+header .header-contents {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto 0 auto;
+    padding-right: .5ex;
+    max-width: calc(800px + 2ex);
 }
 
 header h1 a, header h1 a::selection, header h1 a:hover {
@@ -87,4 +94,10 @@ header nav ul {
 header nav ul li {
     margin: 0;
     padding: 0;
+}
+section[role="main"] {
+    margin: 1ex auto 0 auto;
+    font-size: 1.5ex;
+    max-width: 800px;
+    padding: 0 2ex 0 2ex;
 }
