@@ -72,11 +72,11 @@ section.title-section h2{
     margin-bottom: .2ex;
     font-size: 4.5ex;
     text-align: center;
-    color: var(--theme-background-primary)
+    color: var(--theme-backdrop-text-primary)
 }
 section.title-section p{
     margin: 0ex 1ex;
     text-align: center;
     font-size: 3ex;
-    color: var(--theme-background-secondary)
+    color: var(--theme-backdrop-text-secondary)
 }
