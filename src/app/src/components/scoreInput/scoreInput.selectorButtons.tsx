@@ -1,6 +1,5 @@
-import { Accessor, Component, Signal, createSignal, createMemo, createEffect, JSX, createReaction } from 'solid-js';
+import { Accessor, Component, Signal, createMemo, JSX } from 'solid-js';
 import type { ScoreField, DieValue } from '../../game/gameConstants';
-import { isScoreApplicableToField } from '../../game/score/scoreFieldValidator';
 import './scoreInput.selectorButtons.css';
 import type { ScoreInputState } from './scoreInput.state';
 import { discard, score } from '../../game/score/score';

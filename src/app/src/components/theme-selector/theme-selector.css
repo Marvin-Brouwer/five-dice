@@ -16,18 +16,10 @@
     pointer-events: none;
     touch-action: none;
 }
-.theme-icon > span {
+.theme-icon > span svg {
+    display: flex;
     position: absolute;
-    font-size: 1.2ex;
-    top: .3ex;
-    left: .3ex;
-}
-.theme-icon > span.small-icon {
-    position: absolute;
-    font-size: .8ex;
-    top: .1ex;
-    left: 2.5ex;
-    z-index: 9;
+    margin: var(--dice-padding);
 }
 .theme-icon > span[aria-hidden="true"]{
     display: none;
