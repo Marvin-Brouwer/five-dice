@@ -80,6 +80,21 @@ export const Dialog: Component<ParentProps<Props>> = ({
         }
     }, dialogState.isOpen)
 
+    
+    function handleUnload(e: BeforeUnloadEvent) {
+
+        if (!dialogState.isOpen()) return true;
+        
+        e.preventDefault();
+        return e.returnValue = 'You\'re still entering a score, are you sure you want to reload the page?';
+    }
+    onMount(() => {
+        window.addEventListener('beforeunload', handleUnload)
+    })
+    onCleanup(() => {
+        document.removeEventListener('beforeunload', handleUnload)
+    })
+
     const unwrappedChildren = children(() => childElements);
     return (
         <dialog id={id} ref={dialogReference!} 

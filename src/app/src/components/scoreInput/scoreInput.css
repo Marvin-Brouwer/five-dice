@@ -51,6 +51,17 @@ section.score-input .set-score button {
         rgba(0, 0, 0, 0.17) 0px 12px 13px, 
         rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
+section.score-input .set-score button.enter-button {
+    position: absolute;
+    right: 1.4em;
+    bottom: 1.3em;
+}
+section.score-input .set-score button.reset-button {
+    font-size: 1.5ex;
+    position: absolute;
+    right: 2.8em;
+    bottom: 1.38em;
+}
 
 .set-score button.die-button svg  {
     top: calc(var(--dice-padding) * 3);
