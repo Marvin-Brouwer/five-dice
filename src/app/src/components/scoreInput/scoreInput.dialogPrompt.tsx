@@ -13,13 +13,14 @@ type Props = {
     submitDescription: string,
     onSubmit: () => void,
     submitEnabled: Accessor<boolean>,
+    setResetButtonRef: Setter<HTMLButtonElement>,
     setCloseButtonRef: Setter<HTMLButtonElement>,
     setSubmitButtonRef: Setter<HTMLButtonElement>,
-    getFirstInputRef: Accessor<HTMLInputElement | undefined>,
+    getFirstInputRef: Accessor<HTMLLabelElement | undefined>,
 }
 
 export const ScoreDialogPrompt: Component<Props> = ({ 
-    inputState, onSubmit, submitEnabled, setCloseButtonRef, setSubmitButtonRef, getFirstInputRef,
+    inputState, onSubmit, submitEnabled, setCloseButtonRef, setSubmitButtonRef, getFirstInputRef, setResetButtonRef,
     submitLabel, submitDescription
 }) => {
 
@@ -49,7 +50,7 @@ export const ScoreDialogPrompt: Component<Props> = ({
         <div class="score-input-dialog-prompt" role="toolbar">
             <div class="grid">
                 <label>
-                    <DieButton value={<span class="illustration" innerHTML={ResetIcon} /> as Element} description="reset" type="reset" onClick={reset} />
+                    <DieButton value={<span class="illustration" innerHTML={ResetIcon} /> as Element} description="reset" type="reset" onClick={reset} ref={setResetButtonRef} />
                     reset
                 </label>
                 <label aria-label={submitDescription} aria-disabled={!submitEnabled()}>

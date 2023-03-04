@@ -20,8 +20,10 @@ type Props = {
 export const RowSelector: Component<Props> = ({ inputState, getScorePad }) => {
 
     const [getCloseButtonRef, setCloseButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
+    const [getResetButtonRef, setResetButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getSubmitButtonRef, setSubmitButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
-    const [getFirstInputRef, setFirstInputRef] = createSignal<HTMLInputElement | undefined>(undefined);
+    const firstInputRef = createSignal<HTMLLabelElement | undefined>();
+    const [getFirstInputRef, setFirstInputRef] = firstInputRef;
 
     const [getSelectedRow] = inputState.row;
     const submitEnabled = createMemo(
@@ -86,10 +88,12 @@ export const RowSelector: Component<Props> = ({ inputState, getScorePad }) => {
             <Selector id="row"
                 getScorePad={getScorePad}
                 selectedField={inputState.row} inputState={inputState} 
-                validFields={validRows} discardFields={discardRows} />
+                validFields={validRows} discardFields={discardRows} 
+                firstInputRef={firstInputRef}
+                nextButton={() => getSelectedRow() === undefined ? getResetButtonRef() : getSubmitButtonRef()} previousButton={getCloseButtonRef} />
             <ScoreDialogPrompt
                 inputState={inputState} onSubmit={onSubmit} submitEnabled={submitEnabled}
-                setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef} 
+                setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef}  setResetButtonRef={setResetButtonRef} 
                 submitLabel="confirm" submitDescription="Select the field to apply the current score to"
                 getFirstInputRef={getFirstInputRef} />
         </Dialog>

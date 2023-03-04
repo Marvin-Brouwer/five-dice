@@ -1,4 +1,4 @@
-import { Accessor, Component, Signal, createSignal, createMemo, createEffect, JSX } from 'solid-js';
+import { Accessor, Component, Signal, createSignal, createMemo, createEffect, JSX, Setter } from 'solid-js';
 import type { ScoreField } from '../../game/gameConstants';
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 import { SelectorBackdrop } from './scoreInput.selectorBackdrop';
@@ -14,11 +14,15 @@ type Props = {
     getScorePad: ScorePadAccessor
     inputState: ScoreInputState,
     selectedField: Signal<ScoreField | undefined>
+    firstInputRef: Signal<HTMLLabelElement | undefined>
+    previousButton: Accessor<HTMLButtonElement | undefined>
+    nextButton: Accessor<HTMLButtonElement | undefined>
 }
 
 
 export const Selector: Component<Props> = ({ 
-    validFields, discardFields, id, inputState, selectedField, getScorePad
+    validFields, discardFields, id, inputState, selectedField, getScorePad, previousButton, nextButton,
+    firstInputRef
 }) => {
 
     const [getElements, setElements] = createSignal<Array<HTMLTableRowElement>>([]);
@@ -45,7 +49,9 @@ export const Selector: Component<Props> = ({
             <SelectorButtons 
                 selectableRows={selectableRows} getScorePad={getScorePad}
                 validFields={validFields} discardFields={discardFields} 
-                inputState={inputState} selectedField={selectedField} />
+                inputState={inputState} selectedField={selectedField} 
+                previousButton={previousButton} nextButton={nextButton} 
+                firstInputRef={firstInputRef} />
         </div>
     )
 }
