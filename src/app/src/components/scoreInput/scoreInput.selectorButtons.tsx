@@ -41,7 +41,7 @@ export const SelectorButtons: Component<Props> = ({
                 const position: JSX.CSSProperties = {
                     left: `${bounds.x}px`,
                     top: `${bounds.y}px`,
-                    width: `${bounds.width}px`,
+                    width: `${bounds.width -1}px`,
                     height: `${bounds.height}px`
                 }
 

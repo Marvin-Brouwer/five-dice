@@ -61,11 +61,11 @@ section.selector-buttons {
     bottom:0;
 }
 .selector-buttons .row-selector > span.score-display {
-    border-left: 1px solid black;
-    border-right: 2px solid black;
+    border-left: 1px solid var(--theme-foreground-primary);
+    border-right: 1px solid var(--theme-foreground-primary);
 }
 .selector-buttons .row-selector > span.roll-display {
-    border-right: 1px solid black;
+    border-right: 1px solid var(--theme-foreground-primary);
 }
 .selector-buttons .row-selector > span > span {
     opacity: .4;
@@ -81,6 +81,10 @@ section.selector-buttons {
     outline: none;
 }
 
+.selector-buttons label.row-selector:not(.fake) {
+    
+    z-index: 90;
+}
 .selector-buttons label.row-selector:not(.fake):focus,
 .selector-buttons label.row-selector:not(.fake):hover {
     outline: 2px solid ;

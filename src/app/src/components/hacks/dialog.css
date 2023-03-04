@@ -12,7 +12,7 @@ dialog div.dialog-content > {
     pointer-events: all;
 }
 dialog::backdrop {
-    background-color: rgba(0,0,0,.7);
+    background-color: rgba(0,0,0,.5);
     z-index: 8;
 }
 dialog[data-show-backdrop="false"]::backdrop {

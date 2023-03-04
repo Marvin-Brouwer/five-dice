@@ -7,7 +7,6 @@ WIP
 ### High importance  
 
 - Fix style inconsistencies
-  - Fix right selection border
   - Add responsiveness for larger screens like browsers (maybe smaller font?)
 - Fix todo's in code
 - Create game description
