@@ -73,27 +73,36 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
     return (
         <section class="score-input">
+            <div class="set-score">
+                
+                <DieButton 
+                    classList={{
+                        "die-button": true,
+                        "enter-button": true,
+                        "game-ended": gameEnded()
+                    }}
+                    value={<span class="illustration" innerHTML={PlusIcon} /> as Element} 
+                    description="Enter a new round's value" 
+                    disabled={() => inputState.isOpen() || gameEnded()} 
+                    onClick={() => {
+                        inputState.open();
+                    }}
+                />
+                <DieButton 
+                    classList={{
+                        "die-button": true,
+                        "reset-button": true,
+                        "game-ended": gameEnded()
+                    }}
+                    value={<span class="illustration" innerHTML={ResetIcon} /> as Element} 
+                    description="Reset score pad" disabled={inputState.isEmpty} 
+                    onClick={() => {
+                        window.location.reload();
+                    }}
+                />
+            </div>
             {gameEnded() ? undefined : 
                 <>
-                    <div class="set-score">
-                        
-                        <DieButton 
-                            class="die-button enter-button"
-                            value={<span class="illustration" innerHTML={PlusIcon} /> as Element} 
-                            description="Enter a new round's value" disabled={inputState.isOpen} 
-                            onClick={() => {
-                                inputState.open();
-                            }}
-                        />
-                        <DieButton 
-                            class="die-button reset-button"
-                            value={<span class="illustration" innerHTML={ResetIcon} /> as Element} 
-                            description="Reset score pad" disabled={inputState.isEmpty} 
-                            onClick={() => {
-                                window.location.reload();
-                            }}
-                        />
-                    </div>
                     <DiceSelector inputState={inputState} />
                     <RowSelector inputState={inputState} getScorePad={getScorePad} />
                     <FlushDiscardSelector inputState={inputState} getScorePad={getScorePad} />
