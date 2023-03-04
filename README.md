@@ -7,15 +7,8 @@ WIP
 ### High importance  
 
 - Fix style inconsistencies
-  - Buttons should look similar to radiobuttons for dice selectors
-  - Fix transparent dice buttons
   - Add responsiveness for larger screens like browsers (maybe smaller font?)
-  - Set max body width
-- Make diceinput keyboard integrated for the score selector
-- Fix keyboard input
-  - Make the rowSelector and flushDiscard react to keyboard input  
 - Fix todo's in code
-- Setup hosting pipeline to host on github.io
 - Create game description
 - Playtest
 - Make PWA
