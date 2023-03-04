@@ -90,6 +90,7 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
         if (storedPreference === undefined || storedPreference === 'auto')
             setPreferredColorScheme(colorSchemeMount.matches ? 'dark' : 'light');
         else {
+            setPreferredColorScheme(storedPreference as 'dark' | 'light');
             setPreferredTheme(storedPreference as 'dark' | 'light');
         }
 
