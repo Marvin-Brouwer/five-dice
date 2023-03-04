@@ -23,7 +23,7 @@ div.score-input-dialog-prompt .grid {
     overflow: hidden;
 }
 div.score-input-dialog-prompt label{
-    margin: 0;
+    margin: 2px auto 0 auto;
     padding: 0;
     text-align: center;
 }

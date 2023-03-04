@@ -1,31 +1,25 @@
 button.die-button {
     font-size: inherit;
-    display: inline-flex;
-    border-color: var(--dice-color-foreground);
-    border-width: 0;
+    display: flex;
     border-radius: calc(var(--dice-size) / 4);
-    width: calc((var(--dice-size) - var(--dice-padding)) - 2px);
-    height: calc((var(--dice-size) - var(--dice-padding)) - 2px);
-    margin: .4ex;
+    margin: -2ex;
     padding: 0;
     position: relative;
     background: none;
-    border-width: 1px;
+    box-sizing: content-box;
+    overflow: visible;
+    border: none;
 }
-button.die-button:not(:disabled):focus,
-button.die-button:not(:disabled):focus-visible,
-button.die-button:not(:disabled):hover {
-    outline:0;
-    border-width: 2px;
-    background: none;
-    border-color: var(--theme-foreground-hover);
+button.die-button:not(:disabled):focus .die,
+button.die-button:not(:disabled):focus-visible .die,
+button.die-button:not(:disabled):hover .die{
+    border-color: var(--theme-foreground-hover) !important;
 }   
-button.die-button:not(:disabled):active {
-    outline:0;
-    border-width: 2px !important;
-    background: none;
+button.die-button:not(:disabled):active .die{
+    border-width: 3px !important;
     font-weight: bold;
     color: var(--theme-foreground-hover) !important;
+    border-color: var(--theme-foreground-hover) !important;
     --dice-color-foreground: var(--theme-foreground-hover) !important;
 }     
 
@@ -33,25 +27,15 @@ button.die-button:disabled {
     outline:0;
     border-width: 1px !important;
     background: none;
+    opacity: .5;
 }     
 
 button.die-button .die {
+    border-width: 2px !important;
     outline:0;
-    border-width: 0;
     display: inline-block;
-    position: absolute;
     padding: 0;
+    margin: -1px;
     left: 0;
     top: 0;
-}
-button.die-button img {
-    outline:0;
-    border-width: 0;
-    display: inline-block;
-    position: absolute;
-    padding: 0;
-    left: var(--dice-padding);
-    top: calc(var(--dice-padding) * 2);
-    width: calc((var(--dice-size)) - 2px);
-    height: calc((var(--dice-size)) - 2px);
 }
