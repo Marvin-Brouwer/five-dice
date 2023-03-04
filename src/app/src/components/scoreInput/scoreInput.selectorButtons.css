@@ -12,7 +12,9 @@ section.selector-buttons {
 .selector-buttons .row-selector {
     pointer-events: all;
     position: absolute;
-    border: 0px;
+    border: 1px solid var(--theme-foreground-primary);
+    border-top: none;
+    border-bottom: none;
     background: none;
     z-index: 2;
     display: flex;
@@ -69,4 +71,34 @@ section.selector-buttons {
 .selector-buttons .row-selector:focus > span > span,
 .selector-buttons .row-selector:hover > span > span {
     opacity: .9;
+}
+
+.selector-buttons label.row-selector input {
+    outline: none;
+}
+
+.selector-buttons label.row-selector:focus,
+.selector-buttons label.row-selector:hover {
+    outline: 2px solid ;
+    outline-color: var(--theme-background-focus);
+    z-index: 99;
+}
+.selector-buttons label.row-selector.selected,
+.selector-buttons .row-selector:active {
+    outline: 2px solid;
+    outline-color: var(--theme-foreground-hover);
+    z-index: 99;
+}
+.selector-buttons label.row-selector.discard:hover,
+.selector-buttons .row-selector.discard:focus {
+    outline-color: gray !important;
+}
+.selector-buttons label.row-selector.discard.selected,
+.selector-buttons .row-selector.discard:active {
+    outline-color: silver !important;
+}
+.selector-buttons .row-selector.selected::after,
+.selector-buttons .row-selector:active::after {
+    top: -1px;
+    bottom: -1px;
 }
