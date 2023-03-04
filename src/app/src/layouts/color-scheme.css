@@ -59,6 +59,26 @@
     color: var(--theme-foreground-primary);
 }
 
+a:hover, 
+button:hover, 
+input:hover,
+select:hover {
+    outline-color: var(--theme-background-focus);
+    outline-width: 2px;
+    -moz-outline-radius: 2ex;
+    border-radius: calc(var(--dice-size) / 8);
+    outline-style: groove;
+}
+a:focus, a:active, 
+button:focus, button:active, 
+input:focus, input:active,
+select:focus, select:active {
+    outline-color: var(--theme-foreground-hover);
+    outline-width: 2px;
+    -moz-outline-radius: 2ex;
+    border-radius: calc(var(--dice-size) / 8);
+    outline-style: groove;
+}
 select option {
     display: block;
     background-color: var(--theme-background-primary);

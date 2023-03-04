@@ -2,13 +2,13 @@
     margin-top: .8ex;
     width: 2.7ex;
     height: 2.7ex;
-    overflow: hidden;
     display: inline-block;
     position: relative;
 }
 
 .theme-icon {
     font-size: 3ex;
+    padding: 1px;
     
     position: relative;
     z-index: 9;
@@ -26,14 +26,18 @@
 }
 
 .theme-selector select {
+    color: transparent;
     position: absolute;
     display: block;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    left: -1px;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
     border: 1ex solid transparent;
     background-color: transparent;
-    border-radius: calc(var(--dice-size) / 4);
-    z-index: 0;
+    border-radius: calc(var(--dice-size) / 1.5);
+    z-index: 10;
+}
+.theme-selector select option {
+    color: var(--theme-foreground-primary);
 }
