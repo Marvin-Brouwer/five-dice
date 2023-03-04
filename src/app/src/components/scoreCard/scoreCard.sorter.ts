@@ -44,15 +44,14 @@ export function sortSimpleScore(amount: number, score: ValidScore):  ScoreGroup{
 
 export function sortSomeOfKind(amount: number, score: ValidScore):  ScoreGroup{
 
+    const splitIndex = (5 - amount);
     const sortedResults = groupBy(score)
-        .sort((a, b) => 
-            (a.values.length - b.values.length) + 
-            (a.value - b.value)
-        )
-        .flatMap(group => group.values);
-        
-    const smallGroup = sortedResults.slice(0, 5- amount);
-    const largeGroup = sortedResults.slice(5- amount);
+        .sort((a, b) => a.values.length - b.values.length);
+
+    const flatResults = sortedResults.flatMap(r => r.values)
+    const smallGroup = Array.from(flatResults.slice(0, splitIndex).values())
+        .sort((a, b) => a - b);
+    const largeGroup = Array.from(flatResults.slice(splitIndex).values());
 
     return [smallGroup, largeGroup] 
 }
