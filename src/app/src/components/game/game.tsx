@@ -27,7 +27,6 @@ const createPlayerNameSignal = () => {
 export const Game: Component = () => {
 
     const playerName = createPlayerNameSignal();
-
     
     return (<>
         <ScoreCard playerName={playerName} round={round} getScorePad={getScorePad} />

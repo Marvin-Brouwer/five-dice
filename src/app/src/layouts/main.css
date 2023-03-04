@@ -50,11 +50,10 @@ header::after {
 }
 
 header h1 {
-    margin: .5ex 0 .5ex 1ex ;
+    margin: .5ex 1ex .5ex 1ex ;
     padding: 0;
     font-size: 3ex; 
     height: 2ex;
-    width: 100%;
 }
 header .header-contents {
     display: flex;
@@ -67,9 +66,8 @@ header .header-contents {
 header h1 a, header h1 a::selection, header h1 a:hover {
     text-decoration: none;
     display: inline-block;
-    width: 100%;
-    height: 100%;
-    margin: -.5ex;
+    height: calc(2ex - 4px);
+    margin: calc(-.5ex + 2px) 2px;
     padding:.5ex;
 }
 

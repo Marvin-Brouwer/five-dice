@@ -1,4 +1,4 @@
-import { Accessor, Component, Signal, createMemo, JSX } from 'solid-js';
+import { Accessor, Component, Signal, createMemo, JSX, createSignal, Setter } from 'solid-js';
 import type { ScoreField, DieValue } from '../../game/gameConstants';
 import './scoreInput.selectorButtons.css';
 import type { ScoreInputState } from './scoreInput.state';
@@ -13,14 +13,20 @@ type Props = {
     inputState: ScoreInputState,
     getScorePad: ScorePadAccessor
     selectedField: Signal<ScoreField | undefined>
+    previousButton: Accessor<HTMLButtonElement | undefined>
+    nextButton: Accessor<HTMLButtonElement | undefined>
     selectableRows: Accessor<Array<[element: HTMLTableRowElement, field: ScoreField]>>
+    firstInputRef: Signal<HTMLLabelElement | undefined>
 }
 
 
 export const SelectorButtons: Component<Props> = ({ 
-    validFields, discardFields, inputState, selectedField, selectableRows, getScorePad
+    validFields, discardFields, inputState, selectedField, selectableRows, getScorePad,
+    previousButton, nextButton, firstInputRef
 }) => {
 
+    const [getFirstInputRef, setFirstInputRef] = firstInputRef;
+    const [getSectionRef, setSectionRef] = createSignal<HTMLDivElement>();
     const [getSelectedField, setSelectedField] = selectedField;
 
     const rowSelectors = createMemo(() => {
@@ -30,7 +36,7 @@ export const SelectorButtons: Component<Props> = ({
         
         return selectableRows()
             .filter(([,field]) => validFields().includes(field) || discardFields().includes(field))
-            .map(([item, field]) => {
+            .map(([item, field], index) => {
                 const bounds = item.getBoundingClientRect();
                 const position: JSX.CSSProperties = {
                     left: `${bounds.x}px`,
@@ -49,10 +55,13 @@ export const SelectorButtons: Component<Props> = ({
                 }
                 
                 return (
-                    <label style={position}  classList={classList}>
+                    <label style={position}  classList={classList} tabIndex={index}
+                        onKeyDown={handleKeyEvent} >
                         <input 
                             type='radio' checked={getSelectedField() === field} data-field={field}
-                            onChange={(e) => e.currentTarget.checked && setSelectedField(field) && e.currentTarget.focus()} />
+                            onChange={(e) => e.currentTarget.checked && setSelectedField(field) && e.currentTarget.focus()} 
+                            onKeyDown={handleKeyEvent} 
+                            onFocus={e => e.currentTarget.parentElement?.focus()} />
                         <RollDisplay field={field} score={displayScore} />
                         <SingleScoreDisplay field={field} score={displayScore()} scorePad={getScorePad} />
                     </label>
@@ -61,8 +70,72 @@ export const SelectorButtons: Component<Props> = ({
             [selectableRows(), validFields(), discardFields(), inputState.diceSelector.getScore()]
     );
 
+    const handleKeyEvent = (e: KeyboardEvent) => { 
+        if (e.key === "Escape") {
+            return true;
+        }
+
+        const handled = () => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            return false;
+        };
+
+        if (e.key === "Tab") {
+            if (e.shiftKey) {
+                previousButton()?.focus();
+            } else {
+                nextButton()?.focus();
+            }
+            return handled();
+        }
+
+        if (e.shiftKey && !Number.isInteger(e.key))  return true;
+        let selectedIndex = document.activeElement === undefined 
+            ? selectableRows().findIndex(([, field]) => field === getSelectedField())
+            : Number(document.activeElement?.getAttribute('tabindex') ?? -1);
+        if (selectedIndex < 0) selectableRows().findIndex(([, field]) => field === getSelectedField());
+        if (selectedIndex < 0) selectedIndex = 0;
+        const lastIndex = selectableRows().length -1;
+
+        if (e.key === "ArrowUp" || (e.shiftKey && e.key === "Tab")) {
+            if (selectedIndex === 0) selectedIndex = lastIndex;
+            else selectedIndex --;
+        }
+        if (e.key === "ArrowDown" || e.key === "Tab") {
+            if (selectedIndex === lastIndex) selectedIndex = 0;
+            else selectedIndex ++;
+        }
+        
+        const inputs = getSectionRef()?.querySelectorAll('label') ?? []; 
+        let input = inputs[selectedIndex] as HTMLLabelElement | undefined;
+        if (input) setFirstInputRef(input);
+
+        if (e.key === " ") {
+            input?.focus();
+            input?.click();
+            
+            // Reselect because of rerender that happens when appending .selected
+            input = getSectionRef()?.querySelector<HTMLLabelElement>(`label[tabindex="${input?.tabIndex}"]`)
+                ?? undefined;
+            setFirstInputRef(input);
+            
+            return handled();
+        }
+        if (e.key === "Enter"){ 
+            input?.click();
+            nextButton()?.focus();
+            return handled();
+        }
+
+        input?.focus();
+
+        return handled();
+    };
+
     return (
-        <section role="menu" class="selector-buttons">
+        <section role="menu" class="selector-buttons" ref={setSectionRef} onKeyDown={handleKeyEvent}>
             {rowSelectors}
         </section>
     )

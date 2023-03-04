@@ -2,11 +2,9 @@ span.die-input {
     display: inline-flex;
     border-color: var(--dice-color-foreground);
     border-width: 1px;
-    width: calc(var(--dice-size) - (var(--dice-padding) *2));
-    height: calc(var(--dice-size) - (var(--dice-padding) *1.5));
-    margin: .4ex;
-    overflow: visible;
-    padding: 0;
+    margin: -1ex;
+    padding: 1px 0 0 1px;
+    border-radius: calc(var(--dice-size) / 4);
     position: relative;
     background: none;
     font-size: inherit;
@@ -27,20 +25,33 @@ span.die-input input::selection {
 .die-input input[type="number"]:focus-visible,
 .die-input:not([data-disabled="true"]) input[type="number"]:hover,
 .die-input[data-keyboard-visible="true"] input[type="number"] {
-    outline: 1px solid;
-    outline-color:  var(--theme-foreground-hover);
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
-    border-width: 1px;
-    border-color: var(--theme-foreground-hover);
+}   
+
+.die-radio-button input:focus,
+.die-radio-button input:focus-visible,
+.die-radio-button input:hover {
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    border: solid;
+    border-width: 2px;
+}   
+.die-radio-button input:active {
+    outline: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    border: solid;
+    border-width: 2px;
+    border-color: var(--theme-foreground-hover) !important;
 }   
 
 .die-input .die {
     padding: 0;
-    margin: 0;
-    width: var(--dice-size);
-    height: var(--dice-size);
+    margin: 1px;
     position: relative;
     z-index: 1;
 }
@@ -50,8 +61,9 @@ span.die-input input::selection {
   margin: 0;
 }
 .die-input input[type="number"] {
-    -moz-appearance: textfield;
-    
+    -moz-appearance: none;
+    appearance: none;
+        
     display: inline-block;
     box-sizing: border-box;
     background-color: transparent;
@@ -59,10 +71,10 @@ span.die-input input::selection {
     position: absolute;
     margin: 0;
     padding: 0;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: 1px;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
     z-index: 2;
     color: transparent;
     border: none;

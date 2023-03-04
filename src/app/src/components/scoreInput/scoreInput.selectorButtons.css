@@ -12,7 +12,9 @@ section.selector-buttons {
 .selector-buttons .row-selector {
     pointer-events: all;
     position: absolute;
-    border: 0px;
+    border: 1px solid var(--theme-foreground-primary);
+    border-top: none;
+    border-bottom: none;
     background: none;
     z-index: 2;
     display: flex;
@@ -60,6 +62,10 @@ section.selector-buttons {
 }
 .selector-buttons .row-selector > span.score-display {
     border-left: 1px solid black;
+    border-right: 2px solid black;
+}
+.selector-buttons .row-selector > span.roll-display {
+    border-right: 1px solid black;
 }
 .selector-buttons .row-selector > span > span {
     opacity: .4;
@@ -69,4 +75,34 @@ section.selector-buttons {
 .selector-buttons .row-selector:focus > span > span,
 .selector-buttons .row-selector:hover > span > span {
     opacity: .9;
+}
+
+.selector-buttons label.row-selector input {
+    outline: none;
+}
+
+.selector-buttons label.row-selector:not(.fake):focus,
+.selector-buttons label.row-selector:not(.fake):hover {
+    outline: 2px solid ;
+    outline-color: var(--theme-background-focus);
+    z-index: 99;
+}
+.selector-buttons label.row-selector:not(.fake).selected,
+.selector-buttons .row-selector:not(.fake):active {
+    outline: 2px solid;
+    outline-color: var(--theme-foreground-hover);
+    z-index: 99;
+}
+.selector-buttons label.row-selector.discard:not(.fake):hover,
+.selector-buttons .row-selector.discard:not(.fake):focus {
+    outline-color: gray !important;
+}
+.selector-buttons label.row-selector.discard:not(.fake).selected,
+.selector-buttons .row-selector.discard:not(.fake):active {
+    outline-color: silver !important;
+}
+.selector-buttons .row-selector.selected:not(.fake)::after,
+.selector-buttons .row-selector:active:not(.fake)::after {
+    top: -1px;
+    bottom: -1px;
 }

@@ -4,7 +4,7 @@ import { Component, createMemo, JSX, Signal, createSignal, onMount, onCleanup, c
 import type { DieValue } from '../../../game/gameConstants';
 import { NumberDie } from "../number-die";
 import { TextDie } from "../text-die";
-import { createDialogSignal, Dialog } from "../../hacks/dialog";
+import { createDialogSignal, Dialog, DialogSignal } from '../../hacks/dialog';
 import { DieInputKeyboard } from './die-input.keyboard';
 
 type Props = JSX.HTMLAttributes<HTMLInputElement> 
@@ -12,50 +12,55 @@ type Props = JSX.HTMLAttributes<HTMLInputElement>
     name: string
     value: Signal<DieValue | undefined>,
     disabled?: Accessor<boolean>,
+    autoFocus: Signal<boolean>,
     modal?: boolean
 }
 
-export const DieInput : Component<Props> = ({ value, name, modal, disabled, ...props }) => {
+export const DieInput : Component<Props> = ({ value, name, modal, disabled, autoFocus, ...props }) => {
 
     let inputReference = props.ref! as HTMLInputElement;
 
     const [getValue, setValue] = value;
-    const keyboardDialogState = createDialogSignal();
+    const [getAutoFocus, setAutoFocus] = autoFocus;
+    const keyboardDialogState = createDialogSignal(
+        undefined,
+        () => getValue() !== undefined && setAutoFocus(true)
+    );
     const { isOpen: keyboardVisible, openDialog: showKeyboard, closeDialog: hideKeyboard }= keyboardDialogState;
 
-    const [getIsKeyboardUser, setIsKeyboardUser] = createSignal(true);
+    const [openOnFocus, setOpenOnFocus] = createSignal(true);
 
     onMount(() => {
-        document.addEventListener('mousemove', () => setIsKeyboardUser(false))
-        document.addEventListener('click', () => setIsKeyboardUser(false))
-        document.addEventListener('contextmenu', () => setIsKeyboardUser(false))
-        document.addEventListener('dblclick', () => setIsKeyboardUser(false))
-        document.addEventListener('dragstart', () => setIsKeyboardUser(false))
-        document.addEventListener('dragend', () => setIsKeyboardUser(false))
-        document.addEventListener('drop', () => setIsKeyboardUser(false))
-        document.addEventListener('pointermove', () => setIsKeyboardUser(false))
-        document.addEventListener('touchstart', () => setIsKeyboardUser(false))
-        document.addEventListener('touchend', () => setIsKeyboardUser(false))
-        document.addEventListener('wheel', () => setIsKeyboardUser(false))
+        document.addEventListener('mousemove', () => setOpenOnFocus(false))
+        document.addEventListener('click', () => setOpenOnFocus(false))
+        document.addEventListener('contextmenu', () => setOpenOnFocus(false))
+        document.addEventListener('dblclick', () => setOpenOnFocus(false))
+        document.addEventListener('dragstart', () => setOpenOnFocus(false))
+        document.addEventListener('dragend', () => setOpenOnFocus(false))
+        document.addEventListener('drop', () => setOpenOnFocus(false))
+        document.addEventListener('pointermove', () => setOpenOnFocus(false))
+        document.addEventListener('touchstart', () => setOpenOnFocus(false))
+        document.addEventListener('touchend', () => setOpenOnFocus(false))
+        document.addEventListener('wheel', () => setOpenOnFocus(false))
 
-        document.addEventListener('keydown', () => setIsKeyboardUser(true))
-        document.addEventListener('keyup', () => setIsKeyboardUser(true))
+        document.addEventListener('keydown', () => setOpenOnFocus(true))
+        document.addEventListener('keyup', () => setOpenOnFocus(true))
     })
     onCleanup(() => {
-        document.removeEventListener('mousemove', () => setIsKeyboardUser(false))
-        document.removeEventListener('click', () => setIsKeyboardUser(false))
-        document.removeEventListener('contextmenu', () => setIsKeyboardUser(false))
-        document.removeEventListener('dblclick', () => setIsKeyboardUser(false))
-        document.removeEventListener('dragstart', () => setIsKeyboardUser(false))
-        document.removeEventListener('dragend', () => setIsKeyboardUser(false))
-        document.removeEventListener('drop', () => setIsKeyboardUser(false))
-        document.removeEventListener('pointermove', () => setIsKeyboardUser(false))
-        document.removeEventListener('touchstart', () => setIsKeyboardUser(false))
-        document.removeEventListener('touchend', () => setIsKeyboardUser(false))
-        document.removeEventListener('wheel', () => setIsKeyboardUser(false))
+        document.removeEventListener('mousemove', () => setOpenOnFocus(false))
+        document.removeEventListener('click', () => setOpenOnFocus(false))
+        document.removeEventListener('contextmenu', () => setOpenOnFocus(false))
+        document.removeEventListener('dblclick', () => setOpenOnFocus(false))
+        document.removeEventListener('dragstart', () => setOpenOnFocus(false))
+        document.removeEventListener('dragend', () => setOpenOnFocus(false))
+        document.removeEventListener('drop', () => setOpenOnFocus(false))
+        document.removeEventListener('pointermove', () => setOpenOnFocus(false))
+        document.removeEventListener('touchstart', () => setOpenOnFocus(false))
+        document.removeEventListener('touchend', () => setOpenOnFocus(false))
+        document.removeEventListener('wheel', () => setOpenOnFocus(false))
 
-        document.removeEventListener('keydown', () => setIsKeyboardUser(true))
-        document.removeEventListener('keyup', () => setIsKeyboardUser(true))
+        document.removeEventListener('keydown', () => setOpenOnFocus(true))
+        document.removeEventListener('keyup', () => setOpenOnFocus(true))
     })
 
 
@@ -155,9 +160,11 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, ...p
 
     const handleFocus = (e: Event) => {
 
-        if (getIsKeyboardUser()) return true;
+        if (openOnFocus()) return true;
         if (keyboardVisible()) return true;
+        if (!getAutoFocus()) return true;
         if (getValue() !== undefined) return true;
+        setAutoFocus(false);
 
         e.preventDefault();
         e.stopPropagation();
@@ -186,7 +193,8 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, ...p
                 onClick={handleClick}
             />
 
-            <DieInputKeyboard value={value} name={name} keyboardDialogState={keyboardDialogState} modal={modal} />
+            <DieInputKeyboard value={value} name={name} 
+                keyboardDialogState={keyboardDialogState} modal={modal}  />
         </span>
     );
 };

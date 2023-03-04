@@ -36,19 +36,15 @@ function hasSomeOfKind(amount: number, score: ValidScore): boolean {
 
 function isFullHouse(score: ValidScore): boolean {
 
-    console.log('t', score)
     const grouped = score.reduce<Array<number>>(
         (counter, currentDie) => (counter[currentDie] = counter[currentDie] + 1 || 1, counter), []);
 
-    console.log('g', grouped)
     const smallGroup = grouped
         .filter(groupValue => groupValue <= 2)[0]
-    if (smallGroup !== 2) console.log('fh-s', smallGroup, smallGroup >= 3)
     if (smallGroup !== 2) return false;
 
     const largeGroup = grouped
         .filter(groupValue => groupValue >= 3)[0]
-    console.log('fh-s', smallGroup, smallGroup >= 3, 'fh-l', largeGroup, largeGroup === 0)
     if (largeGroup !== 3) return false;
 
     return true

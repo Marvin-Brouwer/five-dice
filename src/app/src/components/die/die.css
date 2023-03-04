@@ -20,7 +20,8 @@
     overflow: hidden;
 
     background-color: rgb(234,234,234);
-    border: solid var(--dice-color-foreground);
+    border-style: solid;
+    border-color: var(--dice-color-foreground);
     border-width: var(--dice-border-size);
     border-radius: calc(var(--dice-size) / 4);
 }
@@ -39,6 +40,5 @@
 }
 
 .die:focus{
-    outline:none;
     background-color: var(--theme-background-focus);
 }

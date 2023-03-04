@@ -23,43 +23,44 @@
 
 .die-radio-button .die{
     position: absolute;
+    left: -1px;
+    top: -1px;
+    width: calc(var(--dice-size) + 0px);
+    height: calc(var(--dice-size) + 0px);
     font-size: 12ex;
 }
 .die-radio-button input{
     appearance: none;
-    border-color: var(--dice-color-foreground) !important;
     position: absolute;
     font-size: 12ex;
-    top: -.1ex;
-    left: -.1ex;
-    width: calc(var(--dice-size) + .02ex - (var(--dice-padding) *2));
-    height: calc(var(--dice-size) + .1ex - (var(--dice-padding) *2));
+    width: calc(var(--dice-size) - (var(--dice-padding) * 1.5));
+    height: calc(var(--dice-size) - (var(--dice-padding) * 1.5));
     border: none;
-    border: 0px none;
-    border-radius: calc(var(--dice-size) / 5);
-    z-index: 2;
+    border: none;
+    margin: 0;
+    padding: 0;
+    border-radius: calc(var(--dice-size) / 6);
+    z-index: 1;
 }
 
 .die-radio-button input:focus,
-.die-radio-button input:focus-visible,
 .die-radio-button input:hover {
-    outline: none;
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
-    border: solid;
-    border-width: 2px;
-    border-color: var(--theme-foreground-hover) !important;
+    outline-style: solid;
+    outline-color: var(--theme-foreground-hover) !important;
+    border-color: transparent;
 }   
 .die-radio-button input:active,
 .die-radio-button input:checked {
-    outline: none;
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     border: solid;
     border-width: 2px;
-    border-color: var(--theme-foreground-hover) !important;
+    outline-color: transparent;
+    border: solid var(--theme-foreground-hover) !important;
 }   
 .die-radio-button[data-checked="true"] .die {
     --dice-color-foreground: var(--theme-foreground-hover);

@@ -16,6 +16,8 @@ export type ScoreInput = [
 export type ScoreInputState = {
     open: () => void,
     isOpen: Accessor<boolean>,
+    isEmpty: Accessor<boolean>,
+    autoFocus: Signal<boolean>,
     reset: () => void,
     resetAndClose: () => void,
     submitAndClose: () => void,
@@ -54,6 +56,9 @@ export function createScoreInputState({
 
     const step = createSignal<'closed' | 'diceSelector' | 'rowSelector' | 'flushDiscard'>('closed');
     const [getStep, setStep] = step;
+    const [isEmpty, setIsEmpty] = createSignal(true);
+    const autoFocus = createSignal(true);
+    const [, setAutoFocus] = autoFocus;
     const row = createSignal<ScoreField | undefined>(undefined);
     const [getRow, setRow] = row;
     const flushDiscard = createSignal<Exclude<ScoreField, 'flush'> | undefined>(undefined);
@@ -122,6 +127,7 @@ export function createScoreInputState({
         setScoreInput(createEmptyScore());
         setRow(undefined);
         setFlushDiscard(undefined);
+        setAutoFocus(true);
         if (reopen) {
             setSelectedDie(0);
             setStep('diceSelector')
@@ -137,6 +143,7 @@ export function createScoreInputState({
         reset(false);
     }
     function submitAndClose() {
+        setIsEmpty(false);
         const row = getRow();
         // TODO throw
         if (row == undefined) return;
@@ -192,6 +199,8 @@ export function createScoreInputState({
     return {
         open,
         isOpen,
+        isEmpty,
+        autoFocus,
         reset,
         resetAndClose,
         submitAndClose,

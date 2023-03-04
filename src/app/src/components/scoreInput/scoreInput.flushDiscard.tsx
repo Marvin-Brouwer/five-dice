@@ -18,8 +18,10 @@ type Props = {
 export const FlushDiscardSelector: Component<Props> = ({ inputState, getScorePad }) => {
 
     const [getCloseButtonRef, setCloseButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
+    const [getResetButtonRef, setResetButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getSubmitButtonRef, setSubmitButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
-    const [getFirstInputRef, setFirstInputRef] = createSignal<HTMLInputElement | undefined>(undefined);
+    const firstInputRef = createSignal<HTMLLabelElement | undefined>();
+    const [getFirstInputRef, setFirstInputRef] = firstInputRef;
 
     const [getFlushDiscard] = inputState.flushDiscard;
     const submitEnabled = createMemo(
@@ -49,12 +51,14 @@ export const FlushDiscardSelector: Component<Props> = ({ inputState, getScorePad
             <Selector id="flushDiscard"
                 getScorePad={getScorePad}
                 selectedField={inputState.flushDiscard} inputState={inputState} 
-                validFields={() => []} discardFields={availableRows} />
+                validFields={() => []} discardFields={availableRows} 
+                nextButton={() => getFlushDiscard() === undefined ? getResetButtonRef() : getSubmitButtonRef()} previousButton={getCloseButtonRef}
+                firstInputRef={firstInputRef} />
             <ScoreDialogPrompt 
                 inputState={inputState} onSubmit={inputState.submitAndClose} submitEnabled={submitEnabled}
                 submitLabel="confirm" submitDescription="Select the field to discard"
                 setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef} 
-                getFirstInputRef={getFirstInputRef} />
+                setResetButtonRef={setResetButtonRef} getFirstInputRef={getFirstInputRef} />
         </Dialog>
     );
 }

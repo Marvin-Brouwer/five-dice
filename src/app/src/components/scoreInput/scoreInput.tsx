@@ -5,8 +5,9 @@ import getTrumpetAudio from '../../audio/383154__profcalla__re_frullato_tromba.m
 import getPartyHornAudio from '../../audio/170583__audiosmedia__party-horn.wav?blob';
 
 import PlusIcon from "../../icons/iconmonstr-plus-lined.svg?raw";
+import ResetIcon from "../../icons/iconmonstr-trash-can-lined.svg?raw";
 
-import type { Component } from "solid-js";
+import { Component, onCleanup } from "solid-js";
 import { DieButton } from "../die/input/die-button";
 import { createScoreInputState, ScoreInputStateProps } from "./scoreInput.state";
 import { DiceSelector } from "./scoreInput.diceSelector";
@@ -54,6 +55,21 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
         }, [gameEnded, getAudioContext])
     })
+    
+    function handleUnload(e: BeforeUnloadEvent) {
+
+        if (inputState.isEmpty()) return true;
+        
+        e.preventDefault();
+        return e.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?';
+
+    }
+    onMount(() => {
+        window.addEventListener('beforeunload', handleUnload)
+    })
+    onCleanup(() => {
+        document.removeEventListener('beforeunload', handleUnload)
+    })
 
     return (
         <section class="score-input">
@@ -62,10 +78,19 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                     <div class="set-score">
                         
                         <DieButton 
+                            class="die-button enter-button"
                             value={<span class="illustration" innerHTML={PlusIcon} /> as Element} 
                             description="Enter a new round's value" disabled={inputState.isOpen} 
                             onClick={() => {
                                 inputState.open();
+                            }}
+                        />
+                        <DieButton 
+                            class="die-button reset-button"
+                            value={<span class="illustration" innerHTML={ResetIcon} /> as Element} 
+                            description="Reset score pad" disabled={inputState.isEmpty} 
+                            onClick={() => {
+                                window.location.reload();
                             }}
                         />
                     </div>
