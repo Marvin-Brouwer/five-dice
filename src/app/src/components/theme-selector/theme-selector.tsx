@@ -54,7 +54,6 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
         
     const handleColorSchemeChange = (event: MediaQueryListEvent) => {
         setPreferredColorScheme(event.matches ? 'dark' : 'light');
-        updateThemeMeta();
     }
 
     function isSelected(theme: 'auto' | 'light' | 'dark'): boolean {
@@ -65,9 +64,10 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
     function isActive(theme: 'auto' | 'light' | 'dark'): boolean {
         if (selectedTheme() !== 'auto') return isSelected(theme);
 
+        console.log(preferredColorScheme())
         return preferredColorScheme() == theme;
     }
-    const [autoSelected, setAutoSelected] = createSignal(isSelected('auto'));
+    const [autoSelected, setAutoSelected] = createSignal(false);
     const [lightSelected, setLightSelected] = createSignal(isSelected('light'));
     const [darkSelected, setDarkSelected] = createSignal(isSelected('dark'));
     const [lightActive, setLightActive] = createSignal(isActive('light'));
@@ -87,12 +87,8 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
         const colorSchemeMount = window.matchMedia('(prefers-color-scheme: dark)');
         const storedPreference = Cookie.get('theme');
 
-        if (storedPreference === undefined || storedPreference === 'auto')
-            setPreferredColorScheme(colorSchemeMount.matches ? 'dark' : 'light');
-        else {
-            setPreferredColorScheme(storedPreference as 'dark' | 'light');
-            setPreferredTheme(storedPreference as 'dark' | 'light');
-        }
+        setPreferredColorScheme(colorSchemeMount.matches ? 'dark' : 'light');
+        setPreferredTheme(storedPreference as 'dark' | 'light');
 
         colorSchemeMount
             .addEventListener("change", handleColorSchemeChange)
@@ -107,7 +103,7 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
         <span class="theme-selector">
             <span role="img" class="theme-icon die">
                 {/* The optical disk is just here to give some image when no preference is found on page load */}
-                <span aria-hidden={!autoSelected()} innerHTML={ThemeNoneIcon} />
+                <span innerHTML={ThemeNoneIcon} />
                 <span aria-hidden={!lightActive()} innerHTML={ThemeLightIcon} />
                 <span aria-hidden={!darkActive()} innerHTML={ThemeDarkIcon} />
                 <span aria-hidden={!autoSelected()} innerHTML={ThemeSystemIcon} />
