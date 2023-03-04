@@ -1,6 +1,6 @@
 import "./die-input.keyboard.css"
 
-import type { Component, Signal } from 'solid-js';
+import type { Component, Setter, Signal } from 'solid-js';
 import type { DieValue } from "../../../game/gameConstants";
 import { DieRadioButton } from "./die-radio";
 import { createSignal, createEffect } from 'solid-js';
@@ -11,9 +11,10 @@ type Props = {
     value: Signal<DieValue | undefined>,
     keyboardDialogState: DialogState,
     modal?: boolean
+    setAutoFocus: Setter<boolean>
 }
 
-export const DieInputKeyboard : Component<Props> = ({ value,modal, name, keyboardDialogState }) => {
+export const DieInputKeyboard : Component<Props> = ({ value, modal, name, keyboardDialogState, setAutoFocus }) => {
 
     const [getValue, setValue] = value;
     const initialValue = getValue();
@@ -92,7 +93,7 @@ export const DieInputKeyboard : Component<Props> = ({ value,modal, name, keyboar
     };
 
     return (
-        <Dialog modal={modal ?? true} dialogState={keyboardDialogState}>
+        <Dialog modal={modal ?? true} dialogState={keyboardDialogState} closeOnClick={true}>
             <span class="die-input-keyboard" onKeyDown={handleKeyEvent} ref={keyboardReference!} role="toolbar">
                 <DieRadioButton die='aces' value={value} group={`keyboard-${name}`} />
                 <DieRadioButton die='deuces' value={value} group={`keyboard-${name}`} />

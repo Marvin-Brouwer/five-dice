@@ -10,11 +10,13 @@ export type DialogState = {
     isOpen: Accessor<boolean>,
     closeDialog: (fireEvents?: boolean) => void;
 }
-export const createDialogSignal = (onClose?: () => void | undefined) => {
+export const createDialogSignal = (onClose?: () => void, onBeforeClose?: () => void) => {
     const openState = createSignal(false);
     const [isOpen,setIsOpen] = openState;
     const openDialog = () => setIsOpen(true);
     const closeDialog = (fireEvents?: boolean) => {
+        if (fireEvents !== false)
+            onBeforeClose?.()
         setIsOpen(false);
         if (fireEvents !== false)
             onClose?.();
@@ -29,13 +31,14 @@ type Props = {
     dialogState: DialogState
     modal: boolean
     id?: string,
+    closeOnClick?: boolean,
     showBackdrop?: Accessor<boolean>,
     class?: string | undefined,
     hide?: Accessor<boolean>,
 }
 
 export const Dialog: Component<ParentProps<Props>> = ({ 
-    dialogState, id, class: className, modal, children: childElements, hide, showBackdrop
+    dialogState, id, class: className, modal, children: childElements, hide, showBackdrop, closeOnClick
 }) => {
 
     let dialogReference: HTMLDialogElement;
@@ -51,8 +54,9 @@ export const Dialog: Component<ParentProps<Props>> = ({
     }
 
     function dialogClick(e:MouseEvent) {
+        
         if (!e.target) return true;
-        if (e.target !== dialogReference) return true;
+
         e.stopImmediatePropagation();
         e.stopPropagation();
         e.preventDefault();
@@ -62,13 +66,9 @@ export const Dialog: Component<ParentProps<Props>> = ({
     }
 
     onMount(() => {
-        if (modal) dialogReference.addEventListener('click', dialogClick);
-
         if (!hide?.() && dialogState.isOpen()) show();
     })
     onCleanup(() => {
-        if (modal) dialogReference.removeEventListener('click', dialogClick);
-
         dialogReference.close();
     })
     createEffect(() => {
@@ -90,6 +90,10 @@ export const Dialog: Component<ParentProps<Props>> = ({
                 dialogState.closeDialog();
             }}
             class={className} aria-hidden={hide?.() ? true : false}>
+            {modal && closeOnClick 
+                ? <div class='click-backdrop' onClick={dialogClick} />
+                : undefined
+            }
             {unwrappedChildren()}
         </dialog>
     )
