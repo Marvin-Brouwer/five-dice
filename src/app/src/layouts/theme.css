@@ -64,3 +64,7 @@ h2 {
 button, a {
     cursor: pointer;
 }
+
+table { 
+    border-collapse: collapse; 
+}
