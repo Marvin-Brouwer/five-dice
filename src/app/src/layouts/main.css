@@ -98,4 +98,5 @@ section[role="main"] {
     font-size: 1.5ex;
     max-width: 800px;
     padding: 0 2ex 0 2ex;
+    background-color: var(--theme-background-primary) !important;
 }
