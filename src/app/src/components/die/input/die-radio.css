@@ -60,7 +60,9 @@
     border: solid;
     border-width: 2px;
     outline-color: transparent;
-    border: solid var(--theme-foreground-hover) !important;
+    
+    border-style: solid;
+    border-color: var(--theme-foreground-hover);
 }   
 .die-radio-button[data-checked="true"] .die {
     --dice-color-foreground: var(--theme-foreground-hover);

@@ -28,7 +28,9 @@
         "middle-left middle-middle middle-right"
         "bottom-left bottom-middle bottom-right";
 
-    border: var(--dice-padding) solid transparent;
+    border-width: var(--dice-padding);
+    border-style: solid;
+    border-color: transparent;
 }
 
 .dot {
