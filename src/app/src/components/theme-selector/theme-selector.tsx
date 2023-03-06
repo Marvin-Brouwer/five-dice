@@ -85,7 +85,8 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
 
     onMount(() => {
         const colorSchemeMount = window.matchMedia('(prefers-color-scheme: dark)');
-        const storedPreference = Cookie.get('theme');
+        let storedPreference = Cookie.get('theme') ?? 'auto';
+        if (storedPreference === 'undefined') storedPreference = 'auto';
 
         setPreferredColorScheme(colorSchemeMount.matches ? 'dark' : 'light');
         setPreferredTheme(storedPreference as 'dark' | 'light');
