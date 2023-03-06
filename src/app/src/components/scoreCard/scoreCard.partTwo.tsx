@@ -11,7 +11,7 @@ interface Props {
 export const PartTwo: Component<Props> = ({ scorePad }) => {
 
     return (
-        <table>
+        <table frame={1} border={1}>
             <thead>
                 <tr>
                 <td class="sectionName label-column">Part two</td> <td class="roll-column">Roll</td> <td class="score-column">Score</td>

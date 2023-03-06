@@ -1,4 +1,5 @@
 import "./scoreCard.css";
+import "./tablefix.d.ts";
 
 import type { Component } from "solid-js";
 import { dice, Dice } from '../../game/gameConstants';
@@ -10,10 +11,11 @@ interface Props {
     scorePad: ScorePadAccessor
 }
 
+
 export const PartOne: Component<Props> = ({ scorePad }) => {
 
     return (
-        <table>
+        <table frame={1} border={1}>
             <thead>
                 <tr>
                     <td class="sectionName label-column">Part one</td> <td class="roll-column">Roll</td> <td class="score-column">Score</td>
