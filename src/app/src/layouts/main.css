@@ -66,8 +66,8 @@ header .header-contents {
 header h1 a, header h1 a::selection, header h1 a:hover {
     text-decoration: none;
     display: inline-block;
-    height: calc(2ex - 4px);
-    margin: calc(-.5ex + 2px) 2px;
+    height: calc(2ex - 5px);    
+    margin: calc(-.5ex + 2px) 0px 0px calc(-.5ex + 2px);
     padding:.5ex;
 }
 

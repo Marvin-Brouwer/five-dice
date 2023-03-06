@@ -20,7 +20,7 @@ export const Totals: Component<Props> = ({ scorePad }) => {
     );
 
     return (
-        <table>
+        <table frame={1} border={1}>
             <thead>
                 <tr>
                     <td class="sectionName label-column">Rounds total</td> <td class="totals-column">Score</td>
