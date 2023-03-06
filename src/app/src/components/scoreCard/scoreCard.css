@@ -43,7 +43,10 @@
     left: 1ex;
     right: 1ex;
     bottom: 0;
-    border-bottom: 1px solid var(--theme-foreground-primary);
+    
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: var(--theme-foreground-primary);
     z-index: 2;
 }
 #score-card aside .name-input {
@@ -137,7 +140,9 @@
     
     width: 100%;
     border-spacing: 0;
-    border: 2px solid var(--theme-foreground-primary);
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--theme-foreground-primary);
 }
 
 :root{
@@ -153,7 +158,9 @@
     text-align: right;
     padding: 0;
     height: var( --score-card-row-height);
-    border: 1px solid var(--theme-foreground-primary);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--theme-foreground-primary);
 }
 #score-card table thead td {
     font-weight: bold !important;
