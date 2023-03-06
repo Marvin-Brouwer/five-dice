@@ -3,7 +3,7 @@
     width: 100%;
     height: 100%;
     font-size: 1.4ex;
-    line-height: calc(var(--dice-size) + (var(--dice-padding) * 3));
+    line-height: calc(var(--dice-size) + (var(--dice-padding) * 4));
     font-family: Roboto;
     
     position: relative;
@@ -18,6 +18,7 @@
 
 .die .text svg {
     position: absolute;
+    line-height: normal;
     left: var(--dice-padding);
     top: calc(var(--dice-padding) * 2);
     bottom: var(--dice-padding);

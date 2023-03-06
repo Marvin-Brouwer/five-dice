@@ -51,7 +51,7 @@ header::after {
 }
 
 header h1 {
-    margin: -.5ex 0ex 0ex 0ex ;
+    margin: -.5ex 0ex 0ex -.5ex ;
     padding: 0;
     font-size: 3ex; 
     height: 2ex;
@@ -60,8 +60,10 @@ header .header-contents {
     display: flex;
     justify-content: space-between;
     margin: 0 auto 0 auto;
-    padding-right: .5ex;
-    max-width: calc(800px + 2ex);
+    width: calc(100% - 2ex);
+    max-width: calc(800px + .5ex);
+    
+    box-sizing: border-box;
 }
 
 header h1 a, header h1 a::selection, header h1 a:hover {
@@ -73,12 +75,9 @@ header h1 a, header h1 a::selection, header h1 a:hover {
 }
 
 header nav {
-    margin: 0 .5ex .5ex 0 ;
-    /*  todo style nav */
     justify-self: flex-end;
     height: 3ex;
     width: 6ex;
-    /* overflow: hidden; */
 }
 
 header nav ul {
@@ -97,7 +96,7 @@ header nav ul li {
 section[role="main"] {
     margin: 1ex auto 0 auto;
     font-size: 1.5ex;
-    max-width: 800px;
-    padding: 0 2ex 0 2ex;
+    width: calc(100% - 5ex);
+    max-width: calc(800px + .5ex);
     background-color: var(--theme-background-primary) !important;
 }
