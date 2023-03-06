@@ -29,7 +29,6 @@ span.description-label.responsive-description-label .long {
         display: none;
     }
     #score-card {
-        margin-left: -1ex;
         width: 100%;
         padding: 0 0 .5 0;
     }
@@ -39,7 +38,6 @@ span.description-label.responsive-description-label .long {
         font-size: 1.5ex;
     }
     #score-card {
-        margin-left: -1ex;
         width: 100%;
         padding: 0 0 .5 0;
     }

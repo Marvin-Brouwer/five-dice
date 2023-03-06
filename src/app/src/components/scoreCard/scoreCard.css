@@ -1,7 +1,6 @@
 #score-card {
     display: block;
-    width: calc(100% - 2ex);
-    padding: 0ex 1ex 1ex 1ex;
+    width: 100%;
     margin-bottom: 12ex;
 }
 #score-card aside {
@@ -191,7 +190,7 @@
     --dice-padding: .2ex !important;
 }
 
-@media only screen and (min-height: 750px) {
+@media only screen and (min-height: 745px) and (min-width: 400px) {
     #score-card aside {
         display: block;
     }
