@@ -65,9 +65,10 @@ section.score-input .set-score button.reset-button {
 
 .set-score button.die-button svg  {
     top: calc(var(--dice-padding) * 3);
-    bottom: calc(var(--dice-padding) * 2);
+    /* bottom: calc(var(--dice-padding) * 2); */
     left: calc(var(--dice-padding) * 2);
-    right: calc(var(--dice-padding) * 2);
+    /* right: calc(var(--dice-padding) * 2); */
+    width: calc(100% - (var(--dice-padding) * 4));
 }
 
 section.title-section{
