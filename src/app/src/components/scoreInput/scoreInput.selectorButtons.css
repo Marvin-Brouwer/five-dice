@@ -14,7 +14,7 @@ section.selector-buttons {
     position: absolute;
     border-width: 1px;
     border-style: solid;
-    border-width: var(--theme-foreground-primary);
+    border-color: var(--theme-foreground-primary);
     border-top: none;
     border-bottom: none;
     background: none;
@@ -38,7 +38,7 @@ section.selector-buttons {
     border-left: .5ex solid;
     top:1px;
     bottom: 1px;
-    left: calc(-1 * (.5ex + 2px)) ;
+    left: calc(-1 * (.5ex + 1px)) ;
     z-index: 2;
     opacity: .3;
 }
@@ -83,6 +83,7 @@ section.selector-buttons {
 .selector-buttons .row-selector:focus > span > span,
 .selector-buttons .row-selector:hover > span > span {
     opacity: .9;
+    z-index: 99;
 }
 
 .selector-buttons label.row-selector input {
@@ -103,7 +104,7 @@ section.selector-buttons {
 .selector-buttons .row-selector:not(.fake):active {
     outline: 2px solid;
     outline-color: var(--theme-foreground-hover);
-    z-index: 99;
+    z-index: 999;
 }
 .selector-buttons label.row-selector.discard:not(.fake):hover,
 .selector-buttons .row-selector.discard:not(.fake):focus {
@@ -115,6 +116,26 @@ section.selector-buttons {
 }
 .selector-buttons .row-selector.selected:not(.fake)::after,
 .selector-buttons .row-selector:active:not(.fake)::after {
-    top: -1px;
-    bottom: -1px;
+    top: -2px;
+    bottom: -2px;
+    border-radius: 2px;
+    z-index: 999;
+}
+.selector-buttons .row-selector.selected:not(.fake)::before,
+.selector-buttons .row-selector:active:not(.fake)::before {
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--theme-foreground-primary); position: absolute;
+    display: block;
+    content: '';
+    background: none;
+    z-index: 99;
+    box-shadow: inset;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    box-shadow: 
+      0 0 0 .5px var(--theme-foreground-primary) inset,
+      0 0 0 1px var(--theme-background-primary) inset;
 }
