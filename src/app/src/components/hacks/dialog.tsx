@@ -72,11 +72,18 @@ export const Dialog: Component<ParentProps<Props>> = ({
         dialogReference.close();
     })
     createEffect(() => {
+        // These animations are just here to slightly mitigate the dialog flash
         if (dialogState.isOpen()) {
-            setTimeout(show);
+            setTimeout(() => dialogReference.style.opacity = ".2", 0);
+            setTimeout(() => show(), 10);
+            setTimeout(() => dialogReference.style.opacity = ".5", 50);
+            setTimeout(() => dialogReference.style.opacity = "1", 90);
         }
         else {
-            dialogReference.close();
+            setTimeout(() => dialogReference.style.opacity = ".5", 50);
+            setTimeout(() => dialogReference.style.opacity = ".2", 70);
+            setTimeout(() => dialogReference.close(), 90);
+            setTimeout(() => dialogReference.style.opacity = "1", 91);
         }
     }, dialogState.isOpen)
 
