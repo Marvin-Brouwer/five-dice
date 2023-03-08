@@ -31,6 +31,9 @@ export const ScoreInputDialog: Component<Props> = (props) => {
     const gameEnded = createMemo(() => getRound() > roundAmount, getRound);
     const getAudioContext = createAudioContextAccessor();
 
+    const ballonPopAudio = getBalloonPopAudio();
+    const trumpetAudio = getTrumpetAudio();
+    const partyHornAudio = getPartyHornAudio();
 
     onMount(() => {
         const confetti = new JSConfetti();
@@ -42,9 +45,9 @@ export const ScoreInputDialog: Component<Props> = (props) => {
                 audioContext.suspend();
 
                 try{
-                    await appendBuffer(audioContext, getBalloonPopAudio(), createBalloonEffect(3))
-                    await appendBuffer(audioContext, getTrumpetAudio(),createPartyHornEffect(0))
-                    await appendBuffer(audioContext, getPartyHornAudio(), createPartyHornEffect(.06))
+                    await appendBuffer(audioContext, ballonPopAudio(), createBalloonEffect(3))
+                    await appendBuffer(audioContext, trumpetAudio(),createPartyHornEffect(0))
+                    await appendBuffer(audioContext, partyHornAudio(), createPartyHornEffect(.06))
                     audioContext.resume();
                 } catch (e) {
                     console.warn(e);

@@ -1,10 +1,10 @@
 import "./die-input.css"
 
-import { Component, createMemo, JSX, Signal, createSignal, onMount, onCleanup, createEffect, createReaction, createComputed, Accessor } from 'solid-js';
+import { Component, createMemo, JSX, Signal, Accessor } from 'solid-js';
 import type { DieValue } from '../../../game/gameConstants';
 import { NumberDie } from "../number-die";
 import { TextDie } from "../text-die";
-import { createDialogSignal, Dialog, DialogSignal } from '../../hacks/dialog';
+import { createDialogSignal } from '../../hacks/dialog';
 import { DieInputKeyboard } from './die-input.keyboard';
 import { useKeyboardContext } from '../../../context/keyboardContext';
 
@@ -126,8 +126,6 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
 
     const handleFocus = (e: Event) => {
 
-
-        console.log(keyboardContext.isKeyboardUser())
         if (keyboardContext.isKeyboardUser()) return true;
         if (keyboardVisible()) return true;
         if (!getAutoFocus()) return true;

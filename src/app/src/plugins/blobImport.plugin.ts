@@ -46,7 +46,10 @@ export const blobLoader = (extension: string): Plugin => {
                 code: `
                     ${helperFile}
                     const { default: url } = await import("${filePath}?url");
-                    export default createBlobAccessor(url);
+                    function getBlobData() {
+                        return createBlobAccessor(url);
+                    } 
+                    export default getBlobData;
                 `};
         }
     });
