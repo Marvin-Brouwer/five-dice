@@ -6,6 +6,7 @@ import { NumberDie } from "../number-die";
 import { TextDie } from "../text-die";
 import { createDialogSignal, Dialog, DialogSignal } from '../../hacks/dialog';
 import { DieInputKeyboard } from './die-input.keyboard';
+import { useKeyboardContext } from '../../../context/keyboardContext';
 
 type Props = JSX.HTMLAttributes<HTMLInputElement> 
 & {
@@ -20,6 +21,7 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
 
     let inputReference = props.ref! as HTMLInputElement;
 
+    const keyboardContext = useKeyboardContext();
     const [getValue, setValue] = value;
     const [getAutoFocus, setAutoFocus] = autoFocus;
     const keyboardDialogState = createDialogSignal(
@@ -27,42 +29,6 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
         () => getValue() !== undefined && setAutoFocus(true)
     );
     const { isOpen: keyboardVisible, openDialog: showKeyboard, closeDialog: hideKeyboard }= keyboardDialogState;
-
-    const [openOnFocus, setOpenOnFocus] = createSignal(true);
-
-    onMount(() => {
-        document.addEventListener('mousemove', () => setOpenOnFocus(false))
-        document.addEventListener('click', () => setOpenOnFocus(false))
-        document.addEventListener('contextmenu', () => setOpenOnFocus(false))
-        document.addEventListener('dblclick', () => setOpenOnFocus(false))
-        document.addEventListener('dragstart', () => setOpenOnFocus(false))
-        document.addEventListener('dragend', () => setOpenOnFocus(false))
-        document.addEventListener('drop', () => setOpenOnFocus(false))
-        document.addEventListener('pointermove', () => setOpenOnFocus(false))
-        document.addEventListener('touchstart', () => setOpenOnFocus(false))
-        document.addEventListener('touchend', () => setOpenOnFocus(false))
-        document.addEventListener('wheel', () => setOpenOnFocus(false))
-
-        document.addEventListener('keydown', () => setOpenOnFocus(true))
-        document.addEventListener('keyup', () => setOpenOnFocus(true))
-    })
-    onCleanup(() => {
-        document.removeEventListener('mousemove', () => setOpenOnFocus(false))
-        document.removeEventListener('click', () => setOpenOnFocus(false))
-        document.removeEventListener('contextmenu', () => setOpenOnFocus(false))
-        document.removeEventListener('dblclick', () => setOpenOnFocus(false))
-        document.removeEventListener('dragstart', () => setOpenOnFocus(false))
-        document.removeEventListener('dragend', () => setOpenOnFocus(false))
-        document.removeEventListener('drop', () => setOpenOnFocus(false))
-        document.removeEventListener('pointermove', () => setOpenOnFocus(false))
-        document.removeEventListener('touchstart', () => setOpenOnFocus(false))
-        document.removeEventListener('touchend', () => setOpenOnFocus(false))
-        document.removeEventListener('wheel', () => setOpenOnFocus(false))
-
-        document.removeEventListener('keydown', () => setOpenOnFocus(true))
-        document.removeEventListener('keyup', () => setOpenOnFocus(true))
-    })
-
 
     const die = createMemo(() =>  {
         const dieValue = getValue();
@@ -160,7 +126,9 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
 
     const handleFocus = (e: Event) => {
 
-        if (openOnFocus()) return true;
+
+        console.log(keyboardContext.isKeyboardUser())
+        if (keyboardContext.isKeyboardUser()) return true;
         if (keyboardVisible()) return true;
         if (!getAutoFocus()) return true;
         if (getValue() !== undefined) return true;
@@ -194,7 +162,8 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
             />
 
             <DieInputKeyboard value={value} name={name} 
-                keyboardDialogState={keyboardDialogState} modal={modal}  />
+                keyboardDialogState={keyboardDialogState} modal={modal} 
+                setAutoFocus={setAutoFocus} />
         </span>
     );
 };

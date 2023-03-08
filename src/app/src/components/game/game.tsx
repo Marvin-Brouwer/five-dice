@@ -2,6 +2,7 @@ import { createSignal, Component, onMount, createEffect } from 'solid-js';
 import { useScorePad } from '../../game/score/useScorePad';
 import { ScoreCard } from '../scoreCard/scoreCard';
 import { ScoreInputDialog } from '../scoreInput/scoreInput';
+import { KeyboardContextProvider } from '../../context/keyboardContext';
 
 const round = createSignal(1);
 const scorePad = useScorePad();
@@ -28,8 +29,8 @@ export const Game: Component = () => {
 
     const playerName = createPlayerNameSignal();
     
-    return (<>
+    return (<KeyboardContextProvider>
         <ScoreCard playerName={playerName} round={round} getScorePad={getScorePad} />
         <ScoreInputDialog round={round} scorePad={scorePad}  />
-    </>);
+    </KeyboardContextProvider>);
 }

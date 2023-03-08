@@ -9,6 +9,7 @@ import { Selector } from './scoreInput.selector';
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 import type { ScoreField } from '../../game/gameConstants';
 import { SelectorFlushFake } from './scoreInput.selectorButtons.flushFake';
+import { useKeyboardContext } from '../../context/keyboardContext';
 
 type Props = {
     inputState: ScoreInputState,
@@ -17,6 +18,8 @@ type Props = {
 
 export const FlushDiscardSelector: Component<Props> = ({ inputState, getScorePad }) => {
 
+    const keyboardContext = useKeyboardContext();
+    const autoFocusEnabled = createMemo(keyboardContext.isKeyboardUser, keyboardContext.isKeyboardUser())
     const [getCloseButtonRef, setCloseButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getResetButtonRef, setResetButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getSubmitButtonRef, setSubmitButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
@@ -58,7 +61,8 @@ export const FlushDiscardSelector: Component<Props> = ({ inputState, getScorePad
                 inputState={inputState} onSubmit={inputState.submitAndClose} submitEnabled={submitEnabled}
                 submitLabel="confirm" submitDescription="Select the field to discard"
                 setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef} 
-                setResetButtonRef={setResetButtonRef} getFirstInputRef={getFirstInputRef} />
+                setResetButtonRef={setResetButtonRef} getFirstInputRef={getFirstInputRef} 
+                autoFocusEnabled={autoFocusEnabled} />
         </Dialog>
     );
 }

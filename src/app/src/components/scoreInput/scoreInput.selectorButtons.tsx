@@ -1,4 +1,4 @@
-import { Accessor, Component, Signal, createMemo, JSX, createSignal, Setter } from 'solid-js';
+import { Accessor, Component, Signal, createMemo, JSX, createSignal, Setter, onMount, createEffect } from 'solid-js';
 import type { ScoreField, DieValue } from '../../game/gameConstants';
 import './scoreInput.selectorButtons.css';
 import type { ScoreInputState } from './scoreInput.state';
@@ -6,6 +6,7 @@ import { discard, score } from '../../game/score/score';
 import { RollDisplay } from '../scoreCard/scoreCard.rollDisplay';
 import { SingleScoreDisplay } from '../scoreCard/scoreCard.scoreDisplay';
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
+import { useKeyboardContext } from '../../context/keyboardContext';
 
 type Props = {
     validFields: Accessor<Array<ScoreField>>
@@ -25,6 +26,7 @@ export const SelectorButtons: Component<Props> = ({
     previousButton, nextButton, firstInputRef
 }) => {
 
+    const keyboardContext = useKeyboardContext();
     const [getFirstInputRef, setFirstInputRef] = firstInputRef;
     const [getSectionRef, setSectionRef] = createSignal<HTMLDivElement>();
     const [getSelectedField, setSelectedField] = selectedField;
@@ -53,15 +55,27 @@ export const SelectorButtons: Component<Props> = ({
                     'discard': isDiscard,
                     'selected': getSelectedField() === field
                 }
+
+                const checkFocus = index !== 0 ? () => {} : (e: FocusEvent) => {
+                    console.log(getFirstInputRef(), keyboardContext.isKeyboardUser())
+                    if (getFirstInputRef() !== undefined) return true;
+                    if (keyboardContext.isKeyboardUser()) return true;
+                    (e.currentTarget as HTMLElement).blur();
+                    return false;
+                } 
                 
                 return (
                     <label style={position}  classList={classList} tabIndex={index}
-                        onKeyDown={handleKeyEvent} >
+                        onKeyDown={handleKeyEvent}
+                        onFocus={checkFocus}>
                         <input 
                             type='radio' checked={getSelectedField() === field} data-field={field}
                             onChange={(e) => e.currentTarget.checked && setSelectedField(field) && e.currentTarget.focus()} 
                             onKeyDown={handleKeyEvent} 
-                            onFocus={e => e.currentTarget.parentElement?.focus()} />
+                            onFocus={e => {
+                                if (!checkFocus(e)) return;
+                                e.currentTarget.parentElement?.focus();
+                            }} />
                         <RollDisplay field={field} score={displayScore} />
                         <SingleScoreDisplay field={field} score={displayScore()} scorePad={getScorePad} />
                     </label>

@@ -1,5 +1,3 @@
-/* TODO: unify all buttons and input components to use outline and make it look consistent */
-
 [data-theme="light"] {
     color-scheme: light;
     --theme-foreground-primary: rgb(48, 48, 48);

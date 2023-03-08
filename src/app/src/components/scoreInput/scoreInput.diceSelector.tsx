@@ -3,7 +3,7 @@ import './scoreInput.diceSelector.css';
 import type { ScoreInputState } from './scoreInput.state';
 import type { Component } from 'solid-js';
 import { Dialog } from '../hacks/dialog';
-import { createMemo, createSignal } from 'solid-js';
+import { createSignal } from 'solid-js';
 import { ScoreDialogPrompt } from './scoreInput.dialogPrompt';
 import { ScoreInputButtons } from './scoreInput.scoreButtons';
 
@@ -15,7 +15,7 @@ export const DiceSelector: Component<Props> = ({ inputState }) => {
 
     const [getCloseButtonRef, setCloseButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getSubmitButtonRef, setSubmitButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
-    const [getFirstInputRef, setFirstInputRef] = createSignal<HTMLInputElement | undefined>(undefined);
+    const [getFirstInputRef, setFirstInputRef] = createSignal<HTMLLabelElement | undefined>(undefined);
 
     return (
         <Dialog modal={true} dialogState={inputState.dialogs.diceSelector}>
