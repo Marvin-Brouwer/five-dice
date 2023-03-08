@@ -64,7 +64,6 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
     function isActive(theme: 'auto' | 'light' | 'dark'): boolean {
         if (selectedTheme() !== 'auto') return isSelected(theme);
 
-        console.log(preferredColorScheme())
         return preferredColorScheme() == theme;
     }
     const [autoSelected, setAutoSelected] = createSignal(false);

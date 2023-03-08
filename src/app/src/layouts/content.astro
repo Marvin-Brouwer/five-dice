@@ -18,6 +18,7 @@ const { title } = Astro.props
 <MainLayout title={title}>
 	<a id="top" tabindex={-1}/>	
 	<aside role="banner">
+		<!-- TODO: make a share banner instead, make it look like the name and round bar -->
 		<ul class="top-banner" role="navigation">
 			<li>
 				<a href="score-card" title="start new game">
@@ -29,6 +30,7 @@ const { title } = Astro.props
 	</aside>
 	<section role="main"><slot /></section>
 	<footer>
+		<!-- TODO change the doormat into a table -->
 		<ul class="doormat" role="navigation">
 			<li>
 				<a href="score-card" title="start new game">

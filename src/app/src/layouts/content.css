@@ -1,7 +1,8 @@
 
 aside[role="banner"] {
-    margin: 0 2ex 1ex 2ex;
-    width: calc(100% - 4ex);
+    margin: 0 auto 1ex auto;
+    width: calc(100% - 5ex);
+    max-width: calc(800px + .5ex);
     display: flex;
     position: relative;
     z-index: 1;
@@ -74,11 +75,10 @@ aside[role="banner"] ul li picture.new-game-icon{
     margin-right: .6ex;
 }
 
-
 section[role="main"] {
-    margin: 1ex 2ex 0 2ex;
-    font-size: 1.5ex;
+    font-size: 2ex !important;
 }
+
 
 footer {
     border-top-width: 1px;
@@ -91,6 +91,16 @@ footer {
     font-size: 1.4ex;
     font-family: monospace;
     text-transform: uppercase;
+}
+@media screen and (min-width: 369px) {
+    footer {
+        font-size: 1.7ex;
+    }
+}
+@media screen and (min-width: 545px) {
+    footer {
+        font-size: 2ex;
+    }
 }
 footer::before {
     display: block;
@@ -108,13 +118,14 @@ footer::before {
 footer ul {
     height: calc(4em + 2ex) ;
     display: flex;
-    width: 100%;
+    width: calc(100% - 5ex);
+    max-width: calc(800px + .5ex);
     position: relative;
     flex-direction: column;
     flex-wrap: wrap;
     column-count: 2;
     list-style: outside none;
-    margin: 1ex 0 1ex 0;
+    margin: 1ex auto 1ex auto;
     padding: 0;
 }
 

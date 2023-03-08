@@ -57,9 +57,10 @@ export const SelectorButtons: Component<Props> = ({
                 }
 
                 const checkFocus = index !== 0 ? () => {} : (e: FocusEvent) => {
-                    console.log(getFirstInputRef(), keyboardContext.isKeyboardUser())
+
                     if (getFirstInputRef() !== undefined) return true;
                     if (keyboardContext.isKeyboardUser()) return true;
+                    
                     (e.currentTarget as HTMLElement).blur();
                     return false;
                 } 
