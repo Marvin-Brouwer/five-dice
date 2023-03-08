@@ -13,7 +13,7 @@ type Props = {
     submitDescription: string,
     onSubmit: () => void,
     submitEnabled: Accessor<boolean>,
-    setResetButtonRef: Setter<HTMLButtonElement>,
+    setResetButtonRef?: Setter<HTMLButtonElement>,
     setCloseButtonRef: Setter<HTMLButtonElement>,
     setSubmitButtonRef: Setter<HTMLButtonElement>,
     getFirstInputRef: Accessor<HTMLLabelElement | undefined>,
