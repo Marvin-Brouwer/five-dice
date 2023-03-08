@@ -6,6 +6,7 @@ import type { ScoreInputState } from "./scoreInput.state";
 import CloseIcon from "../../icons/iconmonstr-x-mark-lined.svg?raw";
 import SubmitIcon from "../../icons/iconmonstr-check-mark-lined.svg?raw";
 import ResetIcon from "../../icons/iconmonstr-undo-4.svg?raw";
+import { createMemo } from 'solid-js';
 
 type Props = {
     inputState: ScoreInputState,
@@ -17,13 +18,15 @@ type Props = {
     setCloseButtonRef: Setter<HTMLButtonElement>,
     setSubmitButtonRef: Setter<HTMLButtonElement>,
     getFirstInputRef: Accessor<HTMLLabelElement | undefined>,
+    autoFocusEnabled?: Accessor<boolean | undefined>
 }
 
 export const ScoreDialogPrompt: Component<Props> = ({ 
     inputState, onSubmit, submitEnabled, setCloseButtonRef, setSubmitButtonRef, getFirstInputRef, setResetButtonRef,
-    submitLabel, submitDescription
+    submitLabel, submitDescription, autoFocusEnabled
 }) => {
 
+    const isAutoFocusEnabled = createMemo(() => autoFocusEnabled === undefined || autoFocusEnabled(), autoFocusEnabled);
     const submit = (e: MouseEvent) => {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -43,7 +46,8 @@ export const ScoreDialogPrompt: Component<Props> = ({
 
     const reset = () =>{
         inputState.reset();
-        getFirstInputRef()?.focus();
+        if (isAutoFocusEnabled())
+            getFirstInputRef()?.focus();
     }
 
     return (

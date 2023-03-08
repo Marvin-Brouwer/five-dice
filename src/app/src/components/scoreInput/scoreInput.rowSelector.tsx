@@ -11,6 +11,7 @@ import { score, isDiscarded, isFlushScore } from '../../game/score/score';
 import { SelectorBackdrop } from './scoreInput.selectorBackdrop';
 import type { ScorePadAccessor } from '../../game/score/useScorePad';
 import { Selector } from './scoreInput.selector';
+import { useKeyboardContext } from '../../context/keyboardContext';
 
 type Props = {
     inputState: ScoreInputState,
@@ -19,11 +20,14 @@ type Props = {
 
 export const RowSelector: Component<Props> = ({ inputState, getScorePad }) => {
 
+    const keyboardContext = useKeyboardContext();
+    const autoFocusEnabled = createMemo(keyboardContext.isKeyboardUser, keyboardContext.isKeyboardUser());
+    
     const [getCloseButtonRef, setCloseButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getResetButtonRef, setResetButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const [getSubmitButtonRef, setSubmitButtonRef] = createSignal<HTMLButtonElement | undefined>(undefined);
     const firstInputRef = createSignal<HTMLLabelElement | undefined>();
-    const [getFirstInputRef, setFirstInputRef] = firstInputRef;
+    const [getFirstInputRef] = firstInputRef;
 
     const [getSelectedRow] = inputState.row;
     const submitEnabled = createMemo(
@@ -95,7 +99,7 @@ export const RowSelector: Component<Props> = ({ inputState, getScorePad }) => {
                 inputState={inputState} onSubmit={onSubmit} submitEnabled={submitEnabled}
                 setSubmitButtonRef={setSubmitButtonRef} setCloseButtonRef={setCloseButtonRef}  setResetButtonRef={setResetButtonRef} 
                 submitLabel="confirm" submitDescription="Select the field to apply the current score to"
-                getFirstInputRef={getFirstInputRef} />
+                getFirstInputRef={getFirstInputRef} autoFocusEnabled={autoFocusEnabled} />
         </Dialog>
     );
 }
