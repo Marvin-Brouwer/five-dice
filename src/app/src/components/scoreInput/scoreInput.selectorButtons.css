@@ -63,17 +63,19 @@ section.selector-buttons {
     bottom:0;
 }
 .selector-buttons .row-selector > span.score-display {
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-left-color: var(--theme-foreground-primary);
+    height: calc(var(--score-card-row-height) - 2px);
     border-right-width: 1px;
     border-right-style: solid;
     border-right-color: var(--theme-foreground-primary);
 }
 .selector-buttons .row-selector > span.roll-display {
+    height: calc(var(--score-card-row-height) - 2px);
     border-right-width: 1px;
     border-right-style: solid;
     border-right-color: var(--theme-foreground-primary);
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: var(--theme-foreground-primary);
 }
 .selector-buttons .row-selector > span > span {
     opacity: .4;
