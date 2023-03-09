@@ -1,6 +1,6 @@
 
 footer {
-    margin: 0 auto 2ex auto;
+    margin: 4ex auto 2ex auto;
     width: calc(100% - 5ex);
     max-width: calc(800px + .5ex);
     position: relative;
