@@ -1,0 +1,104 @@
+
+footer {
+    margin: 0 auto 2ex auto;
+    width: calc(100% - 5ex);
+    max-width: calc(800px + .5ex);
+    position: relative;
+    font-size: 1.5ex;
+    font-family: monospace;
+    text-transform: uppercase;
+}
+
+footer table {
+    width: 100%;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--theme-foreground-primary);
+    margin: 0;
+    padding: 0;
+}
+footer table td {
+    width: 50%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--theme-foreground-primary);
+    margin: 0;
+    padding: 0;
+}
+
+footer table td > a,
+footer table td > button {
+    all: unset;
+    background: none;
+    border: none;
+    display: flex;
+    width: calc(100% - 1ex);
+    height: calc(100% - 1ex);
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    padding: 0;
+    margin: .5ex;
+    white-space: normal;
+    word-wrap: normal;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+footer table td > a > span.die,
+footer table td > button > span.die{
+    display: block;
+    width: 4ex;
+    height: 4ex;
+    margin: 1ex 2ex 1ex 1ex;
+    padding: 0;
+    white-space: nowrap;
+    word-wrap: normal;
+    overflow: visible;
+}
+footer table td > a > span.die::before,
+footer table td > button > span.die::before{
+    width: 3.8ex;
+    height: 3.8ex;
+}
+footer table td > a > span.die > span.text,
+footer table td > button > span.die > span.text{
+    width: 4ex;
+    height: 4ex;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+footer table td > a span.die svg,
+footer table td > button span.die svg {
+    width: 3.2ex;
+    height: 3.2ex;
+    display: inline-flex;
+    padding: 0;
+    margin: -.2ex 0 0 .2ex;
+    position: relative;
+}
+footer table td > a span.die svg *,
+footer table td > button span.die svg * {
+    display: inline-block;
+}
+footer table td > a.accessibility-icon span.die svg
+ {
+    width: 3.8ex;
+    height: 3.8ex;
+    padding: 0;
+    margin: -.6ex 0 0 -.1ex;
+}
+
+#top-scroller svg {
+    width: 2.8ex;
+    height: 2.8ex;
+    margin: .1ex 0 0  .4ex;
+    transform: rotate(-90deg);
+}

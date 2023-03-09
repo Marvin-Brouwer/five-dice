@@ -6,7 +6,7 @@ mediaQuery.addEventListener('change', () => {
 });
 
 const topElement = document.getElementById('top');
-const topScroller = document.getElementById('topScroller');
+const topScroller = document.getElementById('top-scroller');
 
 function scrollToTop() {
     topScroller?.blur();

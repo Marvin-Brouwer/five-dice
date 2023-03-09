@@ -1,0 +1,61 @@
+---
+import "./footer.css";
+
+import NewIcon from "../icons/iconmonstr-plus-lined.svg?raw" ;
+import ArrowIcon from "../icons/iconmonstr-arrow-41.svg?raw" ;
+import GitHubIcon from "../icons/iconmonstr-github-1.svg?raw" ;
+import AccessibilityIcon from "../icons/iconmonstr-accessibility-circle-lined.svg?raw";
+import { SvgDie } from "../components/die/svg-die";
+
+---
+
+<script src="./footer.mts" ></script>
+
+<footer>
+    <table class="doormat" role="navigation">
+        <tr>
+            <td>
+                <a href="./score-card" title="Start a new game">
+                    <SvgDie value={NewIcon} /> 
+                    <span>New game</span>
+                </a>
+            </td>
+            <td>
+                <button title="Scroll to top" id="top-scroller">
+                    <SvgDie value={ArrowIcon} /> 
+                    <span>Scroll to top</span>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Fork me on GitHub" target="_blank" rel="nofollow">
+                    <SvgDie value={GitHubIcon} />
+                    <span>Fork me on GitHub</span>
+                </a>
+            </td>
+            <td>
+                <!-- TODO: change to issue of type bug -->
+                <a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report a bug" target="_blank" rel="nofollow">
+                    <SvgDie value={GitHubIcon} />
+                    <span>Report a bug</span>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="./accessibility" title="Accessibility" class="accessibility-icon" target="_blank">
+                    <SvgDie value={AccessibilityIcon} />
+                    <span>Accessibility</span>
+                </a>
+            </td>
+            <td>
+                <!-- TODO: change to issue of type accessibility issue -->
+                <a href="https://github.com/Marvin-Brouwer/five-dice#readme" title="Report accessibility issues" target="_blank" rel="nofollow">
+                    <SvgDie value={GitHubIcon} />
+                    <span>Report accessibility issues</span>
+                </a>
+            </td>
+        </tr>
+    </table>
+</footer>
