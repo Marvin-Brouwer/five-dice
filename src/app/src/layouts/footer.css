@@ -93,12 +93,12 @@ footer table td > a.accessibility-icon span.die svg
     width: 3.8ex;
     height: 3.8ex;
     padding: 0;
-    margin: -.6ex 0 0 -.1ex;
+    margin: -.5ex 0 0 -.1ex;
 }
 
 #top-scroller svg {
-    width: 2.8ex;
-    height: 2.8ex;
-    margin: .1ex 0 0  .4ex;
+    width: 2.5ex;
+    height: 2.5ex;
+    margin: .1ex 0 0  .6ex;
     transform: rotate(-90deg);
 }
