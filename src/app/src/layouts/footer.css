@@ -33,7 +33,7 @@ footer table td > button {
     border: none;
     display: flex;
     width: calc(100% - 1ex);
-    height: calc(100% - 1ex);
+    min-height: 5.5ex;
     justify-content: flex-start;
     align-items: center;
     align-content: center;
@@ -47,10 +47,11 @@ footer table td > button {
 }
 
 footer table td > a > span:not(.die),
-footer table td > button > span:not(.die){
-
-    margin: 1.5ex 0 1.5ex 7ex;
+footer table td > button > span:not(.die)
+{
+    margin: .5ex 1.5ex .5ex 7ex;
 }
+
 footer table td > a > span.die,
 footer table td > button > span.die{
     display: block;
