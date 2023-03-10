@@ -43,15 +43,24 @@ footer table td > button {
     word-wrap: normal;
     overflow: hidden;
     cursor: pointer;
+    position: relative;
 }
 
+footer table td > a > span:not(.die),
+footer table td > button > span:not(.die){
+
+    margin: 1.5ex 0 1.5ex 7ex;
+}
 footer table td > a > span.die,
 footer table td > button > span.die{
     display: block;
     width: 4ex;
     height: 4ex;
-    margin: 1ex 2ex 1ex 1ex;
+    margin: -2ex 0 0 0;
     padding: 0;
+    position: absolute;
+    left: 1ex;
+    top: 50%;
     white-space: nowrap;
     word-wrap: normal;
     overflow: visible;
@@ -81,7 +90,7 @@ footer table td > button span.die svg {
     height: 3.2ex;
     display: inline-flex;
     padding: 0;
-    margin: -.2ex 0 0 .2ex;
+    margin: -.2ex 0 0 .3ex;
     position: relative;
 }
 footer table td > a span.die svg *,
@@ -93,12 +102,12 @@ footer table td > a.accessibility-icon span.die svg
     width: 3.8ex;
     height: 3.8ex;
     padding: 0;
-    margin: -.5ex 0 0 -.1ex;
+    margin: -.5ex 0 0 0;
 }
 
 #top-scroller svg {
     width: 2.5ex;
     height: 2.5ex;
-    margin: .1ex 0 0  .6ex;
+    margin: .1ex 0 0  .7ex;
     transform: rotate(-90deg);
 }
