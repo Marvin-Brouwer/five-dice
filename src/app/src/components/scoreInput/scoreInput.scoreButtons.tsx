@@ -58,8 +58,6 @@ export const ScoreInputButtons: Component<Props> = ({
             requestAnimationFrame(setFocus);
     };
 
-    // TODO make shift+tab and tab loop around
-
     return <>
         <DieInputKeyboard 
             keyboardState={keyboardState} />
