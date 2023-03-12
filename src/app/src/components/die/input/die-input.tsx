@@ -1,12 +1,11 @@
 import "./die-input.css"
 
-import { Component, createMemo, JSX, Signal, Accessor } from 'solid-js';
+import { Component, createMemo, JSX, Signal, Accessor, createEffect } from 'solid-js';
 import type { DieValue } from '../../../game/gameConstants';
 import { NumberDie } from "../number-die";
 import { TextDie } from "../text-die";
-import { createDialogSignal } from '../../hacks/dialog';
-import { DieInputKeyboard } from './die-input.keyboard';
 import { useKeyboardContext } from '../../../context/keyboardContext';
+import type { Keyboard } from "./die-input.keyboard";
 
 type Props = JSX.HTMLAttributes<HTMLInputElement> 
 & {
@@ -14,21 +13,20 @@ type Props = JSX.HTMLAttributes<HTMLInputElement>
     value: Signal<DieValue | undefined>,
     disabled?: Accessor<boolean>,
     autoFocus: Signal<boolean>,
-    modal?: boolean
+    keyboard: Accessor<Keyboard>
 }
 
-export const DieInput : Component<Props> = ({ value, name, modal, disabled, autoFocus, ...props }) => {
+export const DieInput : Component<Props> = ({ value, name, disabled, autoFocus, keyboard, ...props }) => {
 
     let inputReference = props.ref! as HTMLInputElement;
 
     const keyboardContext = useKeyboardContext();
     const [getValue, setValue] = value;
-    const [getAutoFocus, setAutoFocus] = autoFocus;
-    const keyboardDialogState = createDialogSignal(
-        undefined,
-        () => getValue() !== undefined && setAutoFocus(true)
-    );
-    const { isOpen: keyboardVisible, openDialog: showKeyboard, closeDialog: hideKeyboard }= keyboardDialogState;
+    const [getAutoFocus] = autoFocus;
+    const { closeKeyboard, openKeyboard, keyboardOpen } = keyboard();
+    function showKeyboard() {
+        openKeyboard(name, value, autoFocus);
+    }
 
     const die = createMemo(() =>  {
         const dieValue = getValue();
@@ -38,17 +36,26 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
     }
     , getValue);
 
-    const handleInput = () => {    
+    const handleInput = () => {  
         if (disabled?.()) return true; 
         if (inputReference.value === undefined || inputReference.value === '') return true;   
         if (Number.isNaN(inputReference.valueAsNumber)) return false;
         if (inputReference.valueAsNumber <= 1 && inputReference.valueAsNumber >= 6) { 
             setValue(inputReference.valueAsNumber as DieValue); 
-            hideKeyboard();
+            closeKeyboard();
             return true;
         }
         return false;
     }
+
+    createEffect(() => {
+        if (!inputReference) return;
+
+        if (getValue() === undefined) inputReference.value = '';
+        else inputReference.valueAsNumber = getValue()!;
+
+    }, getValue);
+
     const handleKeyEvent = (e: KeyboardEvent) => { 
         const handled = () => {
             e.preventDefault();
@@ -57,7 +64,7 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
             return false;
         };
         if (disabled?.()) return true;
-        if (keyboardVisible()) return true; 
+        if (keyboardOpen()) return true; 
 
         if (e.shiftKey && (!Number.isInteger(e.key) && e.key !== "Tab"))  return true;
         if (e.key === "1") { setValue(1); return handled(); }
@@ -95,6 +102,7 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
     }
 
     const handleInputEvent = (e: Event) => {
+
         const handled = () => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -127,10 +135,10 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
     const handleFocus = (e: Event) => {
 
         if (keyboardContext.isKeyboardUser()) return true;
-        if (keyboardVisible()) return true;
+        if (keyboardOpen()) return true;
         if (!getAutoFocus()) return true;
         if (getValue() !== undefined) return true;
-        setAutoFocus(false);
+        keyboardOpen();
 
         e.preventDefault();
         e.stopPropagation();
@@ -142,7 +150,10 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
     }
     
     return (
-        <span class="die-input" data-name={name} data-disabled={disabled?.()} data-keyboard-visible={keyboardVisible()}>
+        <span class="die-input" data-name={name} 
+            data-disabled={disabled?.()} 
+            data-keyboard-visible={keyboardOpen(name)}
+        >
             {die}
             <input type="number" 
                 inputmode="none" 
@@ -158,10 +169,6 @@ export const DieInput : Component<Props> = ({ value, name, modal, disabled, auto
                 onKeyDown={handleKeyEvent}
                 onClick={handleClick}
             />
-
-            <DieInputKeyboard value={value} name={name} 
-                keyboardDialogState={keyboardDialogState} modal={modal} 
-                setAutoFocus={setAutoFocus} />
         </span>
     );
 };

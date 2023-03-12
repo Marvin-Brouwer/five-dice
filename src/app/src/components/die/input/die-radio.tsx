@@ -10,9 +10,10 @@ type Props = JSX.HTMLAttributes<HTMLLabelElement>
     die: Dice
     group: string
     value: Signal<DieValue | undefined>,
+    onClick: () => void
 }
 
-export const DieRadioButton : Component<Props> = ({ value, die, group, ...props }) => {
+export const DieRadioButton : Component<Props> = ({ value, die, group, onClick, ...props }) => {
 
     const dieValue = dice[die];
 
@@ -23,7 +24,7 @@ export const DieRadioButton : Component<Props> = ({ value, die, group, ...props 
         <label class={`die-radio-button die-${die}`} data-checked={checked()} {...props}>
             <NumberDie amount={dieValue} />
             <input type="radio" name={group} value={dieValue} checked={checked()} 
-                onClick={() => { setValue(dieValue); }}
+                onClick={() => { setValue(dieValue); onClick(); }}
             />
         </label>
     );

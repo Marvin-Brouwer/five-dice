@@ -34,7 +34,7 @@ export type ScoreInputState = {
         getSignalForDie: (die: keyof ScoreInput) => Signal<DieValue | undefined>,
         getScoreForDie: (die: keyof ScoreInput) => DieValue | undefined,
         setScoreForDie: (die: keyof ScoreInput, score: DieValue | undefined) => void,
-        selectedDie: Signal<keyof ScoreInput | undefined>,
+        selectedDie: Signal<keyof ScoreInput | undefined>
     },
     row: Signal<ScoreField | undefined>,
     flushDiscard: Signal<Exclude<ScoreField, 'flush'> | undefined>

@@ -12,31 +12,8 @@ section.dice-selector {
     justify-content: flex-end;
     align-items: center;
 }
+
 section.dice-selector div.score-input-dialog-prompt {
 
     height: 31ex;
-}
-
-section.dice-selector span.die-input-keyboard {   
-    position: fixed;
-    bottom: 2ex;
-    right: 0;
-    left: 0;
-    width: max-content;
-    font-size: .3ex;
-    padding: 2ex;
-    gap: 3ex;
-    border-radius: calc(var(--dice-padding) * 4);
-}
-section.dice-selector span.die-input dialog {
-    background: none;
-    border: none;
-}
-section.dice-selector span.die-input dialog::backdrop {
-    border: none;
-    z-index: 0;
-}
-section.dice-selector .die-input .dialog-content {
-    top: unset;
-    height: 5ex;
 }
