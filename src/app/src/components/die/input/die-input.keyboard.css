@@ -1,24 +1,75 @@
-span.die-input-keyboard {
-    font-size: .5ex;
+dialog.die-input-keyboard,
+dialog.die-input-keyboard:not([open]) {
+    position: fixed;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(0,0,0,.7);
+    border: 0px none;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: flex-end;
+    align-items: center;
+    visibility: visible;
+}
+dialog.die-input-keyboard::backdrop {
+    opacity: 0;
+    background-color: rgba(0,0,0,0);
+}
+dialog.die-input-keyboard[data-state="closing"]
+{
+    pointer-events: none;
+    animation: 300ms ease-in-out 100ms fade-out;
+}
+dialog.die-input-keyboard[data-state="opening"]
+{
+    animation: 300ms ease-in-out fade-in;
+    pointer-events: none;
+}
+dialog.die-input-keyboard[data-state="closed"] {
+    animation: none;
+    pointer-events: none;
+    display: none;
+    opacity: 0;
+}
+dialog.die-input-keyboard[data-state="open"] {
+    animation: none;
+    opacity: 1;
+}
+
+dialog.die-input-keyboard .die-input-keyboard-grid{
+    font-size: 1.3ex;
     background-color: var(--theme-background-secondary);
     border: 0px none;
     display: grid;
-    grid-area: value;
-    gap: 1ex;
     grid-template-columns: 10ex 10ex 10ex;
     grid-template-rows: 10ex 10ex;
-    grid-template-areas: 
+    grid-template-areas:
         "aces deuces threes"
         "fours fives sixes";
     overflow: visible;
     margin: 0 auto 2ex auto;
-    padding: 1ex;
-
-    width:32ex;
+    width: max-content;
+    padding: 2ex;
+    gap: 3ex;
+    border-radius: calc(var(--dice-padding) * 4);
+    position: sticky;
 }
 
-span.die-input > dialog {
-    position: fixed;
-    z-index: 100;
-    height: 100%;
+@keyframes fade-in {
+    from { 
+        opacity: 0;
+    }
+    to { opacity: 1; }
+}
+@keyframes fade-out {
+    from { opacity: 1; }
+    to { 
+        opacity: 0;
+    }
 }
