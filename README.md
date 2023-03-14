@@ -6,8 +6,6 @@ WIP
 
 ### High importance  
 
-- Fix style inconsistencies
-  - Add responsiveness for larger screens like browsers (maybe smaller font?)
 - Fix todo's in code
 - Create game description
 - Playtest
@@ -16,12 +14,11 @@ WIP
 
 ### Low importance
 
-- Write readme
-- Setup routing to default to `/en` to prepare for multi-language
+- Add issue types
+- Add actual readme, license and contribution guide
 - Add Linter
 - Add lighthouse pipeline
 - Add more tests
-
 
 ## Credits
 
