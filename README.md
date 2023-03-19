@@ -2,8 +2,8 @@
 
 [license-url]: /License.md#readme
 [license-shield]: https://img.shields.io/badge/license-Apache--2.0-blue.svg?style=flat-square
-[repo-stars-url]: https://github.com/Marvin-Brouwer/FluentSerializer/stargazers
-[repo-stars-shield]: https://img.shields.io/github/stars/Marvin-Brouwer/FluentSerializer.svg?color=brightgreen&style=flat-square
+[repo-stars-url]: https://github.com/Marvin-Brouwer/five-dice/stargazers
+[repo-stars-shield]: https://img.shields.io/github/stars/Marvin-Brouwer/five-dice.svg?color=brightgreen&style=flat-square
 
 # Five dice
 
