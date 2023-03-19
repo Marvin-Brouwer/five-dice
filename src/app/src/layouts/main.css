@@ -95,7 +95,7 @@ header nav ul li {
 }
 section[role="main"] {
     margin: 1ex auto 0 auto;
-    width: calc(100% - 5ex);
+    width: calc(100% - 3ex);
     max-width: calc(800px + .5ex);
     background-color: var(--theme-background-primary) !important;
 }
