@@ -2,3 +2,108 @@
 section[role="main"] {
     font-size: 2ex;
 }
+
+section[role="main"] .pre {
+    display: inline;
+    white-space: pre;
+}
+
+.flat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+.flat-list li {
+    list-style: none;
+    /* line-height: .5ex; */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.flat-list .pre {
+    font-size: 1.5ex;
+    color: var(--theme-foreground-hint);
+    font-style: italic;
+    margin: 0;
+}
+
+span.pre {
+    white-space: nowrap;
+    font-family: monospace;
+}
+
+
+@media only screen and (min-height: 745px) and (min-width: 400px) {
+    .flat-list li {
+        display: list-item;
+    }
+    .flat-list li .pre {
+        margin-left: 1ex;
+    }
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+a.link-button {
+    /* text-decoration: none; */
+    background-color: none;
+    color: var(--theme-foreground-primary);
+    border-radius: calc(var(--dice-size) / 8);
+    padding: .8ex;
+    box-sizing: border-box;
+    display: inline-flex;
+    margin: .5ex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+}
+a.link-button .die{ 
+    margin-right: 1ex;
+    font-size: 2.5ex;
+}
+a.link-button:hover {
+    background-color: var(--theme-link-button-hover);
+    color: var(--theme-foreground-hover);
+    border: none !important;
+    outline: none !important;
+}
+a.link-button:active,
+a.link-button:focus-visible:focus-within {
+    background-color: var(--theme-link-button-active);
+    color: var(--theme-foreground-hover);
+}
+
+figure.add-score-button {
+    background-color: var(--theme-background-secondary);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--theme-foreground-hint);
+    display: flex;
+    position: relative;
+    margin: 2ex;
+    padding: .5ex;
+    justify-content: center;
+    max-width: 15ex;
+    flex-direction: column;
+    align-items: center;
+}
+figure.add-score-button .die {
+    font-size: 4ex;
+}
+figure.add-score-button figcaption {
+    font-size: .8ex;
+    margin-bottom: 2ex;
+    color: var(--theme-foreground-hint);
+}

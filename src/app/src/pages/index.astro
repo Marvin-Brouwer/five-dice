@@ -1,12 +1,64 @@
 ---
+import { SvgDie } from '../components/die/svg-die';
+import { rowDisplayLabels } from '../components/scoreCard/scoreCard.labelDisplay.labels';
+
+import NewIcon from "../icons/iconmonstr-plus-lined.svg?raw" ;
 import ContentLayout from '../layouts/content.astro';
-import Filler from '../components/content/lorem-ipsum.md';
 ---
 
 <ContentLayout title="Home Page">
   <h2>About the game</h2>
-  <p>TODO: Explain what the game is about</p>
-  <h2>Instructions</h2>
-  <p>TODO: This is where the game instructions are shown</p>
-  <Filler />
+  <p>
+    <span class="pre">Five dice</span> is a turn-based dice game that can be played anywhere.<br />
+    The objective is to score the highest number of points possible by rolling certain combinations of numbers with the five dice.<br />
+    It's typically played by multiple players but you <em>can</em> play it by yourself.
+  </p>
+  <p>
+    <a class="link-button" href="./score-card">
+      <SvgDie value={NewIcon} /> 
+      start a new game
+    </a>
+  </p>
+  <h2>Preparation</h2>
+  <p>
+    The game is typically played with a cup, five dice, and a score pad.<br/>
+    This app functions as a score card and the cup is completely optional but part of the fun.  
+  </p>
+  <h2>How to play</h2>
+  <p>
+    The game consists out of 13 rounds, each round allows for a total of 3 rolls.<br />
+    On the first roll you have to roll all the dice, on roll 2 and 3 you may choose which dice to re-roll.<br />
+    Re-rolling is optional though, if you throw a nice score on your first or second roll you may omit the next rolls.  
+  </p>
+  <p>
+    Once you select a score you may choose a row to apply it to.<br />
+    You can do that by pressing the <span class="pre">"Add new score button":</span><br />
+    <figure class="add-score-button">
+      <figcaption>Illustration of the new button</figcaption>
+      <SvgDie value={NewIcon} description="Illustration of the new button" /> 
+    </figure>
+  </p>
+  <p>
+    You can choose one of the following rows:
+  </p>  
+  <ul class="flat-list score-options">
+    {Object.entries(rowDisplayLabels).map(([_, label]) => <li>
+      <span>{label.title}</span> <span class="pre">{label.scoreDescription.long}</span>
+    </li>)}
+  </ul>
+  <p>
+    If you don't end up with a roll you can place anywhere you can always choose to discard one of the rows (marked in gray with a dash where the score would be).
+  </p>
+  <h3>Rolling a flush</h3>
+  <p>
+    When ever you roll five of the same dice, you can apply for a flush. <br />
+    After rolling the first flush, you can apply for another one. However, <br />
+    every consecutive flush requires you to discard an unused row. It will be worth 100 points though.
+  </p>
+  <h3>Ending the game</h3>
+  <p>
+    Once you've played the thirteenth turn, the game ends. <br />
+    Now it's time to calculate the total score, the score pad calculates this for you. <br />
+    The winner is who ever has the hightest <span class="pre uppercase">Final score</span>.
+  </p>
 </ContentLayout>

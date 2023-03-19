@@ -9,6 +9,8 @@
     --theme-backdrop-text-primary: rgb(244, 244, 244);
     --theme-backdrop-text-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgba(255, 153, 0, 0.724);
+    --theme-link-button-hover: rgba(208, 208, 208, .3);
+    --theme-link-button-active: rgba(208, 208, 208, .7);
 }
 
 [data-theme="dark"] {
@@ -22,6 +24,8 @@
     --theme-background-primary: rgb(74 74 74);
     --theme-background-secondary: rgb(115, 115, 115);
     --theme-background-focus: rgba(203, 0, 135, 0.618);
+    --theme-link-button-hover: rgba(115, 115, 115, .3);
+    --theme-link-button-active: rgba(115, 115, 115, .7);
 }
 
 [data-theme="auto"]  {
@@ -35,6 +39,8 @@
     --theme-backdrop-text-primary: rgb(244, 244, 244);
     --theme-backdrop-text-secondary: rgb(208, 208, 208);
     --theme-background-focus: rgba(255, 153, 0, 0.724);
+    --theme-link-button-hover: rgba(208, 208, 208, .3);
+    --theme-link-button-active: rgba(208, 208, 208, .7);
 }
 
 @media (prefers-color-scheme:dark) {
@@ -49,6 +55,8 @@
         --theme-background-primary: rgb(74 74 74);
         --theme-background-secondary: rgb(115, 115, 115);
         --theme-background-focus: rgba(203, 0, 135, 0.618);
+        --theme-link-button-hover: rgba(115, 115, 115, .3);
+        --theme-link-button-active: rgba(115, 115, 115, .7);
     }
 }
 
