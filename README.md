@@ -6,15 +6,12 @@ WIP
 
 ### High importance  
 
-- Fix todo's in code
-- Create game description
 - Playtest
 - Make PWA
   - Include offline capability
 
 ### Low importance
 
-- Add issue types
 - Add actual readme, license and contribution guide
 - Add Linter
 - Add lighthouse pipeline

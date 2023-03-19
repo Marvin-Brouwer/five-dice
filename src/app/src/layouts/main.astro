@@ -53,7 +53,7 @@ const initialTheme = !Astro.cookies.has('theme')
 					</a>
 				</h1>
 				<nav role="menubar">
-					<!-- TODO Button skip to content -->
+					<!-- https://github.com/Marvin-Brouwer/five-dice/issues/55 -->
 					<ul>
 						<li><LanguageSelector value="en" /></li>
 						<li><ThemeSelector client:load initialTheme={initialTheme} initialPreference={initialPreference} /></li>

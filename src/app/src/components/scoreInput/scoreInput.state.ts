@@ -145,7 +145,6 @@ export function createScoreInputState({
     function submitAndClose() {
         setIsEmpty(false);
         const row = getRow();
-        // TODO throw
         if (row == undefined) return;
         const scoreInput = getScoreInput();
         const scoreValue = score(scoreInput as [DieValue, DieValue, DieValue, DieValue, DieValue]);
