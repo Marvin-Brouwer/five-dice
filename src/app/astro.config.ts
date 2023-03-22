@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 import solidJs from "@astrojs/solid-js";
 import { blobLoader } from './src/plugins/blobImport.plugin';
-// import astroPwa from '@vite-pwa/astro';
-// import { manifest } from './src/manifest';
+import astroPwa from '@vite-pwa/astro';
+import { manifest } from './src/manifest';
 
 
 // https://astro.build/config
@@ -13,8 +13,8 @@ export default defineConfig({
     base: '/five-dice/',
     output: "static",
     integrations: [
-		solidJs()
-		// astroPwa()
+		solidJs(),
+		astroPwa()
 	],
     vite: {
         plugins: [

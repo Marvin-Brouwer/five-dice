@@ -1,5 +1,5 @@
-// import type { ManifestOptions } from "vite-plugin-pwa";
+import type { ManifestOptions } from "vite-plugin-pwa";
 
-// export const manifest: Partial<ManifestOptions> = {
+export const manifest: Partial<ManifestOptions> = {
 
-// }
+};

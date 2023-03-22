@@ -9,7 +9,8 @@ import LanguageSelector from "../components/language-selector/language-selector.
 import { ThemeSelector } from "../components/theme-selector/theme-selector";
 import ShareMeta from "./share-meta.astro";
 
-// import { pwaInfo } from 'virtual:pwa-info';
+import { pwaInfo } from 'virtual:pwa-info';
+console.log(pwaInfo)
 
 interface Props {
     title: string
@@ -46,7 +47,7 @@ const initialTheme = !Astro.cookies.has('theme')
 		<title>Five dice - {title}</title>
 		<link rel="canonical" href={baseHost + import.meta.env.BASE_URL} />
 		<base href={baseHost + import.meta.env.BASE_URL} />
-		<!-- { pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> } -->
+		{ pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
 	</head>
 	<body>
 		<header>
@@ -67,6 +68,6 @@ const initialTheme = !Astro.cookies.has('theme')
 			</div>
 		</header>
 		<slot />
-		<!-- { pwaInfo && <Fragment set:html={pwaInfo.registerSW.scriptTag} /> } -->
+		{ pwaInfo?.registerSW && <Fragment set:html={pwaInfo.registerSW.scriptTag} /> }
 	</body>
 </html>
