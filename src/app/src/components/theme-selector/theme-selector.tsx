@@ -6,7 +6,7 @@ import ThemeDarkIcon from "../../icons/five-dice.color-scheme.dark.svg?raw";
 import ThemeLightIcon from "../../icons/five-dice.color-scheme.light.svg?raw";
 import ThemeSystemIcon from "../../icons/five-dice.color-scheme.system.svg?raw";
 
-import { Component, onMount, onCleanup } from "solid-js";
+import { Component, onMount, onCleanup, createMemo } from 'solid-js';
 import { createSignal, createEffect } from "solid-js";
 import Cookie from "js-cookie";
 
@@ -18,13 +18,21 @@ function componentToHex(hexComponent: number) {
     var hex = hexComponent.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
 }
-  
+
 function rgbToHex(r: any, g: any, b: any) {
     return "#" + componentToHex(Number(r)) + componentToHex(Number(g)) + componentToHex(Number(b));
 }
+const isServerSide = () => typeof window === undefined;
+const media = createMemo(() =>
+	isServerSide()
+		? undefined
+		: window?.matchMedia('(prefers-color-scheme: dark)'),
+	isServerSide
+);
 
 const rgbParse = new RegExp("^rgb\\(\\s*(?<r>[0-9]+)\\s*,\\s(?<g>[0-9]+)\\s*,\\s*(?<b>[0-9]+)\\s*\\)$", "gi");
 function updateThemeMeta() {
+	if (isServerSide()) return;
     const rgbTheme = window.getComputedStyle(document.body, null).getPropertyValue("background-color");
     const rgb = rgbParse.exec(rgbTheme);
     if (!rgb) return;
@@ -51,7 +59,7 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
 
     const [selectedTheme, setSelectedTheme] = createSignal(initialTheme);
     const [preferredColorScheme, setPreferredColorScheme] = createSignal(initialPreference);
-        
+
     const handleColorSchemeChange = (event: MediaQueryListEvent) => {
         setPreferredColorScheme(event.matches ? 'dark' : 'light');
     }
@@ -73,30 +81,36 @@ export const ThemeSelector: Component<Props> = ({ initialTheme, initialPreferenc
     const [darkActive, setDarkActive] = createSignal(isActive('dark'));
 
     createEffect(() => {
+		if (isServerSide()) return;
+
         setAutoSelected(isSelected('auto'));
         setLightSelected(isSelected('light'));
         setDarkSelected(isSelected('dark'));
         setLightActive(isActive('light'));
         setDarkActive(isActive('dark'));
         updateThemeMeta();
-        
+
     }, [selectedTheme(), preferredColorScheme()]);
 
     onMount(() => {
-        const colorSchemeMount = window.matchMedia('(prefers-color-scheme: dark)');
+		if (isServerSide()) return;
+
+        const colorSchemeMount = media();
         let storedPreference = Cookie.get('theme') ?? 'auto';
         if (storedPreference === 'undefined') storedPreference = 'auto';
 
-        setPreferredColorScheme(colorSchemeMount.matches ? 'dark' : 'light');
+        setPreferredColorScheme(colorSchemeMount?.matches ?? false ? 'dark' : 'light');
         setPreferredTheme(storedPreference as 'dark' | 'light');
 
         colorSchemeMount
-            .addEventListener("change", handleColorSchemeChange)
+            ?.addEventListener("change", handleColorSchemeChange)
     });
-  
+
     onCleanup(() => {
-        window.matchMedia('(prefers-color-scheme: dark)')
-            .removeEventListener("change", handleColorSchemeChange)
+		if (isServerSide()) return;
+
+        media()
+            ?.removeEventListener("change", handleColorSchemeChange)
     })
 
     return (
