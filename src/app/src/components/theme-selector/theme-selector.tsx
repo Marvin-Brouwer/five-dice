@@ -22,7 +22,7 @@ function componentToHex(hexComponent: number) {
 function rgbToHex(r: any, g: any, b: any) {
     return "#" + componentToHex(Number(r)) + componentToHex(Number(g)) + componentToHex(Number(b));
 }
-const isServerSide = () => typeof window === undefined;
+const isServerSide = () => typeof window === 'undefined' || window === undefined;
 const media = createMemo(() =>
 	isServerSide()
 		? undefined
