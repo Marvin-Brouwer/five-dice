@@ -4,7 +4,7 @@ import { defineConfig } from 'astro/config';
 import solidJs from "@astrojs/solid-js";
 import { blobLoader } from './src/plugins/blobImport.plugin';
 import astroPwa from '@vite-pwa/astro';
-import { manifest } from './src/manifest';
+// import { manifest } from './src/manifest.ts.exclude';
 
 
 // https://astro.build/config
@@ -13,17 +13,22 @@ export default defineConfig({
     base: '/five-dice/',
     output: "static",
     integrations: [
-		solidJs(),
-		astroPwa()
+		astroPwa({
+			base: import.meta.env.BASE_URL,
+			mode: import.meta.env.PROD ? 'production' : 'development',
+			registerType: 'autoUpdate',
+			devOptions: {
+				enabled: !import.meta.env.PROD,
+				resolveTempFolder: () => './dist/.dev-sw',
+			}
+		}),
+		solidJs()
 	],
     vite: {
         plugins: [
 			blobLoader('.wav'),
 			blobLoader('.mp3')
 		],
-        optimizeDeps: {
-            exclude: ['astro']
-        },
         build: {
             target: 'esnext'
         }
