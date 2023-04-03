@@ -45,3 +45,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        
+    lint:
+        runs-on :windows-latest
+    steps:
+    -uses: actions/deploy-pages@v1
+    - name: Super-Linter
+    uses: github/super-linter@v4.10.1
+    env:
+      GITHUB-TOKEN: $({ secrets.GITHUB-TOKEN)}
+  
