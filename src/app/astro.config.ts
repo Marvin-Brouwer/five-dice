@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import { mkdir, rm } from 'fs/promises'
 
 // https://astro.build/config
 import solidJs from "@astrojs/solid-js";
@@ -6,6 +7,9 @@ import { blobLoader } from './src/plugins/blobImport.plugin';
 import astroPwa from '@vite-pwa/astro';
 // import { manifest } from './src/manifest.ts.exclude';
 
+const tempWebworkerFolder = './dist/.dev-sw';
+// Make sure the folder is empty to prevent build errors
+await rm(tempWebworkerFolder, { recursive: true, force: true });
 
 // https://astro.build/config
 export default defineConfig({
@@ -13,16 +17,26 @@ export default defineConfig({
     base: '/five-dice/',
     output: "static",
     integrations: [
+		solidJs(),
 		astroPwa({
 			base: import.meta.env.BASE_URL,
 			mode: import.meta.env.PROD ? 'production' : 'development',
-			registerType: 'autoUpdate',
+			registerType: import.meta.env.PROD ? 'autoUpdate' : 'prompt',
 			devOptions: {
 				enabled: !import.meta.env.PROD,
-				resolveTempFolder: () => './dist/.dev-sw',
+				resolveTempFolder: async () => {
+
+					// Make sure the dist folder exists for the webworker
+					await mkdir(tempWebworkerFolder, { recursive: true });
+
+					return tempWebworkerFolder;
+				},
+			},
+			workbox: {
+			  clientsClaim: true,
+			  skipWaiting: true
 			}
-		}),
-		solidJs()
+		})
 	],
     vite: {
         plugins: [

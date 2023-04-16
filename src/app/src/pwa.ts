@@ -7,5 +7,8 @@ registerSW({
   },
   onOfflineReady() {
     console.log('PWA application ready to work offline')
+  },
+  onRegisterError(error) {
+	alert(error)
   }
 })
