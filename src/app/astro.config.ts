@@ -38,7 +38,9 @@ export default defineConfig({
 			workbox: {
 			  clientsClaim: true,
 			  skipWaiting: import.meta.env.PROD,
-			  mode: import.meta.env.PROD ? 'production' : 'development'
+			  mode: import.meta.env.PROD ? 'production' : 'development',
+			  navigateFallback: './404',
+			  globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
 			},
 			manifest: manifest(base)
 		})
