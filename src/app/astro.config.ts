@@ -11,6 +11,9 @@ const tempWebworkerFolder = './dist/.dev-sw';
 // Make sure the folder is empty to prevent build errors
 await rm(tempWebworkerFolder, { recursive: true, force: true });
 
+(process.env as any).SW_DEV = import.meta.env.SW_dev;
+
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://marvin-brouwer.github.io',
@@ -21,7 +24,7 @@ export default defineConfig({
 		astroPwa({
 			base: import.meta.env.BASE_URL,
 			mode: import.meta.env.PROD ? 'production' : 'development',
-			registerType: import.meta.env.PROD ? 'autoUpdate' : 'prompt',
+			registerType: 'autoUpdate',
 			devOptions: {
 				enabled: !import.meta.env.PROD,
 				resolveTempFolder: async () => {
