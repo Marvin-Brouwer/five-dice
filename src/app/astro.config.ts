@@ -5,7 +5,7 @@ import { mkdir, rm } from 'fs/promises'
 import solidJs from "@astrojs/solid-js";
 import { blobLoader } from './src/plugins/blobImport.plugin';
 import astroPwa from '@vite-pwa/astro';
-// import { manifest } from './src/manifest.ts.exclude';
+import { manifest } from './src/manifest';
 
 const tempWebworkerFolder = './dist/.dev-sw';
 // Make sure the folder is empty to prevent build errors
@@ -13,11 +13,11 @@ await rm(tempWebworkerFolder, { recursive: true, force: true });
 
 (process.env as any).SW_DEV = import.meta.env.SW_dev;
 
-
+const base = '/five-dice/';
 // https://astro.build/config
 export default defineConfig({
     site: 'https://marvin-brouwer.github.io',
-    base: '/five-dice/',
+    base,
     output: "static",
     integrations: [
 		solidJs(),
@@ -37,8 +37,10 @@ export default defineConfig({
 			},
 			workbox: {
 			  clientsClaim: true,
-			  skipWaiting: true
-			}
+			  skipWaiting: import.meta.env.PROD,
+			  mode: import.meta.env.PROD ? 'production' : 'development'
+			},
+			manifest: manifest(base)
 		})
 	],
     vite: {
