@@ -1,4 +1,5 @@
 import { createSignal, createContext, useContext, Component, ParentProps, onMount, onCleanup, Accessor, createEffect } from 'solid-js';
+import { isServerSide } from '../helpers/utilities';
 
 type KeyboardContext = {
     isKeyboardUser: Accessor<boolean>
@@ -6,10 +7,12 @@ type KeyboardContext = {
 const KeyboardContext = createContext<KeyboardContext>({ isKeyboardUser: () => false});
 
 export const KeyboardContextProvider: Component<ParentProps> = (props) => {
-  
+
     const [isKeyboardUser, setIsKeyboardUser] = createSignal(true);
 
     onMount(() => {
+		if (isServerSide()) return;
+
         document.addEventListener('mousemove', () => setIsKeyboardUser(false))
         document.addEventListener('mousedown', () => setIsKeyboardUser(false))
         document.addEventListener('mouseup', () => setIsKeyboardUser(false))
@@ -27,6 +30,8 @@ export const KeyboardContextProvider: Component<ParentProps> = (props) => {
         document.addEventListener('keyup', () => setIsKeyboardUser(true))
     })
     onCleanup(() => {
+		if (isServerSide()) return;
+
         document.removeEventListener('mousemove', () => setIsKeyboardUser(false))
         document.removeEventListener('mousedown', () => setIsKeyboardUser(false))
         document.removeEventListener('mouseup', () => setIsKeyboardUser(false))
