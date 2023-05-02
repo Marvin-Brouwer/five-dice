@@ -26,13 +26,16 @@ export async function pwa(base: string) {
 				return tempWebworkerFolder;
 			},
 		},
+		injectRegister: 'script',
 		workbox: {
 			clientsClaim: true,
 			disableDevLogs: import.meta.env.PROD,
 			skipWaiting: import.meta.env.PROD,
 			mode: import.meta.env.PROD ? 'production' : 'development',
 			navigateFallback: `${base}404`,
-			globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,webmanifest}'],
+			globPatterns: [
+				'**/*.{css,js,html,svg,png,ico,txt,webmanifest}',
+			],
 		},
 		manifest: manifest(base)
 	})

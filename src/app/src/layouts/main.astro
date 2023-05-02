@@ -71,6 +71,6 @@ const initialTheme = !Astro.cookies.has('theme')
 			</div>
 		</header>
 		<slot />
-		{ pwaInfo?.registerSW && <Fragment set:html={pwaInfo.registerSW.scriptTag} /> }
+		{ pwaInfo?.registerSW && <Fragment set:html={pwaInfo.registerSW.registerPath} /> }
 	</body>
 </html>
