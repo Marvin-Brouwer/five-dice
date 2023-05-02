@@ -9,6 +9,7 @@ import ThemeSystemIcon from "../../icons/five-dice.color-scheme.system.svg?raw";
 import { Component, onMount, onCleanup, createMemo } from 'solid-js';
 import { createSignal, createEffect } from "solid-js";
 import Cookie from "js-cookie";
+import { isServerSide } from "../../helpers/utilities";
 
 interface Props {
     initialTheme: 'auto' | 'dark' | 'light'
@@ -22,7 +23,6 @@ function componentToHex(hexComponent: number) {
 function rgbToHex(r: any, g: any, b: any) {
     return "#" + componentToHex(Number(r)) + componentToHex(Number(g)) + componentToHex(Number(b));
 }
-const isServerSide = () => typeof window === 'undefined' || window === undefined;
 const media = createMemo(() =>
 	isServerSide()
 		? undefined

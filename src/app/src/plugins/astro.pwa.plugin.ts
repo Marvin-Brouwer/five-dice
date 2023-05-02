@@ -12,7 +12,6 @@ export async function pwa(base: string) {
 	await rm(tempWebworkerFolder, { recursive: true, force: true });
 
 	const configuredPwa = astroPwa({
-		base,
 		mode: import.meta.env.PROD ? 'production' : 'development',
 		registerType: 'autoUpdate',
 		devOptions: {
@@ -29,12 +28,11 @@ export async function pwa(base: string) {
 		},
 		workbox: {
 			clientsClaim: true,
-			directoryIndex: base,
 			disableDevLogs: import.meta.env.PROD,
 			skipWaiting: import.meta.env.PROD,
 			mode: import.meta.env.PROD ? 'production' : 'development',
 			navigateFallback: `${base}404`,
-			globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,webmanifest}']
+			globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,webmanifest}'],
 		},
 		manifest: manifest(base)
 	})

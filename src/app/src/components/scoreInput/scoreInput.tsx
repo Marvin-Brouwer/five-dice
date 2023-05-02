@@ -18,6 +18,7 @@ import { createMemo, onMount, createEffect } from 'solid-js';
 import JSConfetti from 'js-confetti'
 import { createEchoDelayEffect } from "../../audio/echoDelay";
 import { createAudioContextAccessor } from "../../audio/audioContextSignal";
+import { isServerSide } from "../../helpers/utilities";
 
 type Props = ScoreInputStateProps
 
@@ -39,7 +40,7 @@ export const ScoreInputDialog: Component<Props> = (props) => {
         const confetti = new JSConfetti();
         createEffect(async () => {
             if (!gameEnded()) return;
-            
+
             const audioContext = getAudioContext();
             if (audioContext) {
                 audioContext.suspend();
@@ -58,53 +59,57 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 
         }, [gameEnded, getAudioContext])
     })
-    
+
     function handleUnload(e: BeforeUnloadEvent) {
 
         if (inputState.isEmpty()) return true;
-        
+
         e.preventDefault();
         return e.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?';
 
     }
     onMount(() => {
+		if (isServerSide()) return;
+
         window.addEventListener('beforeunload', handleUnload)
     })
     onCleanup(() => {
+		if (isServerSide()) return;
+
         document.removeEventListener('beforeunload', handleUnload)
     })
 
     return (
         <section class="score-input">
             <div class="set-score">
-                
-                <DieButton 
+
+                <DieButton
                     classList={{
                         "die-button": true,
                         "enter-button": true,
                         "game-ended": gameEnded()
                     }}
-                    value={<span class="illustration" innerHTML={PlusIcon} /> as Element} 
-                    description="Enter a new round's value" 
-                    disabled={() => inputState.isOpen() || gameEnded()} 
+                    value={<span class="illustration" innerHTML={PlusIcon} /> as Element}
+                    description="Enter a new round's value"
+                    disabled={() => inputState.isOpen() || gameEnded()}
                     onClick={() => {
                         inputState.open();
                     }}
                 />
-                <DieButton 
+                <DieButton
                     classList={{
                         "die-button": true,
                         "reset-button": true,
                         "game-ended": gameEnded()
                     }}
-                    value={<span class="illustration" innerHTML={ResetIcon} /> as Element} 
-                    description="Reset score pad" disabled={inputState.isEmpty} 
+                    value={<span class="illustration" innerHTML={ResetIcon} /> as Element}
+                    description="Reset score pad" disabled={inputState.isEmpty}
                     onClick={() => {
                         window.location.reload();
                     }}
                 />
             </div>
-            {gameEnded() ? undefined : 
+            {gameEnded() ? undefined :
                 <>
                     <DiceSelector inputState={inputState} />
                     <RowSelector inputState={inputState} getScorePad={getScorePad} />
@@ -132,7 +137,7 @@ const createPartyHornEffect = (delayTime: number): PitchShifter => (audioContext
     return audioNode.connect(delay);
 }
 async function appendBuffer(audioContext: AudioContext, blob: Blob, shifter?: PitchShifter) {
-    
+
     const actualShifter = shifter ?? ((_, n) => n);
     const bufferSource = audioContext.createBufferSource();
     const audioBuffer = await audioContext.decodeAudioData(await blob.arrayBuffer());
