@@ -8,7 +8,7 @@ dialog {
     background-color: var(--theme-background-secondary);
 }
 
-dialog div.dialog-content > {
+dialog div.dialog-content > * {
     pointer-events: all;
 }
 dialog::backdrop {
