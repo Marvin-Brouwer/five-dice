@@ -8,6 +8,9 @@ import { TextDie } from "../components/die/text-die";
 import LanguageSelector from "../components/language-selector/language-selector.astro";
 import { ThemeSelector } from "../components/theme-selector/theme-selector";
 import ShareMeta from "./share-meta.astro";
+import { isServerSide } from '../helpers/utilities.ts'
+
+import { pwaInfo } from 'virtual:pwa-info';
 
 interface Props {
     title: string
@@ -19,15 +22,19 @@ const baseHost = import.meta.env.PROD
 	? import.meta.env.SITE
 	: new URL(Astro.request.url).origin
 
-Astro.response.headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
-Astro.response.headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
+if (isServerSide()) {
+	Astro.response.headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
+	Astro.response.headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
+}
 
 const initialPreference =
-	Astro.request.headers.get('Sec-CH-Prefers-Color-Scheme') as 'dark' | 'light' ?? 'no-preference';
+	isServerSide() ? Astro.request.headers.get('Sec-CH-Prefers-Color-Scheme') as 'dark' | 'light' : undefined
+	?? 'no-preference';
 
 const initialTheme = !Astro.cookies.has('theme')
 	? 'auto'
 	: Astro.cookies.get('theme').value as 'auto' | 'dark' | 'light';
+
 ---
 
 <html lang="en" data-theme={initialTheme}>
@@ -42,14 +49,15 @@ const initialTheme = !Astro.cookies.has('theme')
 		<meta id="apple-theme-color" name="apple-mobile-web-app-status-bar-style" content="#f4f4f4" />
 		<ShareMeta />
 		<title>Five dice - {title}</title>
-		<link rel="canonical" href={baseHost + import.meta.env.BASE_URL} />
-		<base href={baseHost + import.meta.env.BASE_URL} />
+		<link rel="canonical" href={(baseHost ?? '') + import.meta.env.BASE_URL} />
+		<base href={(baseHost ?? '') + import.meta.env.BASE_URL} />
+		{ pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} /> }
 	</head>
 	<body>
 		<header>
 			<div class="header-contents">
 				<h1 aria-label="Five dice">
-					<a href={baseHost + import.meta.env.BASE_URL} title="Five dice" tabindex="0">
+					<a href={(baseHost ?? '') + import.meta.env.BASE_URL} title="Five dice" tabindex="0">
 						<NumberDie amount={5} description="Five"/>
 						<TextDie value="D" /><TextDie value="i" /><TextDie value="c" /><TextDie value="e" />
 					</a>
@@ -64,5 +72,6 @@ const initialTheme = !Astro.cookies.has('theme')
 			</div>
 		</header>
 		<slot />
+		{ pwaInfo?.registerSW && <Fragment set:html={pwaInfo.registerSW.scriptTag} /> }
 	</body>
 </html>

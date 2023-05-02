@@ -4,6 +4,12 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "astro": "^2.0.0"
+    "astro": "^2.3.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "undici@<5.19.1": ">=5.19.1",
+      "undici@>=2.0.0 <5.19.1": ">=5.19.1"
+    }
   }
 }
