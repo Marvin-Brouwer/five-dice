@@ -10,7 +10,7 @@ export const manifest = (base: string): Partial<ManifestOptions> => ({
 	theme_color: 'rgb(48, 48, 48)',
 	background_color: 'rgb(244, 244, 244)',
 	orientation: 'portrait',
-	start_url: `/${base}/score-card`,
+	start_url: `${base}score-card`,
 
 	icons: [
 		{
