@@ -32,13 +32,16 @@ export async function pwa(base: string) {
 			disableDevLogs: import.meta.env.PROD,
 			skipWaiting: import.meta.env.PROD,
 			mode: import.meta.env.PROD ? 'production' : 'development',
-			navigateFallback: `${base}404`,
+			// TEMP navigateFallback: `${base}404`,
 			globPatterns: [
 				'**/*.{css,js,html,svg,png,ico,txt,webmanifest}',
 			],
 		},
 		manifest: manifest(base)
 	})
+
+	// TEMP
+	return configuredPwa;
 
 	// Override id resolving to prevent the template parsing error
 	// All of this is to prevent the service worker from trying to include:
