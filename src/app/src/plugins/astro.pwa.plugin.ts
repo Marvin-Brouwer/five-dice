@@ -34,10 +34,7 @@ export async function pwa(base: string) {
 			skipWaiting: import.meta.env.PROD,
 			mode: import.meta.env.PROD ? 'production' : 'development',
 			navigateFallback: `${base}404`,
-			globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
-			globIgnores: [
-				'\.webmanifest'
-			]
+			globPatterns: ['**/*.{css,js,html,svg,png,ico,txt,webmanifest}']
 		},
 		manifest: manifest(base)
 	})
