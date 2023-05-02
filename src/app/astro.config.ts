@@ -9,7 +9,7 @@ const base = '/five-dice/';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://marvin-brouwer.github.io',
+    site: import.meta.env.PROD ? 'https://marvin-brouwer.github.io' : undefined,
     base,
     output: "static",
     integrations: [
