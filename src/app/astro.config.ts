@@ -6,6 +6,7 @@ import { blobLoader } from './src/plugins/blobImport.plugin';
 import { pwa } from './src/plugins/astro.pwa.plugin';
 
 const base = '/five-dice/';
+
 // https://astro.build/config
 export default defineConfig({
     site: 'https://marvin-brouwer.github.io',
@@ -13,7 +14,7 @@ export default defineConfig({
     output: "static",
     integrations: [
 		solidJs(),
-		await pwa()
+		await pwa(base)
 	],
     vite: {
         plugins: [
