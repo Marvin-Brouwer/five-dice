@@ -1,0 +1,20 @@
+---
+import { SvgDie } from '../components/die/svg-die';
+import ContentLayout from '../layouts/content.astro';
+import NewIcon from "../icons/iconmonstr-plus-lined.svg?raw" ;
+---
+
+<ContentLayout title="Page not found">
+  <h2>Page not found</h2>
+  <p>
+    Couldn't find the page you were looking for. <br />
+	Go back to the <a href="./">home page</a>.
+  </p>
+  <p>
+	Or
+    <a class="link-button" href="./score-card">
+		<SvgDie value={NewIcon} />
+		start a new game
+	</a>
+  </p>
+</ContentLayout>

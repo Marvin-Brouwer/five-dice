@@ -2,6 +2,7 @@ import './dialog.css'
 
 import { Component, onCleanup, onMount, Signal, ParentProps, children, Accessor, createSignal, createReaction } from 'solid-js';
 import { createEffect } from 'solid-js';
+import { isServerSide } from '../../helpers/utilities';
 
 export type DialogSignal = DialogState & {
     openDialog: () => void;
@@ -37,12 +38,12 @@ type Props = {
     hide?: Accessor<boolean>,
 }
 
-export const Dialog: Component<ParentProps<Props>> = ({ 
+export const Dialog: Component<ParentProps<Props>> = ({
     dialogState, id, class: className, modal, children: childElements, hide, showBackdrop, closeOnClick
 }) => {
 
     let dialogReference: HTMLDialogElement;
-    
+
     function show() {
         if (dialogReference.getAttribute('open') === 'open') return;
 
@@ -54,7 +55,7 @@ export const Dialog: Component<ParentProps<Props>> = ({
     }
 
     function dialogClick(e:MouseEvent) {
-        
+
         if (!e.target) return true;
 
         e.stopImmediatePropagation();
@@ -69,7 +70,7 @@ export const Dialog: Component<ParentProps<Props>> = ({
         if (!hide?.() && dialogState.isOpen()) show();
     })
     onCleanup(() => {
-        dialogReference.close();
+        dialogReference?.close();
     })
     createEffect(() => {
         // These animations are just here to slightly mitigate the dialog flash
@@ -87,24 +88,26 @@ export const Dialog: Component<ParentProps<Props>> = ({
         }
     }, dialogState.isOpen)
 
-    
+
     function handleUnload(e: BeforeUnloadEvent) {
 
         if (!dialogState.isOpen()) return true;
-        
+
         e.preventDefault();
         return e.returnValue = 'You\'re still entering a score, are you sure you want to reload the page?';
     }
     onMount(() => {
+		if (isServerSide()) return;
         window.addEventListener('beforeunload', handleUnload)
     })
     onCleanup(() => {
+		if (isServerSide()) return;
         document.removeEventListener('beforeunload', handleUnload)
     })
 
     const unwrappedChildren = children(() => childElements);
     return (
-        <dialog id={id} ref={dialogReference!} 
+        <dialog id={id} ref={dialogReference!}
             data-show-backdrop={showBackdrop?.() ?? true}
             aria-open={dialogState.isOpen()}
             onClose={() => {
@@ -112,7 +115,7 @@ export const Dialog: Component<ParentProps<Props>> = ({
                 dialogState.closeDialog();
             }}
             class={className} aria-hidden={hide?.() ? true : false}>
-            {modal && closeOnClick 
+            {modal && closeOnClick
                 ? <div class='click-backdrop' onClick={dialogClick} />
                 : undefined
             }
