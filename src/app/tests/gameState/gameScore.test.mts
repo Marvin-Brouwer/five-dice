@@ -9,6 +9,10 @@ const settings = {
 	writeOutMappedScores: false
 }
 
+const cache = {
+	patterns: new Map<string, Array<Pattern>>()
+}
+
 const allRolls = new Map(generateAllPossibleNumbers());
 
 function* generateAllPossibleNumbers(): Generator<[string, ValidScore]> {
@@ -60,13 +64,27 @@ function shufflePatterns(patterns: Array<string>): Array<Pattern> {
 }
 function shufflePattern(pattern: string): Array<Pattern> {
 
-    const distinctPatterns = new Set(shuffleCharacters(pattern));
-	if (settings.writeOutUnfoldedPatterns){
-		const distinctPatternsLog = JSON.stringify(Array.from(distinctPatterns));
-		console.log(`A possible of ${distinctPatterns.size} patterns matching '${pattern}' ${distinctPatternsLog}`);
+	if (cache.patterns.has(pattern)) {
+		const distinctPatterns = cache.patterns.get(pattern)!;
+
+		if (settings.writeOutUnfoldedPatterns){
+			const distinctPatternsLog = JSON.stringify(Array.from(distinctPatterns));
+			console.log(`A possible of ${distinctPatterns.length} patterns matching '${pattern}' ${distinctPatternsLog}`);
+		}
+
+		return distinctPatterns;
 	}
 
-    return Array.from(distinctPatterns).map(p => p.split('') as Pattern);
+    const distinctPatternSet = new Set(shuffleCharacters(pattern));
+	if (settings.writeOutUnfoldedPatterns){
+		const distinctPatternsLog = JSON.stringify(Array.from(distinctPatternSet));
+		console.log(`A possible of ${distinctPatternSet.size} patterns matching '${pattern}' ${distinctPatternsLog}`);
+	}
+
+    const distinctPatterns = Array.from(distinctPatternSet).map(p => p.split('') as Pattern)
+	cache.patterns.set(pattern, distinctPatterns);
+
+	return distinctPatterns
 
     function* slideCharacter(pattern: string, charToMove: number) {
 
