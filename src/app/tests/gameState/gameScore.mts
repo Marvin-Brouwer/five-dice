@@ -1,5 +1,5 @@
 import type { DieValue } from '../../src/game/gameConstants.js';
-import { score, ValidScore, ScoreValue, discard } from '../../src/game/score/score';
+import { score, ValidScore, ScoreValue, discard } from '../../src/game/score/score.js';
 import Permutation from 'iterative-permutation';
 
 const settings = {

@@ -3,37 +3,33 @@
  * It just makes is a lot less verbose
  */
 
-import { test, describe } from 'node:test';
-import assert from 'node:assert';
+import { expect, test, describe } from 'vitest'
 
 import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateContainingScores } from './gameScore.test.mjs';
+import { generateContainingScores } from './gameScore.mjs';
 import { dice, Dice } from '../../src/game/gameConstants.js';
-
-type TestFn = Exclude<Parameters<typeof test>[0], undefined>
-type TestContext = Parameters<TestFn>[0]
 
 describe('scoreValidator', () => {
 
-    test(`partOne`, async testContext => {
+    describe(`partOne`, () => {
 
-        await testSection('aces', testContext);
-        await testSection('deuces', testContext);
-        await testSection('threes', testContext);
-        await testSection('fours', testContext);
-        await testSection('fives', testContext);
-        await testSection('sixes', testContext);
+        testSection('aces');
+        testSection('deuces');
+        testSection('threes');
+        testSection('fours');
+        testSection('fives');
+        testSection('sixes');
     })
 });
 
-async function testSection(field: Dice, sectionTestContext: TestContext) {
-    await sectionTestContext.test(`partOne ${field}`, async testContext => {
+function testSection(field: Dice) {
+    test.concurrent(`partOne ${field}`, () => {
 
         const die = dice[field];
         const [allowedScores, disallowedScores] = generateContainingScores(die);
 
         for(let score of allowedScores) {
-            await testContext.test(`validTheory ${score}`, () => {
+            test.concurrent(`validTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, field);
@@ -42,12 +38,12 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
                 const result = sut();
 
                 // Assert
-                assert.strictEqual(result, true);
+                expect(result).toBeTruthy()
             })
         }
 
         for(let score of disallowedScores) {
-            await testContext.test(`inValidTheory ${score}`, () => {
+            test.concurrent(`inValidTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, field);
@@ -56,7 +52,7 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
                 const result = sut();
 
                 // Assert
-                assert.strictEqual(result, false);
+               expect(result).toBeFalsy()
             })
         }
     })

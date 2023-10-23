@@ -9,8 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "tsc --noEmit --allowJs && globstar -- node --loader tsx --test \"./tests/**/*.test.ts\"",
-    "test-out": "echo \"pnpm test > ./tests/test-results.log\""
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.1.0",
@@ -33,7 +33,8 @@
     "tsx": "^3.12.6",
     "typescript": "^5.0.4",
     "vite": "^4.2.1",
-    "vite-plugin-pwa": "^0.14.7"
+    "vite-plugin-pwa": "^0.14.7",
+    "vitest": "^0.34.6"
   },
   "pnpm": {
     "overrides": {
