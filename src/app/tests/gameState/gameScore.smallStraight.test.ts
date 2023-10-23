@@ -7,14 +7,30 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
 import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateScores } from './gameScore.test.mjs';
+import { generateRandomScores } from './gameScore.test.mjs';
 import { score } from '../../src/game/score/score';
 
-const [pattern, allowedScores, disallowedScores] = generateScores(
-    'abcdd', 'abcde'
+const [pattern, allowedScores, disallowedScores] = generateRandomScores(
+    '1234a', '2345a', '3456a', '12345', '23456'
 );
 
 describe('scoreValidator', () => {
+
+    test(`test-cases`, async testContext => {
+
+		await testContext.test(`79-incorrect-small-straight [11235]`, () => {
+
+			// Arrange
+			const testScore = score([1, 1, 2, 3, 5]);
+			const sut = () => isScoreApplicableToField(testScore, 'smallStraight');
+
+			// Act
+			const result = sut();
+
+			// Assert
+			assert.strictEqual(result, false);
+		})
+	})
 
     test(`smallStraight ${pattern}`, async testContext => {
 

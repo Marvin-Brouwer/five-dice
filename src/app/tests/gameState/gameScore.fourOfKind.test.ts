@@ -7,9 +7,9 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
 import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateScores } from './gameScore.test.mjs';
+import { generateRandomScores } from './gameScore.test.mjs';
 
-const [pattern, allowedScores, disallowedScores] = generateScores(
+const [pattern, allowedScores, disallowedScores] = generateRandomScores(
     'aaaab', 'aaaaa'
 );
 

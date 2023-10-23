@@ -4,10 +4,15 @@
 import type { DieValue } from '../../src/game/gameConstants.js';
 import { score, ValidScore, ScoreValue, discard } from '../../src/game/score/score';
 
+const settings = {
+	writeOutUnfoldedPatterns: true,
+	writeOutMappedScores: false
+}
+
 const allRolls = new Map(generateAllPossibleNumbers());
 
 function* generateAllPossibleNumbers(): Generator<[string, ValidScore]> {
-    
+
     let a = 1 as DieValue;
     let b = 1 as DieValue;
     let c = 1 as DieValue;
@@ -16,38 +21,38 @@ function* generateAllPossibleNumbers(): Generator<[string, ValidScore]> {
 
     while(e <= 6) {
         var generatedScore = score([a,b,c,d,e]);
-        yield [generatedScore.join(''), generatedScore]
-        
+        yield [generatedScore.toString(), generatedScore]
+
         if (a !== 6) {
             a ++;
             continue;
-        } 
+        }
         a = 1;
         if (b !== 6) {
             b ++;
             continue;
-        } 
+        }
         b = 1;
         if (c !== 6) {
             c ++;
             continue;
-        } 
+        }
         c = 1;
         if (d !== 6) {
             d ++;
             continue;
-        } 
+        }
         d = 1;
         if (e !== 6) {
             e ++;
             continue;
-        } 
+        }
         e =1;
         break;
     }
 }
 
-type PatternItem = 'a' | 'b' | 'c' | 'd' | 'e'; 
+type PatternItem = 'a' | 'b' | 'c' | 'd' | 'e';
 type Pattern = [PatternItem, PatternItem, PatternItem, PatternItem, PatternItem]
 
 function shufflePatterns(patterns: Array<string>): Array<Pattern> {
@@ -55,9 +60,12 @@ function shufflePatterns(patterns: Array<string>): Array<Pattern> {
 }
 function shufflePattern(pattern: string): Array<Pattern> {
 
-    let distinctPatterns = new Set(shuffleCharacters(pattern));
-    console.log(`possible patterns matching '${pattern}': `, JSON.stringify(Array.from(distinctPatterns)));
-    
+    const distinctPatterns = new Set(shuffleCharacters(pattern));
+	if (settings.writeOutUnfoldedPatterns){
+		const distinctPatternsLog = JSON.stringify(Array.from(distinctPatterns));
+		console.log(`A possible of ${distinctPatterns.size} patterns matching '${pattern}' ${distinctPatternsLog}`);
+	}
+
     return Array.from(distinctPatterns).map(p => p.split('') as Pattern);
 
     function* slideCharacter(pattern: string, charToMove: number) {
@@ -89,7 +97,9 @@ function shufflePattern(pattern: string): Array<Pattern> {
     }
     function* shuffleCharacters(pattern: string) {
 
-        for (let i = 0; i < pattern.length; i++)
+		const possibleShuffles = Math.pow(pattern.length, pattern.length);
+
+        for (let i = 0; i < possibleShuffles; i++)
         {
             for(let item of slideCharacter(pattern, i)) yield item;
         }
@@ -97,27 +107,18 @@ function shufflePattern(pattern: string): Array<Pattern> {
 }
 
 function toPatternGenerator(pattern: Array<string>): PatternDefinition {
-    return (a, b, c, d, e) => pattern.map(item => {
+    return (a, b, c, d, e) => score(pattern.map(item => {
         if (item === 'a') return a;
         if (item === 'b') return b;
         if (item === 'c') return c;
         if (item === 'd') return d;
-        return e;
-    }) as ValidScore
-}
-
-function toPatternKey(pattern: ValidScore): string {
-    return pattern
-        .join('')
-        .replaceAll('1','a')
-        .replaceAll('2','b')
-        .replaceAll('3','c')
-        .replaceAll('4','d')
-        .replaceAll('5','e')
+        if (item === 'e') return e;
+        return +item;
+    }) as ValidScore)
 }
 
 type PatternDefinition = (a: DieValue, b: DieValue, c: DieValue, d: DieValue, e: DieValue) => ValidScore
-export function generateScores(...validPatterns: Array<string>): [
+export function generateRandomScores(...validPatterns: Array<string>): [
     patternKey: string,
     allowedScores: ReadonlySet<ScoreValue>,
     disallowedScores: ReadonlySet<ScoreValue>
@@ -132,35 +133,45 @@ export function generateScores(...validPatterns: Array<string>): [
                 .filter(scoreAttempt => new Set(scoreAttempt).size == 5)
             ){
                 const score = toPatternGenerator(current).apply(undefined, rollAttempt);
-                accumulator.set(score.join(''), score)
+                accumulator.set(score.toString(), score)
             }
 
             return accumulator
 
         }, new Map<string, ScoreValue>());
 
-    const notAllowedScoreMap = new Map<string, ScoreValue>(
-        Array.from(allRolls.entries())
-            .filter(([key]) => !allowedScoreMap.has(key))
-    )
+		const disallowedScoreMap = new Map<string, ScoreValue>(
+			Array.from(allRolls.entries())
+				.filter(([key]) => !allowedScoreMap.has(key))
+		)
 
-    const allowedScores = new Set([...allowedScoreMap.values(), discard()]);
-    const notAllowedScores = new Set(notAllowedScoreMap.values());
-        
-    return [ patternKey, allowedScores, notAllowedScores ];
+	const allowedScores = new Set([...allowedScoreMap.values(), discard()]);
+	const disallowedScores = new Set(disallowedScoreMap.values());
+
+	if (settings.writeOutMappedScores) {
+		console.debug('allowedScores')
+		for(let s of allowedScores) {
+			console.debug(`- ${s}`)
+		}
+		console.debug('disallowedScores')
+		for(let s of Array.from(disallowedScores)) {
+			console.debug(`- ${s}`)
+		}
+	}
+    return [ patternKey, allowedScores, disallowedScores ];
 }
 
-export function generateSimpleScores(die: DieValue): [
+export function generateContainingScores(containsDie: DieValue): [
     allowedScores: ReadonlySet<ScoreValue>,
     disallowedScores: ReadonlySet<ScoreValue>
 ] {
     const allowedScores = new Set<ScoreValue>([
-        ...Array.from(allRolls.values()).filter(score => score.includes(die)),
+        ...Array.from(allRolls.values()).filter(score => score.includes(containsDie)),
         discard()
     ]);
-    
+
     const notAllowedScores = new Set<ScoreValue>(
-        Array.from(allRolls.values()).filter(score => !score.includes(die))
+        Array.from(allRolls.values()).filter(score => !score.includes(containsDie))
     );
 
     return [ allowedScores, notAllowedScores ];

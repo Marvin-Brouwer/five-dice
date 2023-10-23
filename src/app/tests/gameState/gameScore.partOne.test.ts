@@ -7,7 +7,7 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert';
 
 import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateSimpleScores } from './gameScore.test.mjs';
+import { generateContainingScores } from './gameScore.test.mjs';
 import { dice, Dice } from '../../src/game/gameConstants.js';
 
 type TestFn = Exclude<Parameters<typeof test>[0], undefined>
@@ -30,7 +30,7 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
     await sectionTestContext.test(`partOne ${field}`, async testContext => {
 
         const die = dice[field];
-        const [allowedScores, disallowedScores] = generateSimpleScores(die);
+        const [allowedScores, disallowedScores] = generateContainingScores(die);
 
         for(let score of allowedScores) {
             await testContext.test(`validTheory ${score}`, () => {

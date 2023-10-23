@@ -10,7 +10,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "tsc --noEmit && globstar -- node --loader tsx --test \"./tests/**/*.test.ts\"",
-    "test-out": "pnpm test > \"./tests/test-results.log\""
+    "test-out": "echo \"pnpm test > ./tests/test-results.log\""
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.1.0",
