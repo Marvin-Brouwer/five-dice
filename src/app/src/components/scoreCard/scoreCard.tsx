@@ -17,8 +17,8 @@ interface Props {
     getScorePad: ScorePadAccessor
 }
 
-export const ScoreCard: Component<Props> = ({ 
-    playerName: [getPlayerName, setPlayerName], round: [getRound], getScorePad: scorePad 
+export const ScoreCard: Component<Props> = ({
+    playerName: [getPlayerName, setPlayerName], round: [getRound], getScorePad: scorePad
 }) => {
 
     const [getNameInputRef, setNameInputRef] = createSignal<HTMLInputElement>();
@@ -31,12 +31,12 @@ export const ScoreCard: Component<Props> = ({
             <aside role="banner">
                 <span class="name">
                     <input ref={setNameInputRef}
-                        disabled={getNameDisabled()} type="text" class="name-input" 
+                        disabled={getNameDisabled()} type="text" class="name-input"
                         placeholder={getNameDisabled() ? "..." : "Your name here" }
                         value={getPlayerName()} onInput={e => setPlayerName(e.currentTarget.value)} />
-                    <button 
-                        disabled={getNameDisabled()} 
-                        class="clear-name" aria-label="Clear the name value" innerHTML={EraserIcon} 
+                    <button
+                        disabled={getNameDisabled()}
+                        class="clear-name" aria-label="Clear the name value" innerHTML={EraserIcon}
                         onClick={() => {
                             setPlayerName("");
                             getNameInputRef()?.focus();
@@ -61,17 +61,17 @@ type RoundLabelProps = {
     getRound: Accessor<number>
 }
 const RoundLabel: Component<RoundLabelProps> =({ getRound }) => {
-    
+
     return <>
         {
             getRound() > roundAmount ? (
-                <span class="round-number finished" 
+                <span class="round-number finished"
                     aria-label="Game finished"
                     innerHTML={FinishedIcon} />
             ) : (
                 <span class="round-number">
                     <span class="round-label">Round</span>
-                    {getRound}
+                    {getRound()}
                 </span>
             )
         }

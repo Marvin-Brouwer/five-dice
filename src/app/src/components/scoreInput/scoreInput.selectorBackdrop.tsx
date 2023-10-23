@@ -14,7 +14,7 @@ type Props = {
 }
 
 
-export const SelectorBackdrop: Component<Props> = ({ 
+export const SelectorBackdrop: Component<Props> = ({
     validFields, discardFields, id, selectableRows
 }) => {
 
@@ -23,7 +23,7 @@ export const SelectorBackdrop: Component<Props> = ({
             .filter(([,field]) => validFields().includes(field) || discardFields().includes(field))
             .map(([item]) => {
                 const bounds = item.getBoundingClientRect();
-                
+
                 return (
                     <rect x={bounds.x} y={bounds.y} width={bounds.width + 1} height={bounds.height} fill='black' />
                 )
@@ -37,7 +37,7 @@ export const SelectorBackdrop: Component<Props> = ({
                 <defs>
                     <mask id={`available-inputs-${id}`} >
                         <rect width="100%" height="100%" fill="white" />
-                        {selectionWindows}
+                        {selectionWindows()}
                     </mask>
                 </defs>
                 <rect class="main-screen" mask={`url(#available-inputs-${id})`} />

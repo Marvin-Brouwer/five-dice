@@ -3,22 +3,21 @@
  * It just makes is a lot less verbose
  */
 
-import { test, describe } from 'node:test';
-import assert from 'node:assert';
+import { expect, test, describe } from 'vitest'
 
 import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateScores } from './gameScore.test.mjs';
+import { generateRandomScores } from './gameScore.mjs';
 
-const [pattern, allowedScores, disallowedScores] = generateScores(
+const [pattern, allowedScores, disallowedScores] = generateRandomScores(
     'aaabc', 'aaabb', 'aaaab', 'aaaaa'
 );
 
 describe('scoreValidator', () => {
 
-    test(`threeOfKind ${pattern}`, async testContext => {
+    describe(`threeOfKind ${pattern}`, () => {
 
         for(let score of allowedScores) {
-            await testContext.test(`validTheory [${score}]`, () => {
+            test.concurrent(`validTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, 'threeOfKind');
@@ -27,12 +26,12 @@ describe('scoreValidator', () => {
                 const result = sut();
 
                 // Assert
-                assert.strictEqual(result, true);
+                expect(result).toBeTruthy()
             })
         }
 
         for(let score of disallowedScores) {
-            await testContext.test(`inValidTheory [${score}]`, () => {
+            test.concurrent(`inValidTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, 'threeOfKind');
@@ -41,7 +40,7 @@ describe('scoreValidator', () => {
                 const result = sut();
 
                 // Assert
-                assert.strictEqual(result, false);
+               expect(result).toBeFalsy()
             })
         }
     })

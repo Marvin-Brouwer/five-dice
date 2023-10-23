@@ -18,8 +18,8 @@ export function isScoreApplicableToField(score: ScoreValue, field: ScoreField): 
         case "threeOfKind": return hasSomeOfKind(3, score);
         case "fourOfKind": return hasSomeOfKind(4, score);
         case 'fullHouse': return isFullHouse(score);
-        case 'smallStraight': return isStraight(4, score);
-        case 'largeStraight': return isStraight(5, score);
+        case 'smallStraight': return isSmallStraight(score);
+        case 'largeStraight': return isLargeStraight(score);
         case 'flush': return isFlush(score);
         case 'chance': return true;
     }
@@ -50,11 +50,46 @@ function isFullHouse(score: ValidScore): boolean {
     return true
 }
 
-function isStraight(amount: number, score: ValidScore): boolean {
+function isLargeStraight(score: ValidScore): boolean {
 
+	const largeStraightSize = 5;
     const distinct = new Set(score)
-    
-    return distinct.size >= amount
+
+	// Because a large straight needs all dice to be different, a distinct check is good enough
+    return distinct.size >= largeStraightSize
+
+}
+
+function isSmallStraight(score: ValidScore): boolean {
+
+	const smallStraightSize = 4;
+    const distinct = new Set(score)
+
+	// First check if there's at least 4 distinct numbers
+	// If that's the case, check if the numbers are consecutive, which is expensive
+
+	const isStraight = () => 	distinct.size >= smallStraightSize
+	const countConsecutive = () => Array.from(distinct)
+		.sort()
+		.reduce((previousCount, currentValue, index, all) => {
+			if (index == 0) return [1];
+
+			const previous = all[index - 1]
+			const difference = currentValue - previous
+			if (difference === 1) {
+				previousCount[previousCount.length -1] +=1
+				return previousCount;
+			}
+
+			return [...previousCount, 1]
+
+		}, [0])
+	const hasFourConsecutive = () => countConsecutive().some(count =>  count >= smallStraightSize)
+
+	let result = isStraight() && hasFourConsecutive()
+
+	return result;
+
 }
 
 function isFlush(score: ValidScore): boolean {

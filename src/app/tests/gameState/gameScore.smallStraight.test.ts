@@ -3,22 +3,38 @@
  * It just makes is a lot less verbose
  */
 
-import { test, describe } from 'node:test';
-import assert from 'node:assert';
+import { expect, test, describe } from 'vitest'
 
 import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateScores } from './gameScore.test.mjs';
+import { generateRandomScores } from './gameScore.mjs';
+import { score } from '../../src/game/score/score';
 
-const [pattern, allowedScores, disallowedScores] = generateScores(
-    'abcdd', 'abcde'
+const [pattern, allowedScores, disallowedScores] = generateRandomScores(
+    '1234a', '2345a', '3456a', '12345', '23456'
 );
 
 describe('scoreValidator', () => {
 
-    test(`smallStraight ${pattern}`, async testContext => {
+    describe(`test-cases`, () => {
+
+		test.concurrent(`79-incorrect-small-straight [11235]`, () => {
+
+			// Arrange
+			const testScore = score([1, 1, 2, 3, 5]);
+			const sut = () => isScoreApplicableToField(testScore, 'smallStraight');
+
+			// Act
+			const result = sut();
+
+			// Assert
+			expect(result).toBeFalsy();
+		})
+	})
+
+    test(`smallStraight ${pattern}`, () => {
 
         for(let score of allowedScores) {
-            await testContext.test(`validTheory [${score}]`, () => {
+            test.concurrent(`validTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, 'smallStraight');
@@ -27,12 +43,12 @@ describe('scoreValidator', () => {
                 const result = sut();
 
                 // Assert
-                assert.strictEqual(result, true);
+                expect(result).toBeTruthy()
             })
         }
 
         for(let score of disallowedScores) {
-            await testContext.test(`inValidTheory [${score}]`, () => {
+            test.concurrent(`inValidTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, 'smallStraight');
@@ -41,7 +57,7 @@ describe('scoreValidator', () => {
                 const result = sut();
 
                 // Assert
-                assert.strictEqual(result, false);
+               expect(result).toBeFalsy()
             })
         }
     })

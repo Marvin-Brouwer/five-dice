@@ -9,8 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "tsc --noEmit && globstar -- node --loader tsx --test \"./tests/**/*.test.ts\"",
-    "test-out": "pnpm test > \"./tests/test-results.log\""
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.1.0",
@@ -28,11 +28,13 @@
     "@types/node": "^18.15.11",
     "@vite-pwa/astro": "^0.0.5",
     "globstar": "^1.0.0",
+    "iterative-permutation": "^1.0.0",
     "rollup": "^3.20.2",
     "tsx": "^3.12.6",
     "typescript": "^5.0.4",
     "vite": "^4.2.1",
-    "vite-plugin-pwa": "^0.14.7"
+    "vite-plugin-pwa": "^0.14.7",
+    "vitest": "^0.34.6"
   },
   "pnpm": {
     "overrides": {

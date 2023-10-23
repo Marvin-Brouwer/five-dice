@@ -7,7 +7,7 @@ import { TextDie } from "../text-die";
 import { useKeyboardContext } from '../../../context/keyboardContext';
 import type { Keyboard } from "./die-input.keyboard";
 
-type Props = JSX.HTMLAttributes<HTMLInputElement> 
+type Props = JSX.HTMLAttributes<HTMLInputElement>
 & {
     name: string
     value: Signal<DieValue | undefined>,
@@ -36,12 +36,12 @@ export const DieInput : Component<Props> = ({ value, name, disabled, autoFocus, 
     }
     , getValue);
 
-    const handleInput = () => {  
-        if (disabled?.()) return true; 
-        if (inputReference.value === undefined || inputReference.value === '') return true;   
+    const handleInput = () => {
+        if (disabled?.()) return true;
+        if (inputReference.value === undefined || inputReference.value === '') return true;
         if (Number.isNaN(inputReference.valueAsNumber)) return false;
-        if (inputReference.valueAsNumber <= 1 && inputReference.valueAsNumber >= 6) { 
-            setValue(inputReference.valueAsNumber as DieValue); 
+        if (inputReference.valueAsNumber <= 1 && inputReference.valueAsNumber >= 6) {
+            setValue(inputReference.valueAsNumber as DieValue);
             closeKeyboard();
             return true;
         }
@@ -56,7 +56,7 @@ export const DieInput : Component<Props> = ({ value, name, disabled, autoFocus, 
 
     }, getValue);
 
-    const handleKeyEvent = (e: KeyboardEvent) => { 
+    const handleKeyEvent = (e: KeyboardEvent) => {
         const handled = () => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -64,7 +64,7 @@ export const DieInput : Component<Props> = ({ value, name, disabled, autoFocus, 
             return false;
         };
         if (disabled?.()) return true;
-        if (keyboardOpen()) return true; 
+        if (keyboardOpen()) return true;
 
         if (e.shiftKey && (!Number.isInteger(e.key) && e.key !== "Tab"))  return true;
         if (e.key === "1") { setValue(1); return handled(); }
@@ -78,7 +78,7 @@ export const DieInput : Component<Props> = ({ value, name, disabled, autoFocus, 
             showKeyboard();
             return handled();
         }
-        if (e.key === "Enter"){ 
+        if (e.key === "Enter"){
             showKeyboard();
             return handled();
         }
@@ -148,22 +148,22 @@ export const DieInput : Component<Props> = ({ value, name, disabled, autoFocus, 
 
         return false;
     }
-    
+
     return (
-        <span class="die-input" data-name={name} 
-            data-disabled={disabled?.()} 
+        <span class="die-input" data-name={name}
+            data-disabled={disabled?.()}
             data-keyboard-visible={keyboardOpen(name)}
         >
-            {die}
-            <input type="number" 
-                inputmode="none" 
+            {die()}
+            <input type="number"
+                inputmode="none"
                 readOnly={true}
                 value={getValue()} {...props}
-                ref={inputReference!} 
+                ref={inputReference!}
                 name={name}
                 disabled={disabled?.()}
-                onInput={handleInputEvent} 
-                onChange={handleInputEvent} 
+                onInput={handleInputEvent}
+                onChange={handleInputEvent}
                 onSelect={handleSelect}
                 onFocus={handleFocus}
                 onKeyDown={handleKeyEvent}
