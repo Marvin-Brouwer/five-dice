@@ -24,6 +24,7 @@ importers:
       '@vite-pwa/astro': ^0.0.5
       astro: ^2.3.0
       globstar: ^1.0.0
+      iterative-permutation: ^1.0.0
       js-confetti: ^0.11.0
       js-cookie: ^3.0.1
       rollup: ^3.20.2
@@ -47,6 +48,7 @@ importers:
       '@types/node': 18.15.11
       '@vite-pwa/astro': 0.0.5_e7jllfa6q4v37eqn6vxyc6dn3u
       globstar: 1.0.0
+      iterative-permutation: 1.0.0
       rollup: 3.20.2
       tsx: 3.12.6
       typescript: 5.0.4
@@ -3184,6 +3186,10 @@ packages:
 
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+
+  /iterative-permutation/1.0.0:
+    resolution: {integrity: sha512-SJjg3gMkDfg5DFk0y8eQ9R9GxuDy3EWZPKfwJ3xtqDxA/AHZfrQNKIdewPlwv7WiyQ2j02rJDI+7DTB9ueItnQ==}
+    dev: true
 
   /jake/10.8.5:
     resolution: {integrity: sha512-sVpxYeuAhWt0OTWITwT98oyV0GsXyMlXCF+3L1SuafBVUIr/uILGRB+NqwkzhgXKvoJpDIpQvqkUALgdmQsQxw==}

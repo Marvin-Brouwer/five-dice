@@ -72,13 +72,19 @@ function isSmallStraight(score: ValidScore): boolean {
 	const countConsecutive = () => Array.from(distinct)
 		.sort()
 		.reduce((previousCount, currentValue, index, all) => {
-			if (index == 0) return previousCount +1;
+			if (index == 0) return [1];
 
 			const previous = all[index - 1]
 			const difference = currentValue - previous
-			return difference == 1 ? previousCount +1 : previousCount
-		}, 0)
-	const hasFourConsecutive = () => countConsecutive() >= smallStraightSize
+			if (difference === 1) {
+				previousCount[previousCount.length -1] +=1
+				return previousCount;
+			}
+
+			return [...previousCount, 1]
+
+		}, [0])
+	const hasFourConsecutive = () => countConsecutive().some(count =>  count >= smallStraightSize)
 
 	let result = isStraight() && hasFourConsecutive()
 

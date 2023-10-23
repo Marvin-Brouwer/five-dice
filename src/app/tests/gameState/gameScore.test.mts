@@ -1,8 +1,6 @@
-// If you want to make the tests more fancy you can help by including permutations for patterns:
-// https://stackoverflow.com/questions/9960908/permutations-in-javascript
-
 import type { DieValue } from '../../src/game/gameConstants.js';
 import { score, ValidScore, ScoreValue, discard } from '../../src/game/score/score';
+import Permutation from 'iterative-permutation';
 
 const settings = {
 	writeOutUnfoldedPatterns: true,
@@ -115,12 +113,10 @@ function shufflePattern(pattern: string): Array<Pattern> {
     }
     function* shuffleCharacters(pattern: string) {
 
-		const possibleShuffles = Math.pow(pattern.length, pattern.length);
-
-        for (let i = 0; i < possibleShuffles; i++)
-        {
-            for(let item of slideCharacter(pattern, i)) yield item;
-        }
+		const generator = new Permutation(pattern.split(''));
+		while (generator.hasNext()) {
+			yield generator.next().join('');
+		}
     }
 }
 
