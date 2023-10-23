@@ -18,7 +18,7 @@ describe('scoreValidator', () => {
     test(`fourOfKind ${pattern}`, async testContext => {
 
         for(let score of allowedScores) {
-            await testContext.test(`validTheory [${score}]`, () => {
+            await testContext.test(`validTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, 'fourOfKind');
@@ -32,7 +32,7 @@ describe('scoreValidator', () => {
         }
 
         for(let score of disallowedScores) {
-            await testContext.test(`inValidTheory [${score}]`, () => {
+            await testContext.test(`inValidTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, 'fourOfKind');

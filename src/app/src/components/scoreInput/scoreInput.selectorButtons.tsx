@@ -21,7 +21,7 @@ type Props = {
 }
 
 
-export const SelectorButtons: Component<Props> = ({ 
+export const SelectorButtons: Component<Props> = ({
     validFields, discardFields, inputState, selectedField, selectableRows, getScorePad,
     previousButton, nextButton, firstInputRef
 }) => {
@@ -32,10 +32,10 @@ export const SelectorButtons: Component<Props> = ({
     const [getSelectedField, setSelectedField] = selectedField;
 
     const rowSelectors = createMemo(() => {
-        const scoreValue = !inputState.diceSelector.getAllDiceSet() 
+        const scoreValue = !inputState.diceSelector.getAllDiceSet()
             ? discard()
             : score(inputState.diceSelector.getScore() as [DieValue, DieValue, DieValue, DieValue, DieValue])
-        
+
         return selectableRows()
             .filter(([,field]) => validFields().includes(field) || discardFields().includes(field))
             .map(([item, field], index) => {
@@ -49,8 +49,8 @@ export const SelectorButtons: Component<Props> = ({
 
                 const isDiscard = discardFields().includes(field);
 
-                const displayScore = () => isDiscard ? discard() : scoreValue 
-                const classList = { 
+                const displayScore = () => isDiscard ? discard() : scoreValue
+                const classList = {
                     'row-selector': true,
                     'discard': isDiscard,
                     'selected': getSelectedField() === field
@@ -60,19 +60,19 @@ export const SelectorButtons: Component<Props> = ({
 
                     if (getFirstInputRef() !== undefined) return true;
                     if (keyboardContext.isKeyboardUser()) return true;
-                    
+
                     (e.currentTarget as HTMLElement).blur();
                     return false;
-                } 
-                
+                }
+
                 return (
                     <label style={position}  classList={classList} tabIndex={index}
                         onKeyDown={handleKeyEvent}
                         onFocus={checkFocus}>
-                        <input 
+                        <input
                             type='radio' checked={getSelectedField() === field} data-field={field}
-                            onChange={(e) => e.currentTarget.checked && setSelectedField(field) && e.currentTarget.focus()} 
-                            onKeyDown={handleKeyEvent} 
+                            onChange={(e) => e.currentTarget.checked && setSelectedField(field) && e.currentTarget.focus()}
+                            onKeyDown={handleKeyEvent}
                             onFocus={e => {
                                 if (!checkFocus(e)) return;
                                 e.currentTarget.parentElement?.focus();
@@ -85,7 +85,7 @@ export const SelectorButtons: Component<Props> = ({
             [selectableRows(), validFields(), discardFields(), inputState.diceSelector.getScore()]
     );
 
-    const handleKeyEvent = (e: KeyboardEvent) => { 
+    const handleKeyEvent = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
             return true;
         }
@@ -107,7 +107,7 @@ export const SelectorButtons: Component<Props> = ({
         }
 
         if (e.shiftKey && !Number.isInteger(e.key))  return true;
-        let selectedIndex = document.activeElement === undefined 
+        let selectedIndex = document.activeElement === undefined
             ? selectableRows().findIndex(([, field]) => field === getSelectedField())
             : Number(document.activeElement?.getAttribute('tabindex') ?? -1);
         if (selectedIndex < 0) selectableRows().findIndex(([, field]) => field === getSelectedField());
@@ -122,23 +122,23 @@ export const SelectorButtons: Component<Props> = ({
             if (selectedIndex === lastIndex) selectedIndex = 0;
             else selectedIndex ++;
         }
-        
-        const inputs = getSectionRef()?.querySelectorAll('label') ?? []; 
+
+        const inputs = getSectionRef()?.querySelectorAll('label') ?? [];
         let input = inputs[selectedIndex] as HTMLLabelElement | undefined;
         if (input) setFirstInputRef(input);
 
         if (e.key === " ") {
             input?.focus();
             input?.click();
-            
+
             // Reselect because of rerender that happens when appending .selected
             input = getSectionRef()?.querySelector<HTMLLabelElement>(`label[tabindex="${input?.tabIndex}"]`)
                 ?? undefined;
             setFirstInputRef(input);
-            
+
             return handled();
         }
-        if (e.key === "Enter"){ 
+        if (e.key === "Enter"){
             input?.click();
             nextButton()?.focus();
             return handled();
@@ -151,7 +151,7 @@ export const SelectorButtons: Component<Props> = ({
 
     return (
         <section role="menu" class="selector-buttons" ref={setSectionRef} onKeyDown={handleKeyEvent}>
-            {rowSelectors}
+            {rowSelectors()}
         </section>
     )
 }

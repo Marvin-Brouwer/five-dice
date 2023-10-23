@@ -13,22 +13,22 @@ type Props = {
 }
 
 
-export const SelectorFlushFake: Component<Props> = ({ 
+export const SelectorFlushFake: Component<Props> = ({
     inputState, getScorePad
 }) => {
 
-    
+
     const [getFlushElement, setFlushElement] = createSignal<HTMLTableRowElement>();
     createEffect(() => {
         setFlushElement(document.querySelector<HTMLTableRowElement>('.row-display[data-for-field="flush"]') ?? undefined);
     })
-    
-    const rowSelector = createMemo(() => 
+
+    const rowSelector = createMemo(() =>
         {
-            const scoreValue = !inputState.diceSelector.getAllDiceSet() 
+            const scoreValue = !inputState.diceSelector.getAllDiceSet()
                 ? discard()
                 : score(inputState.diceSelector.getScore() as [DieValue, DieValue, DieValue, DieValue, DieValue])
-            
+
             const item = getFlushElement();
             if (item === undefined) return undefined;
 
@@ -40,12 +40,12 @@ export const SelectorFlushFake: Component<Props> = ({
                 height: `${bounds.height}px`
             }
 
-            const classList = { 
+            const classList = {
                 'row-selector': true,
                 'selected': true,
                 'fake': true
             }
-            
+
             return (
                 <label style={position}  classList={classList}>
                     <RollDisplay field="flush" score={() => scoreValue} />
@@ -58,7 +58,7 @@ export const SelectorFlushFake: Component<Props> = ({
 
     return (
         <section role="presentation" class="selector-buttons">
-            {rowSelector}
+            {rowSelector()}
         </section>
     )
 }

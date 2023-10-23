@@ -9,14 +9,14 @@ import { InvalidScoreError } from '../../game/score/invalidScoreError';
 import { createMemo } from 'solid-js';
 
 type Props = {
-    score: Accessor<ScoreContainer | undefined>, 
+    score: Accessor<ScoreContainer | undefined>,
     field: ScoreField
-} 
+}
 export const RollDisplay: Component<Props> = ({ score, field }) => {
 
     const roll = createMemo(() => showRoll(score(), field), score);
     return (
-        <span class='roll-display'><span>{roll}</span></span>
+        <span class='roll-display'><span>{roll()}</span></span>
     )
 }
 
@@ -96,7 +96,7 @@ function showFlush(score: ValidScore[]): JSX.Element {
     const plural = score.length > 1;
     const lastScore = score.reverse()?.[0];
     if (lastScore === undefined) return undefined;
-    
+
     return (<>
         {plural && <span class="many">+{score.length -1}</span>}
         <span>{lastScore.map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
@@ -104,10 +104,9 @@ function showFlush(score: ValidScore[]): JSX.Element {
 }
 
 function showAll(score: ValidScore): JSX.Element {
-        
+
     return (<>
         <span>{score
             .map(scoreDie => (<NumberDie amount={scoreDie} />))}</span>
     </>);
 }
-

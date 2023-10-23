@@ -16,7 +16,7 @@ type TestContext = Parameters<TestFn>[0]
 describe('scoreValidator', () => {
 
     test(`partOne`, async testContext => {
-            
+
         await testSection('aces', testContext);
         await testSection('deuces', testContext);
         await testSection('threes', testContext);
@@ -33,7 +33,7 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
         const [allowedScores, disallowedScores] = generateSimpleScores(die);
 
         for(let score of allowedScores) {
-            await testContext.test(`validTheory [${score}]`, () => {
+            await testContext.test(`validTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, field);
@@ -47,7 +47,7 @@ async function testSection(field: Dice, sectionTestContext: TestContext) {
         }
 
         for(let score of disallowedScores) {
-            await testContext.test(`inValidTheory [${score}]`, () => {
+            await testContext.test(`inValidTheory ${score}`, () => {
 
                 // Arrange
                 const sut = () => isScoreApplicableToField(score, field);
