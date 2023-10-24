@@ -5,60 +5,60 @@
 
 import { expect, test, describe } from 'vitest'
 
-import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator';
-import { generateRandomScores } from './gameScore.mjs';
-import { score } from '../../src/game/score/score';
+import { isScoreApplicableToField } from '../../src/game/score/scoreFieldValidator'
+import { generateRandomScores } from './gameScore.mjs'
+import { score } from '../../src/game/score/score'
 
 const [pattern, allowedScores, disallowedScores] = generateRandomScores(
-    '1234a', '2345a', '3456a', '12345', '23456'
-);
+	'1234a', '2345a', '3456a', '12345', '23456'
+)
 
 describe('scoreValidator', () => {
 
-    describe(`test-cases`, () => {
+	describe('test-cases', () => {
 
-		test.concurrent(`79-incorrect-small-straight [11235]`, () => {
+		test.concurrent('79-incorrect-small-straight [11235]', () => {
 
 			// Arrange
-			const testScore = score([1, 1, 2, 3, 5]);
-			const sut = () => isScoreApplicableToField(testScore, 'smallStraight');
+			const testScore = score([1, 1, 2, 3, 5])
+			const sut = () => isScoreApplicableToField(testScore, 'smallStraight')
 
 			// Act
-			const result = sut();
+			const result = sut()
 
 			// Assert
-			expect(result).toBeFalsy();
+			expect(result).toBeFalsy()
 		})
 	})
 
-    test(`smallStraight ${pattern}`, () => {
+	test(`smallStraight ${pattern}`, () => {
 
-        for(let score of allowedScores) {
-            test.concurrent(`validTheory ${score}`, () => {
+		for(const score of allowedScores) {
+			test.concurrent(`validTheory ${score}`, () => {
 
-                // Arrange
-                const sut = () => isScoreApplicableToField(score, 'smallStraight');
+				// Arrange
+				const sut = () => isScoreApplicableToField(score, 'smallStraight')
 
-                // Act
-                const result = sut();
+				// Act
+				const result = sut()
 
-                // Assert
-                expect(result).toBeTruthy()
-            })
-        }
+				// Assert
+				expect(result).toBeTruthy()
+			})
+		}
 
-        for(let score of disallowedScores) {
-            test.concurrent(`inValidTheory ${score}`, () => {
+		for(const score of disallowedScores) {
+			test.concurrent(`inValidTheory ${score}`, () => {
 
-                // Arrange
-                const sut = () => isScoreApplicableToField(score, 'smallStraight');
+				// Arrange
+				const sut = () => isScoreApplicableToField(score, 'smallStraight')
 
-                // Act
-                const result = sut();
+				// Act
+				const result = sut()
 
-                // Assert
-               expect(result).toBeFalsy()
-            })
-        }
-    })
-});
+				// Assert
+				expect(result).toBeFalsy()
+			})
+		}
+	})
+})

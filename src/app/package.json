@@ -11,7 +11,7 @@
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint --ext .ts,.tsx,.mts,.astro src",
+    "lint": "eslint --ext .ts,.tsx,.mts,.astro src tests",
     "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {

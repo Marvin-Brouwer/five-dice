@@ -19,6 +19,17 @@
 			"source.fixAll.tslint": true
 		}
 	},
+	"[astro]": {
+		"editor.insertSpaces": false,
+		"editor.detectIndentation": false,
+		"editor.renderWhitespace": "all",
+		"files.trimTrailingWhitespace": true,
+		"files.trimFinalNewlines": true,
+		"files.eol": "\n",
+	},
+	"html.format.indentInnerHtml": true,
+	"html.format.wrapAttributes": "force-aligned",
+	"html.format.wrapAttributesIndentSize": 2,
 	"[markdown]": {
 		"files.trimTrailingWhitespace": false,
 		"editor.trimAutoWhitespace": false,
