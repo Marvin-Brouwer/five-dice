@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "scripts": {
+    "test": "pnpm --filter @five-dice/app test",
+    "lint": "pnpm --filter @five-dice/app lint"
+  },
   "devDependencies": {
     "astro": "^2.3.0"
   },
