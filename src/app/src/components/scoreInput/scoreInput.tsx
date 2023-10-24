@@ -5,6 +5,7 @@ import getTrumpetAudio from '../../audio/383154__profcalla__re_frullato_tromba.m
 import getPartyHornAudio from '../../audio/170583__audiosmedia__party-horn.wav?blob'
 
 import PlusIcon from '../../icons/iconmonstr-plus-lined.svg?raw'
+import UndoIcon from '../../icons/iconmonstr-refresh-5.svg?raw'
 import ResetIcon from '../../icons/iconmonstr-trash-can-lined.svg?raw'
 
 import { Component, onCleanup } from 'solid-js'
@@ -94,6 +95,19 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 					disabled={() => inputState.isOpen() || gameEnded()}
 					onClick={() => {
 						inputState.open()
+					}}
+				/>
+				<DieButton
+					classList={{
+						'die-button': true,
+						'undo-button': true,
+						'game-ended': gameEnded()
+					}}
+					value={<span class="illustration" innerHTML={UndoIcon} /> as Element}
+					description="Undo last turn" disabled={inputState.isEmpty} // todo
+					onClick={() => {
+						if (confirm('Are you sure you wan\'t to reset to your previous round?'))
+							alert('TODO')
 					}}
 				/>
 				<DieButton
