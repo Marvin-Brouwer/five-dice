@@ -44,11 +44,11 @@ section.score-input .set-score {
     padding: 0;
 }
 section.score-input .set-score button {
-    box-shadow: 
-        rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+    box-shadow:
+        rgba(0, 0, 0, 0.25) 0px 54px 55px,
         rgba(0, 0, 0, 0.12) 0px -12px 30px,
-        rgba(0, 0, 0, 0.12) 0px 4px 6px, 
-        rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+        rgba(0, 0, 0, 0.12) 0px 4px 6px,
+        rgba(0, 0, 0, 0.17) 0px 12px 13px,
         rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 section.score-input .set-score button.enter-button {
@@ -73,22 +73,38 @@ section.score-input .set-score button.reset-button {
 
 section.title-section{
     position: fixed;
-    left: 0;
     top: 0;
-    right: 0;
     z-index: 9;
+	margin: 0 1ex 0 1ex;
+    user-select: none;
+    pointer-events: none;
+    touch-action: none;
 }
 section.title-section h2{
-    margin: 0ex 1ex;
-    margin-top: 3ex;
+    margin: 0ex 0ex;
+    margin-top: 4ex;
     margin-bottom: .2ex;
     font-size: 4.5ex;
     text-align: center;
     color: var(--theme-backdrop-text-primary)
 }
 section.title-section p{
-    margin: 0ex 1ex;
+    margin: 0ex 0ex;
     text-align: center;
     font-size: 3ex;
     color: var(--theme-backdrop-text-secondary)
+}
+@media only screen and (max-width: 400px) {
+	section.title-section h2{
+		margin-top: 2ex;
+	}
+}
+@media only screen and (max-width: 380px) {
+	section.title-section h2{
+		margin-top: 2.5ex;
+		font-size: 4ex;
+	}
+	section.title-section p{
+		font-size: 2.5ex;
+	}
 }
