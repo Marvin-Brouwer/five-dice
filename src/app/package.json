@@ -10,7 +10,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint --ext .ts,.tsx,.mts,.astro src",
+    "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.1.0",
@@ -23,10 +25,18 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
+    "@babel/eslint-parser": "^7.22.15",
     "@jasikpark/astro-svg-loader": "^0.1.0",
     "@types/js-cookie": "^3.0.3",
     "@types/node": "^18.15.11",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
     "@vite-pwa/astro": "^0.0.5",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-astro": "^0.29.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-solid": "^0.13.0",
     "globstar": "^1.0.0",
     "iterative-permutation": "^1.0.0",
     "rollup": "^3.20.2",

@@ -1,6 +1,6 @@
-import type { Component } from "solid-js";
-import type { Face } from "./die";
-import { DieDot } from './die-dot';
+import type { Component } from 'solid-js'
+import type { Face } from './die'
+import { DieDot } from './die-dot'
 
 interface Props {
     face: Face, 
@@ -9,11 +9,11 @@ interface Props {
 
 export const DieRow : Component<Props> = ({ face, rowName }) => {
     
-    const row = face[rowName];
+	const row = face[rowName]
 
-    return (<>
-        <DieDot row={row} columnName="left" />
-        <DieDot row={row} columnName="middle" />
-        <DieDot row={row} columnName="right" />
-    </>);
-};
+	return (<>
+		<DieDot row={row} columnName="left" />
+		<DieDot row={row} columnName="middle" />
+		<DieDot row={row} columnName="right" />
+	</>)
+}

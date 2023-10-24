@@ -1,4 +1,4 @@
-import type { ValidScore, DiscardedScore } from '../../game/score/score';
+import type { ValidScore, DiscardedScore } from '../../game/score/score'
 
 export type ScorePad = {
     aces: ValidScore | DiscardedScore | undefined
@@ -18,20 +18,20 @@ export type ScorePad = {
 };
 
 export function createScorePad(): ScorePad {
-    return {
-        aces: undefined,
-        deuces: undefined,
-        threes: undefined,
-        fours: undefined,
-        fives: undefined,
-        sixes: undefined,
+	return {
+		aces: undefined,
+		deuces: undefined,
+		threes: undefined,
+		fours: undefined,
+		fives: undefined,
+		sixes: undefined,
 
-        threeOfKind: undefined,
-        fourOfKind: undefined,
-        fullHouse: undefined,
-        smallStraight: undefined,
-        largeStraight: undefined,
-        flush: new Array(),
-        chance: undefined
-    };
+		threeOfKind: undefined,
+		fourOfKind: undefined,
+		fullHouse: undefined,
+		smallStraight: undefined,
+		largeStraight: undefined,
+		flush: [],
+		chance: undefined
+	}
 }

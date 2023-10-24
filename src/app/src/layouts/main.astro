@@ -1,16 +1,16 @@
 ---
-import "./color-scheme.css";
-import "./theme.css";
-import "./main.css";
+import './color-scheme.css'
+import './theme.css'
+import './main.css'
 
-import { NumberDie } from "../components/die/number-die";
-import { TextDie } from "../components/die/text-die";
-import LanguageSelector from "../components/language-selector/language-selector.astro";
-import { ThemeSelector } from "../components/theme-selector/theme-selector";
-import ShareMeta from "./share-meta.astro";
+import { NumberDie } from '../components/die/number-die'
+import { TextDie } from '../components/die/text-die'
+import LanguageSelector from '../components/language-selector/language-selector.astro'
+import { ThemeSelector } from '../components/theme-selector/theme-selector'
+import ShareMeta from './share-meta.astro'
 import { isServerSide } from '../helpers/utilities.ts'
 
-import { pwaInfo } from 'virtual:pwa-info';
+import { pwaInfo } from 'virtual:pwa-info'
 
 interface Props {
     title: string
@@ -23,13 +23,13 @@ const baseHost = import.meta.env.PROD
 	: new URL(Astro.request.url).origin
 
 if (isServerSide()) {
-	Astro.response.headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme');
-	Astro.response.headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme');
+	Astro.response.headers.set('Accept-CH', 'Sec-CH-Prefers-Color-Scheme')
+	Astro.response.headers.set('Vary', 'Sec-CH-Prefers-Color-Scheme')
 }
 
 const initialPreference =
 	isServerSide() ? Astro.request.headers.get('Sec-CH-Prefers-Color-Scheme') as 'dark' | 'light' : undefined
-	?? 'no-preference';
+	?? 'no-preference'
 
 const initialTheme = !Astro.cookies.has('theme')
 	? 'auto'

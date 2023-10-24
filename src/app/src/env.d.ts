@@ -4,5 +4,5 @@
 
 declare module '*?blob' {
 	function getBlobData(): Accessor<Blob.prototype>;
-	export default getBlobData;
-};
+	export default getBlobData
+}

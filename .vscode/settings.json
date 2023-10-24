@@ -5,6 +5,20 @@
 	"files.trimTrailingWhitespace": true,
 	"files.trimFinalNewlines": true,
 	"files.eol": "\n",
+	"javascript.format.semicolons": "remove",
+	"javascript.preferences.importModuleSpecifier": "relative",
+	"javascript.preferences.quoteStyle": "single",
+	"typescript.format.semicolons": "remove",
+	"typescript.preferences.importModuleSpecifier": "relative",
+	"typescript.preferences.quoteStyle": "single",
+	"tslint.configFile": "tsconfig.json",
+	"tslint.jsEnable": true,
+	"tslint.packageManager": "pnpm",
+	"[Typescript]": {
+		"editor.codeActionsOnSave": {
+			"source.fixAll.tslint": true
+		}
+	},
 	"[markdown]": {
 		"files.trimTrailingWhitespace": false,
 		"editor.trimAutoWhitespace": false,
@@ -28,5 +42,10 @@
 			"br_spaces": 2
 		}
 	},
-	"markdown.preview.breaks": true
+	"markdown.preview.breaks": true,
+	"eslint.validate": [
+	  "astro", // Enable .astro
+	  "typescript", // Enable .ts
+	  "typescriptreact" // Enable .tsx
+	]
 }
