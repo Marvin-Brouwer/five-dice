@@ -1,0 +1,39 @@
+name: Continuous development pipeline
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches-ignore: ["main"]
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+# Allow one concurrent deployment
+concurrency:
+  group: ci-${{ github.ref }}${{ github.event_name == 'workflow_dispatch' && '[dispatch]' || '' }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Install dependencies
+        uses: pnpm/action-setup@v2
+        with:
+          version: 'latest'
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
+      - name: Lint
+        run: 'pnpm lint'
+      - name: Run tests
+        run: 'pnpm test'

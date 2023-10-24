@@ -1,5 +1,5 @@
 ---
-import './language-selector.css';
+import './language-selector.css'
 
 interface Props {
     value: string,
@@ -10,8 +10,8 @@ const { value, tabindex } = Astro.props;
 ---
 
 <span class="language-selector" aria-valuetext={value} tabindex={tabindex?.toString()}>
-    <input type="text" list="languages" value={value}>
-    <datalist id="languages">
-        <option value="en" />
-    </datalist>
+	<input type="text" list="languages" value={value}>
+	<datalist id="languages">
+		<option value="en" />
+	</datalist>
 </span>

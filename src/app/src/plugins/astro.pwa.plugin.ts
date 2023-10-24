@@ -1,15 +1,16 @@
 import astroPwa from '@vite-pwa/astro'
-import { mkdir, rm } from 'fs/promises';
-import { manifest } from '../manifest';
+import { mkdir, rm } from 'fs/promises'
+import { manifest } from '../manifest'
 
-const tempWebworkerFolder = './dist/.dev-sw';
+const tempWebworkerFolder = './dist/.dev-sw'
 
 export async function pwa(base: string) {
 
-	(process.env as any).SW_DEV = import.meta.env.SW_dev;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	(process.env as any).SW_DEV = import.meta.env.SW_dev
 
 	// Make sure the folder is empty to prevent build errors
-	await rm(tempWebworkerFolder, { recursive: true, force: true });
+	await rm(tempWebworkerFolder, { recursive: true, force: true })
 
 	const configuredPwa = astroPwa({
 		mode: import.meta.env.PROD ? 'production' : 'development',
@@ -21,9 +22,9 @@ export async function pwa(base: string) {
 			resolveTempFolder: async () => {
 
 				// Make sure the dist folder exists for the webworker
-				await mkdir(tempWebworkerFolder, { recursive: true });
+				await mkdir(tempWebworkerFolder, { recursive: true })
 
-				return tempWebworkerFolder;
+				return tempWebworkerFolder
 			},
 		},
 		injectRegister: 'script',
@@ -51,17 +52,18 @@ export async function pwa(base: string) {
 		...configuredPwa,
 
 		transform(code: string, id: string) {
-			if (id.endsWith('.astro')) return;
+			if (id.endsWith('.astro')) return
 
-			return (configuredPwa as any).transform(code, id);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			return (configuredPwa as any).transform(code, id)
 		},
 		entryFileNames({ name }: { name: string}) {
-			let modifiedName = name;
+			let modifiedName = name
 
 			if(modifiedName.includes('?'))
-				modifiedName = modifiedName.split('?')[0];
+				modifiedName = modifiedName.split('?')[0]
 
-			return modifiedName;
+			return modifiedName
 		}
 	}
 }

@@ -1,31 +1,29 @@
+import { createEffect, createSignal } from 'solid-js'
 
-
-import { createEffect, createSignal } from 'solid-js';
-
-const isServerSide = () => typeof window === 'undefined' || window === undefined;
+const isServerSide = () => typeof window === 'undefined' || window === undefined
 
 export function createBlobAccessor(url) {
 
-	if (isServerSide()) return;
+	if (isServerSide()) return
 
-    const dataSignal = createSignal();
-    const [getDataSignal, setDataSignal] = dataSignal;
+	const dataSignal = createSignal()
+	const [getDataSignal, setDataSignal] = dataSignal
 
-    createEffect(async () => {
+	createEffect(async () => {
 
-        const origin = document.location.origin;
+		const origin = document.location.origin
 
-        try {
-            const data = await fetch(origin + url)
-                .then(response => response.blob());
+		try {
+			const data = await fetch(origin + url)
+				.then(response => response.blob())
 
-            setDataSignal(_ => data);
-        }
-        catch {
-            console.warn(`failed to fetch resource: ${url}`);
-        }
+			setDataSignal(_ => data)
+		}
+		catch {
+			console.warn(`failed to fetch resource: ${url}`)
+		}
 
-    })
+	})
 
-    return getDataSignal;
+	return getDataSignal
 }

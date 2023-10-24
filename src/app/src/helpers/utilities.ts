@@ -1,1 +1,1 @@
-export const isServerSide = () => import.meta.env.SSR || typeof window === 'undefined' || window === undefined;
+export const isServerSide = () => import.meta.env.SSR || typeof window === 'undefined' || window === undefined

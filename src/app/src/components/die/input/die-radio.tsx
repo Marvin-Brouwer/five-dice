@@ -1,9 +1,9 @@
-import "./die-radio.css"
+import './die-radio.css'
 
-import type { Component, JSX, Signal } from "solid-js";
-import { dice, Dice, DieValue } from '../../../game/gameConstants';
-import { createMemo } from 'solid-js';
-import { NumberDie } from "../number-die";
+import type { Component, JSX, Signal } from 'solid-js'
+import { dice, Dice, DieValue } from '../../../game/gameConstants'
+import { createMemo } from 'solid-js'
+import { NumberDie } from '../number-die'
 
 type Props = JSX.HTMLAttributes<HTMLLabelElement> 
 & {
@@ -15,18 +15,18 @@ type Props = JSX.HTMLAttributes<HTMLLabelElement>
 
 export const DieRadioButton : Component<Props> = ({ value, die, group, onClick, ...props }) => {
 
-    const dieValue = dice[die];
+	const dieValue = dice[die]
 
-    const [getValue, setValue] = value;
-    const checked = createMemo(() => getValue() === dieValue, getValue);
+	const [getValue, setValue] = value
+	const checked = createMemo(() => getValue() === dieValue, getValue)
     
-    return (
-        <label class={`die-radio-button die-${die}`} data-checked={checked()} {...props}>
-            <NumberDie amount={dieValue} />
-            <input type="radio" name={group} value={dieValue} checked={checked()} 
-                onClick={() => { setValue(dieValue); onClick(); }}
-            />
-        </label>
-    );
-};
+	return (
+		<label class={`die-radio-button die-${die}`} data-checked={checked()} {...props}>
+			<NumberDie amount={dieValue} />
+			<input type="radio" name={group} value={dieValue} checked={checked()} 
+				onClick={() => { setValue(dieValue); onClick() }}
+			/>
+		</label>
+	)
+}
 

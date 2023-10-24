@@ -1,83 +1,83 @@
-import type { ValidScore, ScoreContainer } from "../../game/score/score";
-import type { DieValue } from '../../game/gameConstants';
+import type { ValidScore } from '../../game/score/score'
+import type { DieValue } from '../../game/gameConstants'
 
 type Group = {
-    values: Array<DieValue>,
-    value: DieValue
-} 
+	values: Array<DieValue>,
+	value: DieValue
+}
 function groupBy(array: ValidScore) {
-    const groupedArray =  array.reduce((accumulator, die) => {
-       
-        if (accumulator.has(die)) {
-            const group = accumulator.get(die)!;
-            group.values.push(die);
+	const groupedArray =  array.reduce((accumulator, die) => {
 
-            accumulator.set(die, group);
-        }
-        else {
-            accumulator.set(die, { value: die, values: [die] })
-        }
+		if (accumulator.has(die)) {
+			const group = accumulator.get(die)!
+			group.values.push(die)
 
-        return accumulator;
-        
-    }, new Map<DieValue, Group>());
-    
-    return Array.from(groupedArray.values());
-        
-};
+			accumulator.set(die, group)
+		}
+		else {
+			accumulator.set(die, { value: die, values: [die] })
+		}
+
+		return accumulator
+
+	}, new Map<DieValue, Group>())
+
+	return Array.from(groupedArray.values())
+
+}
 export type ScoreGroup = [smallGroup: Array<DieValue>, largeGroup: Array<DieValue>]
 
 export function sortSimpleScore(amount: number, score: ValidScore):  ScoreGroup{
 
-    const groupedResults = groupBy(score);
+	const groupedResults = groupBy(score)
 
-    const smallGroup = groupedResults
-        .filter(group => group.value != amount)
-        .sort((a, b) => a.value - b.value)
-        .flatMap(group => group.values);
-    const largeGroup = groupedResults
-        .filter(group => group.value == amount)
-        .flatMap(group => group.values);
+	const smallGroup = groupedResults
+		.filter(group => group.value != amount)
+		.sort((a, b) => a.value - b.value)
+		.flatMap(group => group.values)
+	const largeGroup = groupedResults
+		.filter(group => group.value == amount)
+		.flatMap(group => group.values)
 
-    return [smallGroup, largeGroup] 
+	return [smallGroup, largeGroup]
 }
 
 export function sortSomeOfKind(amount: number, score: ValidScore):  ScoreGroup{
 
-    const splitIndex = (5 - amount);
-    const sortedResults = groupBy(score)
-        .sort((a, b) => a.values.length - b.values.length);
+	const splitIndex = (5 - amount)
+	const sortedResults = groupBy(score)
+		.sort((a, b) => a.values.length - b.values.length)
 
-    const flatResults = sortedResults.flatMap(r => r.values)
-    const smallGroup = Array.from(flatResults.slice(0, splitIndex).values())
-        .sort((a, b) => a - b);
-    const largeGroup = Array.from(flatResults.slice(splitIndex).values());
+	const flatResults = sortedResults.flatMap(r => r.values)
+	const smallGroup = Array.from(flatResults.slice(0, splitIndex).values())
+		.sort((a, b) => a - b)
+	const largeGroup = Array.from(flatResults.slice(splitIndex).values())
 
-    return [smallGroup, largeGroup] 
+	return [smallGroup, largeGroup]
 }
 
 export function sortFullHouse(score: ValidScore):  ScoreGroup{
 
-    const sortedResults = groupBy(score)
-        .sort((a, b) => a.values.length - b.values.length)
-        .flatMap(group => group.values);
-        
-    const smallGroup = sortedResults.slice(0, 2);
-    const largeGroup = sortedResults.slice(2);
+	const sortedResults = groupBy(score)
+		.sort((a, b) => a.values.length - b.values.length)
+		.flatMap(group => group.values)
 
-    return [smallGroup, largeGroup];
+	const smallGroup = sortedResults.slice(0, 2)
+	const largeGroup = sortedResults.slice(2)
+
+	return [smallGroup, largeGroup]
 }
 
 export function sortStraight(score: ValidScore):  ScoreGroup{
 
-    const smallGroup = groupBy(score)
-        .filter(group => group.values.length > 1)
-        .sort((a, b) => a.value - b.value)
-        .flatMap(group => group.value);
-    const largeGroup = groupBy(score)
-        .filter(group => group.values.length = 1)
-        .sort((a, b) => a.value - b.value)
-        .flatMap(group => group.value);
+	const smallGroup = groupBy(score)
+		.filter(group => group.values.length > 1)
+		.sort((a, b) => a.value - b.value)
+		.flatMap(group => group.value)
+	const largeGroup = groupBy(score)
+		.filter(group => group.values.length = 1)
+		.sort((a, b) => a.value - b.value)
+		.flatMap(group => group.value)
 
-    return [smallGroup, largeGroup] 
+	return [smallGroup, largeGroup]
 }

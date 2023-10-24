@@ -1,9 +1,9 @@
-import "./die.css";
-import "./number-die.css";
+import './die.css'
+import './number-die.css'
 
-import { DieFace } from "./die-face";
-import type { DieValue } from "../../game/gameConstants";
-import type { Component } from 'solid-js';
+import { DieFace } from './die-face'
+import type { DieValue } from '../../game/gameConstants'
+import type { Component } from 'solid-js'
 
 interface Props {
     amount: DieValue,
@@ -12,13 +12,13 @@ interface Props {
 }
 
 export const NumberDie : Component<Props> = ({ amount, description, tabindex }) => (
-    <span class="die" data-amount={amount} tabindex={tabindex?.toString()}
-        aria-role="article"
-        aria-valuetext={amount.toString()}
-        aria-label={description || `${amount}-die,`}
-        aria-details={description || `A die displaying ${amount} dot${amount !==1 ? 's' : ''} on its face`}
-    >
-        <DieFace amount={amount} />
-        <span class="value" aria-hidden="true">{amount}</span>
-    </span>
+	<span class="die" data-amount={amount} tabindex={tabindex?.toString()}
+		aria-role="article"
+		aria-valuetext={amount.toString()}
+		aria-label={description || `${amount}-die,`}
+		aria-details={description || `A die displaying ${amount} dot${amount !==1 ? 's' : ''} on its face`}
+	>
+		<DieFace amount={amount} />
+		<span class="value" aria-hidden="true">{amount}</span>
+	</span>
 )
