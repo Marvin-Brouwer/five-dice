@@ -26,7 +26,12 @@ jobs:
         with:
           lfs: true
       - name: Install dependencies
-        run: 'pnpm i --frozen-lockfile'
+        uses: pnpm/action-setup@v2
+        with:
+          version: 'latest'
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: Lint
         run: 'pnpm lint'
       - name: Run tests
