@@ -29,10 +29,10 @@ jobs:
         with:
           lfs: true
       - name: Install, build, and upload your site
-        uses: withastro/action@v0
+        uses: withastro/action@v1
         with:
           path: './src/app'
-          package-manager: pnpm 
+          package-manager: pnpm@latest
           node-version: 19
 
   deploy:
