@@ -26,12 +26,19 @@ type Props = ScoreInputStateProps
 export const ScoreInputDialog: Component<Props> = (props) => {
 
 	const inputState = createScoreInputState(props)
-	const [getScorePad] = props.scorePad
-	const [getRound] = props.round
+	const { getScorePad, canUndoScore, undoScore } = props.scorePad
+	const [getRound, setRound] = props.round
 
 	// Put into memo to force rerender on change
 	const gameEnded = createMemo(() => getRound() > roundAmount, getRound)
 	const getAudioContext = createAudioContextAccessor()
+
+	const undoDisabled = createMemo(() => gameEnded() ||  !canUndoScore(), [gameEnded, canUndoScore])
+	const undoLastTurn = () => {
+		if (!canUndoScore()) return
+		setRound((prev) => prev -1)
+		undoScore()
+	}
 
 	const ballonPopAudio = getBalloonPopAudio()
 	const trumpetAudio = getTrumpetAudio()
@@ -104,10 +111,10 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 						'game-ended': gameEnded()
 					}}
 					value={<span class="illustration" innerHTML={UndoIcon} /> as Element}
-					description="Undo last turn" disabled={inputState.isEmpty} // todo
+					description="Undo last turn" disabled={undoDisabled} // todo
 					onClick={() => {
 						if (confirm('Are you sure you wan\'t to reset to your previous round?'))
-							alert('TODO')
+							undoLastTurn()
 					}}
 				/>
 				<DieButton
