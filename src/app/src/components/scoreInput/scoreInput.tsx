@@ -5,6 +5,7 @@ import getTrumpetAudio from '../../audio/383154__profcalla__re_frullato_tromba.m
 import getPartyHornAudio from '../../audio/170583__audiosmedia__party-horn.wav?blob'
 
 import PlusIcon from '../../icons/iconmonstr-plus-lined.svg?raw'
+import UndoIcon from '../../icons/iconmonstr-refresh-5.svg?raw'
 import ResetIcon from '../../icons/iconmonstr-trash-can-lined.svg?raw'
 
 import { Component, onCleanup } from 'solid-js'
@@ -25,12 +26,19 @@ type Props = ScoreInputStateProps
 export const ScoreInputDialog: Component<Props> = (props) => {
 
 	const inputState = createScoreInputState(props)
-	const [getScorePad] = props.scorePad
-	const [getRound] = props.round
+	const { getScorePad, canUndoScore, undoScore } = props.scorePad
+	const [getRound, setRound] = props.round
 
 	// Put into memo to force rerender on change
 	const gameEnded = createMemo(() => getRound() > roundAmount, getRound)
 	const getAudioContext = createAudioContextAccessor()
+
+	const undoDisabled = createMemo(() => gameEnded() ||  !canUndoScore(), [gameEnded, canUndoScore])
+	const undoLastTurn = () => {
+		if (!canUndoScore()) return
+		setRound((prev) => prev -1)
+		undoScore()
+	}
 
 	const ballonPopAudio = getBalloonPopAudio()
 	const trumpetAudio = getTrumpetAudio()
@@ -94,6 +102,19 @@ export const ScoreInputDialog: Component<Props> = (props) => {
 					disabled={() => inputState.isOpen() || gameEnded()}
 					onClick={() => {
 						inputState.open()
+					}}
+				/>
+				<DieButton
+					classList={{
+						'die-button': true,
+						'undo-button': true,
+						'game-ended': gameEnded()
+					}}
+					value={<span class="illustration" innerHTML={UndoIcon} /> as Element}
+					description="Undo last turn" disabled={undoDisabled} // todo
+					onClick={() => {
+						if (confirm('Are you sure you wan\'t to reset to your previous round?'))
+							undoLastTurn()
 					}}
 				/>
 				<DieButton

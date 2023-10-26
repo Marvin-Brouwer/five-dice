@@ -69,7 +69,7 @@ a.link-button {
     justify-content: flex-start;
     align-items: center;
 }
-a.link-button .die{ 
+a.link-button .die{
     margin-right: 1ex;
     font-size: 2.5ex;
 }
@@ -85,7 +85,7 @@ a.link-button:focus-visible:focus-within {
     color: var(--theme-foreground-hover);
 }
 
-figure.add-score-button {
+figure.button-illustration {
     background-color: var(--theme-background-secondary);
     border-width: 1px;
     border-style: solid;
@@ -99,10 +99,16 @@ figure.add-score-button {
     flex-direction: column;
     align-items: center;
 }
-figure.add-score-button .die {
+figure.button-illustration .die {
     font-size: 4ex;
 }
-figure.add-score-button figcaption {
+figure.button-illustration.undo-button .die svg {
+    width: 60%;
+    height: 60%;
+	left: 18%;
+	top: 27%;
+}
+figure.button-illustration figcaption {
     font-size: .8ex;
     margin-bottom: 2ex;
     color: var(--theme-foreground-hint);

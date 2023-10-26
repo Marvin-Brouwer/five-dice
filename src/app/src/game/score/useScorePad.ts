@@ -1,22 +1,37 @@
-import { createSignal, Accessor } from 'solid-js'
+import { createSignal, Accessor, createMemo } from 'solid-js'
 import { ScorePad, createScorePad } from './scorePad'
 import { ScoreApplication, applyScore } from './scoreApplicationProcessor'
 
 export type ScorePadAccessor =  Accessor<Readonly<ScorePad>>;
 export type ScorePadModifier = (score: ScoreApplication) => (Readonly<ScorePad> | void)
 
-export type ScorePadSignal = [state: ScorePadAccessor, stateSetter: ScorePadModifier];
+export type ScorePadSignal = {
+	getScorePad: ScorePadAccessor, applyScore: ScorePadModifier,
+	canUndoScore: Accessor<boolean>, undoScore: () => void
+};
 
 export function useScorePad(): ScorePadSignal {
 
+	const [getUndoState, setUndoState] = createSignal<ScorePad | undefined>(undefined)
 	const [currentScorePad, setScorePad] = createSignal<ScorePad>(createScorePad())
-    
+
 	function modifyScorePad(application: ScoreApplication) {
-		setScorePad(state => {
-			const test = applyScore(state, application)
-			console.log('currentScore', test)
-			return test
-		})
+		setUndoState(cloneScorePad(currentScorePad()))
+		setScorePad(state => applyScore(state, application))
 	}
-	return [currentScorePad, modifyScorePad]
+
+	const canUndoScore = createMemo(() => getUndoState() !== undefined, getUndoState)
+	function undoScore() {
+		const newScore = cloneScorePad(getUndoState()!)
+		console.log('undo', newScore)
+		setScorePad(newScore)
+		setUndoState(undefined)
+	}
+
+	return { getScorePad: currentScorePad, applyScore: modifyScorePad, canUndoScore, undoScore }
+}
+
+function cloneScorePad(scorePad: Readonly<ScorePad>): Readonly<ScorePad> {
+
+	return Object.assign({},  scorePad)
 }

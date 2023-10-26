@@ -6,9 +6,9 @@ import { isScoreApplicableToField } from '../../game/score/scoreFieldValidator'
 import { DialogState, createDialogSignal } from '../hacks/dialog'
 
 export type ScoreInput = [
-    one: DieValue | undefined, 
-    two: DieValue | undefined, 
-    three: DieValue | undefined, 
+    one: DieValue | undefined,
+    two: DieValue | undefined,
+    three: DieValue | undefined,
     four: DieValue | undefined ,
     five: DieValue | undefined
 ]
@@ -49,9 +49,9 @@ export type ScoreInputStateProps = {
 const createEmptyScore = () => (
     [ undefined, undefined, undefined, undefined, undefined ] as ScoreInput
 )
-export function createScoreInputState({ 
-	scorePad: [,setScorePad], 
-	round:[,setRound] 
+export function createScoreInputState({
+	scorePad: { applyScore },
+	round:[,setRound]
 }: ScoreInputStateProps): ScoreInputState {
 
 	const step = createSignal<'closed' | 'diceSelector' | 'rowSelector' | 'flushDiscard'>('closed')
@@ -92,7 +92,7 @@ export function createScoreInputState({
 		})
 	}
 
-    
+
 	function getSignalForDie(die: keyof ScoreInput) {
 		const accessorProxy = () => getScoreForDie(die)
 		const setterProxy = ((handler) => {
@@ -105,11 +105,11 @@ export function createScoreInputState({
 
 		return [accessorProxy, setterProxy] as Signal<DieValue | undefined>
 	}
-    
+
 	const getAllDiceSet = createMemo(
 		() => {
 			return Array.from(getScoreInput()).every(value => value !== undefined) === true
-		}, 
+		},
 		getScoreInput
 	)
 	const diceSelector: ScoreInputState['diceSelector'] = {
@@ -152,19 +152,19 @@ export function createScoreInputState({
 		if (isScoreApplicableToField(scoreValue, row)){
 
 			if (row !== 'flush') {
-				setScorePad({
+				applyScore({
 					field: row,
 					score: scoreValue
 				})
 			} else {
-				setScorePad({
+				applyScore({
 					field: row,
 					score: scoreValue,
 					discard: getFlushDiscard()!
 				})
 			}
 		} else{
-			setScorePad({
+			applyScore({
 				field: row,
 				score: discard()
 			})
@@ -181,7 +181,7 @@ export function createScoreInputState({
 
 	function nextStep() {
 		const currentStep = getStep()
-        
+
 		if (currentStep === 'diceSelector') {
 			diceSelectorDialogSignal.closeDialog(false)
 			rowSelectorDialogSignal.openDialog()
@@ -192,7 +192,7 @@ export function createScoreInputState({
 			flushDiscardDialogSignal.openDialog()
 			return setStep('flushDiscard')
 		}
-        
+
 		resetAndClose()
 	}
 	return {

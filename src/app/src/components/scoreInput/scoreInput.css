@@ -56,10 +56,16 @@ section.score-input .set-score button.enter-button {
     right: 1.4em;
     bottom: 1.3em;
 }
-section.score-input .set-score button.reset-button {
+section.score-input .set-score button.undo-button {
     font-size: 1.5ex;
     position: absolute;
     right: 2.8em;
+    bottom: 1.38em;
+}
+section.score-input .set-score button.reset-button {
+    font-size: 1.5ex;
+    position: absolute;
+    right: 3.9em;
     bottom: 1.38em;
 }
 
@@ -69,6 +75,13 @@ section.score-input .set-score button.reset-button {
     left: calc(var(--dice-padding) * 2);
     /* right: calc(var(--dice-padding) * 2); */
     width: calc(100% - (var(--dice-padding) * 4));
+}
+.set-score button.die-button.undo-button svg  {
+    top: calc(var(--dice-padding) * 3.5);
+    /* bottom: calc(var(--dice-padding) * 2); */
+    left: calc(var(--dice-padding) * .8);
+    /* right: calc(var(--dice-padding) * 2); */
+    width: calc(100% - (var(--dice-padding) * 2));
 }
 
 section.title-section{

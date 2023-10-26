@@ -6,17 +6,17 @@ import { KeyboardContextProvider } from '../../context/keyboardContext'
 
 const round = createSignal(1)
 const scorePad = useScorePad()
-const [getScorePad] = scorePad
+const { getScorePad } = scorePad
 
 const createPlayerNameSignal = () => {
-    
+
 	const playerName = createSignal('')
 	const [getPlayerName, setPlayerName] = playerName
 
 	onMount(() => {
 		const playerName = localStorage.getItem('playerName')
 		setPlayerName(playerName ?? '')
-        
+
 		createEffect(() => {
 			localStorage.setItem('playerName', getPlayerName())
 		}, getPlayerName)
@@ -28,9 +28,9 @@ const createPlayerNameSignal = () => {
 export const Game: Component = () => {
 
 	const playerName = createPlayerNameSignal()
-    
+
 	return (<KeyboardContextProvider>
 		<ScoreCard playerName={playerName} round={round} getScorePad={getScorePad} />
-		<ScoreInputDialog round={round} scorePad={scorePad}  />
+		<ScoreInputDialog round={round} scorePad={scorePad} />
 	</KeyboardContextProvider>)
 }
