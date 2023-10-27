@@ -55,9 +55,11 @@ function isLargeStraight(score: ValidScore): boolean {
 	const largeStraightSize = 5
 	const distinct = new Set(score)
 
-	// Because a large straight needs all dice to be different, a distinct check is good enough
-	return distinct.size >= largeStraightSize
+	// In the case of a large straight, we can just check all numbers to be unique and then if 1 and 6 are exclusively included
+	const isStraight = distinct.size >= largeStraightSize
+	const isConsecutive = !(distinct.has(1) && distinct.has(6))
 
+	return isStraight && isConsecutive
 }
 
 function isSmallStraight(score: ValidScore): boolean {
@@ -68,7 +70,7 @@ function isSmallStraight(score: ValidScore): boolean {
 	// First check if there's at least 4 distinct numbers
 	// If that's the case, check if the numbers are consecutive, which is expensive
 
-	const isStraight = () => 	distinct.size >= smallStraightSize
+	const isStraight = distinct.size >= smallStraightSize
 	const countConsecutive = () => Array.from(distinct)
 		.sort()
 		.reduce((previousCount, currentValue, index, all) => {
@@ -86,7 +88,7 @@ function isSmallStraight(score: ValidScore): boolean {
 		}, [0])
 	const hasFourConsecutive = () => countConsecutive().some(count =>  count >= smallStraightSize)
 
-	const result = isStraight() && hasFourConsecutive()
+	const result = isStraight && hasFourConsecutive()
 
 	return result
 

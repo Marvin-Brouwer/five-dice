@@ -33,7 +33,7 @@ jobs:
         with:
           path: './src/app'
           package-manager: pnpm@latest
-          node-version: 19
+          node-version: 20
 
   deploy:
     needs: build
