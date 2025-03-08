@@ -16,7 +16,7 @@
 	"tslint.packageManager": "pnpm",
 	"[Typescript]": {
 		"editor.codeActionsOnSave": {
-			"source.fixAll.tslint": true
+			"source.fixAll.tslint": "explicit"
 		}
 	},
 	"[astro]": {
