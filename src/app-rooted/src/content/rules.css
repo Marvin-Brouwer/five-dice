@@ -1,0 +1,35 @@
+.page {
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+}
+
+.page h1 {
+	font-family: var(--font-family-display);
+	margin-top: 0;
+}
+
+.page h2 {
+	margin-top: var(--space-5);
+}
+
+.cta {
+	display: inline-block;
+	background: var(--color-primary);
+	color: var(--color-primary-contrast);
+	padding: var(--space-2) var(--space-4);
+	border-radius: var(--radius-md);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.cta:hover, .cta:focus-visible {
+	filter: brightness(1.1);
+}
+
+.score-options {
+	padding-left: var(--space-5);
+}
+
+.score-options li {
+	margin-bottom: var(--space-2);
+}

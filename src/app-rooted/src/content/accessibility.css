@@ -1,0 +1,13 @@
+.page {
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+}
+
+.page h1 {
+	font-family: var(--font-family-display);
+	margin-top: 0;
+}
+
+.page h2 {
+	margin-top: var(--space-5);
+}

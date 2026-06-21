@@ -1,0 +1,62 @@
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-family-base);
+	font-size: var(--font-size-base);
+	line-height: var(--line-height-base);
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+#app {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+main {
+	flex: 1;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	padding: var(--page-padding);
+}
+
+a {
+	color: var(--color-primary);
+}
+
+:focus-visible {
+	outline: var(--focus-ring-width) solid var(--color-focus-ring);
+	outline-offset: 2px;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	background: var(--color-text);
+	color: var(--color-text-inverted);
+	padding: var(--space-2) var(--space-4);
+	z-index: 999;
+}
+
+.skip-link:focus {
+	left: var(--space-2);
+	top: var(--space-2);
+}
+
+button {
+	font: inherit;
+	cursor: pointer;
+}

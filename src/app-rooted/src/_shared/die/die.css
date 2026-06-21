@@ -1,0 +1,30 @@
+.die {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--die-size);
+	height: var(--die-size);
+	background: var(--color-die-face);
+	border: 2px solid var(--color-die-border);
+	border-radius: var(--radius-md);
+	color: var(--color-die-dot);
+	font-family: var(--font-family-display);
+	font-size: calc(var(--die-size) * 0.55);
+	font-weight: 700;
+	line-height: 1;
+	user-select: none;
+}
+
+.die-text {
+	font-size: calc(var(--die-size) * 0.32);
+	font-family: var(--font-family-base);
+	font-weight: 600;
+	color: var(--color-text-muted);
+}
+
+.die-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--die-gap);
+	justify-content: center;
+}

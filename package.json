@@ -4,8 +4,16 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "pnpm --filter @five-dice/app test",
-    "lint": "pnpm --filter @five-dice/app lint"
+    "dev": "pnpm --filter @five-dice/app-rooted dev",
+    "build": "pnpm --filter @five-dice/app-rooted build",
+    "preview": "pnpm --filter @five-dice/app-rooted preview",
+    "test": "pnpm --filter @five-dice/app-rooted test",
+    "lint": "pnpm --filter @five-dice/app-rooted lint",
+    "test:all": "pnpm -r test",
+    "dev:legacy": "pnpm --filter @five-dice/app dev",
+    "build:legacy": "pnpm --filter @five-dice/app build",
+    "test:legacy": "pnpm --filter @five-dice/app test",
+    "lint:legacy": "pnpm --filter @five-dice/app lint"
   },
   "devDependencies": {
     "astro": "^2.3.0"
