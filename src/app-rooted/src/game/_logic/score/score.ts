@@ -23,16 +23,16 @@ type AnyScoreInput =
 function discardToString() {
 	return '/'
 }
-const discardedScore: DiscardedScore = Object.assign({
+const discardedScore: Readonly<DiscardedScore> = Object.freeze(Object.assign({
 	[scoreSymbol]: 'discardedScore'
 },{
 
 	[inspectSymbol]: discardToString,
 
 	toString: discardToString
-}) as DiscardedScore
+})) as Readonly<DiscardedScore>
 
-export function discard(): DiscardedScore { return discardedScore }
+export function discard(): Readonly<DiscardedScore> { return discardedScore }
 export function score(value: ReadonlyState<[one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue]>): ValidScore {
 
 	function toString() {
