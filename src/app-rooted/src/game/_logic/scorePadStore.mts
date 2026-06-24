@@ -5,13 +5,9 @@ import { type ScoreApplication, applyScore } from './score/scoreApplicationProce
 import { createScorePad, type ScorePad } from './score/scorePad.ts'
 
 export type GameState = {
-	pad: Readonly<ScorePad>
-	undoPad: Readonly<ScorePad> | undefined
+	pad: ScorePad
+	undoPad: ScorePad | undefined
 	round: number
-}
-
-function cloneScorePad(pad: Readonly<ScorePad>): Readonly<ScorePad> {
-	return Object.assign({}, pad)
 }
 
 function initialState(): GameState {
@@ -36,21 +32,21 @@ export function createScorePadStore(): ScorePadStore {
 	function apply(application: ScoreApplication) {
 		const current = store.value
 		const nextPad = applyScore(current.pad, application)
-		store.update(() => ({
-			pad: nextPad,
-			undoPad: cloneScorePad(current.pad),
-			round: current.round + 1,
-		}))
+		store.update(state => {
+			state.undoPad = state.pad
+			state.pad = nextPad
+			state.round = current.round + 1
+		})
 	}
 
 	function undo() {
 		const current = store.value
 		if (!current.undoPad) return
-		store.update(() => ({
-			pad: cloneScorePad(current.undoPad!),
-			undoPad: undefined,
-			round: Math.max(1, current.round - 1),
-		}))
+		store.update(state => {
+			state.pad = state.undoPad!
+			state.undoPad = undefined
+			state.round = Math.max(1, current.round - 1)
+		})
 	}
 
 	function canUndo() {

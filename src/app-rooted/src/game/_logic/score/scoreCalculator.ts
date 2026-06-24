@@ -1,3 +1,5 @@
+import type { ReadonlyState } from '@rooted/store'
+
 import type { ScoreField } from '../gameConstants.js'
 import { ValidScore, isDiscarded } from './score'
 import type { ScorePad } from './scorePad'
@@ -5,7 +7,7 @@ import { InvalidScoreError } from './invalidScoreError.js'
 import { isFlushScore } from './score'
 import type { DieValue } from '../gameConstants'
 
-export function calculateScoreForPad(scorePad: ScorePad, field: ScoreField): number {
+export function calculateScoreForPad(scorePad: ReadonlyState<ScorePad>, field: ScoreField): number {
 
 	const score = scorePad[field]
 
@@ -19,7 +21,7 @@ export function calculateScoreForPad(scorePad: ScorePad, field: ScoreField): num
 	return calculateScore(score, field)
 }
 
-export function calculateScore(score: ValidScore, field: ScoreField): number {
+export function calculateScore(score: ReadonlyState<ValidScore>, field: ScoreField): number {
 
 	switch (field) {
 	case 'aces': return diceSum(score, 1)
@@ -34,26 +36,26 @@ export function calculateScore(score: ValidScore, field: ScoreField): number {
 	case 'fullHouse': return 25
 	case 'smallStraight': return 30
 	case 'largeStraight': return 40
-	case 'flush': return calculateFlush([score])
+	case 'flush': return calculateFlush([score as ValidScore])
 	case 'chance': return diceTotal(score)
 	}
 }
 
-function diceSum(score: ValidScore, value: DieValue): number {
+function diceSum(score: ReadonlyState<ValidScore>, value: DieValue): number {
 
 	return score.reduce((reducer, currentDie) => currentDie === value
 		? reducer + value
 		: reducer,
 	0)
 }
-function diceTotal(score: ValidScore): number {
+function diceTotal(score: ReadonlyState<ValidScore>): number {
 
 	return score.reduce((reducer, currentDie) => reducer + currentDie, 0)
 }
 
 const firstFlushScore = 50
 const additionalFlushScore = 100
-export function calculateFlush(score: Array<ValidScore>): number {
+export function calculateFlush(score: ReadonlyArray<ReadonlyState<ValidScore>>): number {
 
 	if (score.length === 0) return 0
 	if (score.length === 1) return firstFlushScore
@@ -63,7 +65,7 @@ export function calculateFlush(score: Array<ValidScore>): number {
 		.reduce((reducer) => reducer + additionalFlushScore, firstFlushScore)
 }
 
-export function calculatePartOneSubTotal(scorePad: ScorePad): number {
+export function calculatePartOneSubTotal(scorePad: ReadonlyState<ScorePad>): number {
 
 	return (
 		calculateScoreForPad(scorePad, 'aces') +
@@ -87,7 +89,7 @@ export function calculatePartOneBonus(partOneSubTotal: number): number {
 	return partOneBonus
 }
 
-export function calculatePartTwoTotal(scorePad: ScorePad): number {
+export function calculatePartTwoTotal(scorePad: ReadonlyState<ScorePad>): number {
 
 	return (
 		calculateScoreForPad(scorePad, 'threeOfKind') +

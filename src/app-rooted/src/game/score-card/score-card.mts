@@ -1,4 +1,5 @@
 import { component, type ComponentContext, type CssClass } from '@rooted/components'
+import type { ReadonlyState } from '@rooted/store'
 
 import { roundAmount, type ScoreField } from '../_logic/gameConstants.ts'
 import { isDiscarded, isFlushScore } from '../_logic/score/score.ts'
@@ -90,7 +91,7 @@ function renderRoundLabel(round: number): string {
 	return `Round ${round} / ${roundAmount}`
 }
 
-function renderSection(element: ComponentContext['element'], title: string, fields: ScoreField[], pad: Readonly<ScorePad>): Node[] {
+function renderSection(element: ComponentContext['element'], title: string, fields: ScoreField[], pad: ReadonlyState<ScorePad>): Node[] {
 	const rows = fields.map(field => renderRow(element, field, pad))
 	return [
 		element('h2', { classes: styles.sectionTitle, textContent: title }),
@@ -112,7 +113,7 @@ function renderSection(element: ComponentContext['element'], title: string, fiel
 	]
 }
 
-function renderRow(element: ComponentContext['element'], field: ScoreField, pad: Readonly<ScorePad>) {
+function renderRow(element: ComponentContext['element'], field: ScoreField, pad: ReadonlyState<ScorePad>) {
 	const label = rowDisplayLabels[field]
 	const cell = pad[field]
 	let scoreText = '—'
@@ -148,7 +149,7 @@ function renderRow(element: ComponentContext['element'], field: ScoreField, pad:
 	})
 }
 
-function renderTotals(element: ComponentContext['element'], pad: Readonly<ScorePad>): Node[] {
+function renderTotals(element: ComponentContext['element'], pad: ReadonlyState<ScorePad>): Node[] {
 	const partOne = calculatePartOneSubTotal(pad)
 	const bonus = calculatePartOneBonus(partOne)
 	const partTwo = calculatePartTwoTotal(pad)

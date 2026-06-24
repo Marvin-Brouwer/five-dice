@@ -1,3 +1,5 @@
+import type { ReadonlyState } from '@rooted/store'
+
 import type { DieValue } from '../gameConstants.js'
 
 const inspectSymbol = Symbol.for('nodejs.util.inspect.custom')
@@ -11,7 +13,12 @@ export type DiscardedScore =
     & { [scoreSymbol]: 'discardedScore', toString(): string }
 
 export type ScoreValue = ValidScore | DiscardedScore
-export type ScoreContainer = ScoreValue | Array<ValidScore>
+export type ScoreContainer = ScoreValue | ReadonlyArray<ValidScore>
+
+type AnyScoreInput =
+    | ReadonlyState<ValidScore>
+    | ReadonlyState<DiscardedScore>
+    | ReadonlyArray<ReadonlyState<ValidScore>>
 
 function discardToString() {
 	return '/'
@@ -41,10 +48,10 @@ export function score(value: [one: DieValue, two: DieValue, three: DieValue, fou
 		}) as ValidScore
 }
 
-export function isDiscarded(score: Array<ValidScore> | ValidScore | DiscardedScore): score is DiscardedScore {
+export function isDiscarded(score: AnyScoreInput): score is ReadonlyState<DiscardedScore> {
 	return score === discardedScore
 }
-export function isFlushScore(score: Array<ValidScore> | ValidScore | DiscardedScore): score is Array<ValidScore> {
+export function isFlushScore(score: AnyScoreInput): score is ReadonlyArray<ReadonlyState<ValidScore>> {
 	if (score === undefined) return false
 	if (isDiscarded(score)) return false
 

@@ -1,3 +1,5 @@
+import type { ReadonlyState } from '@rooted/store'
+
 import { ValidScore, isDiscarded, DiscardedScore } from './score'
 import type { ScoreField } from '../gameConstants'
 import type { ScorePad } from './scorePad'
@@ -26,7 +28,7 @@ function isDiscardedFlushApplication(application: ScoreApplication): application
 	return application.field === 'flush' && isDiscarded(application.score)
 }
 
-export function applyScore(scorePad: Readonly<ScorePad>, application: ScoreApplication) {
+export function applyScore(scorePad: ReadonlyState<ScorePad>, application: ScoreApplication) {
 
 	console.log('applyScore', application)
 	const { field, score } = application
@@ -45,7 +47,7 @@ export function applyScore(scorePad: Readonly<ScorePad>, application: ScoreAppli
 
 }
 
-function processFlushAppendScore(scorePad: Readonly<ScorePad>, application: FlushApplication): ScorePad {
+function processFlushAppendScore(scorePad: ReadonlyState<ScorePad>, application: FlushApplication): ScorePad {
 
 	const { field, score, discard } = application
 
@@ -65,25 +67,25 @@ function processFlushAppendScore(scorePad: Readonly<ScorePad>, application: Flus
 	return Object.assign({},  scorePad, {
 		[field]: [...scoreField, score],
 		[discard]: discardScore()
-	})
+	}) as ScorePad
 }
-function processFlushDiscardScore(scorePad: Readonly<ScorePad>, application: DiscardFlushApplication): ScorePad {
+function processFlushDiscardScore(scorePad: ReadonlyState<ScorePad>, application: DiscardFlushApplication): ScorePad {
 
 	const { field, score } = application
 
 	if (isDiscarded(scorePad[field]))
 		throw InvalidScoreApplicationError.scoreAlreadyApplied(scorePad, application)
-	if ((scorePad[field] as Array<ValidScore>).length != 0)
+	if ((scorePad[field] as ReadonlyArray<ValidScore>).length != 0)
 		throw InvalidScoreApplicationError.cannotDiscardFlush(scorePad, application)
 
-	return Object.assign({},  scorePad, { [field]: score })
+	return Object.assign({},  scorePad, { [field]: score }) as ScorePad
 }
-function processSimpleScore(scorePad: Readonly<ScorePad>, application: SimpleScoreApplication): ScorePad {
+function processSimpleScore(scorePad: ReadonlyState<ScorePad>, application: SimpleScoreApplication): ScorePad {
 
 	const { field, score } = application
 
 	if (scorePad[field] !== undefined)
 		throw InvalidScoreApplicationError.scoreAlreadyApplied(scorePad, application)
 
-	return Object.assign({},  scorePad, { [field]: score })
+	return Object.assign({},  scorePad, { [field]: score }) as ScorePad
 }
