@@ -31,7 +31,7 @@ export type ScoreInputOptions = {
 export const ScoreInput = component<ScoreInputOptions>({
 	name: 'score-input',
 	styles,
-	onMount({ append, element, signal, options }) {
+	onMount({ append, element, signal, options, on }) {
 		const { store } = options
 		const input = createStore<InputState>(initialInput())
 
@@ -42,11 +42,10 @@ export const ScoreInput = component<ScoreInputOptions>({
 			return state.dice.some(d => d !== undefined)
 		}
 
-		window.addEventListener('beforeunload', (event) => {
+		on('window', 'beforeunload', (event) => {
 			if (!hasUnappliedInput()) return
 			event.preventDefault()
-			event.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?'
-		}, { signal })
+		})
 
 		const diceFieldset = element('fieldset', { classes: styles.fieldset })
 		const rowFieldset = element('fieldset', { classes: styles.fieldset })
