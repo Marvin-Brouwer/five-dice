@@ -1,8 +1,9 @@
 import { createEchoDelayEffect } from './echo-delay.ts'
 
-const balloonPopUrl = '/audio/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav'
-const trumpetUrl = '/audio/383154__profcalla__re_frullato_tromba.mp3'
-const partyHornUrl = '/audio/170583__audiosmedia__party-horn.wav'
+const audioBase = `${import.meta.env.BASE_URL}audio`
+const balloonPopUrl = `${audioBase}/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`
+const trumpetUrl = `${audioBase}/383154__profcalla__re_frullato_tromba.mp3`
+const partyHornUrl = `${audioBase}/170583__audiosmedia__party-horn.wav`
 
 type PitchShifter = (audioContext: AudioContext, node: AudioNode) => AudioNode
 

@@ -12,7 +12,7 @@ type SimpleScoreApplication =
 type DiscardFlushApplication =
     | { field: 'flush', score: DiscardedScore}
 type FlushApplication =
-    | { field: 'flush', score: ValidScore, discard: Exclude<ScoreField, 'flush'> }
+    | { field: 'flush', score: ValidScore, discard?: Exclude<ScoreField, 'flush'> }
 
 export type ScoreApplication =
     | SimpleScoreApplication
@@ -60,6 +60,12 @@ function processFlushAppendScore(scorePad: ReadonlyState<ScorePad>, application:
 	const currentFlushValue = scorePad.flush
 	if (!discard && !isDiscarded(currentFlushValue) && currentFlushValue.length > 0)
 		throw InvalidScoreApplicationError.noDiscardOnFlush(scorePad, application)
+
+	if (discard === undefined) {
+		return Object.assign({}, scorePad, {
+			[field]: [...scoreField, score],
+		}) as ScorePad
+	}
 
 	if (scorePad[discard] !== undefined)
 		throw InvalidScoreApplicationError.scoreAlreadyApplied(scorePad, application)

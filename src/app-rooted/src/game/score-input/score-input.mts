@@ -86,7 +86,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 						liveAnnounce.textContent = `Flush applied. Discarded ${rowDisplayLabels[flushDiscardField].title}.`
 					}
 					else {
-						store.apply({ field: 'flush', score: scoreValue, discard: 'aces' as Exclude<ScoreField, 'flush'> })
+						store.apply({ field: 'flush', score: scoreValue })
 						liveAnnounce.textContent = 'First flush applied.'
 					}
 				}
