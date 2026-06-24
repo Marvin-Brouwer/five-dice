@@ -1,6 +1,8 @@
 import { component } from '@rooted/components'
 import JSConfetti from 'js-confetti'
 
+import { type ScoreField } from './_logic/gameConstants.ts'
+import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
 import { playGameEndFanfare } from './audio/audio.ts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
@@ -11,8 +13,25 @@ import styles from './game.css'
 export const Game = component({
 	name: 'game-page',
 	styles,
-	onMount({ append, element, create, signal }) {
+	onMount({ append, element, create, signal, on }) {
 		const store = createScorePadStore()
+
+		function hasGameProgress(): boolean {
+			const pad = store.value.pad
+			for (const key of Object.keys(pad) as ScoreField[]) {
+				const cell = pad[key]
+				if (cell === undefined) continue
+				if (key === 'flush' && !isDiscarded(cell) && isFlushScore(cell) && cell.length === 0) continue
+				return true
+			}
+			return false
+		}
+
+		on('window', 'beforeunload', (event) => {
+			if (!hasGameProgress()) return
+			event.preventDefault()
+			event.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?'
+		})
 
 		const undoButton = element('button', {
 			type: 'button',
