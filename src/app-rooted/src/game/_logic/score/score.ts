@@ -33,13 +33,14 @@ const discardedScore: DiscardedScore = Object.assign({
 }) as DiscardedScore
 
 export function discard(): DiscardedScore { return discardedScore }
-export function score(value: [one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue]): ValidScore {
+export function score(value: ReadonlyState<[one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue]>): ValidScore {
 
+	const tuple: [DieValue, DieValue, DieValue, DieValue, DieValue] = [value[0], value[1], value[2], value[3], value[4]]
 	function toString() {
-		return `[ ${value.join(' ')} ]`
+		return `[ ${tuple.join(' ')} ]`
 	}
 	return Object.assign(
-		value, {
+		tuple, {
 
 			[scoreSymbol]: 'validScore',
 			[inspectSymbol]: toString,
