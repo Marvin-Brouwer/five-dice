@@ -188,6 +188,10 @@ export const RowOverlay = component<RowOverlayOptions>({
 			document.body.style.overflow = ''
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
+			fieldset.replaceChildren()
+			activeRadios = []
+			activeLabels = []
+			confirmButton.disabled = true
 		}
 
 		open.on('change', signal, ({ detail }) => {
