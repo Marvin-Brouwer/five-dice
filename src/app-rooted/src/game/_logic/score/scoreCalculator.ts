@@ -55,7 +55,7 @@ function diceTotal(score: ReadonlyState<ValidScore>): number {
 
 const firstFlushScore = 50
 const additionalFlushScore = 100
-export function calculateFlush(score: ReadonlyArray<ReadonlyState<ValidScore>>): number {
+export function calculateFlush(score: ReadonlyState<Array<ValidScore>>): number {
 
 	if (score.length === 0) return 0
 	if (score.length === 1) return firstFlushScore
