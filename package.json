@@ -22,7 +22,12 @@
     "overrides": {
       "undici@<5.19.1": ">=5.19.1",
       "undici@>=2.0.0 <5.19.1": ">=5.19.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@jasikpark/astro-svg-loader",
+      "esbuild",
+      "sharp"
+    ]
   },
   "volta": {
     "node": "20.9.0"
