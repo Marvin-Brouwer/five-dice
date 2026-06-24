@@ -32,7 +32,8 @@ export const Game = component({
 		on('window', 'beforeunload', (event) => {
 			if (!hasGameProgress()) return
 			event.preventDefault()
-			event.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?'
+			const message = 'You have a scorepad with changes, are you sure you want to reload the page?'
+			event.returnValue = message
 		})
 
 		const enterScoreButton = element('button', {
