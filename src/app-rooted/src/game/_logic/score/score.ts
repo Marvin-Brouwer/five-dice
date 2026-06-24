@@ -51,7 +51,8 @@ export function score(value: ReadonlyState<[one: DieValue, two: DieValue, three:
 }
 
 export function isDiscarded(score: AnyScoreInput): score is ReadonlyState<DiscardedScore> {
-	return score === discardedScore
+	if (Array.isArray(score)) return false
+	return (score as Record<symbol, unknown>)[scoreSymbol] === 'discardedScore'
 }
 export function isFlushScore(score: AnyScoreInput): score is ReadonlyState<Array<ValidScore>> {
 	if (score === undefined) return false
