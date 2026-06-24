@@ -1,0 +1,103 @@
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.title {
+	margin: 0;
+	font-size: 1.125rem;
+}
+
+.dice-fieldset,
+.keypad-fieldset {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.legend {
+	font-size: 0.875rem;
+	color: var(--color-text-muted, currentColor);
+	padding: 0 0 0.25rem;
+}
+
+.slots {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 0.5rem;
+}
+
+.slot {
+	font: inherit;
+	font-size: 1.25rem;
+	font-variant-numeric: tabular-nums;
+	padding: 0.5rem 0;
+	border: 1px solid var(--color-border, #888);
+	border-radius: 0.25rem;
+	background: var(--color-surface, transparent);
+	color: var(--color-text, currentColor);
+	cursor: pointer;
+}
+
+.slot.focused {
+	outline: 2px solid var(--color-focus, currentColor);
+	outline-offset: 1px;
+	border-color: transparent;
+}
+
+.slot:focus-visible {
+	outline: 2px solid var(--color-focus, currentColor);
+	outline-offset: 1px;
+}
+
+.keypad {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 0.5rem;
+}
+
+.keypad-button {
+	font: inherit;
+	font-size: 1.125rem;
+	padding: 0.5rem 0;
+	border: 1px solid var(--color-border, #888);
+	border-radius: 0.25rem;
+	background: var(--color-surface, transparent);
+	color: var(--color-text, currentColor);
+	cursor: pointer;
+}
+
+.keypad-button:hover,
+.keypad-button:focus-visible {
+	background: var(--color-surface-alt, #eee);
+}
+
+.live-region {
+	margin: 0;
+	font-size: 0.8125rem;
+	color: var(--color-text-muted, currentColor);
+}
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+}
+
+.cancel-button,
+.confirm-button {
+	font: inherit;
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--color-border, #888);
+	border-radius: 0.25rem;
+	background: var(--color-surface, transparent);
+	color: var(--color-text, currentColor);
+	cursor: pointer;
+}
+
+.confirm-button[disabled] {
+	opacity: 0.5;
+	cursor: not-allowed;
+}

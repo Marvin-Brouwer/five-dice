@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import { createStore } from '@rooted/store'
 import JSConfetti from 'js-confetti'
 
 import { type ScoreField } from './_logic/gameConstants.ts'
@@ -15,6 +16,7 @@ export const Game = component({
 	styles,
 	onMount({ append, element, create, signal, on }) {
 		const store = createScorePadStore()
+		const openRequest = createStore(false)
 
 		function hasGameProgress(): boolean {
 			const pad = store.value.pad
@@ -33,10 +35,23 @@ export const Game = component({
 			event.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?'
 		})
 
+		const enterScoreButton = element('button', {
+			type: 'button',
+			classes: styles.toolbarButton,
+			textContent: 'Enter score',
+			disabled: store.gameEnded(),
+			on: {
+				click() {
+					if (store.gameEnded()) return
+					openRequest.update(() => true)
+				},
+			},
+		})
+
 		const undoButton = element('button', {
 			type: 'button',
 			classes: styles.toolbarButton,
-			textContent: 'Undo last round',
+			textContent: 'Undo last turn',
 			disabled: !store.canUndo(),
 			on: {
 				click() {
@@ -59,11 +74,6 @@ export const Game = component({
 			},
 		})
 
-		const inputWrapper = element('section', {
-			classes: styles.inputWrapper,
-			aria: { label: 'Score input' },
-		})
-
 		const endBanner = element('aside', {
 			classes: [styles.endBanner, styles.hidden],
 			role: 'status',
@@ -75,12 +85,12 @@ export const Game = component({
 		let lastGameEnded = false
 
 		function syncToolbar() {
+			enterScoreButton.disabled = store.gameEnded()
 			undoButton.disabled = !store.canUndo() || store.gameEnded()
 		}
 
-		function syncInputVisibility() {
+		function syncEndBanner() {
 			if (store.gameEnded()) {
-				inputWrapper.classList.add(styles.hidden!)
 				endBanner.classList.remove(styles.hidden!)
 				if (!lastGameEnded) {
 					lastGameEnded = true
@@ -89,29 +99,27 @@ export const Game = component({
 				}
 			}
 			else {
-				inputWrapper.classList.remove(styles.hidden!)
 				endBanner.classList.add(styles.hidden!)
 				lastGameEnded = false
 			}
 		}
 
 		syncToolbar()
-		syncInputVisibility()
-		inputWrapper.append(create(ScoreInput, { store }))
+		syncEndBanner()
 
 		store.on('change', signal, () => {
 			syncToolbar()
-			syncInputVisibility()
+			syncEndBanner()
 		})
 
 		append(
 			element('div', {
 				classes: styles.toolbar,
-				children: [resetButton, undoButton],
+				children: [enterScoreButton, undoButton, resetButton],
 			}),
 			create(ScoreCard, { store }),
 			endBanner,
-			inputWrapper,
+			create(ScoreInput, { store, openRequest }),
 		)
 	},
 })

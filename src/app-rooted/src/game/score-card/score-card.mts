@@ -1,8 +1,8 @@
-import { component, type ComponentContext, type CssClass } from '@rooted/components'
+import { component, cssClass, type ComponentContext, type CssClass } from '@rooted/components'
 import type { ReadonlyState } from '@rooted/store'
 
 import { roundAmount, type ScoreField } from '../_logic/gameConstants.ts'
-import { isDiscarded, isFlushScore } from '../_logic/score/score.ts'
+import { isDiscarded, isFlushScore, type ValidScore } from '../_logic/score/score.ts'
 import {
 	calculateGameTotal,
 	calculatePartOneBonus,
@@ -41,9 +41,30 @@ export const ScoreCard = component<ScoreCardOptions>({
 				input(event) {
 					const value = (event.currentTarget as HTMLInputElement).value
 					playerNameStore.update(() => value)
+					syncClearButton()
 				},
 			},
 		})
+
+		const clearNameButton = element('button', {
+			type: 'button',
+			classes: styles.nameClearButton,
+			textContent: '×',
+			aria: { label: 'Clear name' },
+			hidden: playerNameStore.value.length === 0,
+			on: {
+				click() {
+					playerNameStore.update(() => '')
+					nameInput.value = ''
+					nameInput.focus()
+					syncClearButton()
+				},
+			},
+		})
+
+		function syncClearButton() {
+			clearNameButton.hidden = nameInput.value.length === 0
+		}
 
 		const roundLabel = element('span', {
 			classes: styles.roundLabel,
@@ -75,7 +96,10 @@ export const ScoreCard = component<ScoreCardOptions>({
 						htmlFor: 'player-name',
 						textContent: 'Player',
 					}),
-					nameInput,
+					element('span', {
+						classes: styles.nameInputWrap,
+						children: [nameInput, clearNameButton],
+					}),
 					roundLabel,
 				],
 			}),
@@ -101,9 +125,9 @@ function renderSection(element: ComponentContext['element'], title: string, fiel
 				element('thead', {
 					children: element('tr', {
 						children: [
-							element('th', { textContent: 'Row', scope: 'col' }),
-							element('th', { textContent: 'Description', scope: 'col' }),
-							element('th', { textContent: 'Score', scope: 'col' }),
+							element('th', { textContent: 'Label', scope: 'col' }),
+							element('th', { textContent: 'Roll', scope: 'col', classes: styles.rollHeader }),
+							element('th', { textContent: 'Score', scope: 'col', classes: styles.scoreHeader }),
 						],
 					}),
 				}),
@@ -111,6 +135,17 @@ function renderSection(element: ComponentContext['element'], title: string, fiel
 			],
 		}),
 	]
+}
+
+function renderRoll(cell: ReadonlyState<ValidScore | ScorePad['flush']> | undefined): string {
+	if (cell === undefined) return ''
+	if (isDiscarded(cell)) return ''
+	if (isFlushScore(cell)) {
+		if (cell.length === 0) return ''
+		const latest = cell[cell.length - 1]!
+		return Array.from(latest).join(' ')
+	}
+	return Array.from(cell as ReadonlyState<ValidScore>).join(' ')
 }
 
 function renderRow(element: ComponentContext['element'], field: ScoreField, pad: ReadonlyState<ScorePad>) {
@@ -127,26 +162,21 @@ function renderRow(element: ComponentContext['element'], field: ScoreField, pad:
 		scoreText = '—'
 		extraClass = styles.discarded
 	}
-	else if (isFlushScore(cell)) {
-		const value = calculateScoreForPad(pad, field)
-		scoreText = String(value)
-	}
 	else {
 		const value = calculateScoreForPad(pad, field)
 		scoreText = String(value)
 	}
 
-	return element('tr', {
-		classes: extraClass,
+	const row = element('tr', {
+		classes: [extraClass, cssClass(styles.rowApplied, scoreText !== '' && scoreText !== '—')],
 		children: [
 			element('th', { scope: 'row', textContent: label.title }),
-			element('td', {
-				classes: styles.descriptionCell,
-				textContent: label.scoreDescription.short ?? label.scoreDescription.long,
-			}),
+			element('td', { classes: styles.rollCell, textContent: renderRoll(cell) }),
 			element('td', { classes: styles.scoreCell, textContent: scoreText }),
 		],
 	})
+	row.dataset.field = field
+	return row
 }
 
 function renderTotals(element: ComponentContext['element'], pad: ReadonlyState<ScorePad>): Node[] {
