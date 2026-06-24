@@ -45,6 +45,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 		on('window', 'beforeunload', (event) => {
 			if (!hasUnappliedInput()) return
 			event.preventDefault()
+			event.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?'
 		})
 
 		const diceFieldset = element('fieldset', { classes: styles.fieldset })
