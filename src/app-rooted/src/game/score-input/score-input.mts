@@ -35,6 +35,19 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const { store } = options
 		const input = createStore<InputState>(initialInput())
 
+		function hasUnappliedInput(): boolean {
+			const state = input.value
+			if (state.row !== undefined) return true
+			if (state.flushDiscard !== undefined) return true
+			return state.dice.some(d => d !== undefined)
+		}
+
+		window.addEventListener('beforeunload', (event) => {
+			if (!hasUnappliedInput()) return
+			event.preventDefault()
+			event.returnValue = 'You have a scorepad with changes, are you sure you want to reload the page?'
+		}, { signal })
+
 		const diceFieldset = element('fieldset', { classes: styles.fieldset })
 		const rowFieldset = element('fieldset', { classes: styles.fieldset })
 		const flushFieldset = element('fieldset', { classes: [styles.fieldset, styles.hidden] })
