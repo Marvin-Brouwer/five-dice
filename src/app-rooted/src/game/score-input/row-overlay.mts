@@ -24,7 +24,10 @@ export const RowOverlay = component<RowOverlayOptions>({
 	styles,
 	onMount({ append, element, signal, options, on }) {
 		const { open, title, availableFields, onConfirm, onCancel } = options
-		const titleId = `row-overlay-title-${Math.random().toString(36).slice(2, 8)}`
+		const instanceId = Math.random().toString(36).slice(2, 8)
+		const titleId = `row-overlay-title-${instanceId}`
+		const radioName = `row-overlay-selection-${instanceId}`
+		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
 
 		const fieldset = element('fieldset', {
 			classes: styles.fieldset,
@@ -112,16 +115,16 @@ export const RowOverlay = component<RowOverlayOptions>({
 			fields.forEach(({ field, variant }, index) => {
 				const radio = element('input', {
 					type: 'radio',
-					name: 'row-overlay-selection',
+					name: radioName,
 					value: field,
 					classes: styles.radio,
-					id: `row-overlay-radio-${field}`,
+					id: radioId(field),
 					on: {
 						change: syncConfirm,
 					},
 				})
 				const label = element('label', {
-					htmlFor: `row-overlay-radio-${field}`,
+					htmlFor: radioId(field),
 					classes: [
 						styles.option,
 						variant === 'valid' ? styles.optionValid : styles.optionDiscard,
