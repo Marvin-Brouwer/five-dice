@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 import { createStore } from '@rooted/store'
 import JSConfetti from 'js-confetti'
 
+import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
 import { type ScoreField } from './_logic/gameConstants.ts'
 import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
 import { playGameEndFanfare } from './audio/audio.ts'
@@ -15,6 +16,7 @@ export const Game = component({
 	name: 'game-page',
 	styles,
 	onMount({ append, element, create, signal, on }) {
+		routeTitleStore.update(() => 'Score card')
 		const store = createScorePadStore()
 		const openRequest = createStore(false)
 
@@ -112,6 +114,17 @@ export const Game = component({
 			syncToolbar()
 			syncEndBanner()
 		})
+
+		window.addEventListener('five-dice:new-game', () => {
+			if (confirm('Start a new game? This will clear the current score pad.')) {
+				store.reset()
+			}
+		}, { signal })
+
+		window.addEventListener('five-dice:undo', () => {
+			if (!store.canUndo()) return
+			if (confirm('Undo your last committed round?')) store.undo()
+		}, { signal })
 
 		append(
 			element('div', {

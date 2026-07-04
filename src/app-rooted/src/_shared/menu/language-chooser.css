@@ -1,0 +1,86 @@
+.wrap {
+	position: relative;
+	display: inline-flex;
+}
+
+.button {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 8px;
+	border: 1.5px solid var(--color-text);
+	border-radius: 4px;
+	background: var(--color-surface-elevated);
+	color: var(--color-text);
+	cursor: pointer;
+	font: inherit;
+}
+
+.short {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	color: var(--color-text);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.long {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--color-text-muted);
+	letter-spacing: 0.05em;
+}
+
+.chevron {
+	display: inline-flex;
+	color: var(--color-text);
+}
+
+.list {
+	position: absolute;
+	bottom: 100%;
+	right: 0;
+	margin-bottom: 6px;
+	background: var(--color-surface-elevated);
+	border: 1.5px solid var(--color-text);
+	border-radius: 6px;
+	box-shadow: 0 -12px 28px rgba(28, 29, 31, 0.22);
+	padding: 4px;
+	min-width: 180px;
+	z-index: 20;
+}
+
+.option {
+	display: grid;
+	grid-template-columns: 32px 1fr 14px;
+	align-items: center;
+	gap: 10px;
+	padding: 8px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.option-selected {
+	background: var(--color-border-subtle);
+}
+
+.option-short {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--color-text);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.option-long {
+	font-family: var(--font-sans);
+	font-size: 13px;
+	color: var(--color-text);
+}
+
+.option-check {
+	display: inline-flex;
+	color: var(--color-text);
+}

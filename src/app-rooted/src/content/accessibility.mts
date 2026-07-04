@@ -1,11 +1,14 @@
 import { component } from '@rooted/components'
 
+import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
+
 import styles from './accessibility.css'
 
 export const Accessibility = component({
 	name: 'accessibility-page',
 	styles,
 	onMount({ append, element }) {
+		routeTitleStore.update(() => 'Accessibility')
 		append(element('article', {
 			classes: styles.page,
 			children: [

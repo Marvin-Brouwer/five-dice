@@ -1,0 +1,26 @@
+.section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 0;
+	margin: 14px 0 0;
+	border-top: 1px dashed var(--color-border);
+	border-bottom: 1px dashed var(--color-border);
+}
+
+.label {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	color: var(--color-text-secondary);
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+.hint {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--color-accent);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}

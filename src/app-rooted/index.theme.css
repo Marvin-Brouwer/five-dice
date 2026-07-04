@@ -1,31 +1,60 @@
+/* Dark palette. Names stay the same as index.tokens.css; only values change.
+   Values derived from PAPER_DARK / CARDBOARD_BG_DARK in the Direction A.v2 mockup. */
+
 :root[data-theme="dark"] {
-	--color-bg: #1a1a1a;
-	--color-surface: #2a2a2a;
-	--color-surface-alt: #232323;
-	--color-border: #444444;
+	--color-page:              #5a5650;
+	--color-surface:           #1a1b1e;
+	--color-surface-elevated:  #26272b;
 
-	--color-text: #f4f4f4;
-	--color-text-muted: #b0b0b0;
-	--color-text-inverted: #1a1a1a;
+	--color-text:              #f6f5f0;
+	--color-text-secondary:    #d4d3ce;
+	--color-text-muted:        #85837e;
+	--color-text-inverted:     var(--color-surface);
 
-	--color-die-face: #2a2a2a;
-	--color-die-dot: #f4f4f4;
-	--color-die-border: #888888;
+	--color-border:            rgba(246, 245, 240, 0.14);
+	--color-border-subtle:     rgba(246, 245, 240, 0.08);
+	--color-divider-strong:    #f6f5f0;
+
+	--color-accent:            #5a7cc0;
+	--color-accent-subtle:     rgba(90, 124, 192, 0.18);
+	--color-accent-contrast:   #0f1424;
+
+	/* Dark-mode paper texture: warm off-white polygons (from PAPER_DARK) */
+	--background-surface:
+		url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'><polygon points='0,0 100,0 60,45' fill='%23faf8f5'/><polygon points='0,0 0,50 60,45' fill='%23f4f0e8'/><polygon points='100,0 200,0 140,55' fill='%23fdfbfa'/><polygon points='100,0 60,45 140,55' fill='%23faf8f5'/><polygon points='200,0 200,50 140,55' fill='%23f4f0e8'/><polygon points='0,50 60,45 100,100' fill='%23fdfbfa'/><polygon points='0,50 0,100 100,100' fill='%23faf8f5'/><polygon points='60,45 140,55 100,100' fill='%23f4f0e8'/><polygon points='140,55 200,50 200,100' fill='%23faf8f5'/><polygon points='140,55 100,100 200,100' fill='%23fdfbfa'/></svg>"),
+		var(--color-surface);
+
+	--color-die-face:          var(--color-surface);
+	--color-die-dot:           var(--color-text);
+	--color-die-border:        var(--color-text-muted);
 }
 
+/* System-follow theme resolves via matchMedia; the theme-sensor service writes
+   data-theme="dark" onto <html> when the resolved theme is dark, so no separate
+   @media block is needed. This block stays for the moment where the service
+   has not yet run (first render): if the user has never set a preference, pick
+   up the OS default. */
 @media (prefers-color-scheme: dark) {
-	:root[data-theme="auto"] {
-		--color-bg: #1a1a1a;
-		--color-surface: #2a2a2a;
-		--color-surface-alt: #232323;
-		--color-border: #444444;
+	:root:not([data-theme]) {
+		--color-page:              #5a5650;
+		--color-surface:           #1a1b1e;
+		--color-surface-elevated:  #26272b;
 
-		--color-text: #f4f4f4;
-		--color-text-muted: #b0b0b0;
-		--color-text-inverted: #1a1a1a;
+		--color-text:              #f6f5f0;
+		--color-text-secondary:    #d4d3ce;
+		--color-text-muted:        #85837e;
+		--color-text-inverted:     var(--color-surface);
 
-		--color-die-face: #2a2a2a;
-		--color-die-dot: #f4f4f4;
-		--color-die-border: #888888;
+		--color-border:            rgba(246, 245, 240, 0.14);
+		--color-border-subtle:     rgba(246, 245, 240, 0.08);
+		--color-divider-strong:    #f6f5f0;
+
+		--color-accent:            #5a7cc0;
+		--color-accent-subtle:     rgba(90, 124, 192, 0.18);
+		--color-accent-contrast:   #0f1424;
+
+		--color-die-face:          var(--color-surface);
+		--color-die-dot:           var(--color-text);
+		--color-die-border:        var(--color-text-muted);
 	}
 }

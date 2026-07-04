@@ -1,12 +1,15 @@
 import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
+import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
+
 import styles from './not-found.css'
 
 export const NotFoundPage = component({
 	name: 'not-found-page',
 	styles,
 	onMount({ append, element, create }) {
+		routeTitleStore.update(() => 'Not found')
 		append(element('article', {
 			classes: styles.page,
 			children: [

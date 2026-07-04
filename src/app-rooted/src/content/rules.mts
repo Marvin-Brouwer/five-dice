@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
 import { rowDisplayLabels } from '../game/score-card/score-card.labels.ts'
+import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
 
 import styles from './rules.css'
 
@@ -9,6 +10,7 @@ export const Rules = component({
 	name: 'rules-page',
 	styles,
 	onMount({ append, element, create }) {
+		routeTitleStore.update(() => 'Home')
 		append(element('article', {
 			classes: styles.page,
 			children: [

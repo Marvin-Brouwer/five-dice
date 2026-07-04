@@ -1,0 +1,52 @@
+.group {
+	display: inline-flex;
+	border: 1.5px solid var(--color-text);
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	clip-path: inset(50%);
+	overflow: hidden;
+}
+
+.segment {
+	padding: 6px 11px;
+	background: transparent;
+	color: var(--color-text);
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	cursor: pointer;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.segment-on {
+	border-right: 1.5px solid var(--color-text);
+}
+
+.group:has(input#\:menu-lock-on:checked) .segment-on,
+.group input:checked + .segment-on {
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+}
+
+.group input:checked + .segment-off {
+	background: var(--color-text);
+	color: var(--color-surface);
+}
+
+.group input:focus-visible + .segment {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
+}
