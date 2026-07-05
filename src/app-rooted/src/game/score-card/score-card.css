@@ -15,6 +15,9 @@
 }
 
 .card-inner {
+	--col-roll: 138px;
+	--col-score: 72px;
+	--col-totals-score: calc(var(--col-roll) + var(--col-score));
 	border: 0;
 	outline: 2px solid var(--color-text);
 	outline-offset: -2px;
@@ -246,7 +249,7 @@
 }
 
 .band-roll {
-	flex: 0 0 44%;
+	flex: 0 0 var(--col-roll);
 	font-size: 9px;
 	letter-spacing: 0.18em;
 	font-weight: 600;
@@ -257,7 +260,7 @@
 }
 
 .band-score {
-	flex: 0 0 76px;
+	flex: 0 0 var(--col-score);
 	font-size: 9px;
 	letter-spacing: 0.2em;
 	font-weight: 600;
@@ -267,7 +270,7 @@
 }
 
 .band-totals-score {
-	flex: 0 0 76px;
+	flex: 0 0 var(--col-totals-score);
 	font-size: 9px;
 	letter-spacing: 0.2em;
 	font-weight: 600;
@@ -289,23 +292,29 @@
 .score-table tbody tr > *:first-child { border-left: 0; }
 .score-table tbody tr > *:last-child { border-right: 0; }
 
-/* Column widths */
+.score-table tbody td.score-column,
+.score-table tbody td.totals-column {
+	text-align: right;
+}
+
+/* Column widths — driven by CSS variables on .card-inner so the ruled
+   grid stays aligned across Part 1, Part 2 and Totals. */
 .label-column {
 	width: auto;
 }
 
 .roll-column {
-	width: 44%;
+	width: var(--col-roll);
 	text-align: left;
 }
 
 .score-column {
-	width: 76px;
+	width: var(--col-score);
 	text-align: right;
 }
 
 .totals-column {
-	width: 76px;
+	width: var(--col-totals-score);
 	text-align: right;
 }
 
