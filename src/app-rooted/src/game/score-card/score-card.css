@@ -8,11 +8,18 @@
 	background-repeat: repeat;
 	border-radius: var(--radius-lg);
 	box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
-	padding: var(--space-5) var(--space-4);
+	padding: 0;
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-3);
+	gap: 0;
 	container-type: inline-size;
+	overflow: hidden;
+}
+
+.card > header,
+.card > aside {
+	padding-left: var(--space-4);
+	padding-right: var(--space-4);
 }
 
 /* ------------------------------------------------------------- Card header */
@@ -20,6 +27,7 @@
 	display: flex;
 	align-items: baseline;
 	gap: 0.5em;
+	padding-top: var(--space-4);
 	padding-bottom: var(--space-3);
 	border-bottom: 2px solid var(--color-text);
 }
@@ -153,7 +161,8 @@
 	width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
-	border: 2px solid var(--color-text);
+	border-top: 2px solid var(--color-text);
+	border-bottom: 2px solid var(--color-text);
 	background: transparent;
 }
 
@@ -161,31 +170,38 @@
 	border-top: 0;
 }
 
-/* Section band — full-width ink bar */
+/* Section band — the whole thead row is the ink bar; the section title
+   sits in the label column, the Roll / Score column labels sit in their
+   own cells still on the ink background. */
 .section-row td.section-name {
 	background: var(--color-divider-strong);
 	color: var(--color-surface);
 	font-family: var(--font-mono);
-	font-size: 11px;
 	font-weight: 700;
 	letter-spacing: 0.22em;
 	text-transform: uppercase;
 	padding: 8px 12px;
-	text-align: left;
 	border: 0;
+	border-right: 1px solid color-mix(in srgb, var(--color-surface) 22%, transparent);
 }
 
-/* Column header row — mono uppercase small on paper */
-.column-header-row td {
-	background: transparent;
-	padding: 6px 8px;
-	font-family: var(--font-mono);
+.section-row td.section-name:last-child {
+	border-right: 0;
+}
+
+.section-row td.label-column {
+	font-size: 11px;
+	text-align: left;
+}
+
+.section-row td.roll-column,
+.section-row td.score-column,
+.section-row td.totals-column {
 	font-size: 9px;
-	letter-spacing: 0.18em;
-	text-transform: uppercase;
-	color: var(--color-text-muted);
+	letter-spacing: 0.2em;
 	font-weight: 600;
-	border: 1px solid var(--color-text);
+	text-align: right;
+	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
 }
 
 /* Ruled grid — every body cell gets an ink border */
