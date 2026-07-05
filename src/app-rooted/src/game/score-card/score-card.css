@@ -6,7 +6,8 @@
 	background: var(--background-surface);
 	background-size: var(--background-surface-size);
 	background-repeat: repeat;
-	border-radius: var(--radius-lg);
+	border-radius: 0;
+	border: 2px solid var(--color-text);
 	box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
 	padding: 0;
 	display: flex;
@@ -182,11 +183,6 @@
 	text-transform: uppercase;
 	padding: 8px 12px;
 	border: 0;
-	border-right: 1px solid color-mix(in srgb, var(--color-surface) 22%, transparent);
-}
-
-.section-row td.section-name:last-child {
-	border-right: 0;
 }
 
 .section-row td.label-column {
