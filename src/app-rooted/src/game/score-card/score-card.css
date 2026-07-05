@@ -60,36 +60,38 @@
 
 .name-field {
 	flex: 1 1 auto;
-	display: flex;
-	align-items: baseline;
-	gap: var(--space-2);
+	position: relative;
+	display: block;
 	min-width: 0;
-	border-bottom: 1.5px solid var(--color-text);
-	padding: var(--space-2) 0 2px;
-}
-
-.name-field:focus-within {
-	border-bottom-color: var(--color-accent);
 }
 
 .name-label {
-	flex: 0 0 auto;
+	position: absolute;
+	top: 2px;
+	left: 0;
 	font-family: var(--font-mono);
-	font-size: 10px;
+	font-size: 9px;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: var(--color-text-muted);
 	font-weight: 600;
+	pointer-events: none;
+	z-index: 1;
 }
 
 .name-input-wrap {
-	flex: 1 1 auto;
 	display: flex;
-	align-items: baseline;
-	min-width: 8ch;
+	align-items: center;
+	min-width: 10ch;
 	border: 0;
+	border-bottom: 1.5px solid var(--color-text);
 	background: transparent;
-	padding: 0;
+	padding: 12px 0 2px 0;
+	height: 100%;
+}
+
+.name-input-wrap:focus-within {
+	border-bottom-color: var(--color-accent);
 }
 
 .name-input-wrap:focus-within {
