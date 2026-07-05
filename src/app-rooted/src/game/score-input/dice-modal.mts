@@ -1,8 +1,8 @@
-import { component, cssClass } from '@rooted/components'
+import { component } from '@rooted/components'
 import { createStore, type Store } from '@rooted/store'
 
 import { type DieValue } from '../_logic/gameConstants.ts'
-import { Dialog } from '../../_shared/dialog/dialog.mts'
+import { PipDie } from '../../_shared/die/pip-die.mts'
 
 import styles from './dice-modal.css'
 
@@ -31,16 +31,39 @@ function nextEmpty(dice: InputDice, after: number): number | undefined {
 	return undefined
 }
 
+function firstEmpty(dice: InputDice): number | undefined {
+	for (let idx = 0; idx < dice.length; idx++) {
+		if (dice[idx] === undefined) return idx
+	}
+	return undefined
+}
+
 function asTuple(dice: InputDice): DiceTuple | undefined {
 	if (dice.some(d => d === undefined)) return undefined
 	return dice.slice() as DiceTuple
 }
+
+const closeIconSvg = `
+	<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M9 4L3 10l6 6M3 10h13a5 5 0 010 10"/>
+	</svg>
+`
+const resetIconSvg = `
+	<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+		stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<path d="M3 12a9 9 0 1 0 3-6.7"/>
+		<path d="M3 4v5h5"/>
+	</svg>
+`
 
 export const DiceModal = component<DiceModalOptions>({
 	name: 'dice-modal',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
 		const { open, onConfirm, onCancel } = options
+		const makeDieNode = (value: DieValue | undefined, size: number, variant: 'default' | 'active' | 'muted', ariaLabel?: string): Node =>
+			create(PipDie, { value, size, variant, ariaLabel })
 		const state = createStore<{ dice: InputDice, focusedDie: number }>({
 			dice: emptyDice(),
 			focusedDie: 0,
@@ -48,36 +71,51 @@ export const DiceModal = component<DiceModalOptions>({
 
 		const titleId = 'dice-modal-title'
 
-		const slotButtons: HTMLButtonElement[] = slotIndices.map((idx) => element('button', {
-			type: 'button',
-			classes: styles.slot,
-			aria: { label: `Die ${idx + 1}, empty` },
-			textContent: '—',
-			on: {
-				click() {
-					state.update(s => { s.focusedDie = idx })
-					slotButtons[idx]!.focus()
+		// Slot buttons — a die face + tiny "01"..."05" label below
+		const slotButtons: HTMLButtonElement[] = slotIndices.map((idx) => {
+			const dieSpace = element('span', { classes: styles.slotDie })
+			const button = element('button', {
+				type: 'button',
+				classes: styles.slot,
+				aria: { label: `Slot ${idx + 1}: empty` },
+				children: [
+					dieSpace,
+					element('span', {
+						classes: styles.slotLabel,
+						textContent: String(idx + 1).padStart(2, '0'),
+					}),
+				],
+				on: {
+					click() {
+						state.update(s => { s.focusedDie = idx })
+						slotButtons[idx]!.focus()
+					},
+					keydown(event) {
+						if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+							event.preventDefault()
+							const next = (idx + 1) % slotIndices.length
+							state.update(s => { s.focusedDie = next })
+							slotButtons[next]!.focus()
+						}
+						else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+							event.preventDefault()
+							const prev = (idx - 1 + slotIndices.length) % slotIndices.length
+							state.update(s => { s.focusedDie = prev })
+							slotButtons[prev]!.focus()
+						}
+						else if (event.key === 'Backspace' || event.key === 'Delete') {
+							event.preventDefault()
+							state.update(s => {
+								s.dice[idx] = undefined
+								const next = firstEmpty(s.dice)
+								if (next !== undefined) s.focusedDie = next
+							})
+						}
+					},
 				},
-				keydown(event) {
-					if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-						event.preventDefault()
-						const next = (idx + 1) % slotIndices.length
-						state.update(s => { s.focusedDie = next })
-						slotButtons[next]!.focus()
-					}
-					else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-						event.preventDefault()
-						const prev = (idx - 1 + slotIndices.length) % slotIndices.length
-						state.update(s => { s.focusedDie = prev })
-						slotButtons[prev]!.focus()
-					}
-					else if (event.key === 'Backspace' || event.key === 'Delete') {
-						event.preventDefault()
-						state.update(s => { s.dice[idx] = undefined })
-					}
-				},
-			},
-		}))
+			})
+			return button
+		})
 
 		function fillFocused(value: DieValue) {
 			state.update(s => {
@@ -90,25 +128,54 @@ export const DiceModal = component<DiceModalOptions>({
 			slotButtons[focused]?.focus()
 		}
 
-		const keypadButtons: HTMLButtonElement[] = dieValues.map(value => element('button', {
-			type: 'button',
-			classes: styles.keypadButton,
-			textContent: String(value),
-			aria: { label: `Set die to ${value}` },
-			on: {
-				click() { fillFocused(value) },
-			},
-		}))
+		// Keypad buttons — 6 die faces (pip pattern IS the label)
+		const keypadButtons: HTMLButtonElement[] = dieValues.map((value) => {
+			const dieSpace = element('span', { classes: styles.keyDie })
+			dieSpace.append(makeDieNode(value, 40, 'default', `Add a ${value}`))
+			return element('button', {
+				type: 'button',
+				classes: styles.keypadButton,
+				aria: { label: `Add a ${value}` },
+				children: dieSpace,
+				on: {
+					click() { fillFocused(value) },
+				},
+			})
+		})
 
 		const liveRegion = element('p', {
 			classes: styles.liveRegion,
 			aria: { live: 'polite', atomic: 'true' },
 		})
 
-		const cancelButton = element('button', {
+		// Section band between slots and keys
+		const bandStatus = element('span', {
+			classes: styles.bandStatus,
+			textContent: '',
+		})
+		const band = element('div', {
+			classes: styles.band,
+			children: [
+				element('span', {
+					classes: styles.bandLabel,
+					textContent: 'Select dice',
+				}),
+				bandStatus,
+			],
+		})
+
+		function closeReset() {
+			if (open.value) open.update(() => false)
+			state.update(s => {
+				s.dice = emptyDice()
+				s.focusedDie = 0
+			})
+		}
+
+		const closeButton = element('button', {
 			type: 'button',
-			classes: styles.cancelButton,
-			textContent: 'Cancel',
+			classes: [styles.actionButton, styles.actionSecondary],
+			aria: { label: 'Close and cancel' },
 			on: {
 				click() {
 					closeReset()
@@ -116,11 +183,28 @@ export const DiceModal = component<DiceModalOptions>({
 				},
 			},
 		})
+		closeButton.innerHTML = `${closeIconSvg}<span>Close</span>`
+
+		const resetButton = element('button', {
+			type: 'button',
+			classes: [styles.actionButton, styles.actionSecondary],
+			aria: { label: 'Clear all dice' },
+			on: {
+				click() {
+					state.update(s => {
+						s.dice = emptyDice()
+						s.focusedDie = 0
+					})
+					slotButtons[0]?.focus()
+				},
+			},
+		})
+		resetButton.innerHTML = `${resetIconSvg}<span>Reset</span>`
 
 		const confirmButton = element('button', {
-			type: 'submit',
-			classes: styles.confirmButton,
-			textContent: 'Confirm dice',
+			type: 'button',
+			classes: [styles.actionButton, styles.actionPrimary],
+			textContent: 'Confirm',
 			disabled: true,
 			on: {
 				click(event) {
@@ -133,45 +217,118 @@ export const DiceModal = component<DiceModalOptions>({
 			},
 		})
 
-		function closeReset() {
-			if (open.value) open.update(() => false)
-			state.update(s => {
-				s.dice = emptyDice()
-				s.focusedDie = 0
-			})
-		}
-
-		function syncUi() {
+		// Slot die refresh — swap the pip svg on state change
+		function refreshSlotDies() {
 			const { dice, focusedDie } = state.value
 			slotIndices.forEach((idx) => {
 				const btn = slotButtons[idx]!
 				const value = dice[idx]
-				btn.textContent = value === undefined ? '—' : String(value)
-				btn.setAttribute('aria-label', value === undefined ? `Die ${idx + 1}, empty` : `Die ${idx + 1}, ${value}`)
-				btn.classList.toggle(styles.focused!, idx === focusedDie)
+				const dieSpace = btn.firstElementChild as HTMLSpanElement
+				dieSpace.replaceChildren(makeDieNode(
+					value,
+					50,
+					idx === focusedDie ? 'active' : 'default',
+					value === undefined ? `Slot ${idx + 1}: empty` : `Slot ${idx + 1}: ${value}`,
+				))
+				const ariaLabel = value === undefined
+					? (idx === focusedDie ? `Slot ${idx + 1}: next` : `Slot ${idx + 1}: empty`)
+					: `Slot ${idx + 1}: ${value}`
+				btn.setAttribute('aria-label', ariaLabel)
+				btn.classList.toggle(styles.slotActive!, idx === focusedDie)
 			})
+		}
+
+		function syncUi() {
+			refreshSlotDies()
+			const { dice, focusedDie } = state.value
+			const setCount = dice.filter(d => d !== undefined).length
 			const tuple = asTuple(dice as InputDice)
 			confirmButton.disabled = tuple === undefined
+			confirmButton.textContent = tuple === undefined
+				? `Confirm · ${5 - setCount} left`
+				: 'Confirm'
+			bandStatus.textContent = tuple === undefined
+				? `slot ${focusedDie + 1} next →`
+				: 'ready to confirm'
 			liveRegion.textContent = tuple === undefined
-				? `${dice.filter(d => d !== undefined).length} of 5 dice set`
+				? `${setCount} of 5 dice set`
 				: 'All dice set, ready to confirm'
 		}
 
 		state.on('update', signal, syncUi)
 		syncUi()
 
-		open.on('change', signal, ({ detail }) => {
-			if (!detail.state) return
-			state.update(s => {
-				s.dice = emptyDice()
-				s.focusedDie = 0
-			})
-			queueMicrotask(() => slotButtons[0]?.focus())
+		const dialog = element('dialog', {
+			classes: styles.sheet,
+			aria: { modal: 'true', labelledBy: titleId },
+			on: {
+				close() {
+					if (open.value) open.update(() => false)
+				},
+				click(event) {
+					if (event.target === dialog) dialog.close()
+				},
+			},
 		})
+
+		const handle = element('span', {
+			classes: styles.handle,
+			aria: { hidden: 'true' },
+		})
+
+		const srTitle = element('h2', {
+			id: titleId,
+			classes: styles.srTitle,
+			textContent: 'Enter your roll',
+		})
+
+		const slotsRow = element('div', {
+			role: 'group',
+			aria: { label: 'Your five dice' },
+			classes: styles.slotsRow,
+			children: slotButtons,
+		})
+
+		const keysRow = element('div', {
+			role: 'group',
+			aria: { label: 'Dice keys' },
+			classes: styles.keysRow,
+			children: keypadButtons,
+		})
+
+		const actionsRow = element('div', {
+			classes: styles.actionsRow,
+			children: [closeButton, resetButton, confirmButton],
+		})
+
+		dialog.append(
+			handle,
+			srTitle,
+			slotsRow,
+			band,
+			keysRow,
+			actionsRow,
+			liveRegion,
+		)
+
+		open.on('change', signal, ({ detail }) => {
+			if (detail.state) {
+				state.update(s => {
+					s.dice = emptyDice()
+					s.focusedDie = 0
+				})
+				if (!dialog.open) dialog.showModal()
+				queueMicrotask(() => slotButtons[0]?.focus())
+			}
+			else if (dialog.open) {
+				dialog.close()
+			}
+		})
+
+		if (open.value && !dialog.open) queueMicrotask(() => { if (open.value) dialog.showModal() })
 
 		on('document', 'keydown', (event) => {
 			if (!open.value) return
-			if (event.target instanceof HTMLButtonElement && event.target.classList.contains(styles.keypadButton!) && event.key === ' ') return
 			if (event.key >= '1' && event.key <= '6') {
 				event.preventDefault()
 				fillFocused(Number(event.key) as DieValue)
@@ -182,68 +339,6 @@ export const DiceModal = component<DiceModalOptions>({
 			}
 		})
 
-		const form = element('form', {
-			classes: styles.form,
-			on: {
-				submit(event) { event.preventDefault() },
-			},
-			children: [
-				element('h2', {
-					id: titleId,
-					classes: styles.title,
-					textContent: 'Enter your roll',
-				}),
-				element('fieldset', {
-					classes: styles.diceFieldset,
-					children: [
-						element('legend', {
-							classes: styles.legend,
-							textContent: 'Dice',
-						}),
-						element('div', {
-							classes: styles.slots,
-							children: slotButtons,
-						}),
-					],
-				}),
-				element('fieldset', {
-					classes: styles.keypadFieldset,
-					children: [
-						element('legend', {
-							classes: styles.legend,
-							textContent: 'Pick a value (1–6)',
-						}),
-						element('div', {
-							classes: styles.keypad,
-							children: keypadButtons,
-						}),
-					],
-				}),
-				liveRegion,
-				element('div', {
-					classes: styles.actions,
-					children: [cancelButton, confirmButton],
-				}),
-			],
-		})
-
-		append(
-			create(Dialog, {
-				open,
-				label: 'Enter your roll',
-				labelId: titleId,
-				onClose() {
-					if (open.value) onCancel()
-					state.update(s => {
-						s.dice = emptyDice()
-						s.focusedDie = 0
-					})
-				},
-				children: form,
-			}),
-		)
-
-		// noop reference to keep cssClass importable for future conditional classes
-		void cssClass
+		append(dialog)
 	},
 })
