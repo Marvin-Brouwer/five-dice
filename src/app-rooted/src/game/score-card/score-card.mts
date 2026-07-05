@@ -170,20 +170,23 @@ function renderPartTwo(context: RenderContext, pad: ReadonlyState<ScorePad>): No
 function renderSection(context: RenderContext, title: string, fields: ScoreField[], pad: ReadonlyState<ScorePad>, withDieIcon: boolean): Node {
 	const { element } = context
 	const rows = fields.map(field => renderRow(context, field, pad, withDieIcon))
+	const bandCell = element('td', {
+		classes: styles.sectionName,
+		children: element('div', {
+			classes: styles.bandInner,
+			children: [
+				element('span', { classes: [styles.bandCell, styles.bandTitle], textContent: title }),
+				element('span', { classes: [styles.bandCell, styles.bandRoll], textContent: 'Roll' }),
+				element('span', { classes: [styles.bandCell, styles.bandScore], textContent: 'Score' }),
+			],
+		}),
+	})
+	bandCell.colSpan = 3
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
 			element('thead', {
-				children: [
-					element('tr', {
-						classes: styles.sectionRow,
-						children: [
-							element('td', { classes: [styles.sectionName, styles.labelColumn], textContent: title }),
-							element('td', { classes: [styles.sectionName, styles.rollColumn], textContent: 'Roll' }),
-							element('td', { classes: [styles.sectionName, styles.scoreColumn], textContent: 'Score' }),
-						],
-					}),
-				],
+				children: element('tr', { classes: styles.sectionRow, children: [bandCell] }),
 			}),
 			element('tbody', { children: rows }),
 		],
@@ -321,19 +324,22 @@ function renderTotals(context: RenderContext, pad: ReadonlyState<ScorePad>): Nod
 		],
 	})
 
+	const totalsBand = element('td', {
+		classes: styles.sectionName,
+		children: element('div', {
+			classes: styles.bandInner,
+			children: [
+				element('span', { classes: [styles.bandCell, styles.bandTitle], textContent: 'Rounds total' }),
+				element('span', { classes: [styles.bandCell, styles.bandTotalsScore], textContent: 'Score' }),
+			],
+		}),
+	})
+	totalsBand.colSpan = 2
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
 			element('thead', {
-				children: [
-					element('tr', {
-						classes: styles.sectionRow,
-						children: [
-							element('td', { classes: [styles.sectionName, styles.labelColumn], textContent: 'Rounds total' }),
-							element('td', { classes: [styles.sectionName, styles.totalsColumn], textContent: 'Score' }),
-						],
-					}),
-				],
+				children: element('tr', { classes: styles.sectionRow, children: [totalsBand] }),
 			}),
 			element('tbody', {
 				children: [
