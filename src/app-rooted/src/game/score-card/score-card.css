@@ -283,7 +283,7 @@
    edges of the table where the card-inner's 2px frame takes over. */
 .score-table tbody th,
 .score-table tbody td {
-	padding: 10px 8px;
+	padding: 5px 8px;
 	text-align: left;
 	vertical-align: middle;
 	border: 1px solid var(--color-text);
@@ -318,55 +318,63 @@
 	text-align: right;
 }
 
-/* --------------------------------------------------------------- Row label */
+/* --------------------------------------------------------------- Row label
+   By default the description sits inline to the right of the title with
+   a middot separator ("Aces · Sum of aces"). When the label column runs
+   out of room the description wraps beneath the title on its own line,
+   never truncated. */
 .label-display {
-	display: inline-flex;
-	align-items: center;
+	display: flex;
+	align-items: baseline;
 	flex-wrap: wrap;
-	gap: 0 0.4em;
-	line-height: 1.15;
+	column-gap: 0.5em;
+	row-gap: 1px;
+	line-height: 1.2;
 }
 
 .label-title {
 	font-family: var(--font-sans);
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 600;
 	color: var(--color-text);
+	white-space: nowrap;
 }
 
 .description-label {
-	display: inline;
 	font-family: var(--font-mono);
 	font-size: 10px;
 	color: var(--color-text-muted);
 	letter-spacing: 0.02em;
-	flex-basis: 100%;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
-.simple-description-label {
-	display: block;
-	margin-top: 2px;
+/* Middot leading the description when it sits inline (i.e. hasn't wrapped
+   to its own line). Uses a pseudo-element so no extra DOM. */
+.description-label::before {
+	content: "· ";
+	color: var(--color-text-muted);
 }
 
-.responsive-description-label {
-	display: block;
-	margin-top: 2px;
-}
-
+/* Prefer short description when available; if none, the `long` text sits
+   directly in the .description-label span so no extra rule is needed. */
 .description-short {
-	display: none;
-}
-
-.description-long {
 	display: inline;
 }
 
-@container (max-width: 34rem) {
-	.description-short {
-		display: inline;
+.description-long {
+	display: none;
+}
+
+/* When the label column is narrow (roughly < 190px including padding),
+   let the description wrap under the title without shrinking, and drop
+   the middot since it becomes decorative noise on a new line. */
+@container (max-width: 22rem) {
+	.description-label {
+		flex-basis: 100%;
 	}
-	.description-long {
-		display: none;
+	.description-label::before {
+		content: "";
 	}
 }
 
