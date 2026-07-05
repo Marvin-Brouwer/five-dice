@@ -1,7 +1,6 @@
 import { component } from '@rooted/components'
 
 import { menuStore } from '../_shared/stores/menuStore.mts'
-import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
 
 import styles from './app-bar.css'
 
@@ -42,11 +41,7 @@ export const AppBar = component({
 
 		const breadcrumb = element('span', {
 			classes: styles.breadcrumb,
-			textContent: routeTitleStore.value,
-		})
-
-		routeTitleStore.on('change', signal, ({ detail }) => {
-			breadcrumb.textContent = detail.state
+			textContent: 'Five dice',
 		})
 
 		const kebab = element('button', {

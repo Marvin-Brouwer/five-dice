@@ -51,9 +51,9 @@
 /* ------------------------------------------------------------------ Banner */
 .banner {
 	display: flex;
-	gap: var(--space-3);
+	gap: var(--space-2);
 	align-items: stretch;
-	padding: var(--space-3) var(--space-4);
+	padding: var(--space-2) var(--space-3);
 }
 
 .name-field {
@@ -65,8 +65,8 @@
 
 .name-label {
 	position: absolute;
-	top: 6px;
-	left: 10px;
+	top: 2px;
+	left: 6px;
 	font-family: var(--font-mono);
 	font-size: 9px;
 	letter-spacing: 0.18em;
@@ -84,7 +84,7 @@
 	border: 0;
 	border-bottom: 1.5px solid var(--color-text);
 	background: transparent;
-	padding: 18px 6px 4px 10px;
+	padding: 12px 4px 2px 6px;
 	height: 100%;
 }
 
