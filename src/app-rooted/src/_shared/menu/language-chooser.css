@@ -38,10 +38,7 @@
 }
 
 .list {
-	position: absolute;
-	bottom: 100%;
-	right: 0;
-	margin-bottom: 6px;
+	position: fixed;
 	background: var(--color-surface-elevated);
 	border: 1.5px solid var(--color-text);
 	border-radius: 6px;

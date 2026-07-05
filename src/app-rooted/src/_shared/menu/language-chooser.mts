@@ -64,13 +64,22 @@ export const LanguageChooser = component({
 			button.setAttribute('aria-label', `Language: ${LABELS[languageStore.value].long}`)
 		}
 
+		function positionList() {
+			const rect = button.getBoundingClientRect()
+			list.style.right = `${Math.max(8, window.innerWidth - rect.right)}px`
+			list.style.bottom = `${window.innerHeight - rect.top + 6}px`
+		}
+
 		function renderList() {
 			list.hidden = !listOpen
 			button.setAttribute('aria-expanded', String(listOpen))
 			if (!listOpen) {
 				list.replaceChildren()
+				list.style.right = ''
+				list.style.bottom = ''
 				return
 			}
+			positionList()
 			list.replaceChildren(
 				...availableLanguages.map((code) => {
 					const selected = code === languageStore.value
@@ -109,6 +118,10 @@ export const LanguageChooser = component({
 			if (target && (button.contains(target) || list.contains(target))) return
 			listOpen = false
 			renderList()
+		})
+
+		on('window', 'resize', () => {
+			if (listOpen) positionList()
 		})
 
 		append(
