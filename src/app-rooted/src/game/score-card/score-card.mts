@@ -110,11 +110,19 @@ export const ScoreCard = component<ScoreCardOptions>({
 			],
 		})
 
+		const cardHeader = element('header', {
+			classes: styles.cardHeader,
+			children: [
+				element('span', { classes: styles.cardTitle, textContent: 'Score card' }),
+				element('span', { classes: styles.cardSubtitle, textContent: 'Five dice' }),
+			],
+		})
+
 		const card = element('section', {
 			id: 'score-card',
 			classes: styles.card,
 			role: 'document',
-			children: [banner, partOneBlock, partTwoBlock, totalsBlock],
+			children: [cardHeader, banner, partOneBlock, partTwoBlock, totalsBlock],
 		})
 
 		append(card)
@@ -133,6 +141,7 @@ function writeRoundLabel(target: HTMLElement, round: number): void {
 	target.replaceChildren(
 		document.createTextNode('Round '),
 		Object.assign(document.createElement('span'), { textContent: String(round), className: styles.roundNumber! }),
+		document.createTextNode(` / ${roundAmount}`),
 	)
 }
 
@@ -147,17 +156,26 @@ function renderPartTwo(context: RenderContext, pad: ReadonlyState<ScorePad>): No
 function renderSection(context: RenderContext, title: string, fields: ScoreField[], pad: ReadonlyState<ScorePad>, withDieIcon: boolean): Node {
 	const { element } = context
 	const rows = fields.map(field => renderRow(context, field, pad, withDieIcon))
+	const bandCell = element('td', {
+		classes: [styles.sectionName],
+		textContent: title,
+	})
+	bandCell.colSpan = 3
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
 			element('thead', {
-				children: element('tr', {
-					children: [
-						element('td', { classes: [styles.sectionName, styles.labelColumn], textContent: title }),
-						element('td', { classes: styles.rollColumn, textContent: 'Roll' }),
-						element('td', { classes: styles.scoreColumn, textContent: 'Score' }),
-					],
-				}),
+				children: [
+					element('tr', { classes: styles.sectionRow, children: [bandCell] }),
+					element('tr', {
+						classes: styles.columnHeaderRow,
+						children: [
+							element('td', { classes: styles.labelColumn, textContent: '' }),
+							element('td', { classes: styles.rollColumn, textContent: 'Roll' }),
+							element('td', { classes: styles.scoreColumn, textContent: 'Score' }),
+						],
+					}),
+				],
 			}),
 			element('tbody', { children: rows }),
 		],
@@ -295,16 +313,25 @@ function renderTotals(context: RenderContext, pad: ReadonlyState<ScorePad>): Nod
 		],
 	})
 
+	const totalsBand = element('td', {
+		classes: [styles.sectionName],
+		textContent: 'Rounds total',
+	})
+	totalsBand.colSpan = 2
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
 			element('thead', {
-				children: element('tr', {
-					children: [
-						element('td', { classes: [styles.sectionName, styles.labelColumn], textContent: 'Rounds total' }),
-						element('td', { classes: styles.totalsColumn, textContent: 'Score' }),
-					],
-				}),
+				children: [
+					element('tr', { classes: styles.sectionRow, children: [totalsBand] }),
+					element('tr', {
+						classes: styles.columnHeaderRow,
+						children: [
+							element('td', { classes: styles.labelColumn, textContent: '' }),
+							element('td', { classes: styles.totalsColumn, textContent: 'Score' }),
+						],
+					}),
+				],
 			}),
 			element('tbody', {
 				children: [

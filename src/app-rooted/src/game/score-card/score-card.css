@@ -11,7 +11,34 @@
 	padding: var(--space-5) var(--space-4);
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-4);
+	gap: var(--space-3);
+	container-type: inline-size;
+}
+
+/* ------------------------------------------------------------- Card header */
+.card-header {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5em;
+	padding-bottom: var(--space-3);
+	border-bottom: 2px solid var(--color-text);
+}
+
+.card-title {
+	font-family: var(--font-mono);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	color: var(--color-text);
+}
+
+.card-subtitle {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
 }
 
 /* ------------------------------------------------------------------ Banner */
@@ -20,6 +47,7 @@
 	flex-wrap: wrap;
 	gap: var(--space-3);
 	align-items: center;
+	padding: var(--space-2) 0 var(--space-3);
 }
 
 .name-label {
@@ -103,7 +131,7 @@
 	letter-spacing: 0;
 	transform: rotate(-3deg);
 	display: inline-block;
-	margin-left: 0.2em;
+	margin: 0 0.15em;
 }
 
 .round-label-finished {
@@ -125,53 +153,48 @@
 	width: 100%;
 	border-collapse: collapse;
 	table-layout: fixed;
+	border: 2px solid var(--color-text);
+	background: transparent;
 }
 
-.section-name {
+.score-table + .score-table {
+	border-top: 0;
+}
+
+/* Section band — full-width ink bar */
+.section-row td.section-name {
 	background: var(--color-divider-strong);
 	color: var(--color-surface);
 	font-family: var(--font-mono);
 	font-size: 11px;
-	font-weight: 600;
+	font-weight: 700;
 	letter-spacing: 0.22em;
 	text-transform: uppercase;
-	padding: 8px 14px;
+	padding: 8px 12px;
 	text-align: left;
+	border: 0;
 }
 
-.score-table thead td {
-	padding: 8px 6px;
+/* Column header row — mono uppercase small on paper */
+.column-header-row td {
+	background: transparent;
+	padding: 6px 8px;
 	font-family: var(--font-mono);
 	font-size: 9px;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: var(--color-text-muted);
-	border-bottom: 1px solid var(--color-border-subtle);
+	font-weight: 600;
+	border: 1px solid var(--color-text);
 }
 
-.score-table thead td.section-name {
-	color: var(--color-surface);
-	font-size: 11px;
-	letter-spacing: 0.22em;
-}
-
-.score-table thead td.roll-column,
-.score-table thead td.score-column,
-.score-table thead td.totals-column {
-	background: transparent;
-}
-
-.score-table th,
-.score-table td {
-	padding: 10px 6px;
+/* Ruled grid — every body cell gets an ink border */
+.score-table tbody th,
+.score-table tbody td {
+	padding: 10px 8px;
 	text-align: left;
 	vertical-align: middle;
-	border-bottom: 1px solid var(--color-border-subtle);
-}
-
-.score-table tbody tr:last-child th,
-.score-table tbody tr:last-child td {
-	border-bottom: 0;
+	border: 1px solid var(--color-text);
 }
 
 /* Column widths */
@@ -185,12 +208,12 @@
 }
 
 .score-column {
-	width: 68px;
+	width: 76px;
 	text-align: right;
 }
 
 .totals-column {
-	width: 68px;
+	width: 76px;
 	text-align: right;
 }
 
@@ -244,11 +267,6 @@
 	.description-long {
 		display: none;
 	}
-}
-
-/* Container-query fallback via a card-scoped wrapper */
-.card {
-	container-type: inline-size;
 }
 
 /* ---------------------------------------------------------------- Roll cell */
@@ -324,15 +342,15 @@
 	text-decoration-thickness: 1.5px;
 }
 
-.discarded .score-column {
+.discarded td[data-cell="score"] {
 	position: relative;
 }
 
-.discarded .score-column::after {
+.discarded td[data-cell="score"]::after {
 	content: "";
 	position: absolute;
-	left: 20%;
-	right: 10%;
+	left: 15%;
+	right: 8%;
 	top: 50%;
 	height: 2px;
 	background: var(--color-text);
@@ -375,7 +393,7 @@
 
 /* ----------------------------------------------------------- Final row bump */
 .final-row td {
-	border-top: 3px double var(--color-divider-strong);
+	border-top: 3px double var(--color-text);
 	padding-top: 12px;
 }
 

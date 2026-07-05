@@ -2,8 +2,8 @@ import { component } from '@rooted/components'
 import { type Store } from '@rooted/store'
 
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
-import { PipDie } from '../../_shared/die/pip-die.mts'
 
+import { inputActiveStore } from './input-active-store.mts'
 import styles from './place-dock.css'
 
 export type PlaceDockOptions = {
@@ -11,31 +11,16 @@ export type PlaceDockOptions = {
 	openRequest: Store<boolean>
 }
 
-const SLOT_COUNT = 5
-const SLOT_SIZE = 24
-
 export const PlaceDock = component<PlaceDockOptions>({
 	name: 'place-dock',
 	styles,
-	onMount({ append, element, create, signal, options }) {
+	onMount({ append, element, signal, options }) {
 		const { store, openRequest } = options
-
-		const slots = Array.from({ length: SLOT_COUNT }, () => {
-			const wrap = element('span', { classes: styles.slot })
-			wrap.append(create(PipDie, { value: undefined, size: SLOT_SIZE, variant: 'muted', ariaLabel: 'Empty slot' }))
-			return wrap
-		})
-
-		const slotsRow = element('span', {
-			classes: styles.slots,
-			aria: { hidden: 'true' },
-			children: slots,
-		})
 
 		const button = element('button', {
 			type: 'button',
 			classes: styles.placeButton,
-			textContent: store.gameEnded() ? 'Game over' : 'Place',
+			textContent: store.gameEnded() ? 'Game over' : 'Enter score',
 			disabled: store.gameEnded(),
 			aria: { label: store.gameEnded() ? 'Game over' : 'Enter score' },
 			on: {
@@ -50,18 +35,24 @@ export const PlaceDock = component<PlaceDockOptions>({
 			classes: styles.dock,
 			role: 'toolbar',
 			aria: { label: 'Score entry' },
-			children: [slotsRow, button],
+			children: [button],
 		})
 
-		function sync() {
+		function syncGame() {
 			const ended = store.gameEnded()
 			button.disabled = ended
-			button.textContent = ended ? 'Game over' : 'Place'
+			button.textContent = ended ? 'Game over' : 'Enter score'
 			button.setAttribute('aria-label', ended ? 'Game over' : 'Enter score')
 		}
 
-		store.on('change', signal, sync)
-		sync()
+		function syncActive() {
+			dock.hidden = inputActiveStore.value
+		}
+
+		store.on('change', signal, syncGame)
+		inputActiveStore.on('change', signal, syncActive)
+		syncGame()
+		syncActive()
 
 		append(dock)
 	},

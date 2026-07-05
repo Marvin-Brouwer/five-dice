@@ -10,6 +10,7 @@ import { rowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import { DiceModal, type DiceTuple } from './dice-modal.mts'
 import { RowOverlay, type RowOverlayField } from './row-overlay.mts'
+import { inputActiveStore } from './input-active-store.mts'
 
 import styles from './score-input.css'
 
@@ -30,6 +31,14 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const diceOpen = createStore(false)
 		const rowOpen = createStore(false)
 		const flushOpen = createStore(false)
+
+		function syncActive() {
+			const active = diceOpen.value || rowOpen.value || flushOpen.value
+			if (inputActiveStore.value !== active) inputActiveStore.update(() => active)
+		}
+		diceOpen.on('change', signal, syncActive)
+		rowOpen.on('change', signal, syncActive)
+		flushOpen.on('change', signal, syncActive)
 
 		let pendingDice: DiceTuple | undefined
 		let pendingRow: ScoreField | undefined
