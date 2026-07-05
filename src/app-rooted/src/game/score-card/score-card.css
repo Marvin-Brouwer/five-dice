@@ -160,10 +160,11 @@
 
 .round-heading {
 	font-family: var(--font-mono);
-	font-size: 8px;
+	font-size: 9px;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
-	color: var(--color-text-secondary);
+	color: var(--color-text-muted);
+	font-weight: 600;
 	line-height: 1;
 }
 
