@@ -14,6 +14,16 @@ const kebabSvg = `
 	</svg>
 `
 
+const fiveDieSvg = `
+	<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+		<circle cx="6"  cy="6"  r="2.1" fill="currentColor"/>
+		<circle cx="18" cy="6"  r="2.1" fill="currentColor"/>
+		<circle cx="12" cy="12" r="2.1" fill="currentColor"/>
+		<circle cx="6"  cy="18" r="2.1" fill="currentColor"/>
+		<circle cx="18" cy="18" r="2.1" fill="currentColor"/>
+	</svg>
+`
+
 export const AppBar = component({
 	name: 'app-bar',
 	styles,
@@ -26,9 +36,9 @@ export const AppBar = component({
 
 		const monogram = element('span', {
 			classes: styles.monogram,
-			textContent: '5',
-			aria: { hidden: 'true' },
+			aria: { label: 'Five dice' },
 		})
+		monogram.innerHTML = fiveDieSvg
 
 		const breadcrumb = element('span', {
 			classes: styles.breadcrumb,

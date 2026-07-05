@@ -40,15 +40,16 @@
 	--focus-ring-width:        3px;
 
 	/* -------- Composed backgrounds --------------------------------------- */
-	/* Cardboard noise SVG behind the warm-gray page colour */
+	/* Cardboard noise SVG behind the warm-gray page colour.
+	   Angle brackets URL-encoded (%3C / %3E) so Chrome parses the data URI. */
 	--background-page:
-		url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>"),
+		url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"),
 		var(--color-page);
 	--background-page-size:    200px 200px, auto;
 
 	/* Paper texture: soft cellular polygons behind the paper card */
 	--background-surface:
-		url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'><polygon points='0,0 100,0 60,45' fill='%23f4f6f9'/><polygon points='0,0 0,50 60,45' fill='%23edf1f5'/><polygon points='100,0 200,0 140,55' fill='%23f7f9fb'/><polygon points='100,0 60,45 140,55' fill='%23f4f6f9'/><polygon points='200,0 200,50 140,55' fill='%23edf1f5'/><polygon points='0,50 60,45 100,100' fill='%23f7f9fb'/><polygon points='0,50 0,100 100,100' fill='%23f4f6f9'/><polygon points='60,45 140,55 100,100' fill='%23edf1f5'/><polygon points='140,55 200,50 200,100' fill='%23f4f6f9'/><polygon points='140,55 100,100 200,100' fill='%23f7f9fb'/></svg>"),
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23f4f6f9'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23edf1f5'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23f7f9fb'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23f4f6f9'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23edf1f5'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23f7f9fb'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23f4f6f9'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23edf1f5'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23f4f6f9'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23f7f9fb'/%3E%3C/svg%3E"),
 		var(--color-surface);
 	--background-surface-size: 200px 100px, auto;
 

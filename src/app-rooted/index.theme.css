@@ -21,7 +21,7 @@
 
 	/* Dark-mode paper texture: warm off-white polygons (from PAPER_DARK) */
 	--background-surface:
-		url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'><polygon points='0,0 100,0 60,45' fill='%23faf8f5'/><polygon points='0,0 0,50 60,45' fill='%23f4f0e8'/><polygon points='100,0 200,0 140,55' fill='%23fdfbfa'/><polygon points='100,0 60,45 140,55' fill='%23faf8f5'/><polygon points='200,0 200,50 140,55' fill='%23f4f0e8'/><polygon points='0,50 60,45 100,100' fill='%23fdfbfa'/><polygon points='0,50 0,100 100,100' fill='%23faf8f5'/><polygon points='60,45 140,55 100,100' fill='%23f4f0e8'/><polygon points='140,55 200,50 200,100' fill='%23faf8f5'/><polygon points='140,55 100,100 200,100' fill='%23fdfbfa'/></svg>"),
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23faf8f5'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23f4f0e8'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23fdfbfa'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23faf8f5'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23f4f0e8'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23fdfbfa'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23faf8f5'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23f4f0e8'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23faf8f5'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23fdfbfa'/%3E%3C/svg%3E"),
 		var(--color-surface);
 
 	--color-die-face:          var(--color-surface);
