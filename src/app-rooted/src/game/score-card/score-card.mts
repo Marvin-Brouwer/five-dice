@@ -97,14 +97,19 @@ export const ScoreCard = component<ScoreCardOptions>({
 			role: 'banner',
 			classes: styles.banner,
 			children: [
-				element('label', {
-					classes: styles.nameLabel,
-					htmlFor: 'player-name',
-					textContent: 'Player',
-				}),
 				element('span', {
-					classes: styles.nameInputWrap,
-					children: [nameInput, clearNameButton],
+					classes: styles.nameField,
+					children: [
+						element('label', {
+							classes: styles.nameLabel,
+							htmlFor: 'player-name',
+							textContent: 'Player',
+						}),
+						element('span', {
+							classes: styles.nameInputWrap,
+							children: [nameInput, clearNameButton],
+						}),
+					],
 				}),
 				roundLabel,
 			],
@@ -143,9 +148,9 @@ function writeRoundLabel(target: HTMLElement, round: number): void {
 	target.classList.remove(styles.roundLabelFinished!)
 	target.removeAttribute('aria-label')
 	target.replaceChildren(
-		document.createTextNode('Round '),
+		Object.assign(document.createElement('span'), { textContent: 'Round', className: styles.roundHeading! }),
 		Object.assign(document.createElement('span'), { textContent: String(round), className: styles.roundNumber! }),
-		document.createTextNode(` / ${roundAmount}`),
+		Object.assign(document.createElement('span'), { textContent: `of ${roundAmount}`, className: styles.roundOf! }),
 	)
 }
 
