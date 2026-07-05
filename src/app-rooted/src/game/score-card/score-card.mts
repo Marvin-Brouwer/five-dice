@@ -117,11 +117,16 @@ export const ScoreCard = component<ScoreCardOptions>({
 			],
 		})
 
+		const cardInner = element('div', {
+			classes: styles.cardInner,
+			children: [cardHeader, banner, partOneBlock, partTwoBlock, totalsBlock],
+		})
+
 		const card = element('section', {
 			id: 'score-card',
 			classes: styles.card,
 			role: 'document',
-			children: [cardHeader, banner, partOneBlock, partTwoBlock, totalsBlock],
+			children: [cardInner],
 		})
 
 		append(card)
