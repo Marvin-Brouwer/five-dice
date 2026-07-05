@@ -1,3 +1,7 @@
+/* Global styles — loaded via <link rel="stylesheet"> in index.html so the
+   rooted CSS loader does not scope these selectors (which would prevent
+   them from matching html/body/#app/main). */
+
 *, *::before, *::after {
 	box-sizing: border-box;
 }

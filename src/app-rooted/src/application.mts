@@ -14,8 +14,6 @@ import './_shared/services/wake-lock.mts'
 import { Rules } from './content/rules.mts'
 import { NotFoundPage } from './navigation/not-found.mts'
 
-import styles from './application.css'
-
 const Router = router({
 	home: Rules,
 	notFound: NotFoundPage,
@@ -24,7 +22,6 @@ const Router = router({
 
 export const Application = component({
 	name: 'five-dice-application',
-	styles,
 	onMount({ append, element, create }) {
 		document.title = 'Five dice'
 		append(
