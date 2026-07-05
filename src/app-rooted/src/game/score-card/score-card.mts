@@ -147,10 +147,15 @@ function writeRoundLabel(target: HTMLElement, round: number): void {
 	}
 	target.classList.remove(styles.roundLabelFinished!)
 	target.removeAttribute('aria-label')
+	const line = document.createElement('span')
+	line.className = styles.roundLine!
+	line.append(
+		Object.assign(document.createElement('span'), { textContent: String(round), className: styles.roundNumber! }),
+		Object.assign(document.createElement('span'), { textContent: `/${roundAmount}`, className: styles.roundOf! }),
+	)
 	target.replaceChildren(
 		Object.assign(document.createElement('span'), { textContent: 'Round', className: styles.roundHeading! }),
-		Object.assign(document.createElement('span'), { textContent: String(round), className: styles.roundNumber! }),
-		Object.assign(document.createElement('span'), { textContent: `/ ${roundAmount}`, className: styles.roundOf! }),
+		line,
 	)
 }
 

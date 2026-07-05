@@ -82,9 +82,14 @@
 	align-items: center;
 	min-width: 10ch;
 	border: 0;
+	border-bottom: 1.5px solid var(--color-text);
 	background: transparent;
 	padding: 18px 6px 4px 10px;
 	height: 100%;
+}
+
+.name-input-wrap:focus-within {
+	border-bottom-color: var(--color-accent);
 }
 
 .name-input {
@@ -101,10 +106,6 @@
 
 .name-input:focus {
 	outline: none;
-}
-
-.name-input-wrap:focus-within {
-	border-bottom-color: var(--color-accent);
 }
 
 .name-clear-button {
@@ -132,8 +133,7 @@
 
 .round-label {
 	flex: 0 0 auto;
-	width: 44px;
-	height: 44px;
+	min-width: 56px;
 	border: 0;
 	background: transparent;
 	color: var(--color-text);
@@ -145,8 +145,8 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	gap: 0;
-	padding: 0;
+	gap: 2px;
+	padding: 0 4px;
 	text-align: center;
 	align-self: center;
 }
@@ -160,22 +160,27 @@
 	line-height: 1;
 }
 
+.round-line {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 2px;
+	line-height: 1;
+}
+
 .round-number {
 	font-family: var(--font-hand);
 	font-size: 22px;
 	color: var(--color-accent);
 	letter-spacing: 0;
 	transform: rotate(-4deg);
-	display: block;
+	display: inline-block;
 	line-height: 1;
-	margin: 1px 0;
 }
 
 .round-of {
 	font-family: var(--font-mono);
-	font-size: 8px;
-	letter-spacing: 0.18em;
-	text-transform: uppercase;
+	font-size: 9px;
+	letter-spacing: 0.1em;
 	color: var(--color-text-muted);
 	line-height: 1;
 }
@@ -229,7 +234,8 @@
 	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
 }
 
-/* Ruled grid — every body cell gets an ink border */
+/* Ruled grid — every body cell gets an ink border, except at the outer
+   edges of the table where the card-inner's 2px frame takes over. */
 .score-table tbody th,
 .score-table tbody td {
 	padding: 10px 8px;
@@ -237,6 +243,9 @@
 	vertical-align: middle;
 	border: 1px solid var(--color-text);
 }
+
+.score-table tbody tr > *:first-child { border-left: 0; }
+.score-table tbody tr > *:last-child { border-right: 0; }
 
 /* Column widths */
 .label-column {
