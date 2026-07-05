@@ -319,17 +319,22 @@
 }
 
 /* --------------------------------------------------------------- Row label
-   By default the description sits inline to the right of the title with
-   a middot separator ("Aces · Sum of aces"). When the label column runs
-   out of room the description wraps beneath the title on its own line,
-   never truncated. */
+   Every row is a compact two-line block: title on top, description below.
+   Same layout across Part 1, Part 2 and Totals so the grid reads
+   predictably regardless of description length. */
 .label-display {
 	display: flex;
-	align-items: baseline;
-	flex-wrap: wrap;
-	column-gap: 0.5em;
-	row-gap: 1px;
-	line-height: 1.2;
+	align-items: center;
+	gap: 0.4em;
+	line-height: 1.15;
+	min-width: 0;
+}
+
+.label-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.15;
 }
 
 .label-title {
@@ -337,45 +342,29 @@
 	font-size: 13px;
 	font-weight: 600;
 	color: var(--color-text);
-	white-space: nowrap;
+	line-height: 1.15;
 }
 
 .description-label {
 	font-family: var(--font-mono);
-	font-size: 10px;
+	font-size: 9px;
 	color: var(--color-text-muted);
 	letter-spacing: 0.02em;
-	flex: 1 1 auto;
-	min-width: 0;
+	line-height: 1.15;
+	margin-top: 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
-/* Middot leading the description when it sits inline (i.e. hasn't wrapped
-   to its own line). Uses a pseudo-element so no extra DOM. */
-.description-label::before {
-	content: "· ";
-	color: var(--color-text-muted);
-}
-
-/* Prefer short description when available; if none, the `long` text sits
-   directly in the .description-label span so no extra rule is needed. */
+/* Always show the short variant when available; the `long` variant is
+   still in the DOM for screen readers (via aria-label on the parent). */
 .description-short {
 	display: inline;
 }
 
 .description-long {
 	display: none;
-}
-
-/* When the label column is narrow (roughly < 190px including padding),
-   let the description wrap under the title without shrinking, and drop
-   the middot since it becomes decorative noise on a new line. */
-@container (max-width: 22rem) {
-	.description-label {
-		flex-basis: 100%;
-	}
-	.description-label::before {
-		content: "";
-	}
 }
 
 /* ---------------------------------------------------------------- Roll cell */

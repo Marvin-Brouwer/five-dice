@@ -230,8 +230,13 @@ function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState
 			ariaLabel: `${dice[field as Dice]}`,
 		}))
 	}
-	labelChildren.push(element('span', { classes: styles.labelTitle, textContent: label.title }))
-	labelChildren.push(renderDescription(context, label))
+	labelChildren.push(element('span', {
+		classes: styles.labelText,
+		children: [
+			element('span', { classes: styles.labelTitle, textContent: label.title }),
+			renderDescription(context, label),
+		],
+	}))
 
 	const scoreChildren: Array<Node | string> = [
 		element('span', {
@@ -356,13 +361,16 @@ function renderTotals(context: RenderContext, pad: ReadonlyState<ScorePad>): Nod
 			}),
 			element('tbody', {
 				children: [
-					totalsRow(['Total part 1'], partOne === 0 ? '.' : String(partOne)),
-					totalsRow([
-						element('span', { classes: styles.labelTitle, textContent: 'Bonus' }),
-						bonusDescription,
-					], bonus === 0 ? '.' : String(bonus)),
-					totalsRow(['Total part 2'], partTwo === 0 ? '.' : String(partTwo)),
-					totalsRow(['Final score'], total === 0 ? '.' : String(total), styles.finalRow),
+					totalsRow([element('span', { classes: styles.labelText, children: [element('span', { classes: styles.labelTitle, textContent: 'Total part 1' })] })], partOne === 0 ? '.' : String(partOne)),
+					totalsRow([element('span', {
+						classes: styles.labelText,
+						children: [
+							element('span', { classes: styles.labelTitle, textContent: 'Bonus' }),
+							bonusDescription,
+						],
+					})], bonus === 0 ? '.' : String(bonus)),
+					totalsRow([element('span', { classes: styles.labelText, children: [element('span', { classes: styles.labelTitle, textContent: 'Total part 2' })] })], partTwo === 0 ? '.' : String(partTwo)),
+					totalsRow([element('span', { classes: styles.labelText, children: [element('span', { classes: styles.labelTitle, textContent: 'Final score' })] })], total === 0 ? '.' : String(total), styles.finalRow),
 				],
 			}),
 		],
