@@ -150,7 +150,7 @@ function writeRoundLabel(target: HTMLElement, round: number): void {
 	target.replaceChildren(
 		Object.assign(document.createElement('span'), { textContent: 'Round', className: styles.roundHeading! }),
 		Object.assign(document.createElement('span'), { textContent: String(round), className: styles.roundNumber! }),
-		Object.assign(document.createElement('span'), { textContent: `of ${roundAmount}`, className: styles.roundOf! }),
+		Object.assign(document.createElement('span'), { textContent: `/ ${roundAmount}`, className: styles.roundOf! }),
 	)
 }
 
