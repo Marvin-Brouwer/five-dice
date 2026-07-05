@@ -185,6 +185,13 @@ function renderSection(context: RenderContext, title: string, fields: ScoreField
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
+			element('colgroup', {
+				children: [
+					element('col', { classes: styles.labelColumn }),
+					element('col', { classes: styles.rollColumn }),
+					element('col', { classes: styles.scoreColumn }),
+				],
+			}),
 			element('thead', {
 				children: element('tr', { classes: styles.sectionRow, children: [bandCell] }),
 			}),
@@ -338,6 +345,12 @@ function renderTotals(context: RenderContext, pad: ReadonlyState<ScorePad>): Nod
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
+			element('colgroup', {
+				children: [
+					element('col', { classes: styles.labelColumn }),
+					element('col', { classes: styles.totalsColumn }),
+				],
+			}),
 			element('thead', {
 				children: element('tr', { classes: styles.sectionRow, children: [totalsBand] }),
 			}),
