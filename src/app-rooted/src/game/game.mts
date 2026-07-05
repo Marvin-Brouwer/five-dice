@@ -8,6 +8,7 @@ import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
 import { playGameEndFanfare } from './audio/audio.ts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
+import { PlaceDock } from './score-input/place-dock.mts'
 import { createScorePadStore } from './_logic/scorePadStore.mts'
 
 import styles from './game.css'
@@ -38,45 +39,6 @@ export const Game = component({
 			event.returnValue = message
 		})
 
-		const enterScoreButton = element('button', {
-			type: 'button',
-			classes: styles.toolbarButton,
-			textContent: 'Enter score',
-			disabled: store.gameEnded(),
-			on: {
-				click() {
-					if (store.gameEnded()) return
-					openRequest.update(() => true)
-				},
-			},
-		})
-
-		const undoButton = element('button', {
-			type: 'button',
-			classes: styles.toolbarButton,
-			textContent: 'Undo last turn',
-			disabled: !store.canUndo(),
-			on: {
-				click() {
-					if (!store.canUndo()) return
-					if (confirm('Undo your last committed round?')) store.undo()
-				},
-			},
-		})
-
-		const resetButton = element('button', {
-			type: 'button',
-			classes: styles.toolbarButton,
-			textContent: 'New game',
-			on: {
-				click() {
-					if (confirm('Start a new game? This will clear the current score pad.')) {
-						store.reset()
-					}
-				},
-			},
-		})
-
 		const endBanner = element('aside', {
 			classes: [styles.endBanner, styles.hidden],
 			role: 'status',
@@ -86,11 +48,6 @@ export const Game = component({
 
 		const confetti = typeof window !== 'undefined' ? new JSConfetti() : undefined
 		let lastGameEnded = false
-
-		function syncToolbar() {
-			enterScoreButton.disabled = store.gameEnded()
-			undoButton.disabled = !store.canUndo() || store.gameEnded()
-		}
 
 		function syncEndBanner() {
 			if (store.gameEnded()) {
@@ -107,11 +64,9 @@ export const Game = component({
 			}
 		}
 
-		syncToolbar()
 		syncEndBanner()
 
 		store.on('change', signal, () => {
-			syncToolbar()
 			syncEndBanner()
 		})
 
@@ -127,13 +82,10 @@ export const Game = component({
 		}, { signal })
 
 		append(
-			element('div', {
-				classes: styles.toolbar,
-				children: [enterScoreButton, undoButton, resetButton],
-			}),
 			create(ScoreCard, { store }),
 			endBanner,
 			create(ScoreInput, { store, openRequest }),
+			create(PlaceDock, { store, openRequest }),
 		)
 	},
 })

@@ -12,7 +12,7 @@
 .backdrop {
 	position: fixed;
 	inset: 0;
-	background: rgba(0, 0, 0, 0.45);
+	background: rgba(28, 29, 31, 0.28);
 	z-index: 1;
 }
 
@@ -23,12 +23,17 @@
 	transform: translateX(-50%);
 	z-index: 3;
 	margin: 0;
-	padding: 0.5rem 1rem;
-	font-size: 1rem;
-	background: var(--color-surface, #fff);
-	color: var(--color-text, #111);
-	border: 1px solid var(--color-border, #888);
-	border-radius: 0.25rem;
+	padding: 8px 14px;
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	background: var(--color-divider-strong);
+	color: var(--color-surface);
+	border-radius: var(--radius-sm);
+	max-width: calc(100vw - 2rem);
+	text-align: center;
 }
 
 .fieldset {
@@ -48,82 +53,117 @@
 	border: 0;
 }
 
+/* Transparent per-row hit target. All visual affordance is on the row itself
+   via [data-selecting]/[data-target] attribute selectors on the score-card. */
 .option {
 	position: fixed;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0 0.75rem;
 	z-index: 2;
 	cursor: pointer;
-	border: 2px solid var(--color-focus, currentColor);
-	background: var(--color-surface, #fff);
-	color: var(--color-text, #111);
-	font: inherit;
+	background: transparent;
+	border: 0;
 	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
 }
 
-.option-valid {
-	border-color: var(--color-success, var(--color-focus, #2a7));
+.option:has(.radio:focus-visible) {
+	outline: 3px solid var(--color-focus);
+	outline-offset: -3px;
+	border-radius: var(--radius-sm);
 }
 
-.option-discard {
-	border-color: var(--color-warning, var(--color-text-muted, #a70));
-	opacity: 0.85;
+.option:has(.radio:checked) {
+	outline: 3px solid var(--color-accent);
+	outline-offset: -3px;
+	border-radius: var(--radius-sm);
 }
 
-.option:hover {
-	background: var(--color-surface-alt, #eef);
+.option-discard:has(.radio:checked) {
+	outline-color: var(--color-warning);
 }
 
 .radio {
-	flex: 0 0 auto;
-	margin: 0;
+	position: absolute;
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+	pointer-events: none;
 }
 
-.option-title {
-	flex: 1;
-	font-weight: 600;
+/* Preview injected into the row's score cell during hover/focus */
+.score-preview {
+	display: inline-block;
+	margin-left: 6px;
+	padding: 2px 6px;
+	font-family: var(--font-hand);
+	font-size: 22px;
+	color: var(--color-accent);
+	border: 1.5px dashed var(--color-accent);
+	border-radius: 4px;
+	transform: rotate(-2deg);
+	pointer-events: none;
 }
 
-.option-meta {
-	flex: 0 0 auto;
-	font-size: 0.875rem;
-	color: var(--color-text-muted, currentColor);
-}
-
-.option:has(.radio:focus-visible),
-.option:has(.radio:checked) {
-	outline: 2px solid var(--color-focus, currentColor);
-	outline-offset: 2px;
+.score-preview-discard {
+	display: inline-block;
+	margin-left: 6px;
+	padding: 2px 6px;
+	font-family: var(--font-mono);
+	font-size: 16px;
+	color: var(--color-warning);
+	border: 1.5px dashed var(--color-warning);
+	border-radius: 4px;
+	pointer-events: none;
 }
 
 .footer {
 	position: fixed;
-	bottom: 0.75rem;
+	bottom: max(env(safe-area-inset-bottom), 0.75rem);
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 3;
 	display: flex;
-	gap: 0.5rem;
-	padding: 0.5rem;
-	background: var(--color-surface, #fff);
-	border: 1px solid var(--color-border, #888);
-	border-radius: 0.25rem;
+	gap: 8px;
+	padding: 10px;
+	background: var(--color-surface);
+	border-radius: var(--radius-md);
+	box-shadow: 0 4px 16px rgba(28, 29, 31, 0.2);
 }
 
-.cancel-button,
-.confirm-button {
-	font: inherit;
-	padding: 0.5rem 0.75rem;
-	border: 1px solid var(--color-border, #888);
-	border-radius: 0.25rem;
-	background: var(--color-surface, transparent);
-	color: var(--color-text, currentColor);
+.action-button {
+	padding: 10px 14px;
+	border-radius: var(--radius-sm);
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
 	cursor: pointer;
+	min-width: 6rem;
 }
 
-.confirm-button[disabled] {
-	opacity: 0.5;
+.action-secondary {
+	background: transparent;
+	color: var(--color-text-secondary);
+	border: 1.5px solid var(--color-border);
+}
+
+.action-secondary:hover,
+.action-secondary:focus-visible {
+	background: var(--color-border-subtle);
+	color: var(--color-text);
+}
+
+.action-primary {
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+	border: 0;
+	font-weight: 700;
+}
+
+.action-primary:disabled {
+	opacity: 0.45;
 	cursor: not-allowed;
 }

@@ -9,21 +9,25 @@ import styles from './row-overlay.css'
 export type RowOverlayField = {
 	field: ScoreField
 	variant: 'valid' | 'discard'
+	preview?: string
 }
 
 export type RowOverlayOptions = {
 	open: Store<boolean>
+	mode: 'apply' | 'discard'
 	title: string
 	availableFields: () => RowOverlayField[]
 	onConfirm: (field: ScoreField) => void
 	onCancel: () => void
 }
 
+const SCORE_CARD_ID = 'score-card'
+
 export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
 	onMount({ append, element, signal, options, on }) {
-		const { open, title, availableFields, onConfirm, onCancel } = options
+		const { open, mode, title, availableFields, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
@@ -33,6 +37,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			classes: styles.fieldset,
 			aria: { labelledBy: titleId },
 		})
+
 		const titleEl = element('h2', {
 			id: titleId,
 			classes: styles.title,
@@ -41,7 +46,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const cancelButton = element('button', {
 			type: 'button',
-			classes: styles.cancelButton,
+			classes: [styles.actionButton, styles.actionSecondary],
 			textContent: 'Cancel',
 			on: {
 				click() {
@@ -53,15 +58,16 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const confirmButton = element('button', {
 			type: 'button',
-			classes: styles.confirmButton,
-			textContent: 'Confirm',
+			classes: [styles.actionButton, styles.actionPrimary],
+			textContent: mode === 'discard' ? 'Discard' : 'Confirm',
 			disabled: true,
 			on: {
 				click() {
 					const selected = selectedField()
 					if (selected === undefined) return
+					const target = selected
 					closeOverlay()
-					onConfirm(selected)
+					onConfirm(target)
 				},
 			},
 		})
@@ -92,6 +98,23 @@ export const RowOverlay = component<RowOverlayOptions>({
 		let activeRadios: HTMLInputElement[] = []
 		let activeLabels: HTMLLabelElement[] = []
 		let resizeObserver: ResizeObserver | undefined
+		let injectedPreviews: Map<ScoreField, HTMLSpanElement> = new Map()
+
+		function scoreCardEl(): HTMLElement | null {
+			return document.getElementById(SCORE_CARD_ID)
+		}
+
+		function rowEl(field: ScoreField): HTMLElement | null {
+			const card = scoreCardEl()
+			if (!card) return null
+			return card.querySelector<HTMLElement>(`[data-field="${field}"]`)
+		}
+
+		function scoreCellEl(field: ScoreField): HTMLElement | null {
+			const row = rowEl(field)
+			if (!row) return null
+			return row.querySelector<HTMLElement>('[data-cell="score"]')
+		}
 
 		function selectedField(): ScoreField | undefined {
 			const checked = activeRadios.find(r => r.checked)
@@ -100,6 +123,55 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		function syncConfirm() {
 			confirmButton.disabled = selectedField() === undefined
+		}
+
+		function decorateRows(fields: RowOverlayField[]) {
+			const card = scoreCardEl()
+			if (card) card.dataset.selecting = mode
+			fields.forEach(({ field, variant }) => {
+				const row = rowEl(field)
+				if (!row) return
+				row.dataset.target = variant === 'valid' ? 'valid' : 'discard'
+			})
+		}
+
+		function undecorateRows() {
+			const card = scoreCardEl()
+			if (card) delete card.dataset.selecting
+			card?.querySelectorAll<HTMLElement>('[data-field]').forEach((row) => {
+				delete row.dataset.target
+				delete row.dataset.hover
+			})
+			injectedPreviews.forEach((node, field) => {
+				const cell = scoreCellEl(field)
+				if (cell && cell.contains(node)) node.remove()
+			})
+			injectedPreviews.clear()
+		}
+
+		function setHover(field: ScoreField, on: boolean) {
+			const row = rowEl(field)
+			if (!row) return
+			if (on) row.dataset.hover = 'true'
+			else delete row.dataset.hover
+		}
+
+		function showPreview(field: ScoreField, text: string, variant: 'valid' | 'discard') {
+			const cell = scoreCellEl(field)
+			if (!cell) return
+			hidePreview(field)
+			const node = document.createElement('span')
+			node.className = variant === 'valid' ? styles.scorePreview! : styles.scorePreviewDiscard!
+			node.textContent = text
+			cell.append(node)
+			injectedPreviews.set(field, node)
+		}
+
+		function hidePreview(field: ScoreField) {
+			const existing = injectedPreviews.get(field)
+			if (!existing) return
+			existing.remove()
+			injectedPreviews.delete(field)
 		}
 
 		function buildRadios() {
@@ -112,7 +184,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			)
 			activeRadios = []
 			activeLabels = []
-			fields.forEach(({ field, variant }, index) => {
+			fields.forEach(({ field, variant, preview }, index) => {
 				const radio = element('input', {
 					type: 'radio',
 					name: radioName,
@@ -120,7 +192,17 @@ export const RowOverlay = component<RowOverlayOptions>({
 					classes: styles.radio,
 					id: radioId(field),
 					on: {
-						change: syncConfirm,
+						change() {
+							syncConfirm()
+						},
+						focus() {
+							setHover(field, true)
+							if (preview !== undefined) showPreview(field, preview, variant)
+						},
+						blur() {
+							setHover(field, false)
+							hidePreview(field)
+						},
 					},
 				})
 				const label = element('label', {
@@ -129,17 +211,18 @@ export const RowOverlay = component<RowOverlayOptions>({
 						styles.option,
 						variant === 'valid' ? styles.optionValid : styles.optionDiscard,
 					],
-					children: [
-						radio,
-						element('span', {
-							classes: styles.optionTitle,
-							textContent: rowDisplayLabels[field].title,
-						}),
-						element('span', {
-							classes: styles.optionMeta,
-							textContent: variant === 'valid' ? 'apply' : 'discard',
-						}),
-					],
+					aria: { label: `${rowDisplayLabels[field].title} — ${variant === 'valid' ? 'apply' : 'discard'}` },
+					children: [radio],
+					on: {
+						mouseenter() {
+							setHover(field, true)
+							if (preview !== undefined) showPreview(field, preview, variant)
+						},
+						mouseleave() {
+							setHover(field, false)
+							hidePreview(field)
+						},
+					},
 				})
 				label.dataset.field = field
 				if (index === 0) label.dataset.firstOption = 'true'
@@ -147,13 +230,14 @@ export const RowOverlay = component<RowOverlayOptions>({
 				activeLabels.push(label)
 				fieldset.append(label)
 			})
+			decorateRows(fields)
 		}
 
 		function repositionLabels() {
 			activeLabels.forEach((label) => {
-				const field = label.dataset.field
+				const field = label.dataset.field as ScoreField | undefined
 				if (!field) return
-				const row = document.querySelector(`[data-field="${field}"]`) as HTMLElement | null
+				const row = rowEl(field)
 				if (!row) {
 					label.style.display = 'none'
 					return
@@ -188,6 +272,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			document.body.style.overflow = ''
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
+			undecorateRows()
 			fieldset.replaceChildren()
 			activeRadios = []
 			activeLabels = []
