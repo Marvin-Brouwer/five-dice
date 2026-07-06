@@ -23,8 +23,8 @@
 	top: -14px;
 	right: 8px;
 	z-index: 10;
-	width: 68px;
-	height: 68px;
+	width: 64px;
+	height: 64px;
 	padding: 0;
 	border-radius: 50%;
 	border: 3px solid var(--color-surface);
