@@ -8,7 +8,6 @@ import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
 import { playGameEndFanfare } from './audio/audio.ts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
-import { PlaceDock } from './score-input/place-dock.mts'
 import { createScorePadStore } from './_logic/scorePadStore.mts'
 
 import styles from './game.css'
@@ -82,10 +81,9 @@ export const Game = component({
 		}, { signal })
 
 		append(
-			create(ScoreCard, { store }),
+			create(ScoreCard, { store, openRequest }),
 			endBanner,
 			create(ScoreInput, { store, openRequest }),
-			create(PlaceDock, { store, openRequest }),
 		)
 	},
 })

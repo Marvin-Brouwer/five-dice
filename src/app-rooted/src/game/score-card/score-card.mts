@@ -1,5 +1,5 @@
 import { component, cssClass, type ComponentContext, type CssClass } from '@rooted/components'
-import type { ReadonlyState } from '@rooted/store'
+import type { ReadonlyState, Store } from '@rooted/store'
 
 import { dice, roundAmount, type Dice, type ScoreField } from '../_logic/gameConstants.ts'
 import { isDiscarded } from '../_logic/score/score.ts'
@@ -14,6 +14,7 @@ import type { ScorePad } from '../_logic/score/scorePad.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
 import { PipDie } from '../../_shared/die/pip-die.mts'
 import { playerNameStore } from '../../_shared/stores/playerNameStore.mts'
+import { inputActiveStore } from '../score-input/input-active-store.mts'
 
 import { renderRollCell } from './roll-cell.mts'
 import { rowDisplayLabels } from './score-card.labels.ts'
@@ -26,6 +27,7 @@ const partyIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd
 
 export type ScoreCardOptions = {
 	store: ScorePadStore
+	openRequest: Store<boolean>
 }
 
 type RenderContext = Pick<ComponentContext, 'element' | 'create'>
@@ -35,7 +37,7 @@ export const ScoreCard = component<ScoreCardOptions>({
 	styles,
 	onMount(context) {
 		const { append, element, create, signal, options } = context
-		const { store } = options
+		const { store, openRequest } = options
 
 		const nameInput = element('input', {
 			type: 'text',
@@ -127,11 +129,37 @@ export const ScoreCard = component<ScoreCardOptions>({
 			children: [cardHeader, banner, partOneBlock, partTwoBlock, totalsBlock],
 		})
 
+		const stickerButton = element('button', {
+			type: 'button',
+			classes: styles.sticker,
+			aria: { label: 'Enter score' },
+			on: {
+				click() {
+					if (store.gameEnded()) return
+					openRequest.update(() => true)
+				},
+			},
+			children: [
+				element('span', { classes: styles.stickerLine1, textContent: 'Enter' }),
+				element('span', { classes: styles.stickerLine2, textContent: 'score' }),
+			],
+		})
+
+		function syncSticker() {
+			const ended = store.gameEnded()
+			const inputOpen = inputActiveStore.value
+			stickerButton.hidden = ended || inputOpen
+			stickerButton.disabled = ended
+		}
+		store.on('change', signal, syncSticker)
+		inputActiveStore.on('change', signal, syncSticker)
+		syncSticker()
+
 		const card = element('section', {
 			id: 'score-card',
 			classes: styles.card,
 			role: 'document',
-			children: [cardInner],
+			children: [cardInner, stickerButton],
 		})
 
 		append(card)
