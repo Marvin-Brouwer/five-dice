@@ -18,7 +18,7 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: var(--space-3);
-	padding: var(--space-2) var(--page-padding);
+	padding: var(--space-2) var(--page-padding) var(--space-4) var(--page-padding) ;
 	background: transparent;
 }
 
@@ -32,8 +32,8 @@
 
 .monogram {
 	flex: 0 0 auto;
-	width: 22px;
-	height: 22px;
+	width: 26px;
+	height: 26px;
 	border-radius: 3px;
 	background: #ffffff;
 	color: var(--color-text);
@@ -51,7 +51,7 @@
 
 .breadcrumb {
 	font-family: var(--font-mono);
-	font-size: 10px;
+	font-size: 14px;
 	letter-spacing: 0.14em;
 	color: var(--color-text-secondary);
 	text-transform: uppercase;
