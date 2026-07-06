@@ -13,7 +13,9 @@ import {
 import type { ScorePad } from '../_logic/score/scorePad.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
 import { PipDie } from '../../_shared/die/pip-die.mts'
+import { menuStore } from '../../_shared/stores/menuStore.mts'
 import { playerNameStore } from '../../_shared/stores/playerNameStore.mts'
+import { inputActiveStore } from '../score-input/input-active-store.mts'
 
 import { renderRollCell } from './roll-cell.mts'
 import { rowDisplayLabels } from './score-card.labels.ts'
@@ -146,10 +148,16 @@ export const ScoreCard = component<ScoreCardOptions>({
 
 		function syncSticker() {
 			const ended = store.gameEnded()
+			const blocked = inputActiveStore.value || menuStore.value
 			stickerButton.hidden = ended
 			stickerButton.disabled = ended
+			stickerButton.classList.toggle(styles.stickerInert!, blocked)
+			stickerButton.setAttribute('aria-hidden', blocked ? 'true' : 'false')
+			stickerButton.tabIndex = blocked ? -1 : 0
 		}
 		store.on('change', signal, syncSticker)
+		inputActiveStore.on('change', signal, syncSticker)
+		menuStore.on('change', signal, syncSticker)
 		syncSticker()
 
 		const card = element('section', {

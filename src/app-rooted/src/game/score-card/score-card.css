@@ -53,6 +53,12 @@
 	display: none;
 }
 
+/* Blocked while an overlay/menu owns the screen — visually the same but
+   can't intercept clicks or steal keyboard focus. */
+.sticker-inert {
+	pointer-events: none;
+}
+
 .sticker:hover,
 .sticker:focus-visible {
 	transform: rotate(-8deg) scale(1.05);
