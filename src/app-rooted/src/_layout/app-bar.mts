@@ -1,6 +1,7 @@
 import { component } from '@rooted/components'
 
 import { menuStore } from '../_shared/stores/menuStore.mts'
+import { PipDie } from '../_shared/die/pip-die.mts'
 
 import styles from './app-bar.css'
 
@@ -13,20 +14,10 @@ const kebabSvg = `
 	</svg>
 `
 
-const fiveDieSvg = `
-	<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-		<circle cx="6"  cy="6"  r="2.1" fill="currentColor"/>
-		<circle cx="18" cy="6"  r="2.1" fill="currentColor"/>
-		<circle cx="12" cy="12" r="2.1" fill="currentColor"/>
-		<circle cx="6"  cy="18" r="2.1" fill="currentColor"/>
-		<circle cx="18" cy="18" r="2.1" fill="currentColor"/>
-	</svg>
-`
-
 export const AppBar = component({
 	name: 'app-bar',
 	styles,
-	onMount({ append, element, signal }) {
+	onMount({ append, element, create, signal }) {
 		const skipLink = element('a', {
 			classes: styles.skipLink,
 			href: '#main-content',
@@ -36,8 +27,8 @@ export const AppBar = component({
 		const monogram = element('span', {
 			classes: styles.monogram,
 			aria: { label: 'Five dice' },
+			children: create(PipDie, { value: 5, ariaLabel: 'Five dice' }),
 		})
-		monogram.innerHTML = fiveDieSvg
 
 		const breadcrumb = element('span', {
 			classes: styles.breadcrumb,

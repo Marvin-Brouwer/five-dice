@@ -23,6 +23,7 @@ const CELL_XY: Array<[number, number]> = [
 
 export type PipDieOptions = {
 	value: DieValue | undefined
+	/** Pixel size (fixed) — pass 0 or undefined to let CSS drive size instead. */
 	size?: number
 	variant?: 'default' | 'active' | 'muted'
 	ariaLabel?: string
@@ -53,10 +54,10 @@ export const PipDie = component<PipDieOptions>({
 	name: 'pip-die',
 	styles,
 	onMount({ append, element, options }) {
-		const { value, size = 44, variant = 'default', ariaLabel } = options
+		const { value, size, variant = 'default', ariaLabel } = options
 		const wrap = element('span', {
 			classes: styles.die,
-			style: { width: `${size}px`, height: `${size}px` },
+			style: size ? { width: `${size}px`, height: `${size}px` } : {},
 			role: 'img',
 			aria: { label: ariaLabel ?? (value === undefined ? 'Empty die' : `Die showing ${value}`) },
 		})

@@ -2,4 +2,8 @@
 	display: inline-block;
 	line-height: 0;
 	flex: 0 0 auto;
+	/* When no fixed pixel size is passed, follow the current font-size so
+	   the die scales with surrounding text. */
+	width: 1em;
+	height: 1em;
 }

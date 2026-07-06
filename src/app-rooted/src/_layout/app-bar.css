@@ -32,21 +32,13 @@
 
 .monogram {
 	flex: 0 0 auto;
-	width: 26px;
-	height: 26px;
-	border-radius: 3px;
-	background: #ffffff;
+	/* Font-size drives the die's size (1em × 1em). Change this to resize. */
+	font-size: 22px;
+	line-height: 1;
 	color: var(--color-text);
-	border: 1.5px solid var(--color-text);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	line-height: 1;
-	box-sizing: border-box;
-}
-
-.monogram svg {
-	display: block;
 }
 
 .breadcrumb {
