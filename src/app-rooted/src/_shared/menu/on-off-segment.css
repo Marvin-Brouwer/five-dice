@@ -3,16 +3,17 @@
 	border: 1.5px solid var(--color-text);
 	border-radius: 4px;
 	overflow: hidden;
+	padding: 0;
+	background: transparent;
+	cursor: pointer;
+	font: inherit;
+	user-select: none;
+	-webkit-user-select: none;
 }
 
-.visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	clip-path: inset(50%);
-	overflow: hidden;
+.group:focus-visible {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
 }
 
 .segment {
@@ -24,29 +25,25 @@
 	font-weight: 600;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	cursor: pointer;
 	line-height: 1;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	user-select: none;
+	-webkit-user-select: none;
+	pointer-events: none;
 }
 
 .segment-on {
 	border-right: 1.5px solid var(--color-text);
 }
 
-.group:has(input#\:menu-lock-on:checked) .segment-on,
-.group input:checked + .segment-on {
+.group[data-state="on"] .segment-on {
 	background: var(--color-accent);
 	color: var(--color-accent-contrast);
 }
 
-.group input:checked + .segment-off {
+.group[data-state="off"] .segment-off {
 	background: var(--color-text);
 	color: var(--color-surface);
-}
-
-.group input:focus-visible + .segment {
-	outline: 2px solid var(--color-focus);
-	outline-offset: 2px;
 }

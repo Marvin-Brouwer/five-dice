@@ -176,7 +176,26 @@ export const ThemeChooser = component({
 			})
 		}
 
-		const dropdown = attachDropdown({ button, list, buildOptions, signal, on })
+		const dropdown = attachDropdown({
+			button,
+			list,
+			buildOptions,
+			signal,
+			on,
+			nativeSelect: {
+				ariaLabel: 'Theme',
+				options: () => {
+					const sensorSupported = sensorAvailable()
+					return OPTIONS.map(o => ({
+						value: o.value,
+						label: o.label,
+						selected: o.value === themeStore.value,
+						disabled: o.value === 'sensor' && !sensorSupported,
+					}))
+				},
+				onChange: (value) => themeStore.update(() => value as Theme),
+			},
+		})
 
 		syncButton()
 

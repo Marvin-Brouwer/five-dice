@@ -9,61 +9,48 @@ export type OnOffSegmentOptions = {
 	idPrefix: string
 }
 
-/** Two-segment radio group rendering as On / Off buttons wired to a Store<boolean>. */
+/** Single-tap toggle rendered as an On / Off segmented switch. Clicking
+    anywhere on the control flips the store; the labels themselves are
+    unselectable so a mis-clicked drag doesn't turn into a text selection. */
 export const OnOffSegment = component<OnOffSegmentOptions>({
 	name: 'on-off-segment',
 	styles,
 	onMount({ append, element, signal, options }) {
-		const { store, ariaLabel, idPrefix } = options
-		const onId = `${idPrefix}-on`
-		const offId = `${idPrefix}-off`
+		const { store, ariaLabel } = options
 
-		const onRadio = element('input', {
-			type: 'radio',
-			id: onId,
-			name: `${idPrefix}-group`,
-			classes: styles.visuallyHidden,
-			checked: store.value === true,
+		const onLabel = element('span', {
+			classes: [styles.segment, styles.segmentOn],
+			textContent: 'On',
+			aria: { hidden: 'true' },
+		})
+		const offLabel = element('span', {
+			classes: [styles.segment, styles.segmentOff],
+			textContent: 'Off',
+			aria: { hidden: 'true' },
+		})
+
+		const button = element('button', {
+			type: 'button',
+			role: 'switch',
+			aria: { label: ariaLabel, checked: String(store.value) },
+			classes: styles.group,
+			children: [onLabel, offLabel],
 			on: {
-				change: () => store.update(() => true),
+				click() {
+					store.update(prev => !prev)
+				},
 			},
 		})
-		const offRadio = element('input', {
-			type: 'radio',
-			id: offId,
-			name: `${idPrefix}-group`,
-			classes: styles.visuallyHidden,
-			checked: store.value === false,
-			on: {
-				change: () => store.update(() => false),
-			},
-		})
 
-		store.on('change', signal, ({ detail }) => {
-			onRadio.checked = detail.state === true
-			offRadio.checked = detail.state === false
-		})
+		function sync() {
+			const value = store.value
+			button.setAttribute('aria-checked', String(value))
+			button.dataset.state = value ? 'on' : 'off'
+		}
 
-		append(
-			element('div', {
-				role: 'radiogroup',
-				aria: { label: ariaLabel },
-				classes: styles.group,
-				children: [
-					onRadio,
-					element('label', {
-						htmlFor: onId,
-						classes: [styles.segment, styles.segmentOn],
-						textContent: 'On',
-					}),
-					offRadio,
-					element('label', {
-						htmlFor: offId,
-						classes: [styles.segment, styles.segmentOff],
-						textContent: 'Off',
-					}),
-				],
-			}),
-		)
+		store.on('change', signal, sync)
+		sync()
+
+		append(button)
 	},
 })
