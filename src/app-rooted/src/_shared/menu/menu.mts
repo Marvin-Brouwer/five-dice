@@ -31,9 +31,9 @@ const undo = `
 	</svg>
 `
 
-const closeIcon = `
-	<svg width="13" height="11" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M9 4L3 10l6 6M3 10h13a5 5 0 010 10"/>
+const closeXIcon = `
+	<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+		<path d="M6 6l12 12M18 6L6 18"/>
 	</svg>
 `
 
@@ -68,15 +68,31 @@ export const Menu = component({
 				close() {
 					if (menuStore.value) menuStore.update(() => false)
 				},
-				click(event) {
-					if (event.target === dialog) dialog.close()
-				},
 			},
 		})
 
-		const handle = element('span', {
-			classes: styles.handle,
-			aria: { hidden: 'true' },
+		const closeXWrap = element('span', { classes: styles.navCloseIcon })
+		closeXWrap.innerHTML = closeXIcon
+		const navCloseButton = element('button', {
+			type: 'button',
+			classes: styles.navClose,
+			aria: { label: 'Close menu' },
+			on: {
+				click() { dialog.close() },
+			},
+			children: closeXWrap,
+		})
+
+		const navBar = element('header', {
+			classes: styles.navBar,
+			children: [
+				element('span', { classes: styles.navTitle, textContent: 'Menu' }),
+				navCloseButton,
+			],
+		})
+
+		const contentScroll = element('div', {
+			classes: styles.content,
 		})
 
 		const settingsSection = create(MenuSection, { label: 'Settings', rightHint: 'Preferences' })
@@ -141,24 +157,13 @@ export const Menu = component({
 			control: iconElement(chevron),
 		})
 
-		const closeIconEl = element('span', { classes: styles.closeIcon })
-		closeIconEl.innerHTML = closeIcon
-		const closeButton = element('button', {
-			type: 'button',
-			classes: styles.closeButton,
-			children: [closeIconEl, element('span', { textContent: 'Close menu' })],
-			on: {
-				click() { dialog.close() },
-			},
-		})
-
-		dialog.append(
-			handle,
+		contentScroll.append(
 			settingsSection, themeRow, languageRow, screenLockRow,
 			gameSection, newGameRow, undoRow,
 			aboutSection, rulesRow, accessibilityRow, sourceRow,
-			element('div', { classes: styles.footer, children: closeButton }),
 		)
+
+		dialog.append(navBar, contentScroll)
 
 		menuStore.on('change', signal, ({ detail }) => {
 			if (detail.state && !dialog.open) dialog.showModal()
