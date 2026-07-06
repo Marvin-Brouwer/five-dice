@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 import { createStore } from '@rooted/store'
 import JSConfetti from 'js-confetti'
 
+import { newGameDisabledStore, undoDisabledStore } from '../_shared/stores/gameStateStore.mts'
 import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
 import { type ScoreField } from './_logic/gameConstants.ts'
 import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
@@ -63,10 +64,26 @@ export const Game = component({
 			}
 		}
 
+		function syncMenuActions() {
+			const noProgress = !hasGameProgress()
+			const noUndo = !store.canUndo()
+			if (newGameDisabledStore.value !== noProgress) newGameDisabledStore.update(() => noProgress)
+			if (undoDisabledStore.value !== noUndo) undoDisabledStore.update(() => noUndo)
+		}
+
 		syncEndBanner()
+		syncMenuActions()
 
 		store.on('change', signal, () => {
 			syncEndBanner()
+			syncMenuActions()
+		})
+
+		// Reset the shared menu-action flags when the game page unmounts so
+		// other routes (Rules, Accessibility) see New game / Undo disabled.
+		signal.addEventListener('abort', () => {
+			if (!newGameDisabledStore.value) newGameDisabledStore.update(() => true)
+			if (!undoDisabledStore.value) undoDisabledStore.update(() => true)
 		})
 
 		window.addEventListener('five-dice:new-game', () => {

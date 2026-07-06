@@ -1,6 +1,7 @@
 import { component } from '@rooted/components'
 import { href } from '@rooted/router'
 
+import { newGameDisabledStore, undoDisabledStore } from '../stores/gameStateStore.mts'
 import { menuStore } from '../stores/menuStore.mts'
 import { screenLockStore } from '../stores/screenLockStore.mts'
 
@@ -117,6 +118,7 @@ export const Menu = component({
 			label: 'New game',
 			hint: 'Reset the score pad',
 			variant: 'button',
+			disabledStore: newGameDisabledStore,
 			onSelect() {
 				dialog.close()
 				window.dispatchEvent(new CustomEvent('five-dice:new-game'))
@@ -127,6 +129,7 @@ export const Menu = component({
 			label: 'Undo last turn',
 			hint: 'Revert the last committed score',
 			variant: 'button',
+			disabledStore: undoDisabledStore,
 			onSelect() {
 				dialog.close()
 				window.dispatchEvent(new CustomEvent('five-dice:undo'))

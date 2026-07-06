@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import type { Store } from '@rooted/store'
 
 import styles from './menu-row.css'
 
@@ -10,6 +11,8 @@ export type MenuRowOptions = {
 	variant?: MenuRowVariant
 	href?: string | { toString(): string }
 	disabled?: boolean
+	/** Optional store driving the disabled state reactively. Overrides `disabled`. */
+	disabledStore?: Store<boolean>
 	onSelect?: () => void
 	control: Node
 }
@@ -19,8 +22,9 @@ export type MenuRowOptions = {
 export const MenuRow = component<MenuRowOptions>({
 	name: 'menu-row',
 	styles,
-	onMount({ append, element, options }) {
-		const { label, hint, variant = 'display', href, disabled = false, onSelect, control } = options
+	onMount({ append, element, signal, options }) {
+		const { label, hint, variant = 'display', href, disabled = false, disabledStore, onSelect, control } = options
+		const initialDisabled = disabledStore?.value ?? disabled
 
 		const labelBlock = element('span', {
 			classes: styles.labels,
@@ -54,17 +58,23 @@ export const MenuRow = component<MenuRowOptions>({
 			return
 		}
 		if (variant === 'button') {
-			append(element('button', {
+			const button = element('button', {
 				type: 'button',
 				classes: [styles.row, styles.rowButton],
-				disabled,
+				disabled: initialDisabled,
 				on: {
 					click() {
-						if (!disabled) onSelect?.()
+						if (!button.disabled) onSelect?.()
 					},
 				},
 				children: [labelBlock, controlWrap],
-			}))
+			})
+			if (disabledStore) {
+				disabledStore.on('change', signal, ({ detail }) => {
+					button.disabled = detail.state
+				})
+			}
+			append(button)
 			return
 		}
 		append(element('div', {
