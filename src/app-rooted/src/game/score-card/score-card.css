@@ -576,12 +576,12 @@
 .discarded th::after {
 	content: "";
 	position: absolute;
-	left: 6px;
+	left: 50%;
 	top: 50%;
 	width: calc(100cqi - 32px);
 	height: 2px;
 	background: var(--color-text);
-	transform: translateY(-50%) rotate(-2deg);
+	transform: translateY(calc(-50% + 8px)) translateX(calc(-25% + 32px)) rotate(-2deg);
 	transform-origin: left center;
 	pointer-events: none;
 	z-index: 1;
