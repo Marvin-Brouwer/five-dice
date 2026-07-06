@@ -79,13 +79,13 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	height: 22px;
-	padding: 0 5px;
+	height: 20px;
+	padding: 0 4px;
 	font-family: var(--font-hand);
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 1;
 	color: var(--color-accent);
-	border: 1.5px dashed var(--color-accent);
+	border: 1px dashed var(--color-accent);
 	border-radius: 3px;
 	transform: rotate(-2deg);
 	pointer-events: none;
@@ -95,13 +95,13 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	height: 22px;
-	padding: 0 5px;
+	height: 20px;
+	padding: 0 4px;
 	font-family: var(--font-hand);
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 1;
 	color: var(--color-warning);
-	border: 1.5px dashed var(--color-warning);
+	border: 1px dashed var(--color-warning);
 	border-radius: 3px;
 	pointer-events: none;
 }

@@ -362,6 +362,7 @@
 .score-table tbody tr > *:first-child { border-left: 0; }
 .score-table tbody tr > *:last-child { border-right: 0; }
 
+.score-table tbody td.roll-column,
 .score-table tbody td.score-column,
 .score-table tbody td.totals-column {
 	text-align: right;
@@ -536,7 +537,7 @@
 	width: calc(100cqi - 32px);
 	height: 2px;
 	background: var(--color-text);
-	transform: rotate(-2deg);
+	transform: translateY(-50%) rotate(-2deg);
 	transform-origin: left center;
 	pointer-events: none;
 	z-index: 1;
