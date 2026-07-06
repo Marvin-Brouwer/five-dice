@@ -167,6 +167,9 @@ export function attachDropdown({
 	}
 
 	button.addEventListener('click', (event) => {
+		// If the click originated from the native <select> overlay (touch),
+		// let the OS picker handle it and don't open the styled list too.
+		if (nativeEl && (event.target === nativeEl || nativeEl.contains(event.target as Node))) return
 		event.stopPropagation()
 		setOpen(!open)
 	}, { signal })
