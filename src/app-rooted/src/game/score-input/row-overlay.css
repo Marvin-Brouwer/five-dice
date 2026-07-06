@@ -72,27 +72,37 @@
 	pointer-events: none;
 }
 
-/* Preview injected into the row's score cell during hover/focus */
+/* Preview injected into the row's score cell during hover/focus.
+   Sized to fit the 22px .score-value container so previewing doesn't
+   push row height. */
 .score-preview {
-	display: inline-block;
-	padding: 2px 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 22px;
+	padding: 0 5px;
 	font-family: var(--font-hand);
-	font-size: 22px;
+	font-size: 20px;
+	line-height: 1;
 	color: var(--color-accent);
 	border: 1.5px dashed var(--color-accent);
-	border-radius: 4px;
+	border-radius: 3px;
 	transform: rotate(-2deg);
 	pointer-events: none;
 }
 
 .score-preview-discard {
-	display: inline-block;
-	padding: 2px 6px;
-	font-family: var(--font-mono);
-	font-size: 16px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 22px;
+	padding: 0 5px;
+	font-family: var(--font-hand);
+	font-size: 20px;
+	line-height: 1;
 	color: var(--color-warning);
 	border: 1.5px dashed var(--color-warning);
-	border-radius: 4px;
+	border-radius: 3px;
 	pointer-events: none;
 }
 

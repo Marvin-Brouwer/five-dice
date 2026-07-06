@@ -324,7 +324,7 @@
 	letter-spacing: 0.18em;
 	font-weight: 600;
 	text-transform: uppercase;
-	text-align: left;
+	text-align: right;
 	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
 	white-space: nowrap;
 }
@@ -375,7 +375,7 @@
 
 .roll-column {
 	width: var(--col-roll);
-	text-align: left;
+	text-align: right;
 }
 
 .score-column {
@@ -519,18 +519,25 @@
 	color: var(--color-text-muted);
 }
 
-/* Single ink slash spanning the whole row (relies on modern browsers'
-   support for position: relative on <tr>). */
-.discarded::after {
+/* Single ink slash spanning the whole row. Anchored to the label cell
+   because <tr> positioning is quirky; width uses the container-query
+   inline size of the card (which owns container-type: inline-size) so
+   the slash reaches the row's right edge regardless of column widths. */
+.discarded th {
+	position: relative;
+	overflow: visible;
+}
+
+.discarded th::after {
 	content: "";
 	position: absolute;
 	left: 6px;
-	right: 6px;
 	top: 50%;
+	width: calc(100cqi - 32px);
 	height: 2px;
 	background: var(--color-text);
 	transform: rotate(-2deg);
-	transform-origin: center;
+	transform-origin: left center;
 	pointer-events: none;
 	z-index: 1;
 }
