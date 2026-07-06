@@ -3,6 +3,7 @@ import { component } from '@rooted/components'
 import { sensorAvailable } from '../services/theme-sensor.mts'
 import { themeStore, type Theme } from '../stores/themeStore.mts'
 
+import { attachDropdown } from './dropdown-controller.mts'
 import styles from './theme-chooser.css'
 
 type ThemeOption = {
@@ -81,8 +82,6 @@ export const ThemeChooser = component({
 	name: 'theme-chooser',
 	styles,
 	onMount({ append, element, signal, on }) {
-		let listOpen = false
-
 		const statusLine = element('span', {
 			classes: styles.status,
 			aria: { hidden: 'true' },
@@ -99,15 +98,8 @@ export const ThemeChooser = component({
 		const button = element('button', {
 			type: 'button',
 			classes: styles.button,
-			aria: { hasPopup: 'listbox', expanded: 'false', label: `Theme: ${themeLabel(themeStore.value)}` },
+			aria: { hasPopup: 'listbox', label: `Theme: ${themeLabel(themeStore.value)}` },
 			children: [buttonIcon, buttonLabel, buttonChevron],
-			on: {
-				click(event) {
-					event.stopPropagation()
-					listOpen = !listOpen
-					renderList()
-				},
-			},
 		})
 
 		const list = element('div', {
@@ -115,7 +107,6 @@ export const ThemeChooser = component({
 			aria: { label: 'Theme' },
 			classes: styles.list,
 		})
-		list.hidden = true
 
 		function syncButton() {
 			const dark = isDarkNow()
@@ -133,39 +124,10 @@ export const ThemeChooser = component({
 			}
 		}
 
-		function positionList() {
-			const rect = button.getBoundingClientRect()
-			list.style.right = `${Math.max(8, window.innerWidth - rect.right)}px`
-
-			// Default to opening upward. If the list would clip past the top
-			// of the viewport, flip it downward instead.
-			list.style.top = ''
-			list.style.bottom = ''
-			const listHeight = list.offsetHeight
-			const spaceAbove = rect.top - 8
-			const openUpward = listHeight <= spaceAbove
-
-			if (openUpward) {
-				list.style.bottom = `${window.innerHeight - rect.top + 6}px`
-			}
-			else {
-				list.style.top = `${rect.bottom + 6}px`
-			}
-		}
-
-		function renderList() {
-			list.hidden = !listOpen
-			button.setAttribute('aria-expanded', String(listOpen))
-			if (!listOpen) {
-				list.replaceChildren()
-				list.style.right = ''
-				list.style.top = ''
-				list.style.bottom = ''
-				return
-			}
+		function buildOptions(): Node[] {
 			const dark = isDarkNow()
 			const sensorSupported = sensorAvailable()
-			const options = OPTIONS.map((option) => {
+			return OPTIONS.map((option) => {
 				const selected = option.value === themeStore.value
 				const disabled = option.value === 'sensor' && !sensorSupported
 
@@ -185,8 +147,7 @@ export const ThemeChooser = component({
 							event.stopPropagation()
 							if (disabled) return
 							themeStore.update(() => option.value)
-							listOpen = false
-							renderList()
+							dropdown.close()
 						},
 					},
 					children: [
@@ -213,27 +174,15 @@ export const ThemeChooser = component({
 				}
 				return optionEl
 			})
-			list.replaceChildren(...options)
-			positionList()
 		}
+
+		const dropdown = attachDropdown({ button, list, buildOptions, signal, on })
 
 		syncButton()
 
 		themeStore.on('change', signal, () => {
 			syncButton()
-			if (listOpen) renderList()
-		})
-
-		on('document', 'click', (event) => {
-			if (!listOpen) return
-			const target = event.target as Node | null
-			if (target && (button.contains(target) || list.contains(target))) return
-			listOpen = false
-			renderList()
-		})
-
-		on('window', 'resize', () => {
-			if (listOpen) positionList()
+			dropdown.refresh()
 		})
 
 		// Listen for data-theme changes (theme-sensor writes it) so the button
@@ -241,7 +190,7 @@ export const ThemeChooser = component({
 		if (typeof MutationObserver !== 'undefined') {
 			const observer = new MutationObserver(() => {
 				syncButton()
-				if (listOpen) renderList()
+				dropdown.refresh()
 			})
 			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 			signal.addEventListener('abort', () => observer.disconnect(), { once: true })

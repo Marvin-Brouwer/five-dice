@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 
 import { availableLanguages, languageStore, type Language } from '../stores/languageStore.mts'
 
+import { attachDropdown } from './dropdown-controller.mts'
 import styles from './language-chooser.css'
 
 const LABELS: Record<Language, { short: string, long: string }> = {
@@ -24,8 +25,6 @@ export const LanguageChooser = component({
 	name: 'language-chooser',
 	styles,
 	onMount({ append, element, signal, on }) {
-		let listOpen = false
-
 		const short = element('span', {
 			classes: styles.short,
 			textContent: LABELS[languageStore.value].short,
@@ -40,15 +39,8 @@ export const LanguageChooser = component({
 		const button = element('button', {
 			type: 'button',
 			classes: styles.button,
-			aria: { hasPopup: 'listbox', expanded: 'false', label: `Language: ${LABELS[languageStore.value].long}` },
+			aria: { hasPopup: 'listbox', label: `Language: ${LABELS[languageStore.value].long}` },
 			children: [short, long, buttonChevron],
-			on: {
-				click(event) {
-					event.stopPropagation()
-					listOpen = !listOpen
-					renderList()
-				},
-			},
 		})
 
 		const list = element('div', {
@@ -56,7 +48,6 @@ export const LanguageChooser = component({
 			aria: { label: 'Language' },
 			classes: styles.list,
 		})
-		list.hidden = true
 
 		function syncButton() {
 			short.textContent = LABELS[languageStore.value].short
@@ -64,79 +55,39 @@ export const LanguageChooser = component({
 			button.setAttribute('aria-label', `Language: ${LABELS[languageStore.value].long}`)
 		}
 
-		function positionList() {
-			const rect = button.getBoundingClientRect()
-			list.style.right = `${Math.max(8, window.innerWidth - rect.right)}px`
-
-			// Default to opening upward. If the list would clip past the top
-			// of the viewport, flip it downward instead.
-			list.style.top = ''
-			list.style.bottom = ''
-			const listHeight = list.offsetHeight
-			const spaceAbove = rect.top - 8
-			const openUpward = listHeight <= spaceAbove
-
-			if (openUpward) {
-				list.style.bottom = `${window.innerHeight - rect.top + 6}px`
-			}
-			else {
-				list.style.top = `${rect.bottom + 6}px`
-			}
-		}
-
-		function renderList() {
-			list.hidden = !listOpen
-			button.setAttribute('aria-expanded', String(listOpen))
-			if (!listOpen) {
-				list.replaceChildren()
-				list.style.right = ''
-				list.style.top = ''
-				list.style.bottom = ''
-				return
-			}
-			list.replaceChildren(
-				...availableLanguages.map((code) => {
-					const selected = code === languageStore.value
-					const option = element('div', {
-						role: 'option',
-						aria: { selected: String(selected) },
-						classes: [styles.option, selected ? styles.optionSelected : undefined],
-						on: {
-							click(event) {
-								event.stopPropagation()
-								languageStore.update(() => code)
-								listOpen = false
-								renderList()
-							},
+		function buildOptions(): Node[] {
+			return availableLanguages.map((code) => {
+				const selected = code === languageStore.value
+				const option = element('div', {
+					role: 'option',
+					aria: { selected: String(selected) },
+					classes: [styles.option, selected ? styles.optionSelected : undefined],
+					on: {
+						click(event) {
+							event.stopPropagation()
+							languageStore.update(() => code)
+							dropdown.close()
 						},
-						children: [
-							element('span', { classes: styles.optionShort, textContent: LABELS[code].short }),
-							element('span', { classes: styles.optionLong, textContent: LABELS[code].long }),
-						],
-					})
-					if (selected) {
-						const tick = element('span', { classes: styles.optionCheck })
-						tick.innerHTML = check
-						option.append(tick)
-					}
-					return option
-				}),
-			)
-			positionList()
+					},
+					children: [
+						element('span', { classes: styles.optionShort, textContent: LABELS[code].short }),
+						element('span', { classes: styles.optionLong, textContent: LABELS[code].long }),
+					],
+				})
+				if (selected) {
+					const tick = element('span', { classes: styles.optionCheck })
+					tick.innerHTML = check
+					option.append(tick)
+				}
+				return option
+			})
 		}
 
-		languageStore.on('change', signal, syncButton)
+		const dropdown = attachDropdown({ button, list, buildOptions, signal, on })
 
-		on('document', 'click', (event) => {
-			if (!listOpen) return
-			const target = event.target as Node | null
-			if (target && (button.contains(target) || list.contains(target))) return
-			listOpen = false
-			renderList()
-		})
-
-		on('window', 'resize', () => {
-			if (listOpen) positionList()
+		languageStore.on('change', signal, () => {
+			syncButton()
+			dropdown.refresh()
 		})
 
 		append(
