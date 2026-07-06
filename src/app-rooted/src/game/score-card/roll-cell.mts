@@ -21,7 +21,9 @@ export function renderRollCell(
 	const { element } = context
 
 	if (cell === undefined) return element('span', { classes: styles.rollEmpty })
-	if (isDiscarded(cell)) return element('span', { classes: styles.rollDiscard, textContent: '/' })
+	// Discarded rows leave the roll & score cells empty; the big slash
+	// across the row (drawn by CSS) is the sole discard indicator.
+	if (isDiscarded(cell)) return element('span', { classes: styles.rollEmpty })
 
 	if (isFlushScore(cell)) {
 		if (field !== 'flush') return element('span')

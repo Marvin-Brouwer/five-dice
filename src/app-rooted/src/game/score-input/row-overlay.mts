@@ -160,6 +160,11 @@ export const RowOverlay = component<RowOverlayOptions>({
 			const cell = scoreCellEl(field)
 			if (!cell) return
 			hidePreview(field)
+			// Hide any existing content in the cell (the current score value)
+			// so the preview replaces it rather than sitting next to it.
+			Array.from(cell.children).forEach((child) => {
+				if (child instanceof HTMLElement) child.dataset.overlayHidden = 'true'
+			})
 			const node = document.createElement('span')
 			node.className = variant === 'valid' ? styles.scorePreview! : styles.scorePreviewDiscard!
 			node.textContent = text
@@ -169,9 +174,16 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		function hidePreview(field: ScoreField) {
 			const existing = injectedPreviews.get(field)
-			if (!existing) return
-			existing.remove()
-			injectedPreviews.delete(field)
+			if (existing) {
+				existing.remove()
+				injectedPreviews.delete(field)
+			}
+			const cell = scoreCellEl(field)
+			if (cell) {
+				cell.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
+					delete child.dataset.overlayHidden
+				})
+			}
 		}
 
 		function buildRadios() {

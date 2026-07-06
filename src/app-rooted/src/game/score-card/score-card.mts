@@ -245,7 +245,7 @@ function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState
 		scoreText = '.'
 	}
 	else if (isDiscarded(cell)) {
-		scoreText = '/'
+		scoreText = ''
 		discarded = true
 	}
 	else {

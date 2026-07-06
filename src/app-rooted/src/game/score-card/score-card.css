@@ -85,7 +85,7 @@
 }
 
 .card-inner {
-	--col-roll: 138px;
+	--col-roll: 170px;
 	--col-score: 72px;
 	--col-totals-score: calc(var(--col-roll) + var(--col-score));
 	border: 0;
@@ -442,7 +442,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 }
 
 .roll-group {
@@ -476,10 +476,21 @@
 	letter-spacing: 0.05em;
 }
 
-/* --------------------------------------------------------------- Score cell */
+/* Hidden by row-overlay when a preview replaces the current value. */
+[data-overlay-hidden="true"] {
+	display: none !important;
+}
+
+/* --------------------------------------------------------------- Score cell
+   Line-height locks the box height so filled Caveat numerals don't push
+   the row taller than an empty ".". */
 .score-value {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-end;
 	min-width: 2.5ch;
+	height: 22px;
+	line-height: 1;
 	text-align: right;
 	font-variant-numeric: tabular-nums;
 }
@@ -492,7 +503,7 @@
 
 .score-value-filled {
 	font-family: var(--font-hand);
-	font-size: 26px;
+	font-size: 22px;
 	color: var(--color-accent);
 	transform: rotate(-3deg);
 	transform-origin: right center;
@@ -506,25 +517,22 @@
 .discarded .label-title,
 .discarded .description-label {
 	color: var(--color-text-muted);
-	text-decoration: line-through;
-	text-decoration-thickness: 1.5px;
 }
 
-.discarded td[data-cell="score"] {
-	position: relative;
-}
-
-.discarded td[data-cell="score"]::after {
+/* Single ink slash spanning the whole row (relies on modern browsers'
+   support for position: relative on <tr>). */
+.discarded::after {
 	content: "";
 	position: absolute;
-	left: 15%;
-	right: 8%;
+	left: 6px;
+	right: 6px;
 	top: 50%;
 	height: 2px;
 	background: var(--color-text);
-	transform: rotate(-8deg);
+	transform: rotate(-2deg);
 	transform-origin: center;
 	pointer-events: none;
+	z-index: 1;
 }
 
 /* ---------------------------------------------------------- Selection state */
