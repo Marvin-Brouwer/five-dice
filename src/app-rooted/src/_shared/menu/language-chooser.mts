@@ -83,22 +83,7 @@ export const LanguageChooser = component({
 			})
 		}
 
-		const dropdown = attachDropdown({
-			button,
-			list,
-			buildOptions,
-			signal,
-			on,
-			nativeSelect: {
-				ariaLabel: 'Language',
-				options: () => availableLanguages.map(code => ({
-					value: code,
-					label: LABELS[code].long,
-					selected: code === languageStore.value,
-				})),
-				onChange: (value) => languageStore.update(() => value as Language),
-			},
-		})
+		const dropdown = attachDropdown({ button, list, buildOptions, signal, on })
 
 		languageStore.on('change', signal, () => {
 			syncButton()
