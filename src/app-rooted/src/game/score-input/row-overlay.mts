@@ -38,7 +38,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			aria: { labelledBy: titleId },
 		})
 
-		const titleEl = element('h2', {
+		const titleEl = element('p', {
 			id: titleId,
 			classes: styles.title,
 			textContent: title,
@@ -72,9 +72,14 @@ export const RowOverlay = component<RowOverlayOptions>({
 			},
 		})
 
-		const footer = element('div', {
-			classes: styles.footer,
+		const actionsRow = element('div', {
+			classes: styles.actionsRow,
 			children: [cancelButton, confirmButton],
+		})
+
+		const sheet = element('div', {
+			classes: styles.sheet,
+			children: [titleEl, actionsRow],
 		})
 
 		const backdrop = element('div', {
@@ -91,7 +96,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			classes: styles.layer,
 			aria: { labelledBy: titleId },
 			role: 'dialog',
-			children: [backdrop, titleEl, fieldset, footer],
+			children: [backdrop, fieldset, sheet],
 		})
 		layer.hidden = true
 

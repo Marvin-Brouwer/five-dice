@@ -16,26 +16,6 @@
 	z-index: 1001;
 }
 
-.title {
-	position: fixed;
-	top: 0.75rem;
-	left: 50%;
-	transform: translateX(-50%);
-	z-index: 1003;
-	margin: 0;
-	padding: 8px 14px;
-	font-family: var(--font-mono);
-	font-size: 11px;
-	font-weight: 600;
-	letter-spacing: 0.22em;
-	text-transform: uppercase;
-	background: var(--color-divider-strong);
-	color: var(--color-surface);
-	border-radius: var(--radius-sm);
-	max-width: calc(100vw - 2rem);
-	text-align: center;
-}
-
 .fieldset {
 	border: 0;
 	padding: 0;
@@ -95,7 +75,6 @@
 /* Preview injected into the row's score cell during hover/focus */
 .score-preview {
 	display: inline-block;
-	margin-left: 6px;
 	padding: 2px 6px;
 	font-family: var(--font-hand);
 	font-size: 22px;
@@ -108,7 +87,6 @@
 
 .score-preview-discard {
 	display: inline-block;
-	margin-left: 6px;
 	padding: 2px 6px;
 	font-family: var(--font-mono);
 	font-size: 16px;
@@ -118,30 +96,51 @@
 	pointer-events: none;
 }
 
-.footer {
+/* Bottom-sheet: full-width paper strip with title above the actions.
+   Same rhythm as the dice keyboard modal. */
+.sheet {
 	position: fixed;
-	bottom: max(env(safe-area-inset-bottom), 0.75rem);
-	left: 50%;
-	transform: translateX(-50%);
+	inset: auto 0 0 0;
 	z-index: 1003;
-	display: flex;
-	gap: 8px;
-	padding: 10px;
+	width: 100vw;
 	background: var(--color-surface);
-	border-radius: var(--radius-md);
-	box-shadow: 0 4px 16px rgba(28, 29, 31, 0.2);
+	border-top-left-radius: 18px;
+	border-top-right-radius: 18px;
+	box-shadow: 0 -20px 50px rgba(28, 29, 31, 0.22);
+	padding: 14px 18px calc(18px + env(safe-area-inset-bottom));
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 }
 
-.action-button {
-	padding: 10px 14px;
-	border-radius: var(--radius-sm);
+.title {
+	margin: 0;
 	font-family: var(--font-mono);
 	font-size: 10px;
 	font-weight: 600;
-	letter-spacing: 0.14em;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+	text-align: center;
+}
+
+.actions-row {
+	display: grid;
+	grid-template-columns: 1fr 1.5fr;
+	gap: 8px;
+}
+
+.action-button {
+	padding: 12px 14px;
+	border-radius: var(--radius-sm);
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	cursor: pointer;
-	min-width: 6rem;
 }
 
 .action-secondary {
