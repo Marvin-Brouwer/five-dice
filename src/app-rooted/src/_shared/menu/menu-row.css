@@ -25,6 +25,15 @@
 	color: var(--color-text-muted);
 }
 
+.row-button:disabled .title,
+.row-button:disabled .hint {
+	color: var(--color-text-muted);
+}
+
+.row-button:disabled .control {
+	opacity: 0.5;
+}
+
 .row-button:not(:disabled):hover,
 .row-button:not(:disabled):focus-visible,
 a.row:hover,
