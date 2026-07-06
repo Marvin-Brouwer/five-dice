@@ -165,8 +165,9 @@ export const ScoreInput = component<ScoreInputOptions>({
 				applyAndReset(field)
 			},
 			onCancel() {
-				pendingDice = undefined
+				// Back to the dice keyboard.
 				pendingRow = undefined
+				diceOpen.update(() => true)
 			},
 		})
 

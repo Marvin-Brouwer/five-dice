@@ -47,7 +47,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const cancelButton = element('button', {
 			type: 'button',
 			classes: [styles.actionButton, styles.actionSecondary],
-			textContent: 'Cancel',
+			textContent: 'Back',
 			on: {
 				click() {
 					closeOverlay()
@@ -84,12 +84,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const backdrop = element('div', {
 			classes: styles.backdrop,
-			on: {
-				click() {
-					closeOverlay()
-					onCancel()
-				},
-			},
 		})
 
 		const layer = element('section', {
