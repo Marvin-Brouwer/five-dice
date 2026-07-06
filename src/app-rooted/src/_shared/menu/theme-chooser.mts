@@ -136,7 +136,21 @@ export const ThemeChooser = component({
 		function positionList() {
 			const rect = button.getBoundingClientRect()
 			list.style.right = `${Math.max(8, window.innerWidth - rect.right)}px`
-			list.style.bottom = `${window.innerHeight - rect.top + 6}px`
+
+			// Default to opening upward. If the list would clip past the top
+			// of the viewport, flip it downward instead.
+			list.style.top = ''
+			list.style.bottom = ''
+			const listHeight = list.offsetHeight
+			const spaceAbove = rect.top - 8
+			const openUpward = listHeight <= spaceAbove
+
+			if (openUpward) {
+				list.style.bottom = `${window.innerHeight - rect.top + 6}px`
+			}
+			else {
+				list.style.top = `${rect.bottom + 6}px`
+			}
 		}
 
 		function renderList() {
@@ -145,10 +159,10 @@ export const ThemeChooser = component({
 			if (!listOpen) {
 				list.replaceChildren()
 				list.style.right = ''
+				list.style.top = ''
 				list.style.bottom = ''
 				return
 			}
-			positionList()
 			const dark = isDarkNow()
 			const sensorSupported = sensorAvailable()
 			const options = OPTIONS.map((option) => {
@@ -200,6 +214,7 @@ export const ThemeChooser = component({
 				return optionEl
 			})
 			list.replaceChildren(...options)
+			positionList()
 		}
 
 		syncButton()
