@@ -171,7 +171,10 @@ export const RowOverlay = component<RowOverlayOptions>({
 				if (child instanceof HTMLElement) child.dataset.overlayHidden = 'true'
 			})
 			const node = document.createElement('span')
-			node.className = variant === 'valid' ? styles.scorePreview! : styles.scorePreviewDiscard!
+			// Use a data attribute so score-card.css (which owns the cell's
+			// scope) can style the injected preview correctly. Row-overlay's
+			// own scoped CSS wouldn't apply here.
+			node.dataset.scorePreview = variant
 			node.textContent = text
 			cell.append(node)
 			injectedPreviews.set(field, node)

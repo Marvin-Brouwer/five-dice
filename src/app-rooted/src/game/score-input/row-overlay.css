@@ -72,39 +72,8 @@
 	pointer-events: none;
 }
 
-/* Preview injected into the row's score cell during hover/focus.
-   Sized to fit the 22px .score-value container so previewing doesn't
-   push row height. */
-.score-preview {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: 20px;
-	padding: 0 4px;
-	font-family: var(--font-hand);
-	font-size: 16px;
-	line-height: 1;
-	color: var(--color-accent);
-	border: 1px dashed var(--color-accent);
-	border-radius: 3px;
-	transform: rotate(-2deg);
-	pointer-events: none;
-}
-
-.score-preview-discard {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	height: 20px;
-	padding: 0 4px;
-	font-family: var(--font-hand);
-	font-size: 16px;
-	line-height: 1;
-	color: var(--color-warning);
-	border: 1px dashed var(--color-warning);
-	border-radius: 3px;
-	pointer-events: none;
-}
+/* Preview styles live in score-card.css so they inherit the score-card's
+   CSS scope (the injected span is a child of a score-card cell). */
 
 /* Bottom-sheet: full-width paper strip with title above the actions.
    Same rhythm as the dice keyboard modal. */

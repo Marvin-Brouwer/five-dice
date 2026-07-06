@@ -482,6 +482,31 @@
 	display: none !important;
 }
 
+/* Preview span injected by row-overlay into the score cell during hover
+   or focus. Lives inside the score-card's scope so styles apply. */
+[data-score-preview] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 20px;
+	padding: 0 4px;
+	font-family: var(--font-hand);
+	font-size: 16px;
+	line-height: 1;
+	border: 1px dashed currentColor;
+	border-radius: 3px;
+	transform: rotate(-2deg);
+	pointer-events: none;
+}
+
+[data-score-preview="valid"] {
+	color: var(--color-accent);
+}
+
+[data-score-preview="discard"] {
+	color: var(--color-warning);
+}
+
 /* --------------------------------------------------------------- Score cell
    Line-height locks the box height so filled Caveat numerals don't push
    the row taller than an empty ".". */
