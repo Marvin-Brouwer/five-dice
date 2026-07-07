@@ -1,60 +1,92 @@
-/* Dark palette. Names stay the same as index.tokens.css; only values change.
-   Values derived from PAPER_DARK / CARDBOARD_BG_DARK in the Direction A.v2 mockup. */
+/* Dark palette. Design intent: the score-card mostly keeps its look
+   (dark ink on light paper, black bars, ruled grid) — only the paper
+   colour turns aged yellow, the cardboard darkens, and the app menu
+   becomes a dark card close to the cardboard. */
 
 :root[data-theme="dark"] {
-	--color-page:              #5a5650;
-	--color-surface:           #1a1b1e;
-	--color-surface-elevated:  #26272b;
+	/* Cardboard behind everything — much darker warm brown */
+	--color-page:              #2a2622;
+	--color-text-on-page:      #f6f5f0;
 
-	--color-text:              #f6f5f0;
-	--color-text-secondary:    #d4d3ce;
-	--color-text-muted:        #85837e;
+	/* Paper: aged / yellowed instead of stark white */
+	--color-surface:           #f0e7c8;
+	--color-surface-elevated:  #f6efd6;
+
+	/* Text stays dark ink because the paper is still a light surface */
+	--color-text:              #1c1d1f;
+	--color-text-secondary:    #3a3c40;
+	--color-text-muted:        #7a7c80;
 	--color-text-inverted:     var(--color-surface);
 
-	--color-border:            rgba(246, 245, 240, 0.14);
-	--color-border-subtle:     rgba(246, 245, 240, 0.08);
-	--color-divider-strong:    #f6f5f0;
+	/* Borders stay dark on paper */
+	--color-border:            rgba(28, 29, 31, 0.16);
+	--color-border-subtle:     rgba(28, 29, 31, 0.08);
+	--color-divider-strong:    #1c1d1f;   /* black bars stay black */
 
-	--color-accent:            #5a7cc0;
-	--color-accent-subtle:     rgba(90, 124, 192, 0.18);
-	--color-accent-contrast:   #0f1424;
+	/* Sticker blue — slightly brighter so it reads on yellow paper */
+	--color-accent:            #2d4d99;
+	--color-accent-subtle:     rgba(45, 77, 153, 0.12);
+	--color-accent-contrast:   #ffffff;
 
-	/* Dark-mode paper texture: warm off-white polygons (from PAPER_DARK) */
-	--background-surface:
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23faf8f5'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23f4f0e8'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23fdfbfa'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23faf8f5'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23f4f0e8'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23fdfbfa'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23faf8f5'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23f4f0e8'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23faf8f5'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23fdfbfa'/%3E%3C/svg%3E"),
-		var(--color-surface);
-
-	--color-die-face:          var(--color-surface);
+	/* Die tokens: face stays white, dots/border ink */
+	--color-die-face:          var(--color-white);
 	--color-die-dot:           var(--color-text);
-	--color-die-border:        var(--color-text-muted);
+	--color-die-border:        var(--color-text);
+
+	/* Menu: dark card close to cardboard, light text.
+	   The menu re-maps --color-surface / --color-text / etc. internally
+	   so its children (rows, sections, choosers) automatically pick this
+	   up without individual dark-mode rules. */
+	--color-menu-surface:      #3a352e;
+	--color-menu-text:         #f6f5f0;
+	--color-menu-text-secondary: #d4d3ce;
+	--color-menu-text-muted:   #a8a29b;
+	--color-menu-border:       rgba(246, 245, 240, 0.16);
+	--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
+
+	/* Paper texture: subtle warm-yellow polygons instead of near-white */
+	--background-surface:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23ede2be'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23e7dbb1'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23f2e9c9'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23ede2be'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23e7dbb1'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23f2e9c9'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23ede2be'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23e7dbb1'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23ede2be'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23f2e9c9'/%3E%3C/svg%3E"),
+		var(--color-surface);
 }
 
-/* System-follow theme resolves via matchMedia; the theme-sensor service writes
-   data-theme="dark" onto <html> when the resolved theme is dark, so no separate
-   @media block is needed. This block stays for the moment where the service
-   has not yet run (first render): if the user has never set a preference, pick
-   up the OS default. */
+/* System-follow fallback: if no explicit data-theme is set but the OS
+   prefers dark, apply the same overrides so first paint matches before
+   the theme-sensor service resolves. */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
-		--color-page:              #5a5650;
-		--color-surface:           #1a1b1e;
-		--color-surface-elevated:  #26272b;
+		--color-page:              #2a2622;
+		--color-text-on-page:      #f6f5f0;
 
-		--color-text:              #f6f5f0;
-		--color-text-secondary:    #d4d3ce;
-		--color-text-muted:        #85837e;
+		--color-surface:           #f0e7c8;
+		--color-surface-elevated:  #f6efd6;
+
+		--color-text:              #1c1d1f;
+		--color-text-secondary:    #3a3c40;
+		--color-text-muted:        #7a7c80;
 		--color-text-inverted:     var(--color-surface);
 
-		--color-border:            rgba(246, 245, 240, 0.14);
-		--color-border-subtle:     rgba(246, 245, 240, 0.08);
-		--color-divider-strong:    #f6f5f0;
+		--color-border:            rgba(28, 29, 31, 0.16);
+		--color-border-subtle:     rgba(28, 29, 31, 0.08);
+		--color-divider-strong:    #1c1d1f;
 
-		--color-accent:            #5a7cc0;
-		--color-accent-subtle:     rgba(90, 124, 192, 0.18);
-		--color-accent-contrast:   #0f1424;
+		--color-accent:            #2d4d99;
+		--color-accent-subtle:     rgba(45, 77, 153, 0.12);
+		--color-accent-contrast:   #ffffff;
 
-		--color-die-face:          var(--color-surface);
+		--color-die-face:          var(--color-white);
 		--color-die-dot:           var(--color-text);
-		--color-die-border:        var(--color-text-muted);
+		--color-die-border:        var(--color-text);
+
+		--color-menu-surface:      #3a352e;
+		--color-menu-text:         #f6f5f0;
+		--color-menu-text-secondary: #d4d3ce;
+		--color-menu-text-muted:   #a8a29b;
+		--color-menu-border:       rgba(246, 245, 240, 0.16);
+		--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
+
+		--background-surface:
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23ede2be'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23e7dbb1'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23f2e9c9'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23ede2be'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23e7dbb1'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23f2e9c9'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23ede2be'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23e7dbb1'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23ede2be'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23f2e9c9'/%3E%3C/svg%3E"),
+			var(--color-surface);
 	}
 }

@@ -1,5 +1,16 @@
-/* Full-screen navigation view. No backdrop — the menu is the screen. */
+/* Full-screen navigation view. No backdrop — the menu is the screen.
+   The menu re-maps the base color tokens to their menu-* variants so
+   dark mode can turn the menu into a dark card without also dyeing the
+   score card. Children read var(--color-surface) etc. as usual. */
 .sheet {
+	--color-surface: var(--color-menu-surface);
+	--color-surface-elevated: var(--color-menu-surface);
+	--color-text: var(--color-menu-text);
+	--color-text-secondary: var(--color-menu-text-secondary);
+	--color-text-muted: var(--color-menu-text-muted);
+	--color-border: var(--color-menu-border);
+	--color-border-subtle: var(--color-menu-border-subtle);
+
 	border: 0;
 	padding: 0;
 	margin: 0;

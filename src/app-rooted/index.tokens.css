@@ -9,7 +9,7 @@
 	--color-text:              #1c1d1f;                       /* design: ink */
 	--color-text-secondary:    #3a3c40;                       /* design: ink2 */
 	--color-text-muted:        #7a7c80;                       /* design: muted */
-	--color-text-on-page:      #ffffff;                       /* text placed directly on --color-page */
+	--color-text-on-page:      #3a3c40;                       /* text placed directly on --color-page (matches app bar chrome) */
 	--color-text-inverted:     var(--color-surface);          /* used by skip-link etc. */
 
 	/* -------- Colours: borders / dividers -------------------------------- */
@@ -21,6 +21,20 @@
 	--color-accent:            #1f3f7a;
 	--color-accent-subtle:     rgba(31, 63, 122, 0.10);
 	--color-accent-contrast:   #ffffff;
+
+	/* Physical "white" objects that stay white in both themes: die faces,
+	   the sticker's paper border. Not a paper-tint. */
+	--color-white:             #ffffff;
+
+	/* -------- Colours: menu surface (theme-aware) -----------------------
+	   The app menu paints on its own surface so dark mode can turn the
+	   menu into a dark card without also dyeing the paper score-card. */
+	--color-menu-surface:      var(--color-surface);
+	--color-menu-text:         var(--color-text);
+	--color-menu-text-secondary: var(--color-text-secondary);
+	--color-menu-text-muted:   var(--color-text-muted);
+	--color-menu-border:       var(--color-border);
+	--color-menu-border-subtle: var(--color-border-subtle);
 
 	/* Legacy aliases still referenced by score-card / game components ------ */
 	--color-bg:                var(--color-page);
