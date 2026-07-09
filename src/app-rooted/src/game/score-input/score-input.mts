@@ -154,6 +154,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 			mode: 'apply',
 			title: 'Select a row for this roll',
 			availableFields: availableRowFields,
+			pendingDice: () => pendingDice,
 			onConfirm(field) {
 				pendingRow = field
 				if (field === 'flush' && pendingDice

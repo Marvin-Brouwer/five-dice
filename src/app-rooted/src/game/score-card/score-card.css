@@ -324,7 +324,7 @@
 	letter-spacing: 0.18em;
 	font-weight: 600;
 	text-transform: uppercase;
-	text-align: right;
+	text-align: left;
 	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
 	white-space: nowrap;
 }
