@@ -444,6 +444,8 @@
 	align-items: center;
 	gap: 6px;
 	flex-wrap: nowrap;
+	height: 22px;
+	vertical-align: middle;
 }
 
 .roll-group {
@@ -459,6 +461,8 @@
 .roll-empty {
 	display: inline-block;
 	width: 1em;
+	height: 22px;
+	vertical-align: middle;
 }
 
 .roll-discard {
