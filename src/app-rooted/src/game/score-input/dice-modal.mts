@@ -322,13 +322,18 @@ export const DiceModal = component<DiceModalOptions>({
 					const first = firstEmpty(s.dice)
 					s.focusedDie = first ?? s.dice.length - 1
 				})
+				// Pick where the initial focus should land BEFORE showing the
+				// dialog. showModal auto-focuses the first focusable child,
+				// which was clobbering our post-open focus() calls.
+				const complete = asTuple(state.value.dice as InputDice) !== undefined
+				const focusTarget = complete ? confirmButton : slotButtons[state.value.focusedDie]
+				slotButtons.forEach(b => b.removeAttribute('autofocus'))
+				confirmButton.removeAttribute('autofocus')
+				focusTarget?.setAttribute('autofocus', '')
 				if (!dialog.open) dialog.showModal()
-				// If everything is already filled, land focus on Confirm so
-				// Enter accepts immediately; otherwise focus the next slot.
-				queueMicrotask(() => {
-					if (asTuple(state.value.dice as InputDice)) confirmButton.focus()
-					else slotButtons[state.value.focusedDie]?.focus()
-				})
+				// Also focus explicitly after a frame in case showModal's
+				// autofocus resolution differs across browsers.
+				requestAnimationFrame(() => focusTarget?.focus())
 			}
 			else if (dialog.open) {
 				dialog.close()
