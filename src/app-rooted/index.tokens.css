@@ -41,9 +41,11 @@
 	--color-surface-alt:       var(--color-border-subtle);
 	--color-primary:           var(--color-accent);
 	--color-primary-contrast:  var(--color-accent-contrast);
-	--color-die-face:          var(--color-surface);
-	--color-die-dot:           var(--color-text);
-	--color-die-border:        var(--color-text);
+	/* Dice are always white with dark ink dots/border, regardless of theme
+	   or the menu/keyboard's remapped surface — pin them to concrete values. */
+	--color-die-face:          #ffffff;
+	--color-die-dot:           #1c1d1f;
+	--color-die-border:        #1c1d1f;
 	--color-success:           #2a6f4a;
 	--color-warning:           #c77700;
 	--color-error:             #b00020;

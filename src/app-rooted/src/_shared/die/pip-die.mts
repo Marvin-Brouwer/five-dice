@@ -31,11 +31,14 @@ export type PipDieOptions = {
 
 function svg(value: DieValue | undefined, variant: 'default' | 'active' | 'muted'): string {
 	const pips = value === undefined ? [] : PIPS[value]
-	const stroke = variant === 'active' ? 'var(--color-accent)' : 'var(--color-text)'
+	// Dice faces are physically white in every theme, so pips and border
+	// use --color-die-* (dark ink) rather than --color-text — otherwise the
+	// menu / dice-keyboard's inverted palette would render invisible dots.
+	const stroke = variant === 'active' ? 'var(--color-accent)' : 'var(--color-die-border)'
 	const strokeWidth = variant === 'active' ? 2.5 : 1.5
 	const strokeDash = value === undefined && variant !== 'active' ? '3 3' : ''
-	const pipColor = variant === 'muted' ? 'var(--color-text-muted)' : 'var(--color-text)'
-	const rectFill = variant === 'muted' ? 'transparent' : '#ffffff'
+	const pipColor = variant === 'muted' ? 'var(--color-text-muted)' : 'var(--color-die-dot)'
+	const rectFill = variant === 'muted' ? 'transparent' : 'var(--color-die-face)'
 	return `
 		<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;width:100%;height:100%">
 			<rect x="1" y="1" width="22" height="22" rx="3" ry="3"

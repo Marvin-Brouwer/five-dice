@@ -29,9 +29,10 @@
 	--color-accent-contrast:   #ffffff;
 
 	/* Die tokens: face stays white, dots/border ink */
-	--color-die-face:          var(--color-white);
-	--color-die-dot:           var(--color-text);
-	--color-die-border:        var(--color-text);
+	/* Dice stay white with dark ink dots even in dark mode. */
+	--color-die-face:          #ffffff;
+	--color-die-dot:           #1c1d1f;
+	--color-die-border:        #1c1d1f;
 
 	/* Menu: dark card close to cardboard, light text.
 	   The menu re-maps --color-surface / --color-text / etc. internally
