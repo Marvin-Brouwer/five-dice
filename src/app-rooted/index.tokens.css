@@ -18,8 +18,8 @@
 	--color-divider-strong:    #1c1d1f;                       /* design: rule (opaque section rule) */
 
 	/* -------- Colours: accent (blue ink) --------------------------------- */
-	--color-accent:            #163063;
-	--color-accent-subtle:     rgba(22, 48, 99, 0.10);
+	--color-accent:            #1f3f7a;
+	--color-accent-subtle:     rgba(31, 63, 122, 0.10);
 	--color-accent-contrast:   #ffffff;
 
 	/* Physical "white" objects that stay white in both themes: die faces,
