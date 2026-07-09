@@ -140,6 +140,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 
 		const diceModal = create(DiceModal, {
 			open: diceOpen,
+			initialDice: () => pendingDice,
 			onConfirm(dice) {
 				pendingDice = dice
 				rowOpen.update(() => true)

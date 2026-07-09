@@ -10,6 +10,9 @@ export type DiceTuple = [DieValue, DieValue, DieValue, DieValue, DieValue]
 
 export type DiceModalOptions = {
 	open: Store<boolean>
+	/** When re-opened after Back from the row selector, populate the slots
+	    with the previously-entered dice instead of resetting. */
+	initialDice?: () => DiceTuple | undefined
 	onConfirm: (dice: DiceTuple) => void
 	onCancel: () => void
 }
@@ -61,7 +64,7 @@ export const DiceModal = component<DiceModalOptions>({
 	name: 'dice-modal',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
-		const { open, onConfirm, onCancel } = options
+		const { open, initialDice, onConfirm, onCancel } = options
 		const makeDieNode = (value: DieValue | undefined, size: number, variant: 'default' | 'active' | 'muted', ariaLabel?: string): Node =>
 			create(PipDie, { value, size, variant, ariaLabel })
 		const state = createStore<{ dice: InputDice, focusedDie: number }>({
@@ -313,12 +316,19 @@ export const DiceModal = component<DiceModalOptions>({
 
 		open.on('change', signal, ({ detail }) => {
 			if (detail.state) {
+				const carry = initialDice?.()
 				state.update(s => {
-					s.dice = emptyDice()
-					s.focusedDie = 0
+					s.dice = carry ? (Array.from(carry) as InputDice) : emptyDice()
+					const first = firstEmpty(s.dice)
+					s.focusedDie = first ?? s.dice.length - 1
 				})
 				if (!dialog.open) dialog.showModal()
-				queueMicrotask(() => slotButtons[0]?.focus())
+				// If everything is already filled, land focus on Confirm so
+				// Enter accepts immediately; otherwise focus the next slot.
+				queueMicrotask(() => {
+					if (asTuple(state.value.dice as InputDice)) confirmButton.focus()
+					else slotButtons[state.value.focusedDie]?.focus()
+				})
 			}
 			else if (dialog.open) {
 				dialog.close()
