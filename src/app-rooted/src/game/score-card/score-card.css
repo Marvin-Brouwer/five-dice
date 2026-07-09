@@ -510,13 +510,17 @@
 }
 
 /* Hovered/focused discard target: draw the same slash across the row
-   that a permanently discarded row shows. */
-.card[data-selecting="discard"] .row-display[data-hover="true"] th {
+   that a permanently discarded row shows. Covers both the flush-discard
+   overlay AND row-select hover on non-applicable rows (variant=discard),
+   which would end up discarded on confirm. */
+.card[data-selecting="discard"] .row-display[data-hover="true"] th,
+.card[data-selecting="apply"] .row-display[data-target="discard"][data-hover="true"] th {
 	position: relative;
 	overflow: visible;
 }
 
-.card[data-selecting="discard"] .row-display[data-hover="true"] th::after {
+.card[data-selecting="discard"] .row-display[data-hover="true"] th::after,
+.card[data-selecting="apply"] .row-display[data-target="discard"][data-hover="true"] th::after {
 	content: "";
 	position: absolute;
 	left: 50%;
