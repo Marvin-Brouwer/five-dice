@@ -76,8 +76,18 @@
    CSS scope (the injected span is a child of a score-card cell). */
 
 /* Bottom-sheet: full-width paper strip with title above the actions.
-   Same rhythm as the dice keyboard modal. */
+   Same rhythm as the dice keyboard modal. Re-maps the base color tokens
+   to the menu palette so the sheet shares the app menu's surface in
+   both light and dark mode. */
 .sheet {
+	--color-surface: var(--color-menu-surface);
+	--color-surface-elevated: var(--color-menu-surface);
+	--color-text: var(--color-menu-text);
+	--color-text-secondary: var(--color-menu-text-secondary);
+	--color-text-muted: var(--color-menu-text-muted);
+	--color-border: var(--color-menu-border);
+	--color-border-subtle: var(--color-menu-border-subtle);
+
 	position: fixed;
 	inset: auto 0 0 0;
 	z-index: 1003;
