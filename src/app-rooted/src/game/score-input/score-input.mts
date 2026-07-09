@@ -6,6 +6,7 @@ import { discard, isDiscarded, isFlushScore, score, type ValidScore } from '../_
 import { calculateFlush, calculateScore } from '../_logic/score/scoreCalculator.ts'
 import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import { renderRollCell } from '../score-card/roll-cell.mts'
 import { rowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import { DiceModal, type DiceTuple } from './dice-modal.mts'
@@ -76,10 +77,27 @@ export const ScoreInput = component<ScoreInputOptions>({
 				}
 				const applicable = isScoreApplicableToField(scoreValue, field)
 				const preview = applicable ? projectedScoreText(field, scoreValue) : '/'
+				// Roll preview reuses renderRollCell with the same value the row
+				// would receive after apply — for flush that means the full
+				// projected array (existing entries + new score) so the badge
+				// count matches the post-apply render.
+				let projectedRoll: RowOverlayField['projectedRoll']
+				if (applicable) {
+					if (field === 'flush') {
+						const flushCell = pad.flush
+						const existing = isDiscarded(flushCell) ? [] : flushCell
+						const projectedFlush = [...existing, scoreValue]
+						projectedRoll = ctx => renderRollCell(ctx, field, projectedFlush)
+					}
+					else {
+						projectedRoll = ctx => renderRollCell(ctx, field, scoreValue)
+					}
+				}
 				result.push({
 					field,
 					variant: applicable ? 'valid' : 'discard',
 					preview,
+					projectedRoll,
 				})
 			}
 			return result
@@ -155,7 +173,6 @@ export const ScoreInput = component<ScoreInputOptions>({
 			mode: 'apply',
 			title: 'Select a row for this roll',
 			availableFields: availableRowFields,
-			pendingDice: () => pendingDice,
 			onConfirm(field) {
 				pendingRow = field
 				if (field === 'flush' && pendingDice

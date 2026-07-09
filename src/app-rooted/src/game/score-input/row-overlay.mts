@@ -1,18 +1,21 @@
-import { component } from '@rooted/components'
+import { component, type ComponentContext } from '@rooted/components'
 import { type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
-import { score, type ValidScore } from '../_logic/score/score.ts'
-import { renderRollCell } from '../score-card/roll-cell.mts'
 import { rowDisplayLabels } from '../score-card/score-card.labels.ts'
 
-import type { DiceTuple } from './dice-modal.mts'
 import styles from './row-overlay.css'
+
+type RollRenderContext = Pick<ComponentContext, 'element' | 'create'>
 
 export type RowOverlayField = {
 	field: ScoreField
 	variant: 'valid' | 'discard'
 	preview?: string
+	/** Renderer producing a Node for the roll-cell preview. When set, the
+	    hovered row's roll cell is replaced with this node; when omitted, the
+	    roll cell is left untouched (used by the flush-discard overlay). */
+	projectedRoll?: (context: RollRenderContext) => Node
 }
 
 export type RowOverlayOptions = {
@@ -20,9 +23,6 @@ export type RowOverlayOptions = {
 	mode: 'apply' | 'discard'
 	title: string
 	availableFields: () => RowOverlayField[]
-	/** Dice tuple being placed, for the roll-cell preview. Optional so the
-	    flush-discard overlay (which shows no roll preview) can omit it. */
-	pendingDice?: () => DiceTuple | undefined
 	onConfirm: (field: ScoreField) => void
 	onCancel: () => void
 }
@@ -33,7 +33,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
-		const { open, mode, title, availableFields, pendingDice, onConfirm, onCancel } = options
+		const { open, mode, title, availableFields, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
@@ -103,7 +103,8 @@ export const RowOverlay = component<RowOverlayOptions>({
 		let activeRadios: HTMLInputElement[] = []
 		let activeLabels: HTMLLabelElement[] = []
 		let resizeObserver: ResizeObserver | undefined
-		let injectedPreviews: Map<ScoreField, HTMLSpanElement> = new Map()
+		const injectedScoreSpans: Map<ScoreField, HTMLSpanElement> = new Map()
+		const injectedRollNodes: Map<ScoreField, Node> = new Map()
 
 		function scoreCardEl(): HTMLElement | null {
 			return document.getElementById(SCORE_CARD_ID)
@@ -126,8 +127,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 			if (!row) return null
 			return row.querySelector<HTMLElement>('td.roll-column')
 		}
-
-		const injectedRolls: Map<ScoreField, Node> = new Map()
 
 		function selectedField(): ScoreField | undefined {
 			const checked = activeRadios.find(r => r.checked)
@@ -155,15 +154,17 @@ export const RowOverlay = component<RowOverlayOptions>({
 				delete row.dataset.target
 				delete row.dataset.hover
 			})
-			injectedPreviews.forEach((node, field) => {
-				const cell = scoreCellEl(field)
-				if (cell && cell.contains(node)) node.remove()
+			// Fully unwind every injected preview so no stale nodes or hidden
+			// originals survive into whatever DOM the score-card renders next.
+			for (const field of Array.from(injectedScoreSpans.keys())) hidePreview(field)
+			// Safety net: sweep the whole card for any straggling overlay
+			// markers or preview nodes in case a preview was orphaned by a
+			// rerender that raced with our cleanup.
+			card?.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
+				delete child.dataset.overlayHidden
 			})
-			injectedPreviews.clear()
-			injectedRolls.forEach((node) => {
-				node.parentNode?.removeChild(node)
-			})
-			injectedRolls.clear()
+			card?.querySelectorAll<HTMLElement>('[data-score-preview]').forEach((n) => n.remove())
+			card?.querySelectorAll<HTMLElement>('[data-roll-preview]').forEach((n) => n.remove())
 		}
 
 		function setHover(field: ScoreField, on: boolean) {
@@ -173,66 +174,52 @@ export const RowOverlay = component<RowOverlayOptions>({
 			else delete row.dataset.hover
 		}
 
-		function showPreview(field: ScoreField, text: string, variant: 'valid' | 'discard') {
-			const cell = scoreCellEl(field)
-			if (!cell) return
+		function showPreview(field: ScoreField, text: string, variant: 'valid' | 'discard', projectedRoll?: (context: RollRenderContext) => Node) {
+			const scoreCell = scoreCellEl(field)
+			if (!scoreCell) return
 			hidePreview(field)
-			// Hide any existing content in the cell (the current score value)
-			// so the preview replaces it rather than sitting next to it.
-			Array.from(cell.children).forEach((child) => {
+			// Hide the cell's current content so the preview replaces it
+			// visually rather than sitting alongside the real score.
+			Array.from(scoreCell.children).forEach((child) => {
 				if (child instanceof HTMLElement) child.dataset.overlayHidden = 'true'
 			})
-			const node = document.createElement('span')
-			// Use a data attribute so score-card.css (which owns the cell's
-			// scope) can style the injected preview correctly. Row-overlay's
-			// own scoped CSS wouldn't apply here.
-			node.dataset.scorePreview = variant
-			node.textContent = text
-			cell.append(node)
-			injectedPreviews.set(field, node)
+			const scoreNode = document.createElement('span')
+			// A data attribute (not a scoped class) so score-card.css can
+			// style the injected preview from its own CSS scope.
+			scoreNode.dataset.scorePreview = variant
+			scoreNode.textContent = text
+			scoreCell.append(scoreNode)
+			injectedScoreSpans.set(field, scoreNode)
 
-			// Also render the dice into the roll cell as a preview so the whole
-			// row shows what would land after Confirm. Skipped in discard mode
-			// (roll would just be crossed out anyway).
-			const dice = pendingDice?.()
-			if (variant === 'valid' && dice) {
+			// Roll cell: the caller supplies a projected renderer that already
+			// knows how to draw the post-apply state (including flush badges).
+			if (projectedRoll) {
 				const rollCell = rollCellEl(field)
 				if (rollCell) {
 					Array.from(rollCell.children).forEach((child) => {
 						if (child instanceof HTMLElement) child.dataset.overlayHidden = 'true'
 					})
-					const rollNode = renderRollCell(
-						{ element, create },
-						field,
-						score(dice) as ValidScore,
-					)
+					const rollNode = projectedRoll({ element, create })
 					if (rollNode instanceof HTMLElement) rollNode.dataset.rollPreview = 'true'
 					rollCell.append(rollNode)
-					injectedRolls.set(field, rollNode)
+					injectedRollNodes.set(field, rollNode)
 				}
 			}
 		}
 
 		function hidePreview(field: ScoreField) {
-			const existing = injectedPreviews.get(field)
-			if (existing) {
-				existing.remove()
-				injectedPreviews.delete(field)
+			const scoreNode = injectedScoreSpans.get(field)
+			if (scoreNode) {
+				scoreNode.remove()
+				injectedScoreSpans.delete(field)
 			}
-			const cell = scoreCellEl(field)
-			if (cell) {
-				cell.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
-					delete child.dataset.overlayHidden
-				})
-			}
-			const rollNode = injectedRolls.get(field)
+			const rollNode = injectedRollNodes.get(field)
 			if (rollNode) {
 				rollNode.parentNode?.removeChild(rollNode)
-				injectedRolls.delete(field)
+				injectedRollNodes.delete(field)
 			}
-			const rollCell = rollCellEl(field)
-			if (rollCell) {
-				rollCell.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
+			for (const cell of [scoreCellEl(field), rollCellEl(field)]) {
+				cell?.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
 					delete child.dataset.overlayHidden
 				})
 			}
@@ -248,7 +235,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			)
 			activeRadios = []
 			activeLabels = []
-			fields.forEach(({ field, variant, preview }, index) => {
+			fields.forEach(({ field, variant, preview, projectedRoll }, index) => {
 				const radio = element('input', {
 					type: 'radio',
 					name: radioName,
@@ -261,7 +248,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 						},
 						focus() {
 							setHover(field, true)
-							if (preview !== undefined) showPreview(field, preview, variant)
+							if (preview !== undefined) showPreview(field, preview, variant, projectedRoll)
 						},
 						blur() {
 							setHover(field, false)
@@ -280,7 +267,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 					on: {
 						mouseenter() {
 							setHover(field, true)
-							if (preview !== undefined) showPreview(field, preview, variant)
+							if (preview !== undefined) showPreview(field, preview, variant, projectedRoll)
 						},
 						mouseleave() {
 							setHover(field, false)
