@@ -8,9 +8,9 @@
 	--color-page:              #2a2622;
 	--color-text-on-page:      #f6f5f0;
 
-	/* Paper: aged / yellowed instead of stark white */
-	--color-surface:           #f0e7c8;
-	--color-surface-elevated:  #f6efd6;
+	/* Paper: warm off-white — less saturated than fresh yellow paper */
+	--color-surface:           #ede8d3;
+	--color-surface-elevated:  #f2ede0;
 
 	/* Text stays dark ink because the paper is still a light surface */
 	--color-text:              #1c1d1f;
@@ -23,9 +23,9 @@
 	--color-border-subtle:     rgba(28, 29, 31, 0.08);
 	--color-divider-strong:    #1c1d1f;   /* black bars stay black */
 
-	/* Sticker blue — slightly brighter so it reads on yellow paper */
-	--color-accent:            #2d4d99;
-	--color-accent-subtle:     rgba(45, 77, 153, 0.12);
+	/* Sticker blue — darker deep ink */
+	--color-accent:            #22407d;
+	--color-accent-subtle:     rgba(34, 64, 125, 0.14);
 	--color-accent-contrast:   #ffffff;
 
 	/* Die tokens: face stays white, dots/border ink */
@@ -46,7 +46,7 @@
 
 	/* Paper texture: subtle warm-yellow polygons instead of near-white */
 	--background-surface:
-		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23ede2be'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23e7dbb1'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23f2e9c9'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23ede2be'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23e7dbb1'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23f2e9c9'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23ede2be'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23e7dbb1'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23ede2be'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23f2e9c9'/%3E%3C/svg%3E"),
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23eae4cd'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23e3dcc2'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23eee9d5'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23eae4cd'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23e3dcc2'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23eee9d5'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23eae4cd'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23e3dcc2'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23eae4cd'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23eee9d5'/%3E%3C/svg%3E"),
 		var(--color-surface);
 }
 
@@ -58,8 +58,8 @@
 		--color-page:              #2a2622;
 		--color-text-on-page:      #f6f5f0;
 
-		--color-surface:           #f0e7c8;
-		--color-surface-elevated:  #f6efd6;
+		--color-surface:           #ede8d3;
+		--color-surface-elevated:  #f2ede0;
 
 		--color-text:              #1c1d1f;
 		--color-text-secondary:    #3a3c40;
@@ -70,8 +70,8 @@
 		--color-border-subtle:     rgba(28, 29, 31, 0.08);
 		--color-divider-strong:    #1c1d1f;
 
-		--color-accent:            #2d4d99;
-		--color-accent-subtle:     rgba(45, 77, 153, 0.12);
+		--color-accent:            #22407d;
+		--color-accent-subtle:     rgba(34, 64, 125, 0.14);
 		--color-accent-contrast:   #ffffff;
 
 		--color-die-face:          var(--color-white);
@@ -86,7 +86,7 @@
 		--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
 
 		--background-surface:
-			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23ede2be'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23e7dbb1'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23f2e9c9'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23ede2be'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23e7dbb1'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23f2e9c9'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23ede2be'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23e7dbb1'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23ede2be'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23f2e9c9'/%3E%3C/svg%3E"),
+			url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='100' viewBox='0 0 200 100'%3E%3Cpolygon points='0,0 100,0 60,45' fill='%23eae4cd'/%3E%3Cpolygon points='0,0 0,50 60,45' fill='%23e3dcc2'/%3E%3Cpolygon points='100,0 200,0 140,55' fill='%23eee9d5'/%3E%3Cpolygon points='100,0 60,45 140,55' fill='%23eae4cd'/%3E%3Cpolygon points='200,0 200,50 140,55' fill='%23e3dcc2'/%3E%3Cpolygon points='0,50 60,45 100,100' fill='%23eee9d5'/%3E%3Cpolygon points='0,50 0,100 100,100' fill='%23eae4cd'/%3E%3Cpolygon points='60,45 140,55 100,100' fill='%23e3dcc2'/%3E%3Cpolygon points='140,55 200,50 200,100' fill='%23eae4cd'/%3E%3Cpolygon points='140,55 100,100 200,100' fill='%23eee9d5'/%3E%3C/svg%3E"),
 			var(--color-surface);
 	}
 }
