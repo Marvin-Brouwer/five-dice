@@ -320,20 +320,24 @@ export const DiceModal = component<DiceModalOptions>({
 				state.update(s => {
 					s.dice = carry ? (Array.from(carry) as InputDice) : emptyDice()
 					const first = firstEmpty(s.dice)
-					s.focusedDie = first ?? s.dice.length - 1
+					// -1 means "no active slot" — used when the tuple is
+					// already complete so no slot gets the accent border.
+					s.focusedDie = first ?? -1
 				})
 				// Pick where the initial focus should land BEFORE showing the
 				// dialog. showModal auto-focuses the first focusable child,
-				// which was clobbering our post-open focus() calls.
+				// which otherwise clobbers our post-open focus() call.
 				const complete = asTuple(state.value.dice as InputDice) !== undefined
-				const focusTarget = complete ? confirmButton : slotButtons[state.value.focusedDie]
+				const focusTarget = complete
+					? confirmButton
+					: slotButtons[state.value.focusedDie]
 				slotButtons.forEach(b => b.removeAttribute('autofocus'))
 				confirmButton.removeAttribute('autofocus')
 				focusTarget?.setAttribute('autofocus', '')
 				if (!dialog.open) dialog.showModal()
-				// Also focus explicitly after a frame in case showModal's
-				// autofocus resolution differs across browsers.
-				requestAnimationFrame(() => focusTarget?.focus())
+				// Also re-focus after two frames in case showModal's autofocus
+				// resolution differs across browsers.
+				requestAnimationFrame(() => requestAnimationFrame(() => focusTarget?.focus()))
 			}
 			else if (dialog.open) {
 				dialog.close()
