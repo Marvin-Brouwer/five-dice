@@ -1,12 +1,15 @@
 import { route } from '@rooted/router/routes'
 
-export const ScoreCardRoute = route`/score-card/`({
+import { localization } from '../_shared/i18n/localization.mts'
+
+export const ScoreCardRoute = route`/${localization.parameter}/score-card/`({
 	async resolve({ create }) {
+		await localization.load()
 		const { Game } = await import('./game.mts')
 		return create(Game)
 	},
-	seo: {
-		title: 'Score card — Five dice',
-		description: 'Play a game of five dice.',
-	},
+	seo: () => ({
+		title: localization.text`Score card — Five dice`,
+		description: localization.text`Play a game of five dice.`,
+	}),
 })

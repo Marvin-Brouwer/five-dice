@@ -1,0 +1,33 @@
+.page {
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+	text-align: center;
+}
+
+.page h1 {
+	font-family: var(--font-family-display);
+}
+
+.list {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	padding: 0;
+	margin: var(--space-5) auto 0;
+	max-width: 20rem;
+}
+
+.link {
+	display: block;
+	background: var(--color-primary);
+	color: var(--color-primary-contrast);
+	padding: var(--space-2) var(--space-4);
+	border-radius: var(--radius-md);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.link:hover, .link:focus-visible {
+	filter: brightness(1.1);
+}

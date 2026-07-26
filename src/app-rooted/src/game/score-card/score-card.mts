@@ -13,6 +13,7 @@ import {
 import type { ScorePad } from '../_logic/score/scorePad.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
 import { PipDie } from '../../_shared/die/pip-die.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
 import { menuStore } from '../../_shared/stores/menuStore.mts'
 import { playerNameStore } from '../../_shared/stores/playerNameStore.mts'
 import { inputActiveStore } from '../score-input/input-active-store.mts'
@@ -141,8 +142,10 @@ export const ScoreCard = component<ScoreCardOptions>({
 				},
 			},
 			children: [
-				element('span', { classes: styles.stickerLine1, textContent: 'Enter' }),
-				element('span', { classes: styles.stickerLine2, textContent: 'score' }),
+				element('span', {
+					classes: styles.stickerLabel,
+					textContent: localization.text`Enter\nscore`
+				}),
 			],
 		})
 

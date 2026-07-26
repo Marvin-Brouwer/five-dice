@@ -1,12 +1,17 @@
 import { component } from '@rooted/components'
+import { href, navigate } from '@rooted/router'
 
-import { availableLanguages, languageStore, type Language } from '../stores/languageStore.mts'
+import { localeLabels, localization } from '../i18n/localization.mts'
+import { rememberLocale } from '../i18n/remembered-locale.mts'
 
 import { attachDropdown } from './dropdown-controller.mts'
 import styles from './language-chooser.css'
 
-const LABELS: Record<Language, { short: string, long: string }> = {
-	en: { short: 'EN', long: 'English' },
+type Locale = typeof localization.Locale
+
+const LABELS: Record<Locale, { short: string, long: string }> = {
+	en: { short: 'EN', long: localeLabels.en },
+	nl: { short: 'NL', long: localeLabels.nl },
 }
 
 const chevron = `
@@ -21,17 +26,28 @@ const check = `
 	</svg>
 `
 
+/** Swaps the locale segment of the current path, keeping the rest of the URL intact. */
+function pathForLocale(locale: Locale): string {
+	const current = href.current().pathOnly
+	const segment = current.split('/')[1]
+	const isLocale = (localization.supportedLocales as readonly string[]).includes(segment)
+	const rest = isLocale ? current.slice(1 + segment.length) : current
+	return `/${locale}${rest}`
+}
+
 export const LanguageChooser = component({
 	name: 'language-chooser',
 	styles,
 	onMount({ append, element, signal, on }) {
+		let activeLocale = localization.currentLocale
+
 		const short = element('span', {
 			classes: styles.short,
-			textContent: LABELS[languageStore.value].short,
+			textContent: LABELS[activeLocale].short,
 		})
 		const long = element('span', {
 			classes: styles.long,
-			textContent: LABELS[languageStore.value].long,
+			textContent: LABELS[activeLocale].long,
 		})
 		const buttonChevron = element('span', { classes: styles.chevron })
 		buttonChevron.innerHTML = chevron
@@ -39,7 +55,7 @@ export const LanguageChooser = component({
 		const button = element('button', {
 			type: 'button',
 			classes: styles.button,
-			aria: { hasPopup: 'listbox', label: `Language: ${LABELS[languageStore.value].long}` },
+			aria: { hasPopup: 'listbox', label: `Language: ${LABELS[activeLocale].long}` },
 			children: [short, long, buttonChevron],
 		})
 
@@ -50,14 +66,15 @@ export const LanguageChooser = component({
 		})
 
 		function syncButton() {
-			short.textContent = LABELS[languageStore.value].short
-			long.textContent = LABELS[languageStore.value].long
-			button.setAttribute('aria-label', `Language: ${LABELS[languageStore.value].long}`)
+			activeLocale = localization.currentLocale
+			short.textContent = LABELS[activeLocale].short
+			long.textContent = LABELS[activeLocale].long
+			button.setAttribute('aria-label', `Language: ${LABELS[activeLocale].long}`)
 		}
 
 		function buildOptions(): Node[] {
-			return availableLanguages.map((code) => {
-				const selected = code === languageStore.value
+			return localization.supportedLocales.map((code) => {
+				const selected = code === activeLocale
 				const option = element('div', {
 					role: 'option',
 					aria: { selected: String(selected) },
@@ -65,7 +82,10 @@ export const LanguageChooser = component({
 					on: {
 						click(event) {
 							event.stopPropagation()
-							languageStore.update(() => code)
+							rememberLocale(code)
+							navigate(href.path(pathForLocale(code)))
+							activeLocale = code
+							syncButton()
 							dropdown.close()
 						},
 					},
@@ -85,7 +105,7 @@ export const LanguageChooser = component({
 
 		const dropdown = attachDropdown({ button, list, buildOptions, signal, on })
 
-		languageStore.on('change', signal, () => {
+		on('window', 'popstate', () => {
 			syncButton()
 			dropdown.refresh()
 		})

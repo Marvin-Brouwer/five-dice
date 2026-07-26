@@ -79,9 +79,9 @@
 	transform: rotate(-8deg);
 }
 
-.sticker-line-1,
-.sticker-line-2 {
-	display: block;
+.sticker-label {
+	white-space: pre-wrap;
+	text-align: center;
 }
 
 .card-inner {

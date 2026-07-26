@@ -1,7 +1,9 @@
 import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
+import { ScoreCardRoute } from '../game/_routes.mts'
 import { rowDisplayLabels } from '../game/score-card/score-card.labels.ts'
+import { localization } from '../_shared/i18n/localization.mts'
 import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
 
 import styles from './rules.css'
@@ -28,7 +30,7 @@ export const Rules = component({
 				}),
 				element('p', {
 					children: create(Link, {
-						href: href.path('/score-card'),
+						href: href.for(ScoreCardRoute, { locale: localization.currentLocale }),
 						classes: styles.cta,
 						children: 'Start a new game',
 					}),

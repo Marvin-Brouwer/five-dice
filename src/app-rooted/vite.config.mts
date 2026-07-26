@@ -1,9 +1,12 @@
 import { rootedManifest } from '@rooted/application'
+import { localizationSeo } from '@rooted/localization/vite'
 import { generateRouteManifest } from '@rooted/router/manifest'
 
 import packageJson from './package.json' with { type: 'json' }
+import { seo } from './src/seo.mts'
 
 export default rootedManifest({
+	seo,
 	webManifest: {
 		id: 'five-dice-scorecard',
 		url: packageJson.homepage,
@@ -14,7 +17,7 @@ export default rootedManifest({
 		background_color: '#f4f4f4',
 		display: 'standalone',
 		orientation: 'portrait',
-		start_url: '/score-card/',
+		start_url: '/en/score-card/',
 		icons: [
 			{ src: 'pwa/192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
 			{ src: 'pwa/256x256.png', sizes: '256x256', type: 'image/png', purpose: 'any' },
@@ -27,5 +30,6 @@ export default rootedManifest({
 			glob: './src/**/_routes.mts',
 			routeManifestPath: './src/_routes.g.mts',
 		}),
+		localizationSeo(),
 	],
 })

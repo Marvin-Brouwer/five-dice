@@ -1,36 +1,11 @@
 import { component } from '@rooted/components'
-import { href } from '@rooted/router'
 
-import { newGameDisabledStore, undoDisabledStore } from '../stores/gameStateStore.mts'
+import { localization } from '../i18n/localization.mts'
 import { menuStore } from '../stores/menuStore.mts'
-import { screenLockStore } from '../stores/screenLockStore.mts'
 
-import { LanguageChooser } from './language-chooser.mts'
-import { MenuRow } from './menu-row.mts'
-import { MenuSection } from './menu-section.mts'
-import { OnOffSegment } from './on-off-segment.mts'
-import { ThemeChooser } from './theme-chooser.mts'
+import { MenuContent } from './menu-content.mts'
 
 import styles from './menu.css'
-
-const chevron = `
-	<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M9 6l6 6-6 6"/>
-	</svg>
-`
-
-const refresh = `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M3 12a9 9 0 1 0 3-6.7"/>
-		<path d="M3 4v5h5"/>
-	</svg>
-`
-
-const undo = `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M9 14l-4-4 4-4M5 10h9a5 5 0 010 10h-2"/>
-	</svg>
-`
 
 const closeXIcon = `
 	<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
@@ -38,30 +13,10 @@ const closeXIcon = `
 	</svg>
 `
 
-function iconElement(svg: string): HTMLSpanElement {
-	const wrap = document.createElement('span')
-	wrap.classList.add('menu-icon')
-	wrap.innerHTML = svg
-	return wrap
-}
-
 export const Menu = component({
 	name: 'app-menu',
 	styles,
-	onMount({ append, element, create, signal }) {
-		// Theme chooser (multi-node control wrapped in a fragment span)
-		const themeControl = element('span', {
-			classes: styles.controlWrap,
-			children: create(ThemeChooser),
-		})
-
-		const languageControl = create(LanguageChooser)
-		const screenLockControl = create(OnOffSegment, {
-			store: screenLockStore,
-			ariaLabel: 'Keep screen on',
-			idPrefix: 'menu-screen-lock',
-		})
-
+	onMount({ append, element, create, signal, on }) {
 		const dialog = element('dialog', {
 			classes: styles.sheet,
 			aria: { modal: 'true', label: 'App menu' },
@@ -92,85 +47,34 @@ export const Menu = component({
 			],
 		})
 
-		const contentScroll = element('div', {
-			classes: styles.content,
+		let content = create(MenuContent, {
+			onClose: () => dialog.close()
 		})
+		let contentLocale = localization.currentLocale
 
-		const settingsSection = create(MenuSection, { label: 'Settings', rightHint: 'Preferences' })
-		const themeRow = create(MenuRow, {
-			label: 'Theme',
-			hint: 'System & sensor follow the device · Light/Dark force it',
-			control: themeControl,
-		})
-		const languageRow = create(MenuRow, {
-			label: 'Language',
-			hint: 'App and rules text',
-			control: languageControl,
-		})
-		const screenLockRow = create(MenuRow, {
-			label: 'Keep screen on',
-			hint: 'Disable lock while playing',
-			control: screenLockControl,
-		})
-
-		const gameSection = create(MenuSection, { label: 'Game', rightHint: 'Actions' })
-		const newGameRow = create(MenuRow, {
-			label: 'New game',
-			hint: 'Reset the score pad',
-			variant: 'button',
-			disabledStore: newGameDisabledStore,
-			onSelect() {
-				dialog.close()
-				window.dispatchEvent(new CustomEvent('five-dice:new-game'))
-			},
-			control: iconElement(refresh),
-		})
-		const undoRow = create(MenuRow, {
-			label: 'Undo last turn',
-			hint: 'Revert the last committed score',
-			variant: 'button',
-			disabledStore: undoDisabledStore,
-			onSelect() {
-				dialog.close()
-				window.dispatchEvent(new CustomEvent('five-dice:undo'))
-			},
-			control: iconElement(undo),
-		})
-
-		const aboutSection = create(MenuSection, { label: 'About', rightHint: 'Help & links' })
-		const rulesRow = create(MenuRow, {
-			label: 'Rules',
-			hint: 'How to play',
-			variant: 'link',
-			href: href.path('/'),
-			control: iconElement(chevron),
-		})
-		const accessibilityRow = create(MenuRow, {
-			label: 'Accessibility',
-			hint: 'Statement & keyboard map',
-			variant: 'link',
-			href: href.path('/accessibility'),
-			control: iconElement(chevron),
-		})
-		const sourceRow = create(MenuRow, {
-			label: 'Source',
-			hint: 'github.com/marvin-brouwer/five-dice',
-			variant: 'external-link',
-			href: 'https://github.com/marvin-brouwer/five-dice',
-			control: iconElement(chevron),
-		})
-
-		contentScroll.append(
-			settingsSection, themeRow, languageRow, screenLockRow,
-			gameSection, newGameRow, undoRow,
-			aboutSection, rulesRow, accessibilityRow, sourceRow,
-		)
-
-		dialog.append(navBar, contentScroll)
+		dialog.append(navBar, content)
 
 		menuStore.on('change', signal, ({ detail }) => {
 			if (detail.state && !dialog.open) dialog.showModal()
 			else if (!detail.state && dialog.open) dialog.close()
+		})
+
+		// MenuContent renders locale-dependent text/links (e.g. the Settings
+		// label, the Rules/Accessibility hrefs) but mounts once and never
+		// re-renders on its own. Rather than reactively patching each such
+		// piece by hand, just remount the whole thing whenever the locale
+		// actually changes — any localization.text call added in there later
+		// is covered for free.
+		on('window', 'popstate', async () => {
+			if (localization.currentLocale === contentLocale) return
+			contentLocale = localization.currentLocale
+			await localization.load()
+
+			const newContent = create(MenuContent, {
+				onClose: () => dialog.close()
+			})
+			content.replaceWith(newContent)
+			content = newContent
 		})
 
 		if (menuStore.value) queueMicrotask(() => { if (menuStore.value) dialog.showModal() })

@@ -2,14 +2,19 @@ import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
 import { RulesRoute } from '../content/_routes.mts'
+import { localization } from '../_shared/i18n/localization.mts'
 import { routeTitleStore } from '../_shared/stores/routeTitleStore.mts'
 
 import styles from './not-found.css'
 
-export const NotFoundPage = component({
-	name: 'not-found-page',
+export type NotFoundLocalizedOptions = {
+	locale: typeof localization.Locale
+}
+
+export const NotFoundLocalized = component<NotFoundLocalizedOptions>({
+	name: 'not-found-localized-page',
 	styles,
-	onMount({ append, element, create }) {
+	onMount({ append, element, create, options }) {
 		routeTitleStore.update(() => 'Not found')
 		append(element('article', {
 			classes: styles.page,
@@ -21,9 +26,7 @@ export const NotFoundPage = component({
 				element('p', {
 					children: [
 						create(Link, {
-							// Forced to English: this fallback only fires for URLs
-							// that don't carry a recognized locale segment at all.
-							href: href.for(RulesRoute, { locale: 'en' }),
+							href: href.for(RulesRoute, { locale: options.locale }),
 							classes: styles.link,
 							children: '← Back to home',
 						}),

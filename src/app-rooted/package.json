@@ -13,16 +13,19 @@
 		"lint": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@rooted/components": "1.0.0-alpha.11",
-		"@rooted/elements": "1.0.0-alpha.6",
-		"@rooted/events": "1.0.0-alpha.6",
-		"@rooted/router": "1.0.0-alpha.10",
-		"@rooted/storage": "1.0.0-alpha.4",
-		"@rooted/store": "1.0.0-alpha.3",
+		"@rooted/components": "link:../../../rooted/packages/components",
+		"@rooted/elements": "link:../../../rooted/packages/elements",
+		"@rooted/events": "link:../../../rooted/packages/events",
+		"@rooted/localization": "link:../../../rooted/packages/localization",
+		"@rooted/router": "link:../../../rooted/packages/router",
+		"@rooted/storage": "link:../../../rooted/packages/storage",
+		"@rooted/store": "link:../../../rooted/packages/store",
+		"@rooted/util": "link:../../../rooted/packages/util",
 		"js-confetti": "^0.11.0"
 	},
 	"devDependencies": {
-		"@rooted/application": "1.0.0-alpha.13",
+		"@rooted/adapter": "link:../../../rooted/packages/adapter",
+		"@rooted/application": "link:../../../rooted/packages/application",
 		"@types/node": "^20.0.0",
 		"iterative-permutation": "^1.0.0",
 		"typescript": "^5.4.0",
