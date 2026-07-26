@@ -16,7 +16,7 @@ const closeXIcon = `
 export const Menu = component({
 	name: 'app-menu',
 	styles,
-	onMount({ append, element, create, signal, on }) {
+	onMount({ append, element, create, signal }) {
 		const dialog = element('dialog', {
 			classes: styles.sheet,
 			aria: { modal: 'true', label: 'App menu' },
@@ -47,34 +47,17 @@ export const Menu = component({
 			],
 		})
 
-		let content = create(MenuContent, {
-			onClose: () => dialog.close()
-		})
-		let contentLocale = localization.currentLocale
-
-		dialog.append(navBar, content)
+		dialog.append(navBar,
+			localization.localized(() =>
+				create(MenuContent, {
+					onClose: () => dialog.close()
+				})
+			)
+		)
 
 		menuStore.on('change', signal, ({ detail }) => {
 			if (detail.state && !dialog.open) dialog.showModal()
 			else if (!detail.state && dialog.open) dialog.close()
-		})
-
-		// MenuContent renders locale-dependent text/links (e.g. the Settings
-		// label, the Rules/Accessibility hrefs) but mounts once and never
-		// re-renders on its own. Rather than reactively patching each such
-		// piece by hand, just remount the whole thing whenever the locale
-		// actually changes — any localization.text call added in there later
-		// is covered for free.
-		on('window', 'popstate', async () => {
-			if (localization.currentLocale === contentLocale) return
-			contentLocale = localization.currentLocale
-			await localization.load()
-
-			const newContent = create(MenuContent, {
-				onClose: () => dialog.close()
-			})
-			content.replaceWith(newContent)
-			content = newContent
 		})
 
 		if (menuStore.value) queueMicrotask(() => { if (menuStore.value) dialog.showModal() })
