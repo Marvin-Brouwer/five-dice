@@ -156,6 +156,6 @@ export default dictionary(
 
 	// Pip die default aria-label fallback (_shared/die/pip-die.mts), unused by
 	// current call sites (all pass an explicit ariaLabel), kept for API correctness.
-	translation('Empty die', 'Leeg dobbelsteen'),
+	translation('Empty die', 'Lege dobbelsteen'),
 	translation('Die showing {value}', 'Dobbelsteen toont {value}'),
 )
