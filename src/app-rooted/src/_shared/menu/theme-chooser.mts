@@ -9,41 +9,45 @@ import { attachDropdown } from './dropdown-controller.mts'
 import checkIcon from './theme-chooser.check.svg?raw'
 import chevronIcon from './dropdown-chevron.svg?raw'
 import moonIcon from './theme-chooser.moon.svg?raw'
-import sensorDarkIcon from './theme-chooser.sensor-dark.svg?raw'
-import sensorLightIcon from './theme-chooser.sensor-light.svg?raw'
+import sensorIcon from './theme-chooser.sensor.svg?raw'
 import sunIcon from './theme-chooser.sun.svg?raw'
-import systemDarkIcon from './theme-chooser.system-dark.svg?raw'
-import systemLightIcon from './theme-chooser.system-light.svg?raw'
+import systemIcon from './theme-chooser.system.svg?raw'
 import styles from './theme-chooser.css'
 
 type ThemeOption = {
 	value: Theme
+	icon: string
 	label: string
 	sub: string
 }
 
-function getOptions(): ThemeOption[] {
+function getOptions(text: typeof localization.text): ThemeOption[] {
 	return [
-		{ value: 'system', label: localization.text`System`, sub: localization.text`Follow device setting` },
-		{ value: 'sensor', label: localization.text`Sensor`, sub: localization.text`Adapt to room light` },
-		{ value: 'light',  label: localization.text`Light`,  sub: localization.text`Always light` },
-		{ value: 'dark',   label: localization.text`Dark`,   sub: localization.text`Always dark` },
+		{
+			value: 'system', icon: systemIcon,
+			label: text`System`, sub: text`Follow device setting`
+		},
+		{
+			value: 'sensor', icon: sensorIcon,
+			label: text`Sensor`, sub: text`Adapt to room light`
+		},
+		{
+			value: 'light',  icon: sunIcon,
+			label: text`Light`,  sub: text`Always light`
+		},
+		{
+			value: 'dark',   icon: moonIcon,
+			label: text`Dark`, sub: text`Always dark`
+		},
 	]
 }
 
-// TODO this should be CSS driven
-const systemIcon = (dark: boolean) => dark ? systemDarkIcon : systemLightIcon
-const sensorIcon = (dark: boolean) => dark ? sensorDarkIcon : sensorLightIcon
-
-function themeIconFor(value: Theme, resolvedDark: boolean): string {
-	if (value === 'system') return systemIcon(resolvedDark)
-	if (value === 'sensor') return sensorIcon(resolvedDark)
-	if (value === 'dark') return moonIcon
-	return sunIcon
+function themeOption(value: Theme): ThemeOption {
+	return getOptions(localization.text).find(o => o.value === value)!
 }
 
 function themeLabel(value: Theme): string {
-	return getOptions().find(o => o.value === value)!.label
+	return themeOption(value).label
 }
 
 function isDarkNow(): boolean {
@@ -101,7 +105,7 @@ export const ThemeChooser = component({
 		function syncButton() {
 			const dark = isDarkNow()
 			buttonIcon.replaceChildren(create(Icon, {
-				source: themeIconFor(themeStore.value, dark),
+				source: themeOption(themeStore.value).icon,
 			}))
 			buttonLabel.textContent = themeLabel(themeStore.value)
 			button.setAttribute('aria-label', localization.text`Theme: ${themeLabel(themeStore.value)}`)
@@ -124,16 +128,15 @@ export const ThemeChooser = component({
 		}
 
 		function buildOptions(): Node[] {
-			const dark = isDarkNow()
 			const sensorSupported = sensorAvailable()
-			return getOptions().map((option) => {
+			return getOptions(localization.text).map((option) => {
 				const selected = option.value === themeStore.value
 				const disabled = option.value === 'sensor' && !sensorSupported
 
 				const iconWrap = element('span', {
 					classes: styles.optionIcon,
 					children: create(Icon, {
-						source: themeIconFor(option.value, dark),
+						source: option.icon,
 					}),
 				})
 
@@ -196,12 +199,12 @@ export const ThemeChooser = component({
 			dropdown.refresh()
 		})
 
-		// Listen for data-theme changes (theme-sensor writes it) so the button
-		// glyph reflects the currently-resolved theme in auto modes.
+		// Listen for data-theme changes (theme-sensor writes it) so the status
+		// line text reflects the currently-resolved theme in auto modes. The
+		// icon itself is CSS-driven and repaints without JS involvement.
 		if (typeof MutationObserver !== 'undefined') {
 			const observer = new MutationObserver(() => {
 				syncButton()
-				dropdown.refresh()
 			})
 			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 			signal.addEventListener('abort', () => observer.disconnect(), { once: true })

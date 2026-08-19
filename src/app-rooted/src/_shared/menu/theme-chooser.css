@@ -113,3 +113,13 @@
 	display: inline-flex;
 	color: var(--color-text);
 }
+
+/* System/sensor icons carry both a light and a dark glyph; the resolved
+   theme picks which one paints, no JS re-render needed. */
+:global(:root[data-theme="dark"] .theme-glyph-light) {
+	display: none;
+}
+
+:global(:root:not([data-theme="dark"]) .theme-glyph-dark) {
+	display: none;
+}
