@@ -24,8 +24,6 @@ const CELL_XY: Array<[number, number]> = [
 
 export type PipDieOptions = {
 	value: DieValue | undefined
-	/** Pixel size (fixed), pass 0 or undefined to let CSS drive size instead. */
-	size?: number
 	variant?: 'default' | 'active' | 'muted'
 	ariaLabel?: string
 }
@@ -34,7 +32,7 @@ export const PipDie = component<PipDieOptions>({
 	name: 'pip-die',
 	styles,
 	onMount({ append, element, options }) {
-		const { value, size, variant = 'default', ariaLabel } = options
+		const { value, variant = 'default', ariaLabel } = options
 
 		const pips = value === undefined ? [] : PIPS[value]
 		// Dice faces are physically white in every theme, so pips and border
@@ -49,8 +47,6 @@ export const PipDie = component<PipDieOptions>({
 		append(
 			element('span', {
 				classes: styles.die,
-				// TODO, shouldn't this be css driven?
-				style: size ? { width: `${size}px`, height: `${size}px` } : {},
 				role: 'img',
 				aria: {
 					label: renderAriaLabel(ariaLabel, value)

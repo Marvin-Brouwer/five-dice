@@ -9,8 +9,6 @@ import { PipDie } from '../../_shared/die/pip-die.mts'
 import { sortFullHouse, sortSimpleScore, sortSomeOfKind, sortStraight, type ScoreGroup } from './score-card.sorter.ts'
 import styles from './score-card.css'
 
-const ROLL_DIE_SIZE = 22
-
 type RollContext = Pick<ComponentContext, 'element' | 'create'>
 
 export function renderRollCell(
@@ -100,7 +98,6 @@ function renderAll(context: RollContext, dice: DieValue[]): Node {
 function dieNode(context: RollContext, value: DieValue, muted: boolean): Node {
 	return context.create(PipDie, {
 		value,
-		size: ROLL_DIE_SIZE,
 		variant: muted ? 'muted' : 'default',
 		ariaLabel: `${value}`,
 	})

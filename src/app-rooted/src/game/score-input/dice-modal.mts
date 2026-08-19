@@ -130,7 +130,6 @@ export const DiceModal = component<DiceModalOptions>({
 			const dieSpace = element('span', { classes: styles.keyDie })
 			dieSpace.append(create(PipDie, {
 				value,
-				size: 40,
 				variant: 'default',
 				ariaLabel: localization.text`Add a ${value}`,
 			}))
@@ -251,7 +250,6 @@ export const DiceModal = component<DiceModalOptions>({
 				const dieSpace = btn.firstElementChild as HTMLSpanElement
 				dieSpace.replaceChildren(create(PipDie, {
 					value,
-					size: 50,
 					variant: idx === focusedDie ? 'active' : 'default',
 					ariaLabel: value === undefined ? localization.text`Slot ${idx + 1}: empty` : localization.text`Slot ${idx + 1}: ${value}`,
 				}))

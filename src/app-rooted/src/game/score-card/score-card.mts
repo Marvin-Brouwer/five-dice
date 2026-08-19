@@ -319,11 +319,13 @@ function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState
 
 	const labelChildren: Array<Node | string> = []
 	if (withDieIcon) {
-		labelChildren.push(create(PipDie, {
-			value: dice[field as Dice],
-			size: 18,
-			variant: 'default',
-			ariaLabel: `${dice[field as Dice]}`,
+		labelChildren.push(element('span', {
+			classes: styles.labelIcon,
+			children: create(PipDie, {
+				value: dice[field as Dice],
+				variant: 'default',
+				ariaLabel: `${dice[field as Dice]}`,
+			}),
 		}))
 	}
 	labelChildren.push(element('span', {

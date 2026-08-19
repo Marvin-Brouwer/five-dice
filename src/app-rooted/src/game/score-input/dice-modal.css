@@ -80,8 +80,9 @@
 
 .slot-die {
 	display: inline-flex;
-	width: 50px;
-	height: 50px;
+	--dice-size: 3.125em;
+	width: var(--dice-size);
+	height: var(--dice-size);
 }
 
 .slot-label {
@@ -150,8 +151,9 @@
 
 .key-die {
 	display: inline-flex;
-	width: 40px;
-	height: 40px;
+	--dice-size: 2.5em;
+	width: var(--dice-size);
+	height: var(--dice-size);
 }
 
 /* Action row: Close · Reset · Confirm */
