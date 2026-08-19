@@ -56,9 +56,6 @@ export const DiceModal = component<DiceModalOptions>({
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
 		const { open, initialDice, onConfirm, onCancel } = options
-		// TODO useless function, remove
-		const makeDieNode = (value: DieValue | undefined, size: number, variant: 'default' | 'active' | 'muted', ariaLabel?: string): Node =>
-			create(PipDie, { value, size, variant, ariaLabel })
 
 		const state = createStore<{ dice: InputDice, focusedDie: number }>({
 			dice: emptyDice(),
@@ -131,7 +128,12 @@ export const DiceModal = component<DiceModalOptions>({
 		// Keypad buttons: 6 die faces (pip pattern IS the label)
 		const keypadButtons: HTMLButtonElement[] = dieValues.map((value) => {
 			const dieSpace = element('span', { classes: styles.keyDie })
-			dieSpace.append(makeDieNode(value, 40, 'default', localization.text`Add a ${value}`))
+			dieSpace.append(create(PipDie, {
+				value,
+				size: 40,
+				variant: 'default',
+				ariaLabel: localization.text`Add a ${value}`,
+			}))
 			return element('button', {
 				type: 'button',
 				classes: styles.keypadButton,
@@ -247,12 +249,12 @@ export const DiceModal = component<DiceModalOptions>({
 				const btn = slotButtons[idx]!
 				const value = dice[idx]
 				const dieSpace = btn.firstElementChild as HTMLSpanElement
-				dieSpace.replaceChildren(makeDieNode(
+				dieSpace.replaceChildren(create(PipDie, {
 					value,
-					50,
-					idx === focusedDie ? 'active' : 'default',
-					value === undefined ? localization.text`Slot ${idx + 1}: empty` : localization.text`Slot ${idx + 1}: ${value}`,
-				))
+					size: 50,
+					variant: idx === focusedDie ? 'active' : 'default',
+					ariaLabel: value === undefined ? localization.text`Slot ${idx + 1}: empty` : localization.text`Slot ${idx + 1}: ${value}`,
+				}))
 				const ariaLabel = value === undefined
 					? (idx === focusedDie ? localization.text`Slot ${idx + 1}: next` : localization.text`Slot ${idx + 1}: empty`)
 					: localization.text`Slot ${idx + 1}: ${value}`
