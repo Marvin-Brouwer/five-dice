@@ -63,3 +63,12 @@ export function createScorePadStore(): ScorePadStore {
 
 	return Object.assign(store, { apply, undo, canUndo, gameEnded, reset })
 }
+
+/**
+ * App-wide singleton, not a per-mount instance: `Game` is rebuilt by the
+ * router on every navigation (including a pure locale-segment change from
+ * the language switcher), so a store created inside its `onMount` would
+ * reset progress on every revisit. Module scope keeps it alive for the
+ * whole session, same as `playerNameStore`/`menuStore`/`themeStore`.
+ */
+export const scorePadStore = createScorePadStore()

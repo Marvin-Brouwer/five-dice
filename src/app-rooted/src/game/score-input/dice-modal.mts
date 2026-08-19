@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 import { createStore, type Store } from '@rooted/store'
 
 import { type DieValue } from '../_logic/gameConstants.ts'
+import { localization } from '../../_shared/i18n/localization.mts'
 import { PipDie } from '../../_shared/die/pip-die.mts'
 
 import styles from './dice-modal.css'
@@ -60,27 +61,33 @@ const resetIconSvg = `
 	</svg>
 `
 
+// TODO split into more component based approach
 export const DiceModal = component<DiceModalOptions>({
 	name: 'dice-modal',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
 		const { open, initialDice, onConfirm, onCancel } = options
+		// TODO useless function, remove
 		const makeDieNode = (value: DieValue | undefined, size: number, variant: 'default' | 'active' | 'muted', ariaLabel?: string): Node =>
 			create(PipDie, { value, size, variant, ariaLabel })
+
 		const state = createStore<{ dice: InputDice, focusedDie: number }>({
 			dice: emptyDice(),
 			focusedDie: 0,
 		})
 
+		// todo, move to module scope
 		const titleId = 'dice-modal-title'
 
-		// Slot buttons — a die face + tiny "01"..."05" label below
+		// Slot buttons,  a die face + tiny "01"..."05" label below
 		const slotButtons: HTMLButtonElement[] = slotIndices.map((idx) => {
 			const dieSpace = element('span', { classes: styles.slotDie })
 			const button = element('button', {
 				type: 'button',
 				classes: styles.slot,
-				aria: { label: `Slot ${idx + 1}: empty` },
+				aria: {
+					label: localization.text`Slot ${idx + 1}: empty`
+				},
 				children: [
 					dieSpace,
 					element('span', {
@@ -94,6 +101,7 @@ export const DiceModal = component<DiceModalOptions>({
 						slotButtons[idx]!.focus()
 					},
 					keydown(event) {
+						// todo, this looks like something that might be moved into a function in component scope
 						if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
 							event.preventDefault()
 							const next = (idx + 1) % slotIndices.length
@@ -131,14 +139,16 @@ export const DiceModal = component<DiceModalOptions>({
 			slotButtons[focused]?.focus()
 		}
 
-		// Keypad buttons — 6 die faces (pip pattern IS the label)
+		// Keypad buttons,  6 die faces (pip pattern IS the label)
 		const keypadButtons: HTMLButtonElement[] = dieValues.map((value) => {
 			const dieSpace = element('span', { classes: styles.keyDie })
-			dieSpace.append(makeDieNode(value, 40, 'default', `Add a ${value}`))
+			dieSpace.append(makeDieNode(value, 40, 'default', localization.text`Add a ${value}`))
 			return element('button', {
 				type: 'button',
 				classes: styles.keypadButton,
-				aria: { label: `Add a ${value}` },
+				aria: {
+					label: localization.text`Add a ${value}`
+				},
 				children: dieSpace,
 				on: {
 					click() { fillFocused(value) },
@@ -148,7 +158,10 @@ export const DiceModal = component<DiceModalOptions>({
 
 		const liveRegion = element('p', {
 			classes: styles.liveRegion,
-			aria: { live: 'polite', atomic: 'true' },
+			aria: {
+				live: 'polite',
+				atomic: 'true'
+			},
 		})
 
 		// Section band between slots and keys
@@ -161,7 +174,7 @@ export const DiceModal = component<DiceModalOptions>({
 			children: [
 				element('span', {
 					classes: styles.bandLabel,
-					textContent: 'Select dice',
+					textContent: localization.text`Select dice`,
 				}),
 				bandStatus,
 			],
@@ -178,20 +191,25 @@ export const DiceModal = component<DiceModalOptions>({
 		const closeButton = element('button', {
 			type: 'button',
 			classes: [styles.actionButton, styles.actionSecondary],
-			aria: { label: 'Close and cancel' },
+			aria: {
+				label: localization.text`Close and cancel`
+			},
 			on: {
 				click() {
 					closeReset()
 					onCancel()
 				},
 			},
+			// TODO, this should be children instead
+			innerHTML: `${closeIconSvg}<span>${localization.text`Close`}</span>`,
 		})
-		closeButton.innerHTML = `${closeIconSvg}<span>Close</span>`
 
 		const resetButton = element('button', {
 			type: 'button',
 			classes: [styles.actionButton, styles.actionSecondary],
-			aria: { label: 'Clear all dice' },
+			aria: {
+				label: localization.text`Clear all dice`
+			},
 			on: {
 				click() {
 					state.update(s => {
@@ -201,13 +219,14 @@ export const DiceModal = component<DiceModalOptions>({
 					slotButtons[0]?.focus()
 				},
 			},
+			// TODO, this should be children instead
+			innerHTML: `${resetIconSvg}<span>${localization.text`Reset`}</span>`,
 		})
-		resetButton.innerHTML = `${resetIconSvg}<span>Reset</span>`
 
 		const confirmButton = element('button', {
 			type: 'button',
 			classes: [styles.actionButton, styles.actionPrimary],
-			textContent: 'Confirm',
+			textContent: localization.text`Confirm`,
 			disabled: true,
 			on: {
 				click(event) {
@@ -220,7 +239,7 @@ export const DiceModal = component<DiceModalOptions>({
 			},
 		})
 
-		// Slot die refresh — swap the pip svg on state change
+		// Slot die refresh,  swap the pip svg on state change
 		function refreshSlotDies() {
 			const { dice, focusedDie } = state.value
 			slotIndices.forEach((idx) => {
@@ -231,11 +250,11 @@ export const DiceModal = component<DiceModalOptions>({
 					value,
 					50,
 					idx === focusedDie ? 'active' : 'default',
-					value === undefined ? `Slot ${idx + 1}: empty` : `Slot ${idx + 1}: ${value}`,
+					value === undefined ? localization.text`Slot ${idx + 1}: empty` : localization.text`Slot ${idx + 1}: ${value}`,
 				))
 				const ariaLabel = value === undefined
-					? (idx === focusedDie ? `Slot ${idx + 1}: next` : `Slot ${idx + 1}: empty`)
-					: `Slot ${idx + 1}: ${value}`
+					? (idx === focusedDie ? localization.text`Slot ${idx + 1}: next` : localization.text`Slot ${idx + 1}: empty`)
+					: localization.text`Slot ${idx + 1}: ${value}`
 				btn.setAttribute('aria-label', ariaLabel)
 				btn.classList.toggle(styles.slotActive!, idx === focusedDie)
 			})
@@ -248,14 +267,14 @@ export const DiceModal = component<DiceModalOptions>({
 			const tuple = asTuple(dice as InputDice)
 			confirmButton.disabled = tuple === undefined
 			confirmButton.textContent = tuple === undefined
-				? `Confirm · ${5 - setCount} left`
-				: 'Confirm'
+				? localization.text`Confirm · ${5 - setCount} left`
+				: localization.text`Confirm`
 			bandStatus.textContent = tuple === undefined
-				? `slot ${focusedDie + 1} next →`
-				: 'ready to confirm'
+				? localization.text`slot ${focusedDie + 1} next →`
+				: localization.text`ready to confirm`
 			liveRegion.textContent = tuple === undefined
-				? `${setCount} of 5 dice set`
-				: 'All dice set, ready to confirm'
+				? localization.text`${setCount} of 5 dice set`
+				: localization.text`All dice set, ready to confirm`
 		}
 
 		state.on('update', signal, syncUi)
@@ -282,19 +301,19 @@ export const DiceModal = component<DiceModalOptions>({
 		const srTitle = element('h2', {
 			id: titleId,
 			classes: styles.srTitle,
-			textContent: 'Enter your roll',
+			textContent: localization.text`Enter your roll`,
 		})
 
 		const slotsRow = element('div', {
 			role: 'group',
-			aria: { label: 'Your five dice' },
+			aria: { label: localization.text`Your five dice` },
 			classes: styles.slotsRow,
 			children: slotButtons,
 		})
 
 		const keysRow = element('div', {
 			role: 'group',
-			aria: { label: 'Dice keys' },
+			aria: { label: localization.text`Dice keys` },
 			classes: styles.keysRow,
 			children: keypadButtons,
 		})
@@ -320,7 +339,7 @@ export const DiceModal = component<DiceModalOptions>({
 				state.update(s => {
 					s.dice = carry ? (Array.from(carry) as InputDice) : emptyDice()
 					const first = firstEmpty(s.dice)
-					// -1 means "no active slot" — used when the tuple is
+					// -1 means "no active slot",  used when the tuple is
 					// already complete so no slot gets the accent border.
 					s.focusedDie = first ?? -1
 				})

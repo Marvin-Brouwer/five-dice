@@ -11,3 +11,5 @@ export const localeLabels: Record<typeof localization.Locale, string> = {
 	en: 'English',
 	nl: 'Nederlands',
 }
+
+export type Locale = typeof localization.Locale

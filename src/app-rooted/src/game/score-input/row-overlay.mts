@@ -1,8 +1,9 @@
-import { component, type ComponentContext } from '@rooted/components'
+import { component, cssClass, type ComponentContext } from '@rooted/components'
 import { type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
-import { rowDisplayLabels } from '../score-card/score-card.labels.ts'
+import { localization } from '../../_shared/i18n/localization.mts'
+import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import styles from './row-overlay.css'
 
@@ -29,6 +30,7 @@ export type RowOverlayOptions = {
 
 const SCORE_CARD_ID = 'score-card'
 
+// TODO, not using rooted correctly
 export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
@@ -41,7 +43,9 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const fieldset = element('fieldset', {
 			classes: styles.fieldset,
-			aria: { labelledBy: titleId },
+			aria: {
+				labelledBy: titleId
+			},
 		})
 
 		const titleEl = element('p', {
@@ -52,8 +56,11 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const cancelButton = element('button', {
 			type: 'button',
-			classes: [styles.actionButton, styles.actionSecondary],
-			textContent: 'Back',
+			classes: [
+				styles.actionButton,
+				styles.actionSecondary
+			],
+			textContent: localization.text`Back`,
 			on: {
 				click() {
 					closeOverlay()
@@ -64,8 +71,13 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const confirmButton = element('button', {
 			type: 'button',
-			classes: [styles.actionButton, styles.actionPrimary],
-			textContent: mode === 'discard' ? 'Discard' : 'Confirm',
+			classes: [
+				styles.actionButton,
+				styles.actionPrimary
+			],
+			textContent: mode === 'discard'
+				? localization.text`Discard`
+				: localization.text`Confirm`,
 			disabled: true,
 			on: {
 				click() {
@@ -80,12 +92,18 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const actionsRow = element('div', {
 			classes: styles.actionsRow,
-			children: [cancelButton, confirmButton],
+			children: [
+				cancelButton,
+				confirmButton
+			],
 		})
 
 		const sheet = element('div', {
 			classes: styles.sheet,
-			children: [titleEl, actionsRow],
+			children: [
+				titleEl,
+				actionsRow
+			],
 		})
 
 		const backdrop = element('div', {
@@ -94,11 +112,17 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		const layer = element('section', {
 			classes: styles.layer,
-			aria: { labelledBy: titleId },
+			hidden: true,
+			aria: {
+				labelledBy: titleId
+			},
 			role: 'dialog',
-			children: [backdrop, fieldset, sheet],
+			children: [
+				backdrop,
+				fieldset,
+				sheet
+			],
 		})
-		layer.hidden = true
 
 		let activeRadios: HTMLInputElement[] = []
 		let activeLabels: HTMLLabelElement[] = []
@@ -260,10 +284,13 @@ export const RowOverlay = component<RowOverlayOptions>({
 					htmlFor: radioId(field),
 					classes: [
 						styles.option,
-						variant === 'valid' ? styles.optionValid : styles.optionDiscard,
+						cssClass(styles.optionValid, variant === 'valid'),
+						cssClass(styles.optionDiscard, variant !== 'valid'),
 					],
-					aria: { label: `${rowDisplayLabels[field].title} — ${variant === 'valid' ? 'apply' : 'discard'}` },
-					children: [radio],
+					aria: {
+						label: localization.text`${getRowDisplayLabels()[field].title}, ${variant === 'valid' ? localization.text`apply` : localization.text`discard`}`
+					},
+					children: radio,
 					on: {
 						mouseenter() {
 							setHover(field, true)

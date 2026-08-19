@@ -25,11 +25,18 @@ export const CultureSelect = component({
 			return
 		}
 
+		// Deliberately not localized,  shown before a locale is picked, so
+		// there's no language to translate into. The list below already shows
+		// each locale's native name.
 		append(element('article', {
 			classes: styles.page,
 			children: [
-				element('h1', { textContent: 'Five dice' }),
-				element('p', { textContent: 'Choose your language' }),
+				element('h1', {
+					textContent: 'Five dice'
+				}),
+				element('p', {
+					textContent: 'Choose your language'
+				}),
 				element('ul', {
 					classes: styles.list,
 					children: localization.supportedLocales.map(locale => element('li', {

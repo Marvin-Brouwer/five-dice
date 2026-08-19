@@ -1,5 +1,6 @@
-import { component } from '@rooted/components'
+import { component, cssClass } from '@rooted/components'
 
+import { localization } from '../i18n/localization.mts'
 import { sensorAvailable } from '../services/theme-sensor.mts'
 import { themeStore, type Theme } from '../stores/themeStore.mts'
 
@@ -12,13 +13,16 @@ type ThemeOption = {
 	sub: string
 }
 
-const OPTIONS: ThemeOption[] = [
-	{ value: 'system', label: 'System', sub: 'Follow device setting' },
-	{ value: 'sensor', label: 'Sensor', sub: 'Adapt to room light' },
-	{ value: 'light',  label: 'Light',  sub: 'Always light' },
-	{ value: 'dark',   label: 'Dark',   sub: 'Always dark' },
-]
+function getOptions(): ThemeOption[] {
+	return [
+		{ value: 'system', label: localization.text`System`, sub: localization.text`Follow device setting` },
+		{ value: 'sensor', label: localization.text`Sensor`, sub: localization.text`Adapt to room light` },
+		{ value: 'light',  label: localization.text`Light`,  sub: localization.text`Always light` },
+		{ value: 'dark',   label: localization.text`Dark`,   sub: localization.text`Always dark` },
+	]
+}
 
+// TODO this should be CSS driven
 const iconSystem = (dark: boolean) => `
 	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 		<rect x="2.5" y="4" width="19" height="13" rx="2"/>
@@ -70,7 +74,7 @@ function themeIconFor(value: Theme, resolvedDark: boolean): string {
 }
 
 function themeLabel(value: Theme): string {
-	return OPTIONS.find(o => o.value === value)!.label
+	return getOptions().find(o => o.value === value)!.label
 }
 
 function isDarkNow(): boolean {
@@ -84,27 +88,42 @@ export const ThemeChooser = component({
 	onMount({ append, element, signal, on }) {
 		const statusLine = element('span', {
 			classes: styles.status,
-			aria: { hidden: 'true' },
+			aria: {
+				hidden: 'true'
+			},
 		})
 
-		const buttonIcon = element('span', { classes: styles.buttonIcon })
+		const buttonIcon = element('span', {
+			classes: styles.buttonIcon
+		})
 		const buttonLabel = element('span', {
 			classes: styles.buttonLabel,
 			textContent: themeLabel(themeStore.value),
 		})
-		const buttonChevron = element('span', { classes: styles.buttonChevron })
-		buttonChevron.innerHTML = chevron
+		const buttonChevron = element('span', {
+			classes: styles.buttonChevron,
+			innerHTML: chevron
+		})
 
 		const button = element('button', {
 			type: 'button',
 			classes: styles.button,
-			aria: { hasPopup: 'listbox', label: `Theme: ${themeLabel(themeStore.value)}` },
-			children: [buttonIcon, buttonLabel, buttonChevron],
+			aria: {
+				hasPopup: 'listbox',
+				label: localization.text`Theme: ${themeLabel(themeStore.value)}`
+			},
+			children: [
+				buttonIcon,
+				buttonLabel,
+				buttonChevron
+			],
 		})
 
 		const list = element('div', {
 			role: 'listbox',
-			aria: { label: 'Theme' },
+			aria: {
+				label: localization.text`Theme`
+			},
 			classes: styles.list,
 		})
 
@@ -112,12 +131,12 @@ export const ThemeChooser = component({
 			const dark = isDarkNow()
 			buttonIcon.innerHTML = themeIconFor(themeStore.value, dark)
 			buttonLabel.textContent = themeLabel(themeStore.value)
-			button.setAttribute('aria-label', `Theme: ${themeLabel(themeStore.value)}`)
+			button.setAttribute('aria-label', localization.text`Theme: ${themeLabel(themeStore.value)}`)
 
 			const auto = themeStore.value === 'system' || themeStore.value === 'sensor'
 			statusLine.hidden = !auto
 			if (auto) {
-				statusLine.innerHTML = `${dark ? iconMoon : iconSun}<span>${dark ? 'Dark active' : 'Light active'}</span>`
+				statusLine.innerHTML = `${dark ? iconMoon : iconSun}<span>${dark ? localization.text`Dark active` : localization.text`Light active`}</span>`
 			}
 			else {
 				statusLine.textContent = ''
@@ -127,20 +146,25 @@ export const ThemeChooser = component({
 		function buildOptions(): Node[] {
 			const dark = isDarkNow()
 			const sensorSupported = sensorAvailable()
-			return OPTIONS.map((option) => {
+			return getOptions().map((option) => {
 				const selected = option.value === themeStore.value
 				const disabled = option.value === 'sensor' && !sensorSupported
 
-				const iconWrap = element('span', { classes: styles.optionIcon })
-				iconWrap.innerHTML = themeIconFor(option.value, dark)
+				const iconWrap = element('span', {
+					classes: styles.optionIcon,
+					innerHTML: themeIconFor(option.value, dark)
+				})
 
 				const optionEl = element('div', {
 					role: 'option',
-					aria: { selected: String(selected), disabled: disabled ? 'true' : undefined! },
+					aria: {
+						selected: String(selected),
+						disabled: disabled ? 'true' : undefined!
+					},
 					classes: [
 						styles.option,
-						selected ? styles.optionSelected : undefined,
-						disabled ? styles.optionDisabled : undefined,
+						cssClass(styles.optionSelected, selected),
+						cssClass(styles.optionDisabled, disabled),
 					],
 					on: {
 						click(event) {
@@ -160,7 +184,9 @@ export const ThemeChooser = component({
 								}),
 								element('span', {
 									classes: styles.optionSub,
-									textContent: disabled ? 'unavailable in this browser' : option.sub,
+									textContent: disabled
+										? localization.text`unavailable in this browser`
+										: option.sub,
 								}),
 							],
 						}),
@@ -168,9 +194,10 @@ export const ThemeChooser = component({
 				})
 
 				if (selected) {
-					const tick = element('span', { classes: styles.optionCheck })
-					tick.innerHTML = check
-					optionEl.append(tick)
+					optionEl.append(element('span', {
+						classes: styles.optionCheck,
+						innerHTML: check
+					}))
 				}
 				return optionEl
 			})
@@ -200,7 +227,10 @@ export const ThemeChooser = component({
 			statusLine,
 			element('div', {
 				classes: styles.wrap,
-				children: [button, list],
+				children: [
+					button,
+					list
+				],
 			}),
 		)
 	},

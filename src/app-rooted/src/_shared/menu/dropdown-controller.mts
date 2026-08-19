@@ -20,7 +20,7 @@ export type DropdownController = {
 export type DropdownAttachOptions = {
 	/** The trigger button. Click toggles; aria-expanded is kept in sync. */
 	button: HTMLButtonElement
-	/** The list element. Managed here — `hidden`, position and children. */
+	/** The list element. Managed here,  `hidden`, position and children. */
 	list: HTMLElement
 	/** Called every time the list opens or refreshes; returns the option nodes. */
 	buildOptions: () => Node[]

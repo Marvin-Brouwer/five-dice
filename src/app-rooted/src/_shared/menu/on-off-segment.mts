@@ -1,5 +1,7 @@
-import { component } from '@rooted/components'
+import { component, type CssClass } from '@rooted/components'
 import type { Store } from '@rooted/store'
+
+import { localization } from '../i18n/localization.mts'
 
 import styles from './on-off-segment.css'
 
@@ -9,38 +11,32 @@ export type OnOffSegmentOptions = {
 	idPrefix: string
 }
 
+type SegmentLabelOptions = {
+	class: CssClass
+	text: string
+}
+
+/** One unselectable label of the switch,  the `styles.segment` base class
+    plus the on/off-specific variant class passed in via `classes`. */
+const SegmentLabel = component<SegmentLabelOptions>({
+	name: 'on-off-segment-label',
+	onMount({ append, element, options }) {
+		append(element('span', {
+			classes: [styles.segment, options.class],
+			textContent: options.text,
+			aria: { hidden: 'true' },
+		}))
+	},
+})
+
 /** Single-tap toggle rendered as an On / Off segmented switch. Clicking
     anywhere on the control flips the store; the labels themselves are
     unselectable so a mis-clicked drag doesn't turn into a text selection. */
 export const OnOffSegment = component<OnOffSegmentOptions>({
 	name: 'on-off-segment',
 	styles,
-	onMount({ append, element, signal, options }) {
+	onMount({ append, element, create, signal, options }) {
 		const { store, ariaLabel } = options
-
-		const onLabel = element('span', {
-			classes: [styles.segment, styles.segmentOn],
-			textContent: 'On',
-			aria: { hidden: 'true' },
-		})
-		const offLabel = element('span', {
-			classes: [styles.segment, styles.segmentOff],
-			textContent: 'Off',
-			aria: { hidden: 'true' },
-		})
-
-		const button = element('button', {
-			type: 'button',
-			role: 'switch',
-			aria: { label: ariaLabel, checked: String(store.value) },
-			classes: styles.group,
-			children: [onLabel, offLabel],
-			on: {
-				click() {
-					store.update(prev => !prev)
-				},
-			},
-		})
 
 		function sync() {
 			const value = store.value
@@ -48,9 +44,34 @@ export const OnOffSegment = component<OnOffSegmentOptions>({
 			button.dataset.state = value ? 'on' : 'off'
 		}
 
+		const button = append(
+			element('button', {
+				type: 'button',
+				role: 'switch',
+				aria: {
+					label: ariaLabel,
+					checked: String(store.value)
+				},
+				classes: styles.group,
+				children: [
+					create(SegmentLabel, {
+						class: styles.segmentOn,
+						text: localization.text`On`
+					}),
+					create(SegmentLabel, {
+						class: styles.segmentOff,
+						text: localization.text`Off`
+					}),
+				],
+				on: {
+					click() {
+						store.update(prev => !prev)
+					},
+				},
+			})
+		)
+
 		store.on('change', signal, sync)
 		sync()
-
-		append(button)
 	},
 })

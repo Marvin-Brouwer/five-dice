@@ -17,6 +17,7 @@
 		"@rooted/elements": "link:../../../rooted/packages/elements",
 		"@rooted/events": "link:../../../rooted/packages/events",
 		"@rooted/localization": "link:../../../rooted/packages/localization",
+		"@rooted/markdown": "link:../../../rooted/packages/markdown",
 		"@rooted/router": "link:../../../rooted/packages/router",
 		"@rooted/storage": "link:../../../rooted/packages/storage",
 		"@rooted/store": "link:../../../rooted/packages/store",

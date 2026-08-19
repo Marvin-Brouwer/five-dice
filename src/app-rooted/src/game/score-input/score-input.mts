@@ -6,8 +6,9 @@ import { discard, isDiscarded, isFlushScore, score, type ValidScore } from '../_
 import { calculateFlush, calculateScore } from '../_logic/score/scoreCalculator.ts'
 import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
 import { renderRollCell } from '../score-card/roll-cell.mts'
-import { rowDisplayLabels } from '../score-card/score-card.labels.ts'
+import { getRowDisplayLabels, scoreFieldOrder } from '../score-card/score-card.labels.ts'
 
 import { DiceModal, type DiceTuple } from './dice-modal.mts'
 import { RowOverlay, type RowOverlayField } from './row-overlay.mts'
@@ -21,7 +22,7 @@ export type ScoreInputOptions = {
 	onCommit?: () => void
 }
 
-const allFields = Object.keys(rowDisplayLabels) as ScoreField[]
+const allFields = scoreFieldOrder
 
 export const ScoreInput = component<ScoreInputOptions>({
 	name: 'score-input',
@@ -78,7 +79,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 				const applicable = isScoreApplicableToField(scoreValue, field)
 				const preview = applicable ? projectedScoreText(field, scoreValue) : '/'
 				// Roll preview reuses renderRollCell with the same value the row
-				// would receive after apply — for flush that means the full
+				// would receive after apply,  for flush that means the full
 				// projected array (existing entries + new score) so the badge
 				// count matches the post-apply render.
 				let projectedRoll: RowOverlayField['projectedRoll']
@@ -122,21 +123,21 @@ export const ScoreInput = component<ScoreInputOptions>({
 			try {
 				if (!isScoreApplicableToField(scoreValue, field)) {
 					store.apply({ field, score: discard() })
-					liveAnnounce.textContent = `Discarded ${rowDisplayLabels[field].title}.`
+					liveAnnounce.textContent = localization.text`Discarded ${getRowDisplayLabels()[field].title}.`
 				}
 				else if (field === 'flush') {
 					if (flushDiscardField) {
 						store.apply({ field: 'flush', score: scoreValue, discard: flushDiscardField })
-						liveAnnounce.textContent = `Flush applied. Discarded ${rowDisplayLabels[flushDiscardField].title}.`
+						liveAnnounce.textContent = localization.text`Flush applied. Discarded ${getRowDisplayLabels()[flushDiscardField].title}.`
 					}
 					else {
 						store.apply({ field: 'flush', score: scoreValue })
-						liveAnnounce.textContent = 'First flush applied.'
+						liveAnnounce.textContent = localization.text`First flush applied.`
 					}
 				}
 				else {
 					store.apply({ field, score: scoreValue })
-					liveAnnounce.textContent = `Applied ${rowDisplayLabels[field].title}.`
+					liveAnnounce.textContent = localization.text`Applied ${getRowDisplayLabels()[field].title}.`
 				}
 				options.onCommit?.()
 			}
@@ -171,7 +172,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const rowOverlay = create(RowOverlay, {
 			open: rowOpen,
 			mode: 'apply',
-			title: 'Select a row for this roll',
+			title: localization.text`Select a row for this roll`,
 			availableFields: availableRowFields,
 			onConfirm(field) {
 				pendingRow = field
@@ -193,7 +194,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const flushOverlay = create(RowOverlay, {
 			open: flushOpen,
 			mode: 'discard',
-			title: 'Choose a row to discard for this flush',
+			title: localization.text`Choose a row to discard for this flush`,
 			availableFields: flushDiscardFields,
 			onConfirm(field) {
 				if (!pendingRow) return

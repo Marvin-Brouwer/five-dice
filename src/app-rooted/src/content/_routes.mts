@@ -9,7 +9,8 @@ export const RulesRoute = route`/${localization.parameter}/`({
 		return create(Rules)
 	},
 	seo: () => ({
-		title: localization.text`Five dice`,
+		// Brand name, deliberately not wrapped in localization.text
+		title: 'Five dice',
 		description: localization.text`Rules and how to play Five dice.`,
 	}),
 })
@@ -21,7 +22,7 @@ export const AccessibilityRoute = route`/${localization.parameter}/accessibility
 		return create(Accessibility)
 	},
 	seo: () => ({
-		title: localization.text`Accessibility — Five dice`,
+		title: localization.text`Accessibility,  Five dice`,
 		description: localization.text`Accessibility statement for the Five dice app.`,
 	}),
 })

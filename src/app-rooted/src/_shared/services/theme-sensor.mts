@@ -96,7 +96,7 @@ function resolve(mode: Theme) {
 	}
 	if (mode === 'sensor') {
 		if (startSensor()) return
-		// Fell back — behave like system.
+		// Fell back,  behave like system.
 	}
 	applyFromMatchMedia()
 }

@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import type { ElementFactory } from '@rooted/elements'
 import { href } from '@rooted/router'
 
 import { AccessibilityRoute, RulesRoute } from '../../content/_routes.mts'
@@ -33,11 +34,9 @@ const undo = `
 	</svg>
 `
 
-function iconElement(svg: string): HTMLSpanElement {
-	const wrap = document.createElement('span')
-	wrap.classList.add('menu-icon')
-	wrap.innerHTML = svg
-	return wrap
+// TODO icon element that accepts an image and/or svg import
+function iconElement(element: ElementFactory, svg: string): HTMLSpanElement {
+	return element('span', { classes: 'menu-icon', innerHTML: svg })
 }
 
 export type MenuContentOptions = {
@@ -45,7 +44,7 @@ export type MenuContentOptions = {
 }
 
 /** The menu's scrollable body. Fully rebuilt (not patched) whenever the locale
-    changes, so any localization.text call in here just needs to be written —
+    changes, so any localization.text call in here just needs to be written,
     no per-string reactivity plumbing required. See menu.mts. */
 export const MenuContent = component<MenuContentOptions>({
 	name: 'menu-content',
@@ -60,72 +59,84 @@ export const MenuContent = component<MenuContentOptions>({
 		const languageControl = create(LanguageChooser)
 		const screenLockControl = create(OnOffSegment, {
 			store: screenLockStore,
-			ariaLabel: 'Keep screen on',
+			ariaLabel: localization.text`Keep screen on`,
 			idPrefix: 'menu-screen-lock',
 		})
 
-		const settingsSection = create(MenuSection, { label: localization.text`Settings`, rightHint: 'Preferences' })
+		const settingsSection = create(MenuSection, {
+			label: localization.text`Settings`,
+			rightHint: localization.text`Preferences`
+		})
 		const themeRow = create(MenuRow, {
-			label: 'Theme',
-			hint: 'System & sensor follow the device · Light/Dark force it',
+			label: localization.text`Theme`,
+			hint: localization
+				.text`System & sensor follow the device · Light/Dark force it`,
 			control: themeControl,
 		})
 		const languageRow = create(MenuRow, {
-			label: 'Language',
-			hint: 'App and rules text',
+			label: localization.text`Language`,
+			hint: localization.text`App and rules text`,
 			control: languageControl,
 		})
 		const screenLockRow = create(MenuRow, {
-			label: 'Keep screen on',
-			hint: 'Disable lock while playing',
+			label: localization.text`Keep screen on`,
+			hint: localization.text`Disable lock while playing`,
 			control: screenLockControl,
 		})
 
-		const gameSection = create(MenuSection, { label: 'Game', rightHint: 'Actions' })
+		const gameSection = create(MenuSection, {
+			label: localization.text`Game`,
+			rightHint: localization.text`Actions`
+		})
 		const newGameRow = create(MenuRow, {
-			label: 'New game',
-			hint: 'Reset the score pad',
+			label: localization.text`New game`,
+			hint: localization.text`Reset the score pad`,
 			variant: 'button',
 			disabledStore: newGameDisabledStore,
 			onSelect() {
 				onClose()
 				window.dispatchEvent(new CustomEvent('five-dice:new-game'))
 			},
-			control: iconElement(refresh),
+			control: iconElement(element, refresh),
 		})
 		const undoRow = create(MenuRow, {
-			label: 'Undo last turn',
-			hint: 'Revert the last committed score',
+			label: localization.text`Undo last turn`,
+			hint: localization.text`Revert the last committed score`,
 			variant: 'button',
 			disabledStore: undoDisabledStore,
 			onSelect() {
 				onClose()
 				window.dispatchEvent(new CustomEvent('five-dice:undo'))
 			},
-			control: iconElement(undo),
+			control: iconElement(element, undo),
 		})
 
-		const aboutSection = create(MenuSection, { label: 'About', rightHint: 'Help & links' })
+		const aboutSection = create(MenuSection, {
+			label: localization.text`About`,
+			rightHint: localization.text`Help & links`
+		})
 		const rulesRow = create(MenuRow, {
-			label: 'Rules',
-			hint: 'How to play',
+			label: localization.text`Rules`,
+			hint: localization.text`How to play`,
 			variant: 'link',
 			href: href.for(RulesRoute, { locale: localization.currentLocale }),
-			control: iconElement(chevron),
+			control: iconElement(element, chevron),
 		})
 		const accessibilityRow = create(MenuRow, {
-			label: 'Accessibility',
-			hint: 'Statement & keyboard map',
+			label: localization.text`Accessibility`,
+			hint: localization.text`Statement & keyboard map`,
 			variant: 'link',
-			href: href.for(AccessibilityRoute, { locale: localization.currentLocale }),
-			control: iconElement(chevron),
+			href: href.for(AccessibilityRoute, {
+				locale: localization.currentLocale
+			}),
+			control: iconElement(element, chevron),
 		})
 		const sourceRow = create(MenuRow, {
-			label: 'Source',
+			label: localization.text`Source`,
 			hint: 'github.com/marvin-brouwer/five-dice',
 			variant: 'external-link',
 			href: 'https://github.com/marvin-brouwer/five-dice',
-			control: iconElement(chevron),
+			control: iconElement(element, chevron),
 		})
 
 		append(element('div', {

@@ -1,5 +1,6 @@
 import { component } from '@rooted/components'
 
+import { localization } from '../_shared/i18n/localization.mts'
 import { menuStore } from '../_shared/stores/menuStore.mts'
 import { PipDie } from '../_shared/die/pip-die.mts'
 
@@ -21,13 +22,16 @@ export const AppBar = component({
 		const skipLink = element('a', {
 			classes: styles.skipLink,
 			href: '#main-content',
-			textContent: 'Skip to main content',
+			textContent: localization.text`Skip to main content`,
 		})
 
 		const monogram = element('span', {
 			classes: styles.monogram,
 			aria: { label: 'Five dice' },
-			children: create(PipDie, { value: 5, ariaLabel: 'Five dice' }),
+			children: create(PipDie, {
+				value: 5,
+				ariaLabel: 'Five dice'
+			}),
 		})
 
 		const breadcrumb = element('span', {
@@ -38,14 +42,17 @@ export const AppBar = component({
 		const kebab = element('button', {
 			type: 'button',
 			classes: styles.kebab,
-			aria: { label: 'Menu', expanded: String(menuStore.value) },
+			aria: {
+				label: localization.text`Menu`,
+				expanded: String(menuStore.value)
+			},
 			on: {
 				click() {
 					menuStore.update(open => !open)
 				},
 			},
+			innerHTML: kebabSvg,
 		})
-		kebab.innerHTML = kebabSvg
 
 		menuStore.on('change', signal, ({ detail }) => {
 			kebab.setAttribute('aria-expanded', String(detail.state))

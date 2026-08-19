@@ -1,5 +1,6 @@
 import { rootedManifest } from '@rooted/application'
 import { localizationSeo } from '@rooted/localization/vite'
+import { rootedMarkdown } from '@rooted/markdown/vite'
 import { generateRouteManifest } from '@rooted/router/manifest'
 
 import packageJson from './package.json' with { type: 'json' }
@@ -31,5 +32,6 @@ export default rootedManifest({
 			routeManifestPath: './src/_routes.g.mts',
 		}),
 		localizationSeo(),
+		rootedMarkdown(),
 	],
 })

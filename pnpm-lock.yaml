@@ -118,6 +118,9 @@ importers:
       '@rooted/localization':
         specifier: link:../../../rooted/packages/localization
         version: link:../../../rooted/packages/localization
+      '@rooted/markdown':
+        specifier: link:../../../rooted/packages/markdown
+        version: link:../../../rooted/packages/markdown
       '@rooted/router':
         specifier: link:../../../rooted/packages/router
         version: link:../../../rooted/packages/router

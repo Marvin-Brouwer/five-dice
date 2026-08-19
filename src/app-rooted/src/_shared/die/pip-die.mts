@@ -1,10 +1,11 @@
 import { component } from '@rooted/components'
 
+import { localization } from '../i18n/localization.mts'
 import type { DieValue } from '../../game/_logic/gameConstants.ts'
 
 import styles from './pip-die.css'
 
-/** Pip positions on a 3×3 grid (cells 0..8). Matches shared.jsx PIPS. */
+/** Pip positions on a 3×3 grid (cells 0..8). */
 const PIPS: Record<DieValue, number[]> = {
 	1: [4],
 	2: [0, 8],
@@ -23,34 +24,10 @@ const CELL_XY: Array<[number, number]> = [
 
 export type PipDieOptions = {
 	value: DieValue | undefined
-	/** Pixel size (fixed) — pass 0 or undefined to let CSS drive size instead. */
+	/** Pixel size (fixed),  pass 0 or undefined to let CSS drive size instead. */
 	size?: number
 	variant?: 'default' | 'active' | 'muted'
 	ariaLabel?: string
-}
-
-function svg(value: DieValue | undefined, variant: 'default' | 'active' | 'muted'): string {
-	const pips = value === undefined ? [] : PIPS[value]
-	// Dice faces are physically white in every theme, so pips and border
-	// use --color-die-* (dark ink) rather than --color-text — otherwise the
-	// menu / dice-keyboard's inverted palette would render invisible dots.
-	const stroke = variant === 'active' ? 'var(--color-accent)' : 'var(--color-die-border)'
-	const strokeWidth = variant === 'active' ? 2.5 : 1.5
-	const strokeDash = value === undefined && variant !== 'active' ? '3 3' : ''
-	const pipColor = variant === 'muted' ? 'var(--color-text-muted)' : 'var(--color-die-dot)'
-	const rectFill = variant === 'muted' ? 'transparent' : 'var(--color-die-face)'
-	return `
-		<svg viewBox="0 0 24 24" aria-hidden="true" style="display:block;width:100%;height:100%">
-			<rect x="1" y="1" width="22" height="22" rx="3" ry="3"
-				fill="${rectFill}"
-				stroke="${stroke}" stroke-width="${strokeWidth}"
-				${strokeDash ? `stroke-dasharray="${strokeDash}"` : ''}/>
-			${pips.map((cell) => {
-				const [cx, cy] = CELL_XY[cell]!
-				return `<circle cx="${cx}" cy="${cy}" r="2.1" fill="${pipColor}"/>`
-			}).join('')}
-		</svg>
-	`
 }
 
 export const PipDie = component<PipDieOptions>({
@@ -58,13 +35,53 @@ export const PipDie = component<PipDieOptions>({
 	styles,
 	onMount({ append, element, options }) {
 		const { value, size, variant = 'default', ariaLabel } = options
-		const wrap = element('span', {
-			classes: styles.die,
-			style: size ? { width: `${size}px`, height: `${size}px` } : {},
-			role: 'img',
-			aria: { label: ariaLabel ?? (value === undefined ? 'Empty die' : `Die showing ${value}`) },
-		})
-		wrap.innerHTML = svg(value, variant)
-		append(wrap)
+
+		const pips = value === undefined ? [] : PIPS[value]
+		// Dice faces are physically white in every theme, so pips and border
+		// use --color-die-* (dark ink) rather than --color-text,  otherwise the
+		// menu / dice-keyboard's inverted palette would render invisible dots.
+		const stroke = variant === 'active' ? 'var(--color-accent)' : 'var(--color-die-border)'
+		const strokeWidth = variant === 'active' ? 2.5 : 1.5
+		const strokeDash = value === undefined && variant !== 'active' ? '3 3' : undefined
+		const pipColor = variant === 'muted' ? 'var(--color-text-muted)' : 'var(--color-die-dot)'
+		const rectFill = variant === 'muted' ? 'transparent' : 'var(--color-die-face)'
+
+		append(
+			element('span', {
+				classes: styles.die,
+				// TODO, shouldn't this be css driven?
+				style: size ? { width: `${size}px`, height: `${size}px` } : {},
+				role: 'img',
+				aria: {
+					label: renderAriaLabel(ariaLabel, value)
+				},
+				children: element('svg', {
+					viewBox: '0 0 24 24',
+					aria: { hidden: 'true' },
+					style: { display: 'block', width: '100%', height: '100%' },
+					children: [
+						element('svg:rect', {
+							x: 1, y: 1, width: 22, height: 22, rx: 3, ry: 3,
+							fill: rectFill,
+							stroke,
+							'stroke-width': strokeWidth,
+							'stroke-dasharray': strokeDash,
+						}),
+						...pips.map((cell) => {
+							const [cx, cy] = CELL_XY[cell]!
+							return element('svg:circle', { cx, cy, r: 2.1, fill: pipColor })
+						}),
+					],
+				})
+			})
+		)
 	},
 })
+
+function renderAriaLabel(ariaLabel: string | undefined, value: number | undefined): string | null | undefined {
+
+	if (!!ariaLabel) return ariaLabel
+	if (!value) return localization.text`Empty die`
+
+	return localization.text`Die showing ${value}`
+}

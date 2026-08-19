@@ -19,7 +19,7 @@ import { playerNameStore } from '../../_shared/stores/playerNameStore.mts'
 import { inputActiveStore } from '../score-input/input-active-store.mts'
 
 import { renderRollCell } from './roll-cell.mts'
-import { rowDisplayLabels } from './score-card.labels.ts'
+import { getRowDisplayLabels } from './score-card.labels.ts'
 import styles from './score-card.css'
 
 const partOneFields: Dice[] = ['aces', 'deuces', 'threes', 'fours', 'fives', 'sixes']
@@ -45,7 +45,7 @@ export const ScoreCard = component<ScoreCardOptions>({
 			type: 'text',
 			id: 'player-name',
 			classes: styles.nameInput,
-			placeholder: 'Your name here',
+			placeholder: localization.text`Your name here`,
 			value: playerNameStore.value,
 			on: {
 				input(event) {
@@ -60,7 +60,9 @@ export const ScoreCard = component<ScoreCardOptions>({
 			type: 'button',
 			classes: styles.nameClearButton,
 			textContent: '×',
-			aria: { label: 'Clear name' },
+			aria: {
+				label: localization.text`Clear name`
+			},
 			hidden: playerNameStore.value.length === 0,
 			on: {
 				click() {
@@ -82,9 +84,18 @@ export const ScoreCard = component<ScoreCardOptions>({
 		})
 		writeRoundLabel(roundLabel, store.value.round)
 
-		const partOneBlock = element('article', { id: 'part1', role: 'presentation' })
-		const partTwoBlock = element('article', { id: 'part2', role: 'presentation' })
-		const totalsBlock = element('article', { id: 'score', role: 'presentation' })
+		const partOneBlock = element('article', {
+			id: 'part1',
+			role: 'presentation'
+		})
+		const partTwoBlock = element('article', {
+			id: 'part2',
+			role: 'presentation'
+		})
+		const totalsBlock = element('article', {
+			id: 'score',
+			role: 'presentation'
+		})
 
 		function rerender() {
 			partOneBlock.replaceChildren(renderPartOne(context, store.value.pad))
@@ -107,11 +118,14 @@ export const ScoreCard = component<ScoreCardOptions>({
 						element('label', {
 							classes: styles.nameLabel,
 							htmlFor: 'player-name',
-							textContent: 'Player',
+							textContent: localization.text`Player`,
 						}),
 						element('span', {
 							classes: styles.nameInputWrap,
-							children: [nameInput, clearNameButton],
+							children: [
+								nameInput,
+								clearNameButton
+							],
 						}),
 					],
 				}),
@@ -122,19 +136,30 @@ export const ScoreCard = component<ScoreCardOptions>({
 		const cardHeader = element('header', {
 			classes: styles.cardHeader,
 			children: [
-				element('span', { classes: styles.cardTitle, textContent: 'Score card' }),
+				element('span', {
+					classes: styles.cardTitle,
+					textContent: localization.text`Score card`
+				}),
 			],
 		})
 
 		const cardInner = element('div', {
 			classes: styles.cardInner,
-			children: [cardHeader, banner, partOneBlock, partTwoBlock, totalsBlock],
+			children: [
+				cardHeader,
+				banner,
+				partOneBlock,
+				partTwoBlock,
+				totalsBlock
+			],
 		})
 
 		const stickerButton = element('button', {
 			type: 'button',
 			classes: styles.sticker,
-			aria: { label: 'Enter score' },
+			aria: {
+				label: localization.text`Enter score`
+			},
 			on: {
 				click() {
 					if (store.gameEnded()) return
@@ -167,17 +192,21 @@ export const ScoreCard = component<ScoreCardOptions>({
 			id: 'score-card',
 			classes: styles.card,
 			role: 'document',
-			children: [cardInner, stickerButton],
+			children: [
+				cardInner,
+				stickerButton
+			],
 		})
 
 		append(card)
 	},
 })
 
+// TODO this isn't using rooted properly, this file should be split into components.
 function writeRoundLabel(target: HTMLElement, round: number): void {
 	if (round > roundAmount) {
 		target.classList.add(styles.roundLabelFinished!)
-		target.setAttribute('aria-label', 'Game finished')
+		target.setAttribute('aria-label', localization.text`Game finished`)
 		target.innerHTML = partyIconSvg
 		return
 	}
@@ -190,17 +219,17 @@ function writeRoundLabel(target: HTMLElement, round: number): void {
 		Object.assign(document.createElement('span'), { textContent: `/${roundAmount}`, className: styles.roundOf! }),
 	)
 	target.replaceChildren(
-		Object.assign(document.createElement('span'), { textContent: 'Round', className: styles.roundHeading! }),
+		Object.assign(document.createElement('span'), { textContent: localization.text`Round`, className: styles.roundHeading! }),
 		line,
 	)
 }
 
 function renderPartOne(context: RenderContext, pad: ReadonlyState<ScorePad>): Node {
-	return renderSection(context, 'Part one', partOneFields, pad, true)
+	return renderSection(context, localization.text`Part one`, partOneFields, pad, true)
 }
 
 function renderPartTwo(context: RenderContext, pad: ReadonlyState<ScorePad>): Node {
-	return renderSection(context, 'Part two', partTwoFields, pad, false)
+	return renderSection(context, localization.text`Part two`, partTwoFields, pad, false)
 }
 
 function renderSection(context: RenderContext, title: string, fields: ScoreField[], pad: ReadonlyState<ScorePad>, withDieIcon: boolean): Node {
@@ -211,9 +240,27 @@ function renderSection(context: RenderContext, title: string, fields: ScoreField
 		children: element('div', {
 			classes: styles.bandInner,
 			children: [
-				element('span', { classes: [styles.bandCell, styles.bandTitle], textContent: title }),
-				element('span', { classes: [styles.bandCell, styles.bandRoll], textContent: 'Roll' }),
-				element('span', { classes: [styles.bandCell, styles.bandScore], textContent: 'Score' }),
+				element('span', {
+					classes: [
+						styles.bandCell,
+						styles.bandTitle
+					],
+					textContent: title
+				}),
+				element('span', {
+					classes: [
+						styles.bandCell,
+						styles.bandRoll
+					],
+					textContent: localization.text`Roll`
+				}),
+				element('span', {
+					classes: [
+						styles.bandCell,
+						styles.bandScore
+					],
+					textContent: localization.text`Score`
+				}),
 			],
 		}),
 	})
@@ -223,22 +270,33 @@ function renderSection(context: RenderContext, title: string, fields: ScoreField
 		children: [
 			element('colgroup', {
 				children: [
-					element('col', { classes: styles.labelColumn }),
-					element('col', { classes: styles.rollColumn }),
-					element('col', { classes: styles.scoreColumn }),
+					element('col', {
+						classes: styles.labelColumn
+					}),
+					element('col', {
+						classes: styles.rollColumn
+					}),
+					element('col', {
+						classes: styles.scoreColumn
+					}),
 				],
 			}),
 			element('thead', {
-				children: element('tr', { classes: styles.sectionRow, children: [bandCell] }),
+				children: element('tr', {
+					classes: styles.sectionRow,
+					children: bandCell
+				}),
 			}),
-			element('tbody', { children: rows }),
+			element('tbody', {
+				children: rows
+			}),
 		],
 	})
 }
 
 function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState<ScorePad>, withDieIcon: boolean): HTMLElement {
 	const { element, create } = context
-	const label = rowDisplayLabels[field]
+	const label = getRowDisplayLabels()[field]
 	const cell = pad[field]
 
 	let scoreText = '.'
@@ -295,7 +353,10 @@ function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState
 			element('th', {
 				scope: 'row',
 				classes: styles.labelColumn,
-				children: [element('span', { classes: styles.labelDisplay, children: labelChildren })],
+				children: element('span', {
+					classes: styles.labelDisplay,
+					children: labelChildren
+				}),
 			}),
 			element('td', {
 				classes: styles.rollColumn,
@@ -312,23 +373,37 @@ function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState
 	return row
 }
 
-type LabelInfo = (typeof rowDisplayLabels)[ScoreField]
+type LabelInfo = ReturnType<typeof getRowDisplayLabels>[ScoreField]
 
 function renderDescription(context: RenderContext, label: LabelInfo): Node {
 	const { element } = context
 	const { short, long } = label.scoreDescription
 	if (short === undefined) {
 		return element('span', {
-			classes: [styles.descriptionLabel, styles.simpleDescriptionLabel],
+			classes: [
+				styles.descriptionLabel,
+				styles.simpleDescriptionLabel
+			],
 			textContent: long,
 		})
 	}
 	return element('span', {
-		classes: [styles.descriptionLabel, styles.responsiveDescriptionLabel],
-		aria: { label: long },
+		classes: [
+			styles.descriptionLabel,
+			styles.responsiveDescriptionLabel
+		],
+		aria: {
+			label: long
+		},
 		children: [
-			element('span', { classes: styles.descriptionShort, textContent: short }),
-			element('span', { classes: styles.descriptionLong, textContent: long }),
+			element('span', {
+				classes: styles.descriptionShort,
+				textContent: short
+			}),
+			element('span', {
+				classes: styles.descriptionLong,
+				textContent: long
+			}),
 		],
 	})
 }
@@ -346,67 +421,122 @@ function renderTotals(context: RenderContext, pad: ReadonlyState<ScorePad>): Nod
 			children: [
 				element('td', {
 					classes: styles.labelColumn,
-					children: [element('span', { classes: styles.labelDisplay, children: labelChildren })],
+					children: element('span', {
+						classes: styles.labelDisplay,
+						children: labelChildren
+					}),
 				}),
 				element('td', {
 					classes: styles.totalsColumn,
-					children: [element('span', {
+					children: element('span', {
 						classes: [
 							styles.scoreValue,
 							cssClass(styles.scoreValueMark, valueText === '.'),
 							cssClass(styles.scoreValueFilled, valueText !== '.'),
 						],
 						textContent: valueText,
-					})],
+					}),
 				}),
 			],
 		})
 	}
 
 	const bonusDescription = element('span', {
-		classes: [styles.descriptionLabel, styles.responsiveDescriptionLabel],
-		aria: { label: 'Adds 35 if part one ≥ 63' },
+		classes: [
+			styles.descriptionLabel,
+			styles.responsiveDescriptionLabel
+		],
+		aria: {
+			label: localization.text`Adds 35 if part one ≥ 63`
+		},
 		children: [
-			element('span', { classes: styles.descriptionShort, textContent: '+35 if part1 ≥ 63' }),
-			element('span', { classes: styles.descriptionLong, textContent: 'Adds 35 if part one ≥ 63' }),
+			element('span', {
+				classes: styles.descriptionShort,
+				textContent: localization.text`+35 if part1 ≥ 63`
+			}),
+			element('span', {
+				classes: styles.descriptionLong,
+				textContent: localization.text`Adds 35 if part one ≥ 63`
+			}),
 		],
 	})
 
 	const totalsBand = element('td', {
 		classes: styles.sectionName,
+		colSpan: 2,
 		children: element('div', {
 			classes: styles.bandInner,
 			children: [
-				element('span', { classes: [styles.bandCell, styles.bandTitle], textContent: 'Rounds total' }),
-				element('span', { classes: [styles.bandCell, styles.bandTotalsScore], textContent: 'Score' }),
+				element('span', {
+					classes: [
+						styles.bandCell,
+						styles.bandTitle
+					],
+					textContent: localization.text`Rounds total`
+				}),
+				element('span', {
+					classes: [
+						styles.bandCell,
+						styles.bandTotalsScore
+					],
+					textContent: localization.text`Score`
+				}),
 			],
 		}),
 	})
-	totalsBand.colSpan = 2
+
 	return element('table', {
 		classes: styles.scoreTable,
 		children: [
 			element('colgroup', {
 				children: [
-					element('col', { classes: styles.labelColumn }),
-					element('col', { classes: styles.totalsColumn }),
+					element('col', {
+						classes: styles.labelColumn
+					}),
+					element('col', {
+						classes: styles.totalsColumn
+					}),
 				],
 			}),
 			element('thead', {
-				children: element('tr', { classes: styles.sectionRow, children: [totalsBand] }),
+				children: element('tr', {
+					classes: styles.sectionRow,
+					children: totalsBand
+				}),
 			}),
 			element('tbody', {
 				children: [
-					totalsRow([element('span', { classes: styles.labelText, children: [element('span', { classes: styles.labelTitle, textContent: 'Total part 1' })] })], partOne === 0 ? '.' : String(partOne)),
+					totalsRow([element('span', {
+						classes: styles.labelText,
+						children: element('span', {
+							classes: styles.labelTitle,
+							textContent: localization.text`Total part 1`
+						})
+					})], partOne === 0 ? '.' : String(partOne)),
 					totalsRow([element('span', {
 						classes: styles.labelText,
 						children: [
-							element('span', { classes: styles.labelTitle, textContent: 'Bonus' }),
+							element('span', {
+								classes: styles.labelTitle,
+								textContent: localization.text`Bonus`
+							}),
 							bonusDescription,
 						],
 					})], bonus === 0 ? '.' : String(bonus)),
-					totalsRow([element('span', { classes: styles.labelText, children: [element('span', { classes: styles.labelTitle, textContent: 'Total part 2' })] })], partTwo === 0 ? '.' : String(partTwo)),
-					totalsRow([element('span', { classes: styles.labelText, children: [element('span', { classes: styles.labelTitle, textContent: 'Final score' })] })], total === 0 ? '.' : String(total), styles.finalRow),
+					totalsRow([element('span', {
+						classes: styles.labelText,
+						children: element('span', {
+							classes: styles.labelTitle,
+							textContent: localization.text`Total part 2`
+						})
+					})], partTwo === 0 ? '.' : String(partTwo)),
+					totalsRow([element('span', {
+						classes: styles.labelText,
+						children: element('span', {
+							classes: styles.labelTitle,
+							textContent: localization.text`Final score`
+						})
+					})], total === 0 ? '.' : String(total), styles.finalRow),
 				],
 			}),
 		],
