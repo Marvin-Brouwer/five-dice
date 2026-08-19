@@ -85,8 +85,8 @@
 }
 
 .card-inner {
-	--col-roll: 170px;
-	--col-score: 72px;
+	--col-roll: 165px;
+	--col-score: calc(3em + var(--space-1));
 	--col-totals-score: calc(var(--col-roll) + var(--col-score));
 	border: 0;
 	outline: 2px solid var(--color-text);
