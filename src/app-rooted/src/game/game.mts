@@ -6,7 +6,7 @@ import { newGameDisabledStore, undoDisabledStore } from '../_shared/stores/gameS
 import { localization } from '../_shared/i18n/localization.mts'
 import { type ScoreField } from './_logic/gameConstants.ts'
 import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
-import { playGameEndFanfare } from './audio/audio.ts'
+import { createAudioPlayer } from './audio/audio.ts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
 import { scorePadStore as store } from './_logic/scorePadStore.mts'
@@ -16,7 +16,7 @@ import styles from './game.css'
 export const Game = component({
 	name: 'game-page',
 	styles,
-	onMount({ append, element, create, signal, on }) {
+	async onMount({ append, element, create, signal, on }) {
 
 		const openRequest = createStore(false)
 
@@ -37,6 +37,8 @@ export const Game = component({
 			const message = localization.text`You have a scorepad with changes, are you sure you want to reload the page?`
 			event.returnValue = message
 		})
+
+		const audioPlayer = await createAudioPlayer(on)
 
 		const endBanner = element('aside', {
 			classes: [
@@ -63,8 +65,7 @@ export const Game = component({
 				if (!lastGameEnded) {
 					lastGameEnded = true
 					confetti?.addConfetti()
-					// TODO audio should've been loaded on game mount
-					void playGameEndFanfare()
+					void audioPlayer.playGameEndFanfare()
 				}
 			}
 			else {

@@ -1,31 +1,18 @@
+import balloonPopUrl from './458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav'
+import trumpetUrl from './383154__profcalla__re_frullato_tromba.mp3'
+import partyHornUrl from './170583__audiosmedia__party-horn.wav'
+import type { EventBuilder } from '@rooted/elements/events'
 import { createEchoDelayEffect } from './echo-delay.ts'
-
-const audioBase = `${import.meta.env.BASE_URL}audio`
-const balloonPopUrl = `${audioBase}/458398__breviceps__balloon-pop-christmas-cracker-confetti-cannon.wav`
-const trumpetUrl = `${audioBase}/383154__profcalla__re_frullato_tromba.mp3`
-const partyHornUrl = `${audioBase}/170583__audiosmedia__party-horn.wav`
 
 type PitchShifter = (audioContext: AudioContext, node: AudioNode) => AudioNode
 
-let audioContextInstance: AudioContext | undefined
-
-function getAudioContext(): AudioContext | undefined {
-	if (typeof window === 'undefined') return undefined
-	const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-	if (!Ctor) return undefined
-	if (!audioContextInstance) audioContextInstance = new Ctor()
-	return audioContextInstance
+export type AudioPlayer = {
+	playGameEndFanfare(): Promise<void>
 }
 
-async function fetchBlob(url: string): Promise<Blob> {
-	const response = await fetch(url)
-	return response.blob()
-}
-
-async function appendBuffer(audioContext: AudioContext, blob: Blob, shifter?: PitchShifter) {
+function appendBuffer(audioContext: AudioContext, audioBuffer: AudioBuffer, shifter?: PitchShifter) {
 	const actualShifter = shifter ?? ((_, n) => n)
 	const bufferSource = audioContext.createBufferSource()
-	const audioBuffer = await audioContext.decodeAudioData(await blob.arrayBuffer())
 	bufferSource.buffer = audioBuffer
 	actualShifter(audioContext, bufferSource).connect(audioContext.destination)
 	bufferSource.loop = false
@@ -47,23 +34,71 @@ const createPartyHornEffect = (delayTime: number): PitchShifter => (audioContext
 	return audioNode.connect(delay)
 }
 
-export async function playGameEndFanfare() {
-	const audioContext = getAudioContext()
-	if (!audioContext) return
+const unlockEvents = ['pointerdown', 'keydown', 'touchstart'] as const
 
-	try {
-		const [balloon, trumpet, partyHorn] = await Promise.all([
-			fetchBlob(balloonPopUrl),
-			fetchBlob(trumpetUrl),
-			fetchBlob(partyHornUrl),
-		])
-		audioContext.suspend()
-		await appendBuffer(audioContext, balloon, createBalloonEffect(3))
-		await appendBuffer(audioContext, trumpet, createPartyHornEffect(0))
-		await appendBuffer(audioContext, partyHorn, createPartyHornEffect(0.06))
-		audioContext.resume()
+export async function createAudioPlayer(on: EventBuilder): Promise<AudioPlayer> {
+	if (typeof window === 'undefined') {
+		return { playGameEndFanfare: async () => {} }
 	}
-	catch (e) {
-		console.warn('audio failed', e)
+
+	let audioContext: AudioContext | undefined
+	const bufferCache = new Map<string, AudioBuffer>()
+	const inFlight = new Map<string, Promise<AudioBuffer>>()
+
+	function ensureContext(): AudioContext {
+		if (!audioContext) {
+			const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+			audioContext = new Ctor()
+		}
+		return audioContext
 	}
+
+	function loadBuffer(url: string): Promise<AudioBuffer> {
+		const cached = bufferCache.get(url)
+		if (cached) return Promise.resolve(cached)
+		const pending = inFlight.get(url)
+		if (pending) return pending
+		const promise = (async () => {
+			const context = ensureContext()
+			const response = await fetch(url)
+			const arrayBuffer = await response.arrayBuffer()
+			const buffer = await context.decodeAudioData(arrayBuffer)
+			bufferCache.set(url, buffer)
+			return buffer
+		})()
+		inFlight.set(url, promise)
+		void promise.catch(() => {}).finally(() => inFlight.delete(url))
+		return promise
+	}
+
+	let unlocked = false
+	function unlock() {
+		if (unlocked) return
+		unlocked = true
+		ensureContext()
+		void Promise.all([balloonPopUrl, trumpetUrl, partyHornUrl].map(loadBuffer))
+			.catch((e) => console.warn('audio warm-up failed', e))
+	}
+	for (const eventName of unlockEvents) on('document', eventName, unlock)
+
+	async function playGameEndFanfare() {
+		const context = ensureContext()
+		try {
+			const [balloon, trumpet, partyHorn] = await Promise.all([
+				loadBuffer(balloonPopUrl),
+				loadBuffer(trumpetUrl),
+				loadBuffer(partyHornUrl),
+			])
+			context.suspend()
+			appendBuffer(context, balloon, createBalloonEffect(3))
+			appendBuffer(context, trumpet, createPartyHornEffect(0))
+			appendBuffer(context, partyHorn, createPartyHornEffect(0.06))
+			context.resume()
+		}
+		catch (e) {
+			console.warn('audio failed', e)
+		}
+	}
+
+	return { playGameEndFanfare }
 }
