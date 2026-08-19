@@ -16,7 +16,7 @@ type SegmentLabelOptions = {
 	text: string
 }
 
-/** One unselectable label of the switch,  the `styles.segment` base class
+/** One unselectable label of the switch: the `styles.segment` base class
     plus the on/off-specific variant class passed in via `classes`. */
 const SegmentLabel = component<SegmentLabelOptions>({
 	name: 'on-off-segment-label',

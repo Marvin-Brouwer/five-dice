@@ -79,7 +79,7 @@ export const ScoreInput = component<ScoreInputOptions>({
 				const applicable = isScoreApplicableToField(scoreValue, field)
 				const preview = applicable ? projectedScoreText(field, scoreValue) : '/'
 				// Roll preview reuses renderRollCell with the same value the row
-				// would receive after apply,  for flush that means the full
+				// would receive after apply. For flush that means the full
 				// projected array (existing entries + new score) so the badge
 				// count matches the post-apply render.
 				let projectedRoll: RowOverlayField['projectedRoll']

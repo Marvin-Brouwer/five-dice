@@ -9,6 +9,6 @@ export const NotFoundLocalizedRoute = route`/${localization.parameter}/${wildcar
 		return create(NotFoundLocalized, { locale: tokens.locale })
 	},
 	seo: () => ({
-		title: localization.text`Not found,  Five dice`,
+		title: localization.text`Not found - Five dice`,
 	}),
 })

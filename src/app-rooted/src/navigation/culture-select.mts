@@ -25,7 +25,7 @@ export const CultureSelect = component({
 			return
 		}
 
-		// Deliberately not localized,  shown before a locale is picked, so
+		// Deliberately not localized. Shown before a locale is picked, so
 		// there's no language to translate into. The list below already shows
 		// each locale's native name.
 		append(element('article', {

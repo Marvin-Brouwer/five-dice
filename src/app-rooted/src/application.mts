@@ -29,7 +29,7 @@ export const Application = component({
 	async onMount({ append, element, create }) {
 		document.title = 'Five dice'
 		localization.observeDocument({ deploymentUrl: packageJson.homepage })
-		// Menu is part of the app shell, not a per-route component,  it mounts once
+		// Menu is part of the app shell, not a per-route component. It mounts once
 		// and never re-renders on navigation, so its localization.text calls (e.g.
 		// the "Settings" section label) need the dictionary in place before this
 		// first render, same reason every route resolver awaits load() too.

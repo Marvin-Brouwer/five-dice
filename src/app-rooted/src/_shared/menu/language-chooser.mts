@@ -87,11 +87,11 @@ export const LanguageChooser = component({
 							dropdown.close()
 							// Re-picking the active locale is a no-op: nothing will
 							// navigate, so nothing will ever come back to re-enable
-							// the button below,  just close and stop.
+							// the button below. Just close and stop.
 							if (selected) return
 							// Disabled until the ancestor MenuContent (already wrapped
 							// in localization.localized) rebuilds this component fresh
-							// on the popstate navigate() fires,  rather than updating
+							// on the popstate navigate() fires, rather than updating
 							// this button's own label ahead of the rest of the UI.
 							button.disabled = true
 							rememberLocale(code)

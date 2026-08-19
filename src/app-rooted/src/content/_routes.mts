@@ -22,7 +22,7 @@ export const AccessibilityRoute = route`/${localization.parameter}/accessibility
 		return create(Accessibility)
 	},
 	seo: () => ({
-		title: localization.text`Accessibility,  Five dice`,
+		title: localization.text`Accessibility - Five dice`,
 		description: localization.text`Accessibility statement for the Five dice app.`,
 	}),
 })

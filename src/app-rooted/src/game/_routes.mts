@@ -9,7 +9,7 @@ export const ScoreCardRoute = route`/${localization.parameter}/score-card/`({
 		return create(Game)
 	},
 	seo: () => ({
-		title: localization.text`Score card,  Five dice`,
+		title: localization.text`Score card - Five dice`,
 		description: localization.text`Play a game of five dice.`,
 	}),
 })

@@ -47,13 +47,13 @@ export const Game = component({
 			aria: {
 				live: 'polite'
 			},
-			textContent: localization.text`Game finished,  review your score below.`,
+			textContent: localization.text`Game finished. Review your score below.`,
 		})
 
 		const confetti = typeof window !== 'undefined' ? new JSConfetti() : undefined
 		// The store now outlives this component (see scorePadStore.mts), so a
 		// remount (e.g. a language switch) can observe a game that was already
-		// finished before this mount,  start primed so that doesn't replay the
+		// finished before this mount; start primed so that doesn't replay the
 		// celebration, which should only fire on the actual finishing move.
 		let lastGameEnded = store.gameEnded()
 

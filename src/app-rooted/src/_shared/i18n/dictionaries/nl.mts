@@ -5,11 +5,11 @@ export const NewLine = '\n'
 export default dictionary(
 	// Route SEO (content/_routes.mts, game/_routes.mts, navigation/_routes.mts)
 	translation('Rules and how to play Five dice.', 'Spelregels en hoe je Five dice speelt.'),
-	translation('Accessibility,  Five dice', 'Toegankelijkheid,  Five dice'),
+	translation('Accessibility - Five dice', 'Toegankelijkheid - Five dice'),
 	translation('Accessibility statement for the Five dice app.', 'Toegankelijkheidsverklaring voor de Five dice-app.'),
-	translation('Score card,  Five dice', 'Scorekaart,  Five dice'),
+	translation('Score card - Five dice', 'Scorekaart - Five dice'),
 	translation('Play a game of five dice.', 'Speel een potje five dice.'),
-	translation('Not found,  Five dice', 'Niet gevonden,  Five dice'),
+	translation('Not found - Five dice', 'Niet gevonden - Five dice'),
 
 	// App shell (_layout/app-bar.mts, _shared/menu/menu.mts)
 	translation('Skip to main content', 'Ga naar hoofdinhoud'),
@@ -70,7 +70,7 @@ export default dictionary(
 
 	// Game page (game/game.mts)
 	translation('You have a scorepad with changes, are you sure you want to reload the page?', 'Je hebt een scorekaart met wijzigingen, weet je zeker dat je de pagina wilt herladen?'),
-	translation('Game finished,  review your score below.', 'Spel afgelopen,  bekijk je score hieronder.'),
+	translation('Game finished. Review your score below.', 'Spel afgelopen. Bekijk je score hieronder.'),
 	translation('Start a new game? This will clear the current score pad.', 'Nieuw spel starten? Dit wist de huidige scorekaart.'),
 	translation('Undo your last committed round?', 'Je laatste ingevoerde ronde ongedaan maken?'),
 
@@ -135,7 +135,7 @@ export default dictionary(
 	translation('Confirm', 'Bevestigen'),
 	translation('apply', 'toepassen'),
 	translation('discard', 'weggooien'),
-	translation('{title},  {action}', '{title},  {action}'),
+	translation('{title}, {action}', '{title}, {action}'),
 	translation('Slot {n}: empty', 'Vakje {n}: leeg'),
 	translation('Slot {n}: {value}', 'Vakje {n}: {value}'),
 	translation('Slot {n}: next', 'Vakje {n}: volgende'),
@@ -154,7 +154,7 @@ export default dictionary(
 	translation('Your five dice', 'Je vijf dobbelstenen'),
 	translation('Dice keys', 'Dobbelsteentoetsen'),
 
-	// Pip die default aria-label fallback (_shared/die/pip-die.mts),  unused by
+	// Pip die default aria-label fallback (_shared/die/pip-die.mts), unused by
 	// current call sites (all pass an explicit ariaLabel), kept for API correctness.
 	translation('Empty die', 'Leeg dobbelsteen'),
 	translation('Die showing {value}', 'Dobbelsteen toont {value}'),

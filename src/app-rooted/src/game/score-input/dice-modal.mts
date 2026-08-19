@@ -79,7 +79,7 @@ export const DiceModal = component<DiceModalOptions>({
 		// todo, move to module scope
 		const titleId = 'dice-modal-title'
 
-		// Slot buttons,  a die face + tiny "01"..."05" label below
+		// Slot buttons: a die face + tiny "01"..."05" label below
 		const slotButtons: HTMLButtonElement[] = slotIndices.map((idx) => {
 			const dieSpace = element('span', { classes: styles.slotDie })
 			const button = element('button', {
@@ -139,7 +139,7 @@ export const DiceModal = component<DiceModalOptions>({
 			slotButtons[focused]?.focus()
 		}
 
-		// Keypad buttons,  6 die faces (pip pattern IS the label)
+		// Keypad buttons: 6 die faces (pip pattern IS the label)
 		const keypadButtons: HTMLButtonElement[] = dieValues.map((value) => {
 			const dieSpace = element('span', { classes: styles.keyDie })
 			dieSpace.append(makeDieNode(value, 40, 'default', localization.text`Add a ${value}`))
@@ -239,7 +239,7 @@ export const DiceModal = component<DiceModalOptions>({
 			},
 		})
 
-		// Slot die refresh,  swap the pip svg on state change
+		// Slot die refresh: swap the pip svg on state change
 		function refreshSlotDies() {
 			const { dice, focusedDie } = state.value
 			slotIndices.forEach((idx) => {
@@ -339,7 +339,7 @@ export const DiceModal = component<DiceModalOptions>({
 				state.update(s => {
 					s.dice = carry ? (Array.from(carry) as InputDice) : emptyDice()
 					const first = firstEmpty(s.dice)
-					// -1 means "no active slot",  used when the tuple is
+					// -1 means "no active slot", used when the tuple is
 					// already complete so no slot gets the accent border.
 					s.focusedDie = first ?? -1
 				})

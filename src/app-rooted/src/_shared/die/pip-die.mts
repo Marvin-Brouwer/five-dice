@@ -24,7 +24,7 @@ const CELL_XY: Array<[number, number]> = [
 
 export type PipDieOptions = {
 	value: DieValue | undefined
-	/** Pixel size (fixed),  pass 0 or undefined to let CSS drive size instead. */
+	/** Pixel size (fixed), pass 0 or undefined to let CSS drive size instead. */
 	size?: number
 	variant?: 'default' | 'active' | 'muted'
 	ariaLabel?: string
@@ -38,7 +38,7 @@ export const PipDie = component<PipDieOptions>({
 
 		const pips = value === undefined ? [] : PIPS[value]
 		// Dice faces are physically white in every theme, so pips and border
-		// use --color-die-* (dark ink) rather than --color-text,  otherwise the
+		// use --color-die-* (dark ink) rather than --color-text, otherwise the
 		// menu / dice-keyboard's inverted palette would render invisible dots.
 		const stroke = variant === 'active' ? 'var(--color-accent)' : 'var(--color-die-border)'
 		const strokeWidth = variant === 'active' ? 2.5 : 1.5
