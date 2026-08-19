@@ -89,14 +89,14 @@ export default dictionary(
 	translation('Score', 'Score'),
 	translation('Adds 35 if part one ≥ 63', 'Telt 35 op als deel een ≥ 63'),
 	translation('+35 if part1 ≥ 63', '+35 bij deel1 ≥ 63'),
-	translation('Rounds total', 'Totaal rondes'),
+	translation('Rounds total', 'Ronde totaal'),
 	translation('Total part 1', 'Totaal deel 1'),
 	translation('Bonus', 'Bonus'),
 	translation('Total part 2', 'Totaal deel 2'),
 	translation('Final score', 'Eindscore'),
 
 	// Score row labels (game/score-card/score-card.labels.ts)
-	translation('Aces', 'Enen'),
+	translation('Aces', 'Asen'),
 	translation('Sum of aces', 'Som van de enen'),
 	translation('Deuces', 'Tweeën'),
 	translation('Sum of deuces', 'Som van de tweeën'),
