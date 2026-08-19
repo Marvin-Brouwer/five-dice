@@ -1,17 +1,13 @@
 import { component } from '@rooted/components'
 
+import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
 import { menuStore } from '../stores/menuStore.mts'
 
 import { MenuContent } from './menu-content.mts'
 
+import closeXIcon from './menu.close.svg?raw'
 import styles from './menu.css'
-
-const closeXIcon = `
-	<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-		<path d="M6 6l12 12M18 6L6 18"/>
-	</svg>
-`
 
 export const Menu = component({
 	name: 'app-menu',
@@ -41,7 +37,9 @@ export const Menu = component({
 			},
 			children: element('span', {
 				classes: styles.navCloseIcon,
-				innerHTML: closeXIcon
+				children: create(Icon, {
+					source: closeXIcon,
+				}),
 			}),
 		})
 

@@ -1,10 +1,19 @@
 import { component, cssClass } from '@rooted/components'
 
+import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
 import { sensorAvailable } from '../services/theme-sensor.mts'
 import { themeStore, type Theme } from '../stores/themeStore.mts'
 
 import { attachDropdown } from './dropdown-controller.mts'
+import checkIcon from './theme-chooser.check.svg?raw'
+import chevronIcon from './dropdown-chevron.svg?raw'
+import moonIcon from './theme-chooser.moon.svg?raw'
+import sensorDarkIcon from './theme-chooser.sensor-dark.svg?raw'
+import sensorLightIcon from './theme-chooser.sensor-light.svg?raw'
+import sunIcon from './theme-chooser.sun.svg?raw'
+import systemDarkIcon from './theme-chooser.system-dark.svg?raw'
+import systemLightIcon from './theme-chooser.system-light.svg?raw'
 import styles from './theme-chooser.css'
 
 type ThemeOption = {
@@ -23,54 +32,14 @@ function getOptions(): ThemeOption[] {
 }
 
 // TODO this should be CSS driven
-const iconSystem = (dark: boolean) => `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<rect x="2.5" y="4" width="19" height="13" rx="2"/>
-		<path d="M8 21h8M12 17v4"/>
-		${dark
-			? '<path d="M14.2 10.5a3 3 0 1 1-2.7-4 2.3 2.3 0 0 0 2.7 4z" fill="currentColor" stroke="none"/>'
-			: '<circle cx="12" cy="10.5" r="2" fill="currentColor"/>'}
-	</svg>
-`
-
-const iconSensor = (dark: boolean) => `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		${dark
-			? '<circle cx="12" cy="12" r="7"/><path d="M14.5 12.5a3.2 3.2 0 1 1-3-4.3 2.5 2.5 0 0 0 3 4.3z" fill="currentColor" stroke="none"/>'
-			: '<circle cx="12" cy="12" r="3.2" fill="currentColor"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.6 5.6l1.7 1.7M16.7 16.7l1.7 1.7M5.6 18.4l1.7-1.7M16.7 7.3l1.7-1.7"/>'}
-	</svg>
-`
-
-const iconSun = `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<circle cx="12" cy="12" r="4.2" fill="currentColor"/>
-		<path d="M12 2v3M12 19v3M22 12h-3M5 12H2M19 5l-2 2M7 17l-2 2M19 19l-2-2M7 7L5 5"/>
-	</svg>
-`
-
-const iconMoon = `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="currentColor"/>
-	</svg>
-`
-
-const chevron = `
-	<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M6 9l6 6 6-6"/>
-	</svg>
-`
-
-const check = `
-	<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M5 12l5 5L20 7"/>
-	</svg>
-`
+const systemIcon = (dark: boolean) => dark ? systemDarkIcon : systemLightIcon
+const sensorIcon = (dark: boolean) => dark ? sensorDarkIcon : sensorLightIcon
 
 function themeIconFor(value: Theme, resolvedDark: boolean): string {
-	if (value === 'system') return iconSystem(resolvedDark)
-	if (value === 'sensor') return iconSensor(resolvedDark)
-	if (value === 'dark') return iconMoon
-	return iconSun
+	if (value === 'system') return systemIcon(resolvedDark)
+	if (value === 'sensor') return sensorIcon(resolvedDark)
+	if (value === 'dark') return moonIcon
+	return sunIcon
 }
 
 function themeLabel(value: Theme): string {
@@ -85,7 +54,7 @@ function isDarkNow(): boolean {
 export const ThemeChooser = component({
 	name: 'theme-chooser',
 	styles,
-	onMount({ append, element, signal, on }) {
+	onMount({ append, element, create, signal, on }) {
 		const statusLine = element('span', {
 			classes: styles.status,
 			aria: {
@@ -102,7 +71,9 @@ export const ThemeChooser = component({
 		})
 		const buttonChevron = element('span', {
 			classes: styles.buttonChevron,
-			innerHTML: chevron
+			children: create(Icon, {
+				source: chevronIcon,
+			}),
 		})
 
 		const button = element('button', {
@@ -129,14 +100,23 @@ export const ThemeChooser = component({
 
 		function syncButton() {
 			const dark = isDarkNow()
-			buttonIcon.innerHTML = themeIconFor(themeStore.value, dark)
+			buttonIcon.replaceChildren(create(Icon, {
+				source: themeIconFor(themeStore.value, dark),
+			}))
 			buttonLabel.textContent = themeLabel(themeStore.value)
 			button.setAttribute('aria-label', localization.text`Theme: ${themeLabel(themeStore.value)}`)
 
 			const auto = themeStore.value === 'system' || themeStore.value === 'sensor'
 			statusLine.hidden = !auto
 			if (auto) {
-				statusLine.innerHTML = `${dark ? iconMoon : iconSun}<span>${dark ? localization.text`Dark active` : localization.text`Light active`}</span>`
+				statusLine.replaceChildren(
+					create(Icon, {
+						source: dark ? moonIcon : sunIcon,
+					}),
+					element('span', {
+						textContent: dark ? localization.text`Dark active` : localization.text`Light active`,
+					}),
+				)
 			}
 			else {
 				statusLine.textContent = ''
@@ -152,7 +132,9 @@ export const ThemeChooser = component({
 
 				const iconWrap = element('span', {
 					classes: styles.optionIcon,
-					innerHTML: themeIconFor(option.value, dark)
+					children: create(Icon, {
+						source: themeIconFor(option.value, dark),
+					}),
 				})
 
 				const optionEl = element('div', {
@@ -196,7 +178,9 @@ export const ThemeChooser = component({
 				if (selected) {
 					optionEl.append(element('span', {
 						classes: styles.optionCheck,
-						innerHTML: check
+						children: create(Icon, {
+							source: checkIcon,
+						}),
 					}))
 				}
 				return optionEl

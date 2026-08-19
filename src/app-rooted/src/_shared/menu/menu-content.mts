@@ -1,8 +1,8 @@
 import { component } from '@rooted/components'
-import type { ElementFactory } from '@rooted/elements'
 import { href } from '@rooted/router'
 
 import { AccessibilityRoute, RulesRoute } from '../../content/_routes.mts'
+import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
 import { newGameDisabledStore, undoDisabledStore } from '../stores/gameStateStore.mts'
 import { screenLockStore } from '../stores/screenLockStore.mts'
@@ -13,31 +13,10 @@ import { MenuSection } from './menu-section.mts'
 import { OnOffSegment } from './on-off-segment.mts'
 import { ThemeChooser } from './theme-chooser.mts'
 
+import chevronIcon from './menu-content.chevron.svg?raw'
+import refreshIcon from './menu-content.refresh.svg?raw'
+import undoIcon from './menu-content.undo.svg?raw'
 import styles from './menu.css'
-
-const chevron = `
-	<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M9 6l6 6-6 6"/>
-	</svg>
-`
-
-const refresh = `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M3 12a9 9 0 1 0 3-6.7"/>
-		<path d="M3 4v5h5"/>
-	</svg>
-`
-
-const undo = `
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M9 14l-4-4 4-4M5 10h9a5 5 0 010 10h-2"/>
-	</svg>
-`
-
-// TODO icon element that accepts an image and/or svg import
-function iconElement(element: ElementFactory, svg: string): HTMLSpanElement {
-	return element('span', { classes: 'menu-icon', innerHTML: svg })
-}
 
 export type MenuContentOptions = {
 	onClose: () => void
@@ -97,7 +76,9 @@ export const MenuContent = component<MenuContentOptions>({
 				onClose()
 				window.dispatchEvent(new CustomEvent('five-dice:new-game'))
 			},
-			control: iconElement(element, refresh),
+			control: create(Icon, {
+				source: refreshIcon,
+			}),
 		})
 		const undoRow = create(MenuRow, {
 			label: localization.text`Undo last turn`,
@@ -108,7 +89,9 @@ export const MenuContent = component<MenuContentOptions>({
 				onClose()
 				window.dispatchEvent(new CustomEvent('five-dice:undo'))
 			},
-			control: iconElement(element, undo),
+			control: create(Icon, {
+				source: undoIcon,
+			}),
 		})
 
 		const aboutSection = create(MenuSection, {
@@ -120,7 +103,9 @@ export const MenuContent = component<MenuContentOptions>({
 			hint: localization.text`How to play`,
 			variant: 'link',
 			href: href.for(RulesRoute, { locale: localization.currentLocale }),
-			control: iconElement(element, chevron),
+			control: create(Icon, {
+				source: chevronIcon,
+			}),
 		})
 		const accessibilityRow = create(MenuRow, {
 			label: localization.text`Accessibility`,
@@ -129,14 +114,18 @@ export const MenuContent = component<MenuContentOptions>({
 			href: href.for(AccessibilityRoute, {
 				locale: localization.currentLocale
 			}),
-			control: iconElement(element, chevron),
+			control: create(Icon, {
+				source: chevronIcon,
+			}),
 		})
 		const sourceRow = create(MenuRow, {
 			label: localization.text`Source`,
 			hint: 'github.com/marvin-brouwer/five-dice',
 			variant: 'external-link',
 			href: 'https://github.com/marvin-brouwer/five-dice',
-			control: iconElement(element, chevron),
+			control: create(Icon, {
+				source: chevronIcon,
+			}),
 		})
 
 		append(element('div', {

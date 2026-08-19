@@ -1,0 +1,39 @@
+# Formatting conventions
+
+## `element(...)` / `create(...)` calls
+
+Always put the options object on its own lines, one property per line —
+like HTML attributes — even when there's only a single property. Never
+collapse it onto the same line as the call.
+
+Not this:
+```ts
+create(Icon, { source: chevron })
+```
+
+Do this:
+```ts
+create(Icon, {
+	source: chevron,
+})
+```
+
+## Icon identifiers
+
+SVG-markup identifiers — imported strings and any function that
+selects/returns one — are named camelCase `{name}Icon`. Never `{name}Svg`,
+never bare `{name}`.
+
+Not this:
+```ts
+import iconSun from './theme-chooser.sun.svg?raw'
+const check = ...
+const iconSensor = (dark: boolean) => ...
+```
+
+Do this:
+```ts
+import sunIcon from './theme-chooser.sun.svg?raw'
+const checkIcon = ...
+const sensorIcon = (dark: boolean) => ...
+```

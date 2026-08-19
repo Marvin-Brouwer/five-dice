@@ -2,9 +2,12 @@ import { component } from '@rooted/components'
 import { createStore, type Store } from '@rooted/store'
 
 import { type DieValue } from '../_logic/gameConstants.ts'
+import { Icon } from '../../_shared/icon/icon.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { PipDie } from '../../_shared/die/pip-die.mts'
 
+import closeIcon from './dice-modal.close.svg?raw'
+import resetIcon from './dice-modal.reset.svg?raw'
 import styles from './dice-modal.css'
 
 export type DiceTuple = [DieValue, DieValue, DieValue, DieValue, DieValue]
@@ -46,20 +49,6 @@ function asTuple(dice: InputDice): DiceTuple | undefined {
 	if (dice.some(d => d === undefined)) return undefined
 	return dice.slice() as DiceTuple
 }
-
-const closeIconSvg = `
-	<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-		stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M9 4L3 10l6 6M3 10h13a5 5 0 010 10"/>
-	</svg>
-`
-const resetIconSvg = `
-	<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-		stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-		<path d="M3 12a9 9 0 1 0 3-6.7"/>
-		<path d="M3 4v5h5"/>
-	</svg>
-`
 
 // TODO split into more component based approach
 export const DiceModal = component<DiceModalOptions>({
@@ -200,8 +189,14 @@ export const DiceModal = component<DiceModalOptions>({
 					onCancel()
 				},
 			},
-			// TODO, this should be children instead
-			innerHTML: `${closeIconSvg}<span>${localization.text`Close`}</span>`,
+			children: [
+				create(Icon, {
+					source: closeIcon,
+				}),
+				element('span', {
+					textContent: localization.text`Close`,
+				}),
+			],
 		})
 
 		const resetButton = element('button', {
@@ -219,8 +214,14 @@ export const DiceModal = component<DiceModalOptions>({
 					slotButtons[0]?.focus()
 				},
 			},
-			// TODO, this should be children instead
-			innerHTML: `${resetIconSvg}<span>${localization.text`Reset`}</span>`,
+			children: [
+				create(Icon, {
+					source: resetIcon,
+				}),
+				element('span', {
+					textContent: localization.text`Reset`,
+				}),
+			],
 		})
 
 		const confirmButton = element('button', {

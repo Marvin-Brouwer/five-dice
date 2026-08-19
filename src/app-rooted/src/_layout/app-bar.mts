@@ -1,19 +1,12 @@
 import { component } from '@rooted/components'
 
+import { Icon } from '../_shared/icon/icon.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 import { menuStore } from '../_shared/stores/menuStore.mts'
 import { PipDie } from '../_shared/die/pip-die.mts'
 
+import kebabIcon from './app-bar.kebab.svg?raw'
 import styles from './app-bar.css'
-
-const kebabSvg = `
-	<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-		stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-		<circle cx="5" cy="12" r="1.4"/>
-		<circle cx="12" cy="12" r="1.4"/>
-		<circle cx="19" cy="12" r="1.4"/>
-	</svg>
-`
 
 export const AppBar = component({
 	name: 'app-bar',
@@ -51,7 +44,9 @@ export const AppBar = component({
 					menuStore.update(open => !open)
 				},
 			},
-			innerHTML: kebabSvg,
+			children: create(Icon, {
+				source: kebabIcon,
+			}),
 		})
 
 		menuStore.on('change', signal, ({ detail }) => {
