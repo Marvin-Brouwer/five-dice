@@ -12,7 +12,8 @@
 		"test:watch": "vitest",
 		"lint": "tsc --noEmit",
 		"test:e2e": "playwright test",
-		"test:e2e:ui": "playwright test --ui"
+		"test:e2e:ui": "playwright test --ui-port=0",
+		"test:e2e:report": "playwright show-report"
 	},
 	"dependencies": {
 		"@rooted/components": "1.0.0-alpha.13",
