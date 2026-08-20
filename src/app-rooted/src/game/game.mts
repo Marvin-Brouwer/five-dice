@@ -2,7 +2,7 @@ import { component } from '@rooted/components'
 
 import { createGameContext } from './_logic/game-context.mts'
 import { GameEndBanner } from './game-end-banner.mts'
-import { wireGameMenuBridge } from './game-menu-bridge.mts'
+import { wireGameMenuBridge } from './game.menu-bridge.mts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
 
@@ -17,18 +17,20 @@ import styles from './game.css'
 export const Game = component({
 	name: 'game-page',
 	styles,
-	onMount({ replace, element, create, signal, on }) {
+	onMount({ append, element, create, signal, on }) {
 		const game = createGameContext()
 
-		wireGameMenuBridge({ signal, on }, game.pad)
+		wireGameMenuBridge({ signal, on, store: game.pad })
 
-		replace(element('div', {
-			classes: styles.page,
-			children: [
-				create(ScoreCard, { game }),
-				create(GameEndBanner, { store: game.pad }),
-				create(ScoreInput, { game }),
-			],
-		}))
+		append(
+				element('div', {
+				classes: styles.page,
+				children: [
+					create(ScoreCard, { game }),
+					create(GameEndBanner, { store: game.pad }),
+					create(ScoreInput, { game }),
+				],
+			})
+		)
 	},
 })

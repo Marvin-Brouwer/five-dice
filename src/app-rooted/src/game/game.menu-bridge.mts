@@ -5,7 +5,7 @@ import { localization } from '../_shared/i18n/localization.mts'
 
 import type { ScorePadStore } from './_logic/scorePadStore.mts'
 
-type BridgeContext = Pick<ComponentContext, 'signal' | 'on'>
+type BridgeContext = Pick<ComponentContext, 'signal' | 'on'> & { store: ScorePadStore }
 
 /**
  * Everything the game page says to chrome it does not own: the browser's
@@ -20,7 +20,7 @@ type BridgeContext = Pick<ComponentContext, 'signal' | 'on'>
  *
  * A plain function rather than a component, because it renders nothing.
  */
-export function wireGameMenuBridge({ signal, on }: BridgeContext, store: ScorePadStore) {
+export function wireGameMenuBridge({ signal, on, store }: BridgeContext) {
 
 	on('window', 'beforeunload', (event) => {
 		if (!store.hasProgress()) return
