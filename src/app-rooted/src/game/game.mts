@@ -7,7 +7,7 @@ import { localization } from '../_shared/i18n/localization.mts'
 import { createAudioPlayer } from './audio/audio.ts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
-import { scorePadStore as store } from './_logic/scorePadStore.mts'
+import { createGameContext } from './_logic/game-context.mts'
 
 import styles from './game.css'
 
@@ -15,6 +15,9 @@ export const Game = component({
 	name: 'game-page',
 	styles,
 	async onMount({ append, element, create, signal, on }) {
+
+		const game = createGameContext()
+		const store = game.pad
 
 		const openRequest = createStore(false)
 
@@ -95,9 +98,9 @@ export const Game = component({
 		}, { signal })
 
 		append(
-			create(ScoreCard, { store, openRequest }),
+			create(ScoreCard, { game, openRequest }),
 			endBanner,
-			create(ScoreInput, { store, openRequest }),
+			create(ScoreInput, { game, openRequest }),
 		)
 	},
 })

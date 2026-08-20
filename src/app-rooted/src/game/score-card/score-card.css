@@ -60,34 +60,6 @@
 	padding: var(--space-2) var(--space-3);
 }
 
-/* Hovered/focused discard target: draw the same slash across the row
-   that a permanently discarded row shows. Covers both the flush-discard
-   overlay AND row-select hover on non-applicable rows (variant=discard),
-   which would end up discarded on confirm. */
-.card[data-selecting="discard"] [data-field][data-hover="true"] th,
-.card[data-selecting="apply"] [data-field][data-target="discard"][data-hover="true"] th {
-	position: relative;
-	overflow: visible;
-}
-
-.card[data-selecting="discard"] [data-field][data-hover="true"] th::after,
-.card[data-selecting="apply"] [data-field][data-target="discard"][data-hover="true"] th::after {
-	content: "";
-	position: absolute;
-	left: 50cqi;
-	top: 50%;
-	width: var(--dash-width);
-	height: 2px;
-	background: var(--color-text);
-	transform:
-		translateY(-50%)
-		translateX(-50%)
-		rotate(-2deg);
-	transform-origin: center center;
-	pointer-events: none;
-	z-index: 1;
-}
-
 /* ---------------------------------------------------------- Selection state */
 .card[data-selecting="apply"] [data-field] {
 	opacity: 0.5;
@@ -118,4 +90,12 @@
 
 .card[data-selecting="discard"] [data-field][data-hover="true"] {
 	background: color-mix(in srgb, var(--color-warning) 20%, transparent);
+}
+
+/* A previewed discard renders as a real discarded row -- slash and all -- so
+   the hover and the committed result come from one code path. Dimming it
+   marks it as provisional: between the 0.5 of a row that isn't an option and
+   the 1 of an active target. */
+.card[data-selecting] [data-field][data-preview="discard"] {
+	opacity: 0.7;
 }

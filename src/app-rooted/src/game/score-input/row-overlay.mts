@@ -1,8 +1,9 @@
-import { component, cssClass, type ComponentContext } from '@rooted/components'
+import { component, cssClass } from '@rooted/components'
 import { type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
-import type { RenderContext } from '../../_shared/render-context.ts'
+import type { RowRegistry } from '../score-card/row-registry.mts'
+import type { PreviewCell, RowVariant, SelectionMode, SelectionStore } from '../score-card/selection-store.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
@@ -10,31 +11,33 @@ import styles from './row-overlay.css'
 
 export type RowOverlayField = {
 	field: ScoreField
-	variant: 'valid' | 'discard'
-	preview?: string
-	/** Renderer producing a Node for the roll-cell preview. When set, the
-	    hovered row's roll cell is replaced with this node; when omitted, the
-	    roll cell is left untouched (used by the flush-discard overlay). */
-	projectedRoll?: (context: RenderContext) => Node
+	variant: RowVariant
+	/**
+	 * What the pad cell would hold if this row were confirmed. The score card
+	 * renders it through its normal row renderer, so the preview and the
+	 * committed result cannot drift apart. Omit to preview nothing.
+	 */
+	previewCell?: PreviewCell
 }
 
 export type RowOverlayOptions = {
 	open: Store<boolean>
-	mode: 'apply' | 'discard'
+	mode: SelectionMode
 	title: string
 	availableFields: () => RowOverlayField[]
+	/** Written to as the user moves over rows; the score card renders from it. */
+	selection: SelectionStore
+	/** Where each row is on screen, so the hit targets can be placed over them. */
+	rows: RowRegistry
 	onConfirm: (field: ScoreField) => void
 	onCancel: () => void
 }
 
-const SCORE_CARD_ID = 'score-card'
-
-// TODO, not using rooted correctly
 export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
-		const { open, mode, title, availableFields, onConfirm, onCancel } = options
+		const { open, mode, title, availableFields, selection, rows, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
@@ -126,31 +129,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 		let activeRadios: HTMLInputElement[] = []
 		let activeLabels: HTMLLabelElement[] = []
 		let resizeObserver: ResizeObserver | undefined
-		const injectedScoreSpans: Map<ScoreField, HTMLSpanElement> = new Map()
-		const injectedRollNodes: Map<ScoreField, Node> = new Map()
-
-		function scoreCardEl(): HTMLElement | null {
-			return document.getElementById(SCORE_CARD_ID)
-		}
-
-		function rowEl(field: ScoreField): HTMLElement | null {
-			const card = scoreCardEl()
-			if (!card) return null
-			return card.querySelector<HTMLElement>(`[data-field="${field}"]`)
-		}
-
-		function scoreCellEl(field: ScoreField): HTMLElement | null {
-			const row = rowEl(field)
-			if (!row) return null
-			return row.querySelector<HTMLElement>('[data-cell="score"]')
-		}
-
-		function rollCellEl(field: ScoreField): HTMLElement | null {
-			const row = rowEl(field)
-			if (!row) return null
-			return row.querySelector<HTMLElement>('td.roll-column')
-		}
-
 		function selectedField(): ScoreField | undefined {
 			const checked = activeRadios.find(r => r.checked)
 			return checked?.value as ScoreField | undefined
@@ -160,92 +138,29 @@ export const RowOverlay = component<RowOverlayOptions>({
 			confirmButton.disabled = selectedField() === undefined
 		}
 
-		function decorateRows(fields: RowOverlayField[]) {
-			const card = scoreCardEl()
-			if (card) card.dataset.selecting = mode
-			fields.forEach(({ field, variant }) => {
-				const row = rowEl(field)
-				if (!row) return
-				row.dataset.target = variant === 'valid' ? 'valid' : 'discard'
-			})
+		/**
+		 * The overlay proposes; the score card renders. Everything below is a
+		 * write to the selection store — this component never touches the
+		 * card's DOM.
+		 */
+		function beginSelection(fields: RowOverlayField[]) {
+			const targets: Partial<Record<ScoreField, RowVariant>> = {}
+			for (const { field, variant } of fields) targets[field] = variant
+			selection.begin(mode, targets)
 		}
 
-		function undecorateRows() {
-			const card = scoreCardEl()
-			if (card) delete card.dataset.selecting
-			card?.querySelectorAll<HTMLElement>('[data-field]').forEach((row) => {
-				delete row.dataset.target
-				delete row.dataset.hover
-			})
-			// Fully unwind every injected preview so no stale nodes or hidden
-			// originals survive into whatever DOM the score-card renders next.
-			for (const field of Array.from(injectedScoreSpans.keys())) hidePreview(field)
-			// Safety net: sweep the whole card for any straggling overlay
-			// markers or preview nodes in case a preview was orphaned by a
-			// rerender that raced with our cleanup.
-			card?.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
-				delete child.dataset.overlayHidden
-			})
-			card?.querySelectorAll<HTMLElement>('[data-score-preview]').forEach((n) => n.remove())
-			card?.querySelectorAll<HTMLElement>('[data-roll-preview]').forEach((n) => n.remove())
+		function enterRow(field: ScoreField, previewCell: PreviewCell | undefined) {
+			selection.setHover(field)
+			if (previewCell !== undefined) selection.setPreview(field, previewCell)
+			// The card has already re-rendered synchronously, so the hit
+			// targets can be re-measured against the new row heights.
+			repositionLabels()
 		}
 
-		function setHover(field: ScoreField, on: boolean) {
-			const row = rowEl(field)
-			if (!row) return
-			if (on) row.dataset.hover = 'true'
-			else delete row.dataset.hover
-		}
-
-		function showPreview(field: ScoreField, text: string, variant: 'valid' | 'discard', projectedRoll?: (context: RenderContext) => Node) {
-			const scoreCell = scoreCellEl(field)
-			if (!scoreCell) return
-			hidePreview(field)
-			// Hide the cell's current content so the preview replaces it
-			// visually rather than sitting alongside the real score.
-			Array.from(scoreCell.children).forEach((child) => {
-				if (child instanceof HTMLElement) child.dataset.overlayHidden = 'true'
-			})
-			const scoreNode = document.createElement('span')
-			// A data attribute (not a scoped class) so score-card.css can
-			// style the injected preview from its own CSS scope.
-			scoreNode.dataset.scorePreview = variant
-			scoreNode.textContent = text
-			scoreCell.append(scoreNode)
-			injectedScoreSpans.set(field, scoreNode)
-
-			// Roll cell: the caller supplies a projected renderer that already
-			// knows how to draw the post-apply state (including flush badges).
-			if (projectedRoll) {
-				const rollCell = rollCellEl(field)
-				if (rollCell) {
-					Array.from(rollCell.children).forEach((child) => {
-						if (child instanceof HTMLElement) child.dataset.overlayHidden = 'true'
-					})
-					const rollNode = projectedRoll({ element, create })
-					if (rollNode instanceof HTMLElement) rollNode.dataset.rollPreview = 'true'
-					rollCell.append(rollNode)
-					injectedRollNodes.set(field, rollNode)
-				}
-			}
-		}
-
-		function hidePreview(field: ScoreField) {
-			const scoreNode = injectedScoreSpans.get(field)
-			if (scoreNode) {
-				scoreNode.remove()
-				injectedScoreSpans.delete(field)
-			}
-			const rollNode = injectedRollNodes.get(field)
-			if (rollNode) {
-				rollNode.parentNode?.removeChild(rollNode)
-				injectedRollNodes.delete(field)
-			}
-			for (const cell of [scoreCellEl(field), rollCellEl(field)]) {
-				cell?.querySelectorAll<HTMLElement>('[data-overlay-hidden="true"]').forEach((child) => {
-					delete child.dataset.overlayHidden
-				})
-			}
+		function leaveRow() {
+			selection.setHover(undefined)
+			selection.clearPreview()
+			repositionLabels()
 		}
 
 		function buildRadios() {
@@ -258,7 +173,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			)
 			activeRadios = []
 			activeLabels = []
-			fields.forEach(({ field, variant, preview, projectedRoll }, index) => {
+			fields.forEach(({ field, variant, previewCell }, index) => {
 				const radio = element('input', {
 					type: 'radio',
 					name: radioName,
@@ -270,12 +185,10 @@ export const RowOverlay = component<RowOverlayOptions>({
 							syncConfirm()
 						},
 						focus() {
-							setHover(field, true)
-							if (preview !== undefined) showPreview(field, preview, variant, projectedRoll)
+							enterRow(field, previewCell)
 						},
 						blur() {
-							setHover(field, false)
-							hidePreview(field)
+							leaveRow()
 						},
 					},
 				})
@@ -292,12 +205,10 @@ export const RowOverlay = component<RowOverlayOptions>({
 					children: radio,
 					on: {
 						mouseenter() {
-							setHover(field, true)
-							if (preview !== undefined) showPreview(field, preview, variant, projectedRoll)
+							enterRow(field, previewCell)
 						},
 						mouseleave() {
-							setHover(field, false)
-							hidePreview(field)
+							leaveRow()
 						},
 					},
 				})
@@ -307,19 +218,18 @@ export const RowOverlay = component<RowOverlayOptions>({
 				activeLabels.push(label)
 				fieldset.append(label)
 			})
-			decorateRows(fields)
+			beginSelection(fields)
 		}
 
 		function repositionLabels() {
 			activeLabels.forEach((label) => {
 				const field = label.dataset.field as ScoreField | undefined
 				if (!field) return
-				const row = rowEl(field)
-				if (!row) {
+				const rect = rows.rect(field)
+				if (rect === undefined) {
 					label.style.display = 'none'
 					return
 				}
-				const rect = row.getBoundingClientRect()
 				label.style.display = ''
 				label.style.left = `${rect.left}px`
 				label.style.top = `${rect.top}px`
@@ -349,7 +259,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			document.body.style.overflow = ''
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
-			undecorateRows()
+			selection.end()
 			fieldset.replaceChildren()
 			activeRadios = []
 			activeLabels = []

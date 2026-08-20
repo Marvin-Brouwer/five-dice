@@ -46,28 +46,45 @@ export type ScoreRowOptions = {
 	withDieIcon: boolean
 }
 
-/** One three-column score row: label, roll, score. */
-export function scoreRow(context: RenderContext, options: ScoreRowOptions): HTMLTableRowElement {
+/**
+ * One three-column score row: label, roll, score.
+ *
+ * Pass `into` to rewrite an existing row rather than build a new one. The
+ * score card does that when a hover preview changes, so the `<tr>` keeps its
+ * identity — the row registry stays valid and the overlay's absolutely
+ * positioned hit targets keep their geometry.
+ */
+export function scoreRow(
+	context: RenderContext,
+	options: ScoreRowOptions,
+	into?: HTMLTableRowElement,
+): HTMLTableRowElement {
 	const { element } = context
 	const { field, pad, withDieIcon } = options
 	const { scoreText, discarded, applied } = readCell(pad, field)
 
-	const row = element('tr', {
-		classes: [
-			styles.rowDisplay,
-			cssClass(styles.discarded, discarded),
-			cssClass(styles.rowApplied, applied),
-		],
-		children: [
-			labelCell(context, field, withDieIcon),
-			element('td', {
-				classes: styles.rollColumn,
-				children: renderRollCell(context, field, pad[field]),
-			}),
-			scoreCell(context, { text: scoreText, applied, column: 'score' }),
-		],
-	})
-	// Read by row-overlay to find and decorate this row.
+	const classes = [
+		styles.rowDisplay,
+		cssClass(styles.discarded, discarded),
+		cssClass(styles.rowApplied, applied),
+	]
+	const cells = [
+		labelCell(context, field, withDieIcon),
+		element('td', {
+			classes: styles.rollColumn,
+			children: renderRollCell(context, field, pad[field]),
+		}),
+		scoreCell(context, { text: scoreText, applied, column: 'score' }),
+	]
+
+	if (into !== undefined) {
+		into.className = classes.filter(Boolean).join(' ')
+		into.replaceChildren(...cells)
+		return into
+	}
+
+	const row = element('tr', { classes, children: cells })
+	// Marks the row as a selection target; the card's stylesheet keys off it.
 	row.dataset.field = field
 	return row
 }

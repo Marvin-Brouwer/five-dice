@@ -4,12 +4,11 @@ import { createStore, type Store } from '@rooted/store'
 import { type ScoreField } from '../_logic/gameConstants.ts'
 import { scoreFieldOrder } from '../_logic/fields.ts'
 import { discard, isDiscarded, isFlushScore, score, type ValidScore } from '../_logic/score/score.ts'
-import { calculateFlush, calculateScore } from '../_logic/score/scoreCalculator.ts'
 import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
-import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import { flushEntries, projectedCell } from '../_logic/score/scoreProjection.ts'
+import type { GameContext } from '../_logic/game-context.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
-import { renderRollCell } from '../score-card/roll-cell.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import { DiceModal, type DiceTuple } from './dice-modal.mts'
@@ -17,7 +16,7 @@ import { RowOverlay, type RowOverlayField } from './row-overlay.mts'
 import { inputActiveStore } from './input-active-store.mts'
 
 export type ScoreInputOptions = {
-	store: ScorePadStore
+	game: GameContext
 	openRequest: Store<boolean>
 	onCommit?: () => void
 }
@@ -27,7 +26,8 @@ const allFields = scoreFieldOrder
 export const ScoreInput = component<ScoreInputOptions>({
 	name: 'score-input',
 	onMount({ append, element, create, signal, options }) {
-		const { store, openRequest } = options
+		const { game, openRequest } = options
+		const { pad: store, selection, rows } = game
 
 		const diceOpen = createStore(false)
 		const rowOpen = createStore(false)
@@ -47,17 +47,6 @@ export const ScoreInput = component<ScoreInputOptions>({
 		let liveAnnounce!: HTMLElement
 		const liveRegion = create(LiveRegion, { ref: region => { liveAnnounce = region } })
 
-		function projectedScoreText(field: ScoreField, scoreValue: ValidScore): string {
-			if (field === 'flush') {
-				const padFlush = store.value.pad.flush
-				const existing = isDiscarded(padFlush) ? [] : padFlush
-				const value = calculateFlush([...existing, scoreValue])
-				return value === 0 ? '.' : String(value)
-			}
-			const value = calculateScore(scoreValue, field)
-			return value === 0 ? '.' : String(value)
-		}
-
 		function availableRowFields(): RowOverlayField[] {
 			if (!pendingDice) return []
 			const scoreValue = score(pendingDice)
@@ -74,28 +63,14 @@ export const ScoreInput = component<ScoreInputOptions>({
 					continue
 				}
 				const applicable = isScoreApplicableToField(scoreValue, field)
-				const preview = applicable ? projectedScoreText(field, scoreValue) : '/'
-				// Roll preview reuses renderRollCell with the same value the row
-				// would receive after apply. For flush that means the full
-				// projected array (existing entries + new score) so the badge
-				// count matches the post-apply render.
-				let projectedRoll: RowOverlayField['projectedRoll']
-				if (applicable) {
-					if (field === 'flush') {
-						const flushCell = pad.flush
-						const existing = isDiscarded(flushCell) ? [] : flushCell
-						const projectedFlush = [...existing, scoreValue]
-						projectedRoll = ctx => renderRollCell(ctx, field, projectedFlush)
-					}
-					else {
-						projectedRoll = ctx => renderRollCell(ctx, field, scoreValue)
-					}
-				}
 				result.push({
 					field,
 					variant: applicable ? 'valid' : 'discard',
-					preview,
-					projectedRoll,
+					// The card renders this through its normal row renderer, so
+					// the score text, the dice and the flush badge all come out
+					// of the same code path as the committed row. A row that
+					// isn't applicable previews as an actual discard.
+					previewCell: applicable ? projectedCell(pad, field, scoreValue) : discard(),
 				})
 			}
 			return result
@@ -105,13 +80,12 @@ export const ScoreInput = component<ScoreInputOptions>({
 			const pad = store.value.pad
 			return allFields
 				.filter(field => field !== 'flush' && pad[field] === undefined)
-				.map(field => ({ field: field as ScoreField, variant: 'discard' as const, preview: '/' }))
+				.map(field => ({ field: field as ScoreField, variant: 'discard' as const, previewCell: discard() }))
 		}
 
+		/** A second or later flush has to sacrifice another row. */
 		function flushNeedsDiscard(): boolean {
-			const flushCell = store.value.pad.flush
-			if (isDiscarded(flushCell)) return false
-			return isFlushScore(flushCell) && flushCell.length > 0
+			return flushEntries(store.value.pad).length > 0
 		}
 
 		function applyAndReset(field: ScoreField, flushDiscardField?: Exclude<ScoreField, 'flush'>) {
@@ -169,6 +143,8 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const rowOverlay = create(RowOverlay, {
 			open: rowOpen,
 			mode: 'apply',
+			selection,
+			rows,
 			title: localization.text`Select a row for this roll`,
 			availableFields: availableRowFields,
 			onConfirm(field) {
@@ -191,6 +167,8 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const flushOverlay = create(RowOverlay, {
 			open: flushOpen,
 			mode: 'discard',
+			selection,
+			rows,
 			title: localization.text`Choose a row to discard for this flush`,
 			availableFields: flushDiscardFields,
 			onConfirm(field) {

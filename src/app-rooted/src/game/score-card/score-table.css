@@ -202,35 +202,6 @@
 	letter-spacing: 0.05em;
 }
 
-/* Hidden by row-overlay when a preview replaces the current value. */
-[data-overlay-hidden="true"] {
-	display: none !important;
-}
-
-/* Preview span injected by row-overlay into the score cell during hover
-   or focus. Styled to match the final rendered score exactly. */
-[data-score-preview="valid"] {
-	display: inline-flex;
-	align-items: center;
-	justify-content: flex-end;
-	min-width: 2.5ch;
-	height: 22px;
-	line-height: 1;
-	font-family: var(--font-hand);
-	font-size: 22px;
-	color: var(--color-accent);
-	transform: rotate(-3deg);
-	transform-origin: right center;
-	pointer-events: none;
-}
-
-/* In discard mode the score cell stays empty; the row-wide slash below
-   is the entire discard affordance, matching a truly-discarded row. */
-[data-score-preview="discard"] {
-	display: none;
-}
-
-
 /* --------------------------------------------------------------- Score cell
    Line-height locks the box height so filled Caveat numerals don't push
    the row taller than an empty ".". */

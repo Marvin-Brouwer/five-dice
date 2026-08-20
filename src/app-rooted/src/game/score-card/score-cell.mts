@@ -21,7 +21,7 @@ export function scoreCell(context: RenderContext, options: ScoreCellOptions): HT
 	const { element } = context
 	const { text, applied, column } = options
 
-	const cell = element('td', {
+	return element('td', {
 		classes: column === 'totals' ? styles.totalsColumn : styles.scoreColumn,
 		children: element('span', {
 			classes: [
@@ -32,8 +32,4 @@ export function scoreCell(context: RenderContext, options: ScoreCellOptions): HT
 			textContent: text,
 		}),
 	})
-	// Read by row-overlay to place its score preview. Only the per-field rows
-	// are ever queried, so the totals column stays unmarked as before.
-	if (column === 'score') cell.dataset.cell = 'score'
-	return cell
 }
