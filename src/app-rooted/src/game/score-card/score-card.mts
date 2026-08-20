@@ -1,5 +1,4 @@
 import { component } from '@rooted/components'
-import type { Store } from '@rooted/store'
 
 import { partOneFields, partTwoFields } from '../_logic/fields.ts'
 import type { GameContext } from '../_logic/game-context.mts'
@@ -14,7 +13,6 @@ import styles from './score-card.css'
 
 export type ScoreCardOptions = {
 	game: GameContext
-	openRequest: Store<boolean>
 }
 
 /**
@@ -28,8 +26,8 @@ export const ScoreCard = component<ScoreCardOptions>({
 	name: 'score-card',
 	styles,
 	onMount({ replace, element, create, signal, options }) {
-		const { game, openRequest } = options
-		const { pad: store, selection, rows } = game
+		const { game } = options
+		const { pad: store, flow, selection, rows } = game
 
 		const cardHeader = element('header', {
 			classes: styles.cardHeader,
@@ -80,7 +78,7 @@ export const ScoreCard = component<ScoreCardOptions>({
 			role: 'document',
 			children: [
 				cardInner,
-				create(EnterScoreSticker, { store, openRequest }),
+				create(EnterScoreSticker, { store, flow }),
 			],
 		})
 

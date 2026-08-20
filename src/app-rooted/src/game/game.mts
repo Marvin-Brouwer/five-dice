@@ -1,5 +1,4 @@
 import { component } from '@rooted/components'
-import { createStore } from '@rooted/store'
 import JSConfetti from 'js-confetti'
 
 import { newGameDisabledStore, undoDisabledStore } from '../_shared/stores/gameStateStore.mts'
@@ -18,8 +17,6 @@ export const Game = component({
 
 		const game = createGameContext()
 		const store = game.pad
-
-		const openRequest = createStore(false)
 
 		on('window', 'beforeunload', (event) => {
 			if (!store.hasProgress()) return
@@ -98,9 +95,9 @@ export const Game = component({
 		}, { signal })
 
 		append(
-			create(ScoreCard, { game, openRequest }),
+			create(ScoreCard, { game }),
 			endBanner,
-			create(ScoreInput, { game, openRequest }),
+			create(ScoreInput, { game }),
 		)
 	},
 })

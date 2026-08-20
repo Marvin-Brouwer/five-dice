@@ -1,7 +1,7 @@
 import { component, cssClass } from '@rooted/components'
-import { type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
+import type { InputFlowStore, InputStep } from '../_logic/input-flow-store.mts'
 import type { RowRegistry } from '../score-card/row-registry.mts'
 import type { PreviewCell, RowVariant, SelectionMode, SelectionStore } from '../score-card/selection-store.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
@@ -21,7 +21,9 @@ export type RowOverlayField = {
 }
 
 export type RowOverlayOptions = {
-	open: Store<boolean>
+	/** The wizard's position; this overlay shows while it sits on `step`. */
+	flow: InputFlowStore
+	step: Extract<InputStep, 'row' | 'flushDiscard'>
 	mode: SelectionMode
 	title: string
 	availableFields: () => RowOverlayField[]
@@ -37,7 +39,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
-		const { open, mode, title, availableFields, selection, rows, onConfirm, onCancel } = options
+		const { flow, step, mode, title, availableFields, selection, rows, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
@@ -65,7 +67,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 			textContent: localization.text`Back`,
 			on: {
 				click() {
-					closeOverlay()
 					onCancel()
 				},
 			},
@@ -85,9 +86,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 				click() {
 					const selected = selectedField()
 					if (selected === undefined) return
-					const target = selected
-					closeOverlay()
-					onConfirm(target)
+					onConfirm(selected)
 				},
 			},
 		})
@@ -249,11 +248,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 			queueMicrotask(() => activeRadios[0]?.focus())
 		}
 
-		function closeOverlay() {
-			if (!open.value) return
-			open.update(() => false)
-		}
-
 		function hideOverlay() {
 			layer.hidden = true
 			document.body.style.overflow = ''
@@ -266,24 +260,32 @@ export const RowOverlay = component<RowOverlayOptions>({
 			confirmButton.disabled = true
 		}
 
-		open.on('change', signal, ({ detail }) => {
-			if (detail.state) showOverlay()
+		// `flow` fires on every state change, not just this overlay opening,
+		// so track the edge — otherwise moving to the next step would rebuild
+		// an overlay that is already showing.
+		let shown = false
+		function syncOpen() {
+			const open = flow.value.step === step
+			if (open === shown) return
+			shown = open
+			if (open) showOverlay()
 			else hideOverlay()
-		})
+		}
+		syncOpen()
+		flow.on('change', signal, syncOpen)
 
 		on('window', 'resize', () => {
-			if (open.value) repositionLabels()
+			if (shown) repositionLabels()
 		})
 
 		on('window', 'scroll', () => {
-			if (open.value) repositionLabels()
+			if (shown) repositionLabels()
 		})
 
 		on('document', 'keydown', (event) => {
-			if (!open.value) return
+			if (!shown) return
 			if (event.key === 'Escape') {
 				event.preventDefault()
-				closeOverlay()
 				onCancel()
 			}
 			else if (event.key === 'Enter' && selectedField() !== undefined) {

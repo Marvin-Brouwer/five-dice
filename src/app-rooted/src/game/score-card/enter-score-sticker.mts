@@ -1,16 +1,15 @@
 import { component } from '@rooted/components'
-import type { Store } from '@rooted/store'
 
+import type { InputFlowStore } from '../_logic/input-flow-store.mts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { menuStore } from '../../_shared/stores/menuStore.mts'
-import { inputActiveStore } from '../score-input/input-active-store.mts'
 
 import styles from './enter-score-sticker.css'
 
 export type EnterScoreStickerOptions = {
 	store: ScorePadStore
-	openRequest: Store<boolean>
+	flow: InputFlowStore
 }
 
 /**
@@ -23,7 +22,7 @@ export const EnterScoreSticker = component<EnterScoreStickerOptions>({
 	name: 'enter-score-sticker',
 	styles,
 	onMount({ replace, element, signal, options }) {
-		const { store, openRequest } = options
+		const { store, flow } = options
 
 		const sticker = element('button', {
 			type: 'button',
@@ -32,7 +31,7 @@ export const EnterScoreSticker = component<EnterScoreStickerOptions>({
 			on: {
 				click() {
 					if (store.gameEnded()) return
-					openRequest.update(() => true)
+					flow.open()
 				},
 			},
 			children: [
@@ -45,7 +44,7 @@ export const EnterScoreSticker = component<EnterScoreStickerOptions>({
 
 		function sync() {
 			const ended = store.gameEnded()
-			const blocked = inputActiveStore.value || menuStore.value
+			const blocked = flow.isActive() || menuStore.value
 			sticker.hidden = ended
 			sticker.disabled = ended
 			sticker.classList.toggle(styles.stickerInert!, blocked)
@@ -55,7 +54,7 @@ export const EnterScoreSticker = component<EnterScoreStickerOptions>({
 
 		sync()
 		store.on('change', signal, sync)
-		inputActiveStore.on('change', signal, sync)
+		flow.on('change', signal, sync)
 		menuStore.on('change', signal, sync)
 		replace(sticker)
 	},

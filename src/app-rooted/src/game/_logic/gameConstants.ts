@@ -15,3 +15,5 @@ export type ScoreField =
   | Dice 
   | 'threeOfKind' | 'fourOfKind' | 'fullHouse' | 'smallStraight' | 'largeStraight' | 'flush' | 'chance';
   
+/** A complete roll: five dice, in the order they were entered. */
+export type DiceTuple = [DieValue, DieValue, DieValue, DieValue, DieValue]

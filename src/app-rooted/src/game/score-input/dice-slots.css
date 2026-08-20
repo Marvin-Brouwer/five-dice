@@ -1,0 +1,43 @@
+.slots-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 6px;
+}
+
+.slot {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	padding: 4px 2px;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	color: inherit;
+	font: inherit;
+	flex: 1 1 0;
+}
+
+.slot:focus-visible {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
+.slot-die {
+	display: inline-flex;
+	--dice-size: 3.125em;
+	width: var(--dice-size);
+	height: var(--dice-size);
+}
+
+.slot-label {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--color-text-muted);
+	letter-spacing: 0.1em;
+}
+
+.slot-active .slot-label {
+	color: var(--color-accent);
+}

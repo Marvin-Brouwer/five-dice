@@ -1,6 +1,7 @@
 import { createRowRegistry, type RowRegistry } from '../score-card/row-registry.mts'
 import { createSelectionStore, type SelectionStore } from '../score-card/selection-store.mts'
 
+import { createInputFlowStore, type InputFlowStore } from './input-flow-store.mts'
 import { scorePadStore, type ScorePadStore } from './scorePadStore.mts'
 
 export type GameContext = {
@@ -9,6 +10,8 @@ export type GameContext = {
 	 * singleton — see scorePadStore.mts for why it outlives the page.
 	 */
 	pad: ScorePadStore
+	/** Where the score-entry wizard is. Never persisted. */
+	flow: InputFlowStore
 	/** What the row picker is currently proposing. Never persisted. */
 	selection: SelectionStore
 	/** Field to live `<tr>`, published by the card for the overlay's geometry. */
@@ -28,6 +31,7 @@ export type GameContext = {
 export function createGameContext(): GameContext {
 	return {
 		pad: scorePadStore,
+		flow: createInputFlowStore(),
 		selection: createSelectionStore(),
 		rows: createRowRegistry(),
 	}

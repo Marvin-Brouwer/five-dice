@@ -1,96 +1,35 @@
 import { component } from '@rooted/components'
-import { createStore, type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
-import { scoreFieldOrder } from '../_logic/fields.ts'
-import { discard, isDiscarded, isFlushScore, score, type ValidScore } from '../_logic/score/score.ts'
+import { discard, score } from '../_logic/score/score.ts'
 import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
-import { flushEntries, projectedCell } from '../_logic/score/scoreProjection.ts'
 import type { GameContext } from '../_logic/game-context.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
-import { DiceModal, type DiceTuple } from './dice-modal.mts'
-import { RowOverlay, type RowOverlayField } from './row-overlay.mts'
-import { inputActiveStore } from './input-active-store.mts'
+import { DiceModal } from './dice-modal.mts'
+import { availableRowFields, flushDiscardFields, flushNeedsDiscard } from './row-fields.mts'
+import { RowOverlay } from './row-overlay.mts'
 
 export type ScoreInputOptions = {
 	game: GameContext
-	openRequest: Store<boolean>
 	onCommit?: () => void
 }
-
-const allFields = scoreFieldOrder
 
 export const ScoreInput = component<ScoreInputOptions>({
 	name: 'score-input',
 	onMount({ append, element, create, signal, options }) {
-		const { game, openRequest } = options
-		const { pad: store, selection, rows } = game
-
-		const diceOpen = createStore(false)
-		const rowOpen = createStore(false)
-		const flushOpen = createStore(false)
-
-		function syncActive() {
-			const active = diceOpen.value || rowOpen.value || flushOpen.value
-			if (inputActiveStore.value !== active) inputActiveStore.update(() => active)
-		}
-		diceOpen.on('change', signal, syncActive)
-		rowOpen.on('change', signal, syncActive)
-		flushOpen.on('change', signal, syncActive)
-
-		let pendingDice: DiceTuple | undefined
-		let pendingRow: ScoreField | undefined
+		const { game } = options
+		const { pad: store, flow, selection, rows } = game
 
 		let liveAnnounce!: HTMLElement
 		const liveRegion = create(LiveRegion, { ref: region => { liveAnnounce = region } })
 
-		function availableRowFields(): RowOverlayField[] {
-			if (!pendingDice) return []
-			const scoreValue = score(pendingDice)
-			const pad = store.value.pad
-			const result: RowOverlayField[] = []
-			for (const field of allFields) {
-				const cell = pad[field]
-				if (field === 'flush') {
-					// Flush slot is special: discarded → done; otherwise still selectable
-					// (and applicable flushes after the first will need a discard step).
-					if (cell !== undefined && isDiscarded(cell)) continue
-				}
-				else if (cell !== undefined) {
-					continue
-				}
-				const applicable = isScoreApplicableToField(scoreValue, field)
-				result.push({
-					field,
-					variant: applicable ? 'valid' : 'discard',
-					// The card renders this through its normal row renderer, so
-					// the score text, the dice and the flush badge all come out
-					// of the same code path as the committed row. A row that
-					// isn't applicable previews as an actual discard.
-					previewCell: applicable ? projectedCell(pad, field, scoreValue) : discard(),
-				})
-			}
-			return result
-		}
-
-		function flushDiscardFields(): RowOverlayField[] {
-			const pad = store.value.pad
-			return allFields
-				.filter(field => field !== 'flush' && pad[field] === undefined)
-				.map(field => ({ field: field as ScoreField, variant: 'discard' as const, previewCell: discard() }))
-		}
-
-		/** A second or later flush has to sacrifice another row. */
-		function flushNeedsDiscard(): boolean {
-			return flushEntries(store.value.pad).length > 0
-		}
-
-		function applyAndReset(field: ScoreField, flushDiscardField?: Exclude<ScoreField, 'flush'>) {
-			if (!pendingDice) return
-			const scoreValue = score(pendingDice)
+		function applyAndClose(field: ScoreField, flushDiscardField?: Exclude<ScoreField, 'flush'>) {
+			const dice = flow.value.dice
+			if (!dice) return
+			const scoreValue = score(dice)
 			try {
 				if (!isScoreApplicableToField(scoreValue, field)) {
 					store.apply({ field, score: discard() })
@@ -115,69 +54,62 @@ export const ScoreInput = component<ScoreInputOptions>({
 			catch (e) {
 				liveAnnounce.textContent = (e as Error).message
 			}
-			pendingDice = undefined
-			pendingRow = undefined
+			flow.close()
 		}
 
-		openRequest.on('change', signal, ({ detail }) => {
-			if (!detail.state) return
-			openRequest.update(() => false)
-			if (store.gameEnded()) return
-			pendingDice = undefined
-			pendingRow = undefined
-			diceOpen.update(() => true)
-		})
-
 		const diceModal = create(DiceModal, {
-			open: diceOpen,
-			initialDice: () => pendingDice,
+			flow,
 			onConfirm(dice) {
-				pendingDice = dice
-				rowOpen.update(() => true)
+				flow.toRow(dice)
 			},
 			onCancel() {
-				pendingDice = undefined
+				flow.close()
 			},
 		})
 
 		const rowOverlay = create(RowOverlay, {
-			open: rowOpen,
+			flow,
+			step: 'row',
 			mode: 'apply',
 			selection,
 			rows,
 			title: localization.text`Select a row for this roll`,
-			availableFields: availableRowFields,
+			availableFields: () => {
+				const dice = flow.value.dice
+				return dice ? availableRowFields(store.value.pad, dice) : []
+			},
 			onConfirm(field) {
-				pendingRow = field
-				if (field === 'flush' && pendingDice
-					&& isScoreApplicableToField(score(pendingDice), 'flush')
-					&& flushNeedsDiscard()) {
-					flushOpen.update(() => true)
+				const dice = flow.value.dice
+				if (field === 'flush' && dice
+					&& isScoreApplicableToField(score(dice), 'flush')
+					&& flushNeedsDiscard(store.value.pad)) {
+					flow.toFlushDiscard(field)
 					return
 				}
-				applyAndReset(field)
+				applyAndClose(field)
 			},
 			onCancel() {
-				// Back to the dice keyboard.
-				pendingRow = undefined
-				diceOpen.update(() => true)
+				// Back to the dice keyboard, roll intact.
+				flow.backToDice()
 			},
 		})
 
 		const flushOverlay = create(RowOverlay, {
-			open: flushOpen,
+			flow,
+			step: 'flushDiscard',
 			mode: 'discard',
 			selection,
 			rows,
 			title: localization.text`Choose a row to discard for this flush`,
-			availableFields: flushDiscardFields,
+			availableFields: () => flushDiscardFields(store.value.pad),
 			onConfirm(field) {
+				const pendingRow = flow.value.field
 				if (!pendingRow) return
-				applyAndReset(pendingRow, field as Exclude<ScoreField, 'flush'>)
+				applyAndClose(pendingRow, field as Exclude<ScoreField, 'flush'>)
 			},
 			onCancel() {
 				// Back to the row picker if the user cancels flush discard.
-				rowOpen.update(() => true)
+				flow.backToRow()
 			},
 		})
 

@@ -7,7 +7,11 @@ export type LiveRegionOptions = {
 	live?: 'polite' | 'assertive'
 	/**
 	 * Receives the element so the owner can announce by assigning
-	 * `textContent`. Called once, at mount.
+	 * `textContent`.
+	 *
+	 * Called once, during *this* component's mount — which is a microtask
+	 * after the caller's own `onMount`. Callers that announce synchronously
+	 * while mounting must buffer the text and flush it here.
 	 */
 	ref: (element: HTMLElement) => void
 }
