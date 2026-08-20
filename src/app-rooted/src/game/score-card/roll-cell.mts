@@ -7,7 +7,7 @@ import { dieNode } from '../../_shared/die/die-node.mts'
 import type { RenderContext } from '../../_shared/render-context.ts'
 
 import { sortFullHouse, sortSimpleScore, sortSomeOfKind, sortStraight, type ScoreGroup } from './score-card.sorter.ts'
-import styles from './score-card.css'
+import styles from './score-table.css'
 
 export function renderRollCell(
 	context: RenderContext,

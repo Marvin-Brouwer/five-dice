@@ -1,7 +1,3 @@
-:host {
-	display: block;
-}
-
 .card {
 	background: var(--background-surface);
 	background-size: var(--background-surface-size);
@@ -15,75 +11,6 @@
 	position: relative;
 
 	--dash-width: calc(100cqi - 32px);
-}
-
-/* Sticker-style Enter-score button — a paper sticker slapped onto the
-   score card's top-right corner. Slightly rotated, thick paper border,
-   drops a soft shadow so it reads as physical. */
-.sticker {
-	position: absolute;
-	top: -14px;
-	right: 8px;
-	z-index: 10;
-	width: 64px;
-	height: 64px;
-	padding: 0;
-	border-radius: 50%;
-	border: 3px solid var(--color-white);
-	background: var(--color-accent);
-	color: var(--color-accent-contrast);
-	font-family: var(--font-mono);
-	font-size: 10px;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	text-transform: uppercase;
-	line-height: 1.15;
-	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 1px;
-	transform: rotate(-8deg);
-	box-shadow:
-		0 3px 6px rgba(28, 29, 31, 0.28),
-		0 1px 0 rgba(255, 255, 255, 0.35) inset;
-	transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.sticker[hidden] {
-	display: none;
-}
-
-/* Blocked while an overlay/menu owns the screen — visually the same but
-   can't intercept clicks or steal keyboard focus. */
-.sticker-inert {
-	pointer-events: none;
-}
-
-.sticker:hover,
-.sticker:focus-visible {
-	transform: rotate(-8deg) scale(1.05);
-	box-shadow:
-		0 6px 12px rgba(28, 29, 31, 0.35),
-		0 1px 0 rgba(255, 255, 255, 0.35) inset;
-	outline: none;
-}
-
-.sticker:active {
-	transform: rotate(-8deg) scale(0.97);
-}
-
-.sticker:disabled {
-	background: var(--color-border);
-	color: var(--color-text-muted);
-	cursor: not-allowed;
-	transform: rotate(-8deg);
-}
-
-.sticker-label {
-	white-space: pre-wrap;
-	text-align: center;
 }
 
 .card-inner {
@@ -133,402 +60,18 @@
 	padding: var(--space-2) var(--space-3);
 }
 
-.name-field {
-	flex: 1 1 auto;
-	position: relative;
-	display: block;
-	min-width: 0;
-}
-
-.name-label {
-	position: absolute;
-	top: 2px;
-	left: 0;
-	font-family: var(--font-mono);
-	font-size: 9px;
-	letter-spacing: 0.18em;
-	text-transform: uppercase;
-	color: var(--color-text-muted);
-	font-weight: 600;
-	pointer-events: none;
-	z-index: 1;
-}
-
-.name-input-wrap {
-	display: flex;
-	align-items: center;
-	min-width: 10ch;
-	border: 0;
-	border-bottom: 1.5px solid var(--color-text);
-	background: transparent;
-	padding: 12px 0 2px 0;
-	height: 100%;
-}
-
-.name-input-wrap:focus-within {
-	border-bottom-color: var(--color-accent);
-}
-
-.name-input-wrap:focus-within {
-	border-bottom-color: var(--color-accent);
-}
-
-.name-input {
-	flex: 1;
-	min-width: 0;
-	padding: 0;
-	border: 0;
-	background: transparent;
-	color: var(--color-text);
-	font-family: var(--font-hand);
-	font-size: 22px;
-	line-height: 1.1;
-}
-
-.name-input:focus {
-	outline: none;
-}
-
-.name-clear-button {
-	flex: 0 0 auto;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 1.75rem;
-	height: 1.75rem;
-	padding: 0;
-	border: 0;
-	background: transparent;
-	color: var(--color-text-muted);
-	cursor: pointer;
-	font-size: 1.25rem;
-	line-height: 1;
-	border-radius: 50%;
-}
-
-.name-clear-button:hover,
-.name-clear-button:focus-visible {
-	color: var(--color-text);
-	background: var(--color-border-subtle);
-}
-
-.round-label {
-	flex: 0 0 auto;
-	margin-left: auto;
-	min-width: 44px;
-	border: 0;
-	background: transparent;
-	color: var(--color-text);
-	font-family: var(--font-mono);
-	font-size: 7px;
-	letter-spacing: 0.16em;
-	text-transform: uppercase;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	justify-content: center;
-	gap: 2px;
-	padding: 0;
-	text-align: right;
-	align-self: center;
-}
-
-.round-heading {
-	font-family: var(--font-mono);
-	font-size: 9px;
-	letter-spacing: 0.18em;
-	text-transform: uppercase;
-	color: var(--color-text-muted);
-	font-weight: 600;
-	line-height: 1;
-}
-
-.round-line {
-	display: inline-flex;
-	align-items: baseline;
-	gap: 2px;
-	line-height: 1;
-}
-
-.round-number {
-	font-family: var(--font-hand);
-	font-size: 22px;
-	color: var(--color-accent);
-	letter-spacing: 0;
-	transform: rotate(-4deg);
-	display: inline-block;
-	line-height: 1;
-}
-
-.round-of {
-	font-family: var(--font-mono);
-	font-size: 9px;
-	letter-spacing: 0.1em;
-	color: var(--color-text-muted);
-	line-height: 1;
-}
-
-.round-label-finished {
-	color: var(--color-accent);
-	padding: 6px;
-}
-
-.round-label-finished svg {
-	width: 100%;
-	height: 100%;
-	fill: currentColor;
-}
-
-/* -------------------------------------------------------------- Table shell */
-.score-table {
-	width: 100%;
-	border-collapse: collapse;
-	table-layout: fixed;
-	border: 0;
-	background: transparent;
-}
-
-/* Section band — one flex cell so intra-band edges can't create sub-pixel
-   artifacts on high-DPI screens. */
-.section-row td.section-name {
-	background: var(--color-divider-strong);
-	color: var(--color-surface);
-	font-family: var(--font-mono);
-	padding: 0;
-	border: 0;
-}
-
-.band-inner {
-	display: flex;
-	align-items: center;
-	width: 100%;
-}
-
-.band-cell {
-	display: block;
-	padding: 8px 8px;
-	line-height: 1;
-}
-
-.band-title {
-	flex: 1 1 auto;
-	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.16em;
-	text-transform: uppercase;
-	text-align: left;
-	white-space: nowrap;
-}
-
-.band-roll {
-	flex: 0 0 var(--col-roll);
-	font-size: 9px;
-	letter-spacing: 0.18em;
-	font-weight: 600;
-	text-transform: uppercase;
-	text-align: left;
-	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
-	white-space: nowrap;
-}
-
-.band-score {
-	flex: 0 0 var(--col-score);
-	font-size: 9px;
-	letter-spacing: 0.2em;
-	font-weight: 600;
-	text-transform: uppercase;
-	text-align: right;
-	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
-}
-
-.band-totals-score {
-	flex: 0 0 var(--col-totals-score);
-	font-size: 9px;
-	letter-spacing: 0.2em;
-	font-weight: 600;
-	text-transform: uppercase;
-	text-align: right;
-	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
-}
-
-/* Ruled grid — every body cell gets an ink border, except at the outer
-   edges of the table where the card-inner's 2px frame takes over. */
-.score-table tbody th,
-.score-table tbody td {
-	padding: 5px 8px;
-	text-align: left;
-	vertical-align: middle;
-	border: 1px solid var(--color-text);
-}
-
-.score-table tbody tr > *:first-child { border-left: 0; }
-.score-table tbody tr > *:last-child { border-right: 0; }
-
-.score-table tbody td.roll-column,
-.score-table tbody td.score-column,
-.score-table tbody td.totals-column {
-	text-align: right;
-}
-
-/* Column widths — driven by CSS variables on .card-inner so the ruled
-   grid stays aligned across Part 1, Part 2 and Totals. */
-.label-column {
-	width: auto;
-}
-
-.roll-column {
-	width: var(--col-roll);
-	text-align: right;
-}
-
-.score-column {
-	width: var(--col-score);
-	text-align: right;
-}
-
-.totals-column {
-	width: var(--col-totals-score);
-	text-align: right;
-}
-
-/* --------------------------------------------------------------- Row label
-   Every row is a compact two-line block: title on top, description below.
-   Same layout across Part 1, Part 2 and Totals so the grid reads
-   predictably regardless of description length. */
-.label-display {
-	display: flex;
-	align-items: center;
-	gap: 0.4em;
-	line-height: 1.15;
-	min-width: 0;
-}
-
-.label-icon {
-	display: inline-flex;
-	--dice-size: 1.125em;
-}
-
-.label-text {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-	line-height: 1.15;
-}
-
-.label-title {
-	font-family: var(--font-sans);
-	font-size: 13px;
-	font-weight: 600;
-	color: var(--color-text);
-	line-height: 1.15;
-}
-
-.description-label {
-	font-family: var(--font-mono);
-	font-size: 9px;
-	color: var(--color-text-muted);
-	letter-spacing: 0.02em;
-	line-height: 1.15;
-	margin-top: 1px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-/* Always show the short variant when available; the `long` variant is
-   still in the DOM for screen readers (via aria-label on the parent). */
-.description-short {
-	display: inline;
-}
-
-.description-long {
-	display: none;
-}
-
-/* ---------------------------------------------------------------- Roll cell */
-.roll-row {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	flex-wrap: nowrap;
-	--dice-size: 1.125em;
-	height: 1.125em;
-	vertical-align: middle;
-}
-
-.roll-group {
-	display: inline-flex;
-	align-items: center;
-	gap: 3px;
-}
-
-.roll-group-muted {
-	opacity: 0.4;
-}
-
-.roll-empty {
-	display: inline-block;
-	width: 1em;
-	height: 1.125em;
-	vertical-align: middle;
-}
-
-.roll-discard {
-	font-family: var(--font-mono);
-	font-size: 18px;
-	color: var(--color-text-muted);
-}
-
-.roll-badge {
-	font-family: var(--font-mono);
-	font-size: 10px;
-	color: var(--color-accent);
-	padding: 2px 4px;
-	background: var(--color-accent-subtle);
-	border-radius: 3px;
-	letter-spacing: 0.05em;
-}
-
-/* Hidden by row-overlay when a preview replaces the current value. */
-[data-overlay-hidden="true"] {
-	display: none !important;
-}
-
-/* Preview span injected by row-overlay into the score cell during hover
-   or focus. Styled to match the final rendered score exactly. */
-[data-score-preview="valid"] {
-	display: inline-flex;
-	align-items: center;
-	justify-content: flex-end;
-	min-width: 2.5ch;
-	height: 22px;
-	line-height: 1;
-	font-family: var(--font-hand);
-	font-size: 22px;
-	color: var(--color-accent);
-	transform: rotate(-3deg);
-	transform-origin: right center;
-	pointer-events: none;
-}
-
-/* In discard mode the score cell stays empty; the row-wide slash below
-   is the entire discard affordance, matching a truly-discarded row. */
-[data-score-preview="discard"] {
-	display: none;
-}
-
 /* Hovered/focused discard target: draw the same slash across the row
    that a permanently discarded row shows. Covers both the flush-discard
    overlay AND row-select hover on non-applicable rows (variant=discard),
    which would end up discarded on confirm. */
-.card[data-selecting="discard"] .row-display[data-hover="true"] th,
-.card[data-selecting="apply"] .row-display[data-target="discard"][data-hover="true"] th {
+.card[data-selecting="discard"] [data-field][data-hover="true"] th,
+.card[data-selecting="apply"] [data-field][data-target="discard"][data-hover="true"] th {
 	position: relative;
 	overflow: visible;
 }
 
-.card[data-selecting="discard"] .row-display[data-hover="true"] th::after,
-.card[data-selecting="apply"] .row-display[data-target="discard"][data-hover="true"] th::after {
+.card[data-selecting="discard"] [data-field][data-hover="true"] th::after,
+.card[data-selecting="apply"] [data-field][data-target="discard"][data-hover="true"] th::after {
 	content: "";
 	position: absolute;
 	left: 50cqi;
@@ -545,109 +88,34 @@
 	z-index: 1;
 }
 
-/* --------------------------------------------------------------- Score cell
-   Line-height locks the box height so filled Caveat numerals don't push
-   the row taller than an empty ".". */
-.score-value {
-	display: inline-flex;
-	align-items: center;
-	justify-content: flex-end;
-	min-width: 2.5ch;
-	height: 22px;
-	line-height: 1;
-	text-align: right;
-	font-variant-numeric: tabular-nums;
-}
-
-.score-value-mark {
-	font-family: var(--font-mono);
-	font-size: 16px;
-	color: var(--color-text-muted);
-}
-
-.score-value-filled {
-	font-family: var(--font-hand);
-	font-size: 22px;
-	color: var(--color-accent);
-	transform: rotate(-3deg);
-	transform-origin: right center;
-}
-
-/* --------------------------------------------------------------- Row states */
-.row-display {
-	position: relative;
-}
-
-.discarded .label-title,
-.discarded .description-label {
-	color: var(--color-text-muted);
-}
-
-/* Single ink slash spanning the whole row. Anchored to the label cell
-   because <tr> positioning is quirky; width uses the container-query
-   inline size of the card (which owns container-type: inline-size) so
-   the slash reaches the row's right edge regardless of column widths. */
-.discarded th {
-	position: relative;
-	overflow: visible;
-}
-
-.discarded th::after {
-	content: "";
-	position: absolute;
-	left: 50cqi;
-	top: 50%;
-	width: var(--dash-width);
-	height: 2px;
-	background: var(--color-text);
-	transform:
-		translateY(-50% )
-		translateX(-50%)
-		rotate(-2deg);
-	transform-origin: center center;
-	pointer-events: none;
-	z-index: 1;
-}
-
 /* ---------------------------------------------------------- Selection state */
-.card[data-selecting="apply"] .row-display[data-field] {
+.card[data-selecting="apply"] [data-field] {
 	opacity: 0.5;
 	transition: opacity 0.15s ease, background 0.15s ease;
 }
 
-.card[data-selecting="apply"] .row-display[data-field][data-target="valid"],
-.card[data-selecting="discard"] .row-display[data-field][data-target="valid"] {
+.card[data-selecting="apply"] [data-field][data-target="valid"],
+.card[data-selecting="discard"] [data-field][data-target="valid"] {
 	opacity: 1;
 	background: var(--color-accent-subtle);
 	box-shadow: inset 3px 0 0 var(--color-accent);
 }
 
-.card[data-selecting="discard"] .row-display[data-field] {
+.card[data-selecting="discard"] [data-field] {
 	opacity: 0.5;
 	transition: opacity 0.15s ease, background 0.15s ease;
 }
 
-.card[data-selecting="discard"] .row-display[data-field][data-target="discard"] {
+.card[data-selecting="discard"] [data-field][data-target="discard"] {
 	opacity: 1;
 	background: color-mix(in srgb, var(--color-warning) 12%, transparent);
 	box-shadow: inset 3px 0 0 var(--color-warning);
 }
 
-.card[data-selecting] .row-display[data-field][data-hover="true"] {
+.card[data-selecting] [data-field][data-hover="true"] {
 	background: color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 
-.card[data-selecting="discard"] .row-display[data-field][data-hover="true"] {
+.card[data-selecting="discard"] [data-field][data-hover="true"] {
 	background: color-mix(in srgb, var(--color-warning) 20%, transparent);
-}
-
-/* ----------------------------------------------------------- Final row bump */
-.final-row td {
-	border-top: 3px double var(--color-text);
-	padding-top: 12px;
-}
-
-.final-row .label-title,
-.final-row .score-value {
-	font-weight: 700;
 }
