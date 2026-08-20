@@ -13,7 +13,7 @@ export type LiveRegionOptions = {
 	 * after the caller's own `onMount`. Callers that announce synchronously
 	 * while mounting must buffer the text and flush it here.
 	 */
-	ref: (element: HTMLElement) => void
+	reference: (element: HTMLElement) => void
 }
 
 /**
@@ -26,12 +26,15 @@ export type LiveRegionOptions = {
 export const LiveRegion = component<LiveRegionOptions>({
 	name: 'live-region',
 	styles,
-	onMount({ replace, element, options }) {
-		const region = element('p', {
-			classes: styles.liveRegion,
-			aria: { live: options.live ?? 'polite', atomic: 'true' },
-		})
-		options.ref(region)
-		replace(region)
+	onMount({ append, element, options }) {
+
+		const region = append(
+			element('p', {
+				classes: styles.liveRegion,
+				aria: { live: options.live ?? 'polite', atomic: 'true' },
+			})
+		)
+
+		options.reference(region)
 	},
 })

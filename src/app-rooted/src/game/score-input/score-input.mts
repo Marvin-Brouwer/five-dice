@@ -19,12 +19,16 @@ export type ScoreInputOptions = {
 
 export const ScoreInput = component<ScoreInputOptions>({
 	name: 'score-input',
-	onMount({ append, element, create, signal, options }) {
+	onMount({ append, create, options }) {
 		const { game } = options
 		const { pad: store, flow, selection, rows } = game
 
 		let liveAnnounce!: HTMLElement
-		const liveRegion = create(LiveRegion, { ref: region => { liveAnnounce = region } })
+		const liveRegion = create(LiveRegion, {
+			reference(region) {
+				liveAnnounce = region
+			}
+		})
 
 		function applyAndClose(field: ScoreField, flushDiscardField?: Exclude<ScoreField, 'flush'>) {
 			const dice = flow.value.dice
