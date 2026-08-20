@@ -13,6 +13,7 @@ import { renderRollCell } from '../game/score-card/roll-cell.mts'
 import { getRowDisplayLabels } from '../game/score-card/score-card.labels.ts'
 
 import { PocRow, labelCellNode, rollCellNode, rowFacts, scoreCellNode } from './poc-row.mts'
+import { PocPortalRow } from './poc-portal-row.mts'
 import styles from '../game/score-card/score-card.css'
 
 type RenderContext = Pick<ComponentContext, 'element' | 'create'>
@@ -51,7 +52,7 @@ function freeRow(context: RenderContext, field: ScoreField, pad: ReadonlyState<S
 	return row
 }
 
-function table(context: RenderContext, title: string, rows: Array<Node>): Node {
+function table(context: RenderContext, title: string, rows: Array<Node>): { table: Node, tbody: HTMLElement } {
 	const { element } = context
 	const bandCell = element('td', {
 		classes: styles.sectionName,
@@ -65,7 +66,8 @@ function table(context: RenderContext, title: string, rows: Array<Node>): Node {
 		}),
 	})
 	bandCell.colSpan = 3
-	return element('table', {
+	const tbody = element('tbody', { children: rows })
+	const tableNode = element('table', {
 		classes: styles.scoreTable,
 		children: [
 			element('colgroup', {
@@ -78,9 +80,10 @@ function table(context: RenderContext, title: string, rows: Array<Node>): Node {
 			element('thead', {
 				children: element('tr', { classes: styles.sectionRow, children: [bandCell] }),
 			}),
-			element('tbody', { children: rows }),
+			tbody,
 		],
 	})
+	return { table: tableNode, tbody }
 }
 
 export const PocTable = component({
@@ -102,9 +105,20 @@ export const PocTable = component({
 		const blocks = variants.map(([id, title, rows]) => {
 			const article = element('article', { role: 'presentation' })
 			article.id = id
-			article.append(table(context, title, rows))
+			article.append(table(context, title, rows).table)
 			return article
 		})
+
+		// Variant D: rows are components, but each portals its <tr> into the
+		// tbody and parks its own (empty) host outside the table.
+		const dArticle = element('article', { role: 'presentation' })
+		dArticle.id = 'variant-d'
+		const d = table(context, 'D — components portalling into tbody', [])
+		dArticle.append(d.table)
+		const hostPark = element('div', { hidden: true })
+		hostPark.append(...partTwoFields.map(field => create(PocPortalRow, { field, pad, mount: d.tbody })))
+		dArticle.append(hostPark)
+		blocks.push(dArticle)
 
 		const inner = element('div', { classes: styles.cardInner, children: blocks })
 		const card = element('section', { classes: styles.card, children: [inner] })
