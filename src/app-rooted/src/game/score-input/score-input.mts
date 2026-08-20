@@ -14,7 +14,6 @@ import { RowOverlay } from './row-overlay.mts'
 
 export type ScoreInputOptions = {
 	game: GameContext
-	onCommit?: () => void
 }
 
 export const ScoreInput = component<ScoreInputOptions>({
@@ -49,7 +48,6 @@ export const ScoreInput = component<ScoreInputOptions>({
 					store.apply({ field, score: scoreValue })
 					liveAnnounce.textContent = localization.text`Applied ${getRowDisplayLabels()[field].title}.`
 				}
-				options.onCommit?.()
 			}
 			catch (e) {
 				liveAnnounce.textContent = (e as Error).message

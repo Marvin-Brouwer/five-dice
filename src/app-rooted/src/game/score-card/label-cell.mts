@@ -17,7 +17,7 @@ export type ScoreDescription = {
  * When a short form exists both variants are rendered and CSS picks one, with
  * the long text on the parent's aria-label so screen readers always get it.
  */
-export function descriptionLabel(context: RenderContext, description: ScoreDescription): Node {
+function descriptionLabel(context: RenderContext, description: ScoreDescription): Node {
 	const { element } = context
 	const { short, long } = description
 

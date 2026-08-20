@@ -1,19 +1,9 @@
-:host {
+/* The page's own layout element. This cannot live on the component host:
+   rooted forces `display: contents` on every host, so it has no box to lay
+   out -- and a `:host` rule would not match anyway, since the loader
+   prefixes every selector with the scope attribute. */
+.page {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-4);
-}
-
-.end-banner {
-	padding: var(--space-3) var(--space-4);
-	background: var(--color-surface);
-	border: 1px solid var(--color-primary);
-	border-radius: var(--radius-md);
-	color: var(--color-primary);
-	font-family: var(--font-family-display);
-	font-size: var(--font-size-lg);
-}
-
-.hidden {
-	display: none;
 }
