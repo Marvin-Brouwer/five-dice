@@ -5,6 +5,7 @@ import type { InputFlowStore, InputStep } from '../_logic/input-flow-store.mts'
 import type { RowRegistry } from '../score-card/row-registry.mts'
 import type { PreviewCell, RowVariant, SelectionMode, SelectionStore } from '../score-card/selection-store.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
+import { Sheet, sheetButton } from '../../_shared/sheet/sheet.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import styles from './row-overlay.css'
@@ -52,59 +53,35 @@ export const RowOverlay = component<RowOverlayOptions>({
 			},
 		})
 
-		const titleEl = element('p', {
-			id: titleId,
-			classes: styles.title,
-			textContent: title,
+		const context = { element, create }
+
+		const cancelButton = sheetButton(context, {
+			variant: 'secondary',
+			label: localization.text`Back`,
+			onClick: onCancel,
 		})
 
-		const cancelButton = element('button', {
-			type: 'button',
-			classes: [
-				styles.actionButton,
-				styles.actionSecondary
-			],
-			textContent: localization.text`Back`,
-			on: {
-				click() {
-					onCancel()
-				},
-			},
-		})
-
-		const confirmButton = element('button', {
-			type: 'button',
-			classes: [
-				styles.actionButton,
-				styles.actionPrimary
-			],
-			textContent: mode === 'discard'
+		const confirmButton = sheetButton(context, {
+			variant: 'primary',
+			label: mode === 'discard'
 				? localization.text`Discard`
 				: localization.text`Confirm`,
 			disabled: true,
-			on: {
-				click() {
-					const selected = selectedField()
-					if (selected === undefined) return
-					onConfirm(selected)
-				},
+			onClick() {
+				const selected = selectedField()
+				if (selected === undefined) return
+				onConfirm(selected)
 			},
 		})
 
-		const actionsRow = element('div', {
-			classes: styles.actionsRow,
-			children: [
-				cancelButton,
-				confirmButton
-			],
-		})
-
-		const sheet = element('div', {
-			classes: styles.sheet,
-			children: [
-				titleEl,
-				actionsRow
-			],
+		const sheet = create(Sheet, {
+			as: 'div',
+			variant: 'picker',
+			title,
+			titleId,
+			titleVisible: true,
+			content: [],
+			actions: [cancelButton, confirmButton],
 		})
 
 		const backdrop = element('div', {

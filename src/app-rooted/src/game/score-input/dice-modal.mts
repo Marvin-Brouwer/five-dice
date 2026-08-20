@@ -5,6 +5,7 @@ import type { InputFlowStore } from '../_logic/input-flow-store.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
+import { Sheet, sheetButton } from '../../_shared/sheet/sheet.mts'
 
 import { DiceKeypad } from './dice-keypad.mts'
 import { DiceSlots, type DiceSlotsApi } from './dice-slots.mts'
@@ -52,32 +53,26 @@ export const DiceModal = component<DiceModalOptions>({
 			textContent: '',
 		})
 
-		const closeButton = element('button', {
-			type: 'button',
-			classes: [styles.actionButton, styles.actionSecondary],
-			aria: { label: localization.text`Close and cancel` },
-			on: {
-				click() {
-					// Routed through the dialog so Escape and this button take
-					// exactly the same path.
-					dialog.close()
-				},
-			},
+		const context = { element, create }
+
+		const closeButton = sheetButton(context, {
+			variant: 'secondary',
+			ariaLabel: localization.text`Close and cancel`,
+			// Routed through the dialog so Escape and this button take exactly
+			// the same path.
+			onClick: () => dialog.close(),
 			children: [
 				create(Icon, { source: closeIcon }),
 				element('span', { textContent: localization.text`Close` }),
 			],
 		})
 
-		const resetButton = element('button', {
-			type: 'button',
-			classes: [styles.actionButton, styles.actionSecondary],
-			aria: { label: localization.text`Clear all dice` },
-			on: {
-				click() {
-					state.reset()
-					slots?.focus(0)
-				},
+		const resetButton = sheetButton(context, {
+			variant: 'secondary',
+			ariaLabel: localization.text`Clear all dice`,
+			onClick() {
+				state.reset()
+				slots?.focus(0)
 			},
 			children: [
 				create(Icon, { source: resetIcon }),
@@ -85,17 +80,11 @@ export const DiceModal = component<DiceModalOptions>({
 			],
 		})
 
-		const confirmButton = element('button', {
-			type: 'button',
-			classes: [styles.actionButton, styles.actionPrimary],
-			textContent: localization.text`Confirm`,
+		const confirmButton = sheetButton(context, {
+			variant: 'primary',
+			label: localization.text`Confirm`,
 			disabled: true,
-			on: {
-				click(event) {
-					event.preventDefault()
-					confirm()
-				},
-			},
+			onClick: confirm,
 		})
 
 		/** True once the roll is complete. */
@@ -110,20 +99,47 @@ export const DiceModal = component<DiceModalOptions>({
 		/** Distinguishes confirming from dismissing in the `close` handler. */
 		let confirmed = false
 
-		const dialog = element('dialog', {
-			classes: styles.sheet,
-			aria: { modal: 'true', labelledBy: titleId },
-			on: {
-				close() {
-					// Escape, the backdrop and the Close button all land here,
-					// so cancelling always reaches the caller.
+		let dialog!: HTMLDialogElement
+		const sheet = create(Sheet, {
+			as: 'dialog',
+			variant: 'keypad',
+			title: localization.text`Enter your roll`,
+			titleId,
+			handle: true,
+			actionColumns: '1fr 1fr 1.5fr',
+			content: [
+				create(DiceSlots, { state, ref: (api) => { slots = api } }),
+				element('div', {
+					classes: styles.band,
+					children: [
+						element('span', {
+							classes: styles.bandLabel,
+							textContent: localization.text`Select dice`,
+						}),
+						bandStatus,
+					],
+				}),
+				create(DiceKeypad, { state }),
+				create(LiveRegion, {
+					ref: (region) => {
+						liveAnnounce = region
+						region.textContent = announcement
+					},
+				}),
+			],
+			actions: [closeButton, resetButton, confirmButton],
+			ref: (el) => {
+				dialog = el as HTMLDialogElement
+				// Escape, the backdrop and the Close button all land here, so
+				// cancelling always reaches the caller.
+				dialog.addEventListener('close', () => {
 					if (confirmed) return
 					state.reset()
 					onCancel()
-				},
-				click(event) {
+				}, { signal })
+				dialog.addEventListener('click', (event) => {
 					if (event.target === dialog) dialog.close()
-				},
+				}, { signal })
 			},
 		})
 
@@ -142,37 +158,6 @@ export const DiceModal = component<DiceModalOptions>({
 				? localization.text`${5 - left} of 5 dice set`
 				: localization.text`All dice set, ready to confirm`)
 		}
-
-		dialog.append(
-			element('span', { classes: styles.handle, aria: { hidden: 'true' } }),
-			element('h2', {
-				id: titleId,
-				classes: styles.srTitle,
-				textContent: localization.text`Enter your roll`,
-			}),
-			create(DiceSlots, { state, ref: (api) => { slots = api } }),
-			element('div', {
-				classes: styles.band,
-				children: [
-					element('span', {
-						classes: styles.bandLabel,
-						textContent: localization.text`Select dice`,
-					}),
-					bandStatus,
-				],
-			}),
-			create(DiceKeypad, { state }),
-			element('div', {
-				classes: styles.actionsRow,
-				children: [closeButton, resetButton, confirmButton],
-			}),
-			create(LiveRegion, {
-				ref: (region) => {
-					liveAnnounce = region
-					region.textContent = announcement
-				},
-			}),
-		)
 
 		// 'update', not 'change': a no-op write still has to repaint.
 		state.on('update', signal, syncUi)
@@ -230,6 +215,6 @@ export const DiceModal = component<DiceModalOptions>({
 			}
 		})
 
-		replace(dialog)
+		replace(sheet)
 	},
 })
