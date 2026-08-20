@@ -3,6 +3,7 @@ import { component } from '@rooted/components'
 import { type ScoreField } from '../_logic/gameConstants.ts'
 import { discard, score } from '../_logic/score/score.ts'
 import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
+import { projectedCell } from '../_logic/score/scoreProjection.ts'
 import type { GameContext } from '../_logic/game-context.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
@@ -98,6 +99,13 @@ export const ScoreInput = component<ScoreInputOptions>({
 			mode: 'discard',
 			selection,
 			rows,
+			// Show the flush being committed on its own row while the user
+			// picks which row to sacrifice for it.
+			pinnedPreview() {
+				const dice = flow.value.dice
+				if (!dice) return undefined
+				return { field: 'flush', cell: projectedCell(store.value.pad, 'flush', score(dice)) }
+			},
 			title: localization.text`Choose a row to discard for this flush`,
 			availableFields: () => flushDiscardFields(store.value.pad),
 			onConfirm(field) {

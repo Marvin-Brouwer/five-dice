@@ -92,6 +92,13 @@
 	background: color-mix(in srgb, var(--color-warning) 20%, transparent);
 }
 
+/* A pinned preview is not a selectable option, so the dimming above would
+   hide it -- but it is the whole point of the step, so keep it at full
+   contrast. */
+.card[data-selecting] [data-field][data-preview="pinned"] {
+	opacity: 1;
+}
+
 /* A previewed discard renders as a real discarded row -- slash and all -- so
    the hover and the committed result come from one code path. Dimming it
    marks it as provisional: between the 0.5 of a row that isn't an option and

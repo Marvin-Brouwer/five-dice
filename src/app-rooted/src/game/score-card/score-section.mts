@@ -10,7 +10,7 @@ import type { RenderContext } from '../../_shared/render-context.ts'
 import type { RowRegistry } from './row-registry.mts'
 import { scoreRow } from './score-row.mts'
 import { sectionBand, tableColumn } from './score-table.mts'
-import type { SelectionState, SelectionStore } from './selection-store.mts'
+import type { RowPreview, SelectionState, SelectionStore } from './selection-store.mts'
 import styles from './score-table.css'
 
 export type ScoreSectionOptions = {
@@ -45,26 +45,41 @@ export const ScoreSection = component<ScoreSectionOptions>({
 
 		const body = element('tbody')
 		const rowElements = new Map<ScoreField, HTMLTableRowElement>()
-		/** Which field this section is currently showing a preview for. */
-		let previewed: ScoreField | undefined
+		/** Which fields this section is currently showing a preview for. */
+		let previewedFields: ScoreField[] = []
+
+		/**
+		 * The preview for a row, if any. The pointer wins over the pinned one
+		 * when both name the same row, since it is the more immediate intent.
+		 */
+		function previewFor(field: ScoreField, state: ReadonlyState<SelectionState>): ReadonlyState<RowPreview> | undefined {
+			if (state.preview?.field === field) return state.preview
+			if (state.pinned?.field === field) return state.pinned
+			return undefined
+		}
 
 		/** The pad as this row should render it — real, or with a preview substituted. */
-		function padFor(field: ScoreField, preview: SelectionState['preview']): ReadonlyState<ScorePad> {
+		function padFor(field: ScoreField, preview: ReadonlyState<RowPreview> | undefined): ReadonlyState<ScorePad> {
 			const pad = store.value.pad
-			if (preview === undefined || preview.field !== field) return pad
+			if (preview === undefined) return pad
 			return { ...pad, [field]: preview.cell } as ReadonlyState<ScorePad>
 		}
 
+		/** Fields this section renders a preview for, in render order. */
+		function fieldsWithPreview(state: ReadonlyState<SelectionState>): ScoreField[] {
+			return fields.filter(field => previewFor(field, state) !== undefined)
+		}
+
 		function renderAll() {
-			const preview = selection.value.preview
+			const state = selection.value
 			rowElements.clear()
 			body.replaceChildren(...fields.map((field) => {
-				const row = scoreRow(context, { field, pad: padFor(field, preview), withDieIcon })
+				const row = scoreRow(context, { field, pad: padFor(field, previewFor(field, state)), withDieIcon })
 				rowElements.set(field, row)
 				rows.set(field, row)
 				return row
 			}))
-			previewed = preview !== undefined && rowElements.has(preview.field) ? preview.field : undefined
+			previewedFields = fieldsWithPreview(state)
 			applyState()
 		}
 
@@ -73,7 +88,8 @@ export const ScoreSection = component<ScoreSectionOptions>({
 		 * attributes on the rows that are already there.
 		 */
 		function applyState() {
-			const { targets, hover, preview } = selection.value
+			const state = selection.value
+			const { targets, hover, preview, pinned } = state
 			for (const [field, row] of rowElements) {
 				const target = targets[field]
 				if (target === undefined) delete row.dataset.target
@@ -82,24 +98,28 @@ export const ScoreSection = component<ScoreSectionOptions>({
 				if (hover === field) row.dataset.hover = 'true'
 				else delete row.dataset.hover
 
+				// A pinned preview is not a selectable target, so it says so
+				// separately -- the card's stylesheet keeps it at full
+				// contrast rather than dimming it like the other non-options.
 				if (preview?.field === field) row.dataset.preview = target ?? 'valid'
+				else if (pinned?.field === field) row.dataset.preview = 'pinned'
 				else delete row.dataset.preview
 			}
 		}
 
 		/** Re-render only the rows whose preview state actually changed. */
 		function applyPreview() {
-			const preview = selection.value.preview
-			const next = preview !== undefined && rowElements.has(preview.field) ? preview.field : undefined
-			if (next !== previewed) {
-				for (const field of [previewed, next]) {
-					if (field === undefined) continue
-					const row = rowElements.get(field)
-					if (row === undefined) continue
-					scoreRow(context, { field, pad: padFor(field, preview), withDieIcon }, row)
-				}
-				previewed = next
+			const state = selection.value
+			const next = fieldsWithPreview(state)
+			// Every row that has or had a preview, so none can go stale. At
+			// most the pointer's row, the one it left, and a pinned row.
+			const changed = new Set([...previewedFields, ...next])
+			for (const field of changed) {
+				const row = rowElements.get(field)
+				if (row === undefined) continue
+				scoreRow(context, { field, pad: padFor(field, previewFor(field, state)), withDieIcon }, row)
 			}
+			previewedFields = next
 			applyState()
 		}
 

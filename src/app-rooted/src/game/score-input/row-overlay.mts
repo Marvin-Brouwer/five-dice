@@ -3,7 +3,7 @@ import { component, cssClass } from '@rooted/components'
 import { type ScoreField } from '../_logic/gameConstants.ts'
 import type { InputFlowStore, InputStep } from '../_logic/input-flow-store.mts'
 import type { RowRegistry } from '../score-card/row-registry.mts'
-import type { PreviewCell, RowVariant, SelectionMode, SelectionStore } from '../score-card/selection-store.mts'
+import type { PreviewCell, RowPreview, RowVariant, SelectionMode, SelectionStore } from '../score-card/selection-store.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { Sheet, sheetButton } from '../../_shared/sheet/sheet.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
@@ -30,6 +30,12 @@ export type RowOverlayOptions = {
 	availableFields: () => RowOverlayField[]
 	/** Written to as the user moves over rows; the score card renders from it. */
 	selection: SelectionStore
+	/**
+	 * A preview to show for the whole step, independent of the pointer. The
+	 * flush-discard step uses it to show the flush being committed while the
+	 * user picks what to sacrifice for it.
+	 */
+	pinnedPreview?: () => RowPreview | undefined
 	/** Where each row is on screen, so the hit targets can be placed over them. */
 	rows: RowRegistry
 	onConfirm: (field: ScoreField) => void
@@ -40,7 +46,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
 	onMount({ append, element, create, signal, options, on }) {
-		const { flow, step, mode, title, availableFields, selection, rows, onConfirm, onCancel } = options
+		const { flow, step, mode, title, availableFields, pinnedPreview, selection, rows, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
@@ -122,7 +128,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		function beginSelection(fields: RowOverlayField[]) {
 			const targets: Partial<Record<ScoreField, RowVariant>> = {}
 			for (const { field, variant } of fields) targets[field] = variant
-			selection.begin(mode, targets)
+			selection.begin(mode, targets, pinnedPreview?.())
 		}
 
 		function enterRow(field: ScoreField, previewCell: PreviewCell | undefined) {
@@ -230,7 +236,12 @@ export const RowOverlay = component<RowOverlayOptions>({
 			document.body.style.overflow = ''
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
-			selection.end()
+			// Only clear the selection if this overlay still owns it. Both
+			// pickers subscribe to the same flow store and fire in creation
+			// order, so stepping back from the flush discard reopens the row
+			// picker *before* this one tears down -- an unconditional end()
+			// would wipe the state the row picker just set up.
+			if (selection.value.mode === mode) selection.end()
 			fieldset.replaceChildren()
 			activeRadios = []
 			activeLabels = []
