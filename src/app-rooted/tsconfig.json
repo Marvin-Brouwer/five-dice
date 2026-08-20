@@ -19,6 +19,7 @@
 		"src/**/*.ts",
 		"src/_routes.g.mts",
 		"tests/**/*.mts",
+		"e2e/**/*.mts",
 		"tests/**/*.ts",
 		"plugins/**/*.mts"
 	]
