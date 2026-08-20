@@ -2,19 +2,19 @@ import { component } from '@rooted/components'
 import { createStore, type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
+import { scoreFieldOrder } from '../_logic/fields.ts'
 import { discard, isDiscarded, isFlushScore, score, type ValidScore } from '../_logic/score/score.ts'
 import { calculateFlush, calculateScore } from '../_logic/score/scoreCalculator.ts'
 import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { renderRollCell } from '../score-card/roll-cell.mts'
-import { getRowDisplayLabels, scoreFieldOrder } from '../score-card/score-card.labels.ts'
+import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import { DiceModal, type DiceTuple } from './dice-modal.mts'
 import { RowOverlay, type RowOverlayField } from './row-overlay.mts'
 import { inputActiveStore } from './input-active-store.mts'
-
-import styles from './score-input.css'
 
 export type ScoreInputOptions = {
 	store: ScorePadStore
@@ -26,7 +26,6 @@ const allFields = scoreFieldOrder
 
 export const ScoreInput = component<ScoreInputOptions>({
 	name: 'score-input',
-	styles,
 	onMount({ append, element, create, signal, options }) {
 		const { store, openRequest } = options
 
@@ -45,10 +44,8 @@ export const ScoreInput = component<ScoreInputOptions>({
 		let pendingDice: DiceTuple | undefined
 		let pendingRow: ScoreField | undefined
 
-		const liveAnnounce = element('p', {
-			classes: styles.liveRegion,
-			aria: { live: 'polite', atomic: 'true' },
-		})
+		let liveAnnounce!: HTMLElement
+		const liveRegion = create(LiveRegion, { ref: region => { liveAnnounce = region } })
 
 		function projectedScoreText(field: ScoreField, scoreValue: ValidScore): string {
 			if (field === 'flush') {
@@ -206,6 +203,6 @@ export const ScoreInput = component<ScoreInputOptions>({
 			},
 		})
 
-		append(diceModal, rowOverlay, flushOverlay, liveAnnounce)
+		append(diceModal, rowOverlay, flushOverlay, liveRegion)
 	},
 })

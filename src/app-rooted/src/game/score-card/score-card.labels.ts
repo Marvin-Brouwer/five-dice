@@ -1,6 +1,6 @@
 import { localization } from '../../_shared/i18n/localization.mts'
 
-import type { ScoreField } from '../_logic/gameConstants'
+import type { ScoreField } from '../_logic/gameConstants.ts'
 
 type RowDisplayLabel = {
 	title: string,
@@ -9,11 +9,6 @@ type RowDisplayLabel = {
 		long: string
 	}
 }
-
-export const scoreFieldOrder: ScoreField[] = [
-	'aces', 'deuces', 'threes', 'fours', 'fives', 'sixes',
-	'threeOfKind', 'fourOfKind', 'fullHouse', 'smallStraight', 'largeStraight', 'flush', 'chance',
-]
 
 export function getRowDisplayLabels(): Record<ScoreField, RowDisplayLabel> {
 	return {

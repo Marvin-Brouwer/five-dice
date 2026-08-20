@@ -1,11 +1,11 @@
 import type { ReadonlyState } from '@rooted/store'
 
-import { ValidScore, isDiscarded, DiscardedScore } from './score'
-import type { ScoreField } from '../gameConstants'
-import type { ScorePad } from './scorePad'
-import { isScoreApplicableToField } from './scoreFieldValidator'
-import { InvalidScoreApplicationError } from './invalidScoreApplicationError'
-import { discard as discardScore } from './score'
+import { ValidScore, isDiscarded, DiscardedScore } from './score.ts'
+import type { ScoreField } from '../gameConstants.ts'
+import type { ScorePad } from './scorePad.ts'
+import { isScoreApplicableToField } from './scoreFieldValidator.ts'
+import { InvalidScoreApplicationError } from './invalidScoreApplicationError.ts'
+import { discard as discardScore } from './score.ts'
 
 type SimpleScoreApplication =
     | { field: ScoreField, score: ValidScore | DiscardedScore }
@@ -30,7 +30,6 @@ function isDiscardedFlushApplication(application: ScoreApplication): application
 
 export function applyScore(scorePad: ReadonlyState<ScorePad>, application: ScoreApplication) {
 
-	console.log('applyScore', application)
 	const { field, score } = application
 
 	if (!isScoreApplicableToField(score, field))

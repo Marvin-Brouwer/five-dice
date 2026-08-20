@@ -1,7 +1,7 @@
 import type { ReadonlyState } from '@rooted/store'
 
-import type { ScoreApplication } from './scoreApplicationProcessor'
-import type { ScorePad } from './scorePad'
+import type { ScoreApplication } from './scoreApplicationProcessor.ts'
+import type { ScorePad } from './scorePad.ts'
 
 export class InvalidScoreApplicationError extends Error {
 

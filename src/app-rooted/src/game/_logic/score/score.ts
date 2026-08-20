@@ -1,6 +1,6 @@
 import type { ReadonlyState } from '@rooted/store'
 
-import type { DieValue } from '../gameConstants.js'
+import type { DieValue } from '../gameConstants.ts'
 
 const inspectSymbol = Symbol.for('nodejs.util.inspect.custom')
 const scoreSymbol = Symbol.for('score')

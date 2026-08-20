@@ -1,7 +1,5 @@
-:host {
-	display: contents;
-}
-
+/* Visually hidden but exposed to assistive tech. The clip-path/1px recipe
+   keeps the text in the accessibility tree, which display:none would not. */
 .live-region {
 	position: absolute;
 	width: 1px;

@@ -4,8 +4,6 @@ import JSConfetti from 'js-confetti'
 
 import { newGameDisabledStore, undoDisabledStore } from '../_shared/stores/gameStateStore.mts'
 import { localization } from '../_shared/i18n/localization.mts'
-import { type ScoreField } from './_logic/gameConstants.ts'
-import { isDiscarded, isFlushScore } from './_logic/score/score.ts'
 import { createAudioPlayer } from './audio/audio.ts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
@@ -20,19 +18,8 @@ export const Game = component({
 
 		const openRequest = createStore(false)
 
-		function hasGameProgress(): boolean {
-			const pad = store.value.pad
-			for (const key of Object.keys(pad) as ScoreField[]) {
-				const cell = pad[key]
-				if (cell === undefined) continue
-				if (key === 'flush' && !isDiscarded(cell) && isFlushScore(cell) && cell.length === 0) continue
-				return true
-			}
-			return false
-		}
-
 		on('window', 'beforeunload', (event) => {
-			if (!hasGameProgress()) return
+			if (!store.hasProgress()) return
 			event.preventDefault()
 			const message = localization.text`You have a scorepad with changes, are you sure you want to reload the page?`
 			event.returnValue = message
@@ -75,7 +62,7 @@ export const Game = component({
 		}
 
 		function syncMenuActions() {
-			const noProgress = !hasGameProgress()
+			const noProgress = !store.hasProgress()
 			const noUndo = !store.canUndo()
 			if (newGameDisabledStore.value !== noProgress) newGameDisabledStore.update(() => noProgress)
 			if (undoDisabledStore.value !== noUndo) undoDisabledStore.update(() => noUndo)

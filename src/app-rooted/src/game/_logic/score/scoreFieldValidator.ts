@@ -1,11 +1,13 @@
-import { dice, ScoreField } from '../gameConstants.js'
-import { ValidScore, isDiscarded, ScoreValue } from './score'
-import { isFlushScore } from './score'
+import { dice, ScoreField } from '../gameConstants.ts'
+import { ValidScore, ScoreValue, isDiscarded, isFlushScore } from './score.ts'
 
 export function isScoreApplicableToField(score: ScoreValue, field: ScoreField): boolean {
 
 	if (isDiscarded(score)) return true
-	if (isFlushScore(score)) field != 'flush'
+	// Defensive: a flush cell is an array of scores rather than a single roll,
+	// and only the flush field can hold one. The ScoreValue type rules this
+	// out, so this guard only fires if a caller sidesteps it.
+	if (isFlushScore(score)) return field === 'flush'
 
 	switch (field) {
 	case 'aces': return score.includes(dice[field])

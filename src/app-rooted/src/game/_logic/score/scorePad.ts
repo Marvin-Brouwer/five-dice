@@ -1,4 +1,4 @@
-import type { ValidScore, DiscardedScore } from './score'
+import type { ValidScore, DiscardedScore } from './score.ts'
 
 export type ScorePad = {
     aces: ValidScore | DiscardedScore | undefined

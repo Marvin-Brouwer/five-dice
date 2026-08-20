@@ -2,12 +2,11 @@ import { component, cssClass, type ComponentContext } from '@rooted/components'
 import { type Store } from '@rooted/store'
 
 import { type ScoreField } from '../_logic/gameConstants.ts'
+import type { RenderContext } from '../../_shared/render-context.ts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import styles from './row-overlay.css'
-
-type RollRenderContext = Pick<ComponentContext, 'element' | 'create'>
 
 export type RowOverlayField = {
 	field: ScoreField
@@ -16,7 +15,7 @@ export type RowOverlayField = {
 	/** Renderer producing a Node for the roll-cell preview. When set, the
 	    hovered row's roll cell is replaced with this node; when omitted, the
 	    roll cell is left untouched (used by the flush-discard overlay). */
-	projectedRoll?: (context: RollRenderContext) => Node
+	projectedRoll?: (context: RenderContext) => Node
 }
 
 export type RowOverlayOptions = {
@@ -198,7 +197,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			else delete row.dataset.hover
 		}
 
-		function showPreview(field: ScoreField, text: string, variant: 'valid' | 'discard', projectedRoll?: (context: RollRenderContext) => Node) {
+		function showPreview(field: ScoreField, text: string, variant: 'valid' | 'discard', projectedRoll?: (context: RenderContext) => Node) {
 			const scoreCell = scoreCellEl(field)
 			if (!scoreCell) return
 			hidePreview(field)

@@ -1,5 +1,5 @@
-import type { ScoreField } from '../gameConstants'
-import type { ScoreContainer } from './score'
+import type { ScoreField } from '../gameConstants.ts'
+import type { ScoreContainer } from './score.ts'
 
 export class InvalidScoreError extends Error {
     

@@ -1,11 +1,10 @@
 import type { ReadonlyState } from '@rooted/store'
 
-import type { ScoreField } from '../gameConstants.js'
-import { ValidScore, isDiscarded } from './score'
-import type { ScorePad } from './scorePad'
-import { InvalidScoreError } from './invalidScoreError.js'
-import { isFlushScore } from './score'
-import type { DieValue } from '../gameConstants'
+import { partOneFields, partTwoFields } from '../fields.ts'
+import type { DieValue, ScoreField } from '../gameConstants.ts'
+import { InvalidScoreError } from './invalidScoreError.ts'
+import { ValidScore, isDiscarded, isFlushScore } from './score.ts'
+import type { ScorePad } from './scorePad.ts'
 
 export function calculateScoreForPad(scorePad: ReadonlyState<ScorePad>, field: ScoreField): number {
 
@@ -67,14 +66,8 @@ export function calculateFlush(score: ReadonlyState<Array<ValidScore>>): number 
 
 export function calculatePartOneSubTotal(scorePad: ReadonlyState<ScorePad>): number {
 
-	return (
-		calculateScoreForPad(scorePad, 'aces') +
-        calculateScoreForPad(scorePad, 'deuces') +
-        calculateScoreForPad(scorePad, 'threes') +
-        calculateScoreForPad(scorePad, 'fours') +
-        calculateScoreForPad(scorePad, 'fives') +
-        calculateScoreForPad(scorePad, 'sixes')
-	)
+	return partOneFields
+		.reduce((total, field) => total + calculateScoreForPad(scorePad, field), 0)
 }
 
 const partOneBonus = 35
@@ -91,15 +84,8 @@ export function calculatePartOneBonus(partOneSubTotal: number): number {
 
 export function calculatePartTwoTotal(scorePad: ReadonlyState<ScorePad>): number {
 
-	return (
-		calculateScoreForPad(scorePad, 'threeOfKind') +
-        calculateScoreForPad(scorePad, 'fourOfKind') +
-        calculateScoreForPad(scorePad, 'fullHouse') +
-        calculateScoreForPad(scorePad, 'smallStraight') +
-        calculateScoreForPad(scorePad, 'largeStraight') +
-        calculateScoreForPad(scorePad, 'flush') +
-        calculateScoreForPad(scorePad, 'chance')
-	)
+	return partTwoFields
+		.reduce((total, field) => total + calculateScoreForPad(scorePad, field), 0)
 }
 
 export function calculateGameTotal(partOneTotal: number, bonus: number, partTwoTotal: number): number {

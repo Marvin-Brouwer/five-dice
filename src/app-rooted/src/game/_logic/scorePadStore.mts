@@ -1,6 +1,7 @@
 import { createStore, type Store } from '@rooted/store'
 
-import { roundAmount } from './gameConstants.ts'
+import { roundAmount, type ScoreField } from './gameConstants.ts'
+import { isDiscarded, isFlushScore } from './score/score.ts'
 import { type ScoreApplication, applyScore } from './score/scoreApplicationProcessor.ts'
 import { createScorePad, type ScorePad } from './score/scorePad.ts'
 
@@ -23,6 +24,8 @@ export type ScorePadStore = Store<GameState> & {
 	undo(): void
 	canUndo(): boolean
 	gameEnded(): boolean
+	/** Whether anything has been committed yet — drives the reload guard and the New game action. */
+	hasProgress(): boolean
 	reset(): void
 }
 
@@ -57,11 +60,23 @@ export function createScorePadStore(): ScorePadStore {
 		return store.value.round > roundAmount
 	}
 
+	function hasProgress() {
+		const pad = store.value.pad
+		for (const key of Object.keys(pad) as ScoreField[]) {
+			const cell = pad[key]
+			if (cell === undefined) continue
+			// An untouched flush slot is an empty array, not undefined.
+			if (key === 'flush' && !isDiscarded(cell) && isFlushScore(cell) && cell.length === 0) continue
+			return true
+		}
+		return false
+	}
+
 	function reset() {
 		store.update(() => initialState())
 	}
 
-	return Object.assign(store, { apply, undo, canUndo, gameEnded, reset })
+	return Object.assign(store, { apply, undo, canUndo, gameEnded, hasProgress, reset })
 }
 
 /**

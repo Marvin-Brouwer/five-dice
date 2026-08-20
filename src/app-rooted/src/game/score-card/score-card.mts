@@ -2,6 +2,7 @@ import { component, cssClass, type ComponentContext, type CssClass } from '@root
 import type { ReadonlyState, Store } from '@rooted/store'
 
 import { dice, roundAmount, type Dice, type ScoreField } from '../_logic/gameConstants.ts'
+import { partOneFields, partTwoFields } from '../_logic/fields.ts'
 import { isDiscarded } from '../_logic/score/score.ts'
 import {
 	calculateGameTotal,
@@ -12,7 +13,8 @@ import {
 } from '../_logic/score/scoreCalculator.ts'
 import type { ScorePad } from '../_logic/score/scorePad.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
-import { PipDie } from '../../_shared/die/pip-die.mts'
+import { dieNode } from '../../_shared/die/die-node.mts'
+import type { RenderContext } from '../../_shared/render-context.ts'
 import { Icon } from '../../_shared/icon/icon.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { menuStore } from '../../_shared/stores/menuStore.mts'
@@ -24,15 +26,11 @@ import { getRowDisplayLabels } from './score-card.labels.ts'
 import partyIcon from './score-card.party.svg?raw'
 import styles from './score-card.css'
 
-const partOneFields: Dice[] = ['aces', 'deuces', 'threes', 'fours', 'fives', 'sixes']
-const partTwoFields: ScoreField[] = ['threeOfKind', 'fourOfKind', 'fullHouse', 'smallStraight', 'largeStraight', 'flush', 'chance']
 
 export type ScoreCardOptions = {
 	store: ScorePadStore
 	openRequest: Store<boolean>
 }
-
-type RenderContext = Pick<ComponentContext, 'element' | 'create'>
 
 export const ScoreCard = component<ScoreCardOptions>({
 	name: 'score-card',
@@ -85,15 +83,12 @@ export const ScoreCard = component<ScoreCardOptions>({
 		writeRoundLabel(roundLabel, store.value.round, create)
 
 		const partOneBlock = element('article', {
-			id: 'part1',
 			role: 'presentation'
 		})
 		const partTwoBlock = element('article', {
-			id: 'part2',
 			role: 'presentation'
 		})
 		const totalsBlock = element('article', {
-			id: 'score',
 			role: 'presentation'
 		})
 
@@ -321,11 +316,7 @@ function renderRow(context: RenderContext, field: ScoreField, pad: ReadonlyState
 	if (withDieIcon) {
 		labelChildren.push(element('span', {
 			classes: styles.labelIcon,
-			children: create(PipDie, {
-				value: dice[field as Dice],
-				variant: 'default',
-				ariaLabel: `${dice[field as Dice]}`,
-			}),
+			children: dieNode(context, dice[field as Dice]),
 		}))
 	}
 	labelChildren.push(element('span', {

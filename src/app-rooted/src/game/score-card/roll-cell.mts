@@ -1,18 +1,16 @@
-import type { ComponentContext } from '@rooted/components'
 import type { ReadonlyState } from '@rooted/store'
 
 import type { DieValue, ScoreField } from '../_logic/gameConstants.ts'
 import { isDiscarded, isFlushScore, type ValidScore } from '../_logic/score/score.ts'
 import type { ScorePad } from '../_logic/score/scorePad.ts'
-import { PipDie } from '../../_shared/die/pip-die.mts'
+import { dieNode } from '../../_shared/die/die-node.mts'
+import type { RenderContext } from '../../_shared/render-context.ts'
 
 import { sortFullHouse, sortSimpleScore, sortSomeOfKind, sortStraight, type ScoreGroup } from './score-card.sorter.ts'
 import styles from './score-card.css'
 
-type RollContext = Pick<ComponentContext, 'element' | 'create'>
-
 export function renderRollCell(
-	context: RollContext,
+	context: RenderContext,
 	field: ScoreField,
 	cell: ReadonlyState<ValidScore | ScorePad['flush']> | undefined,
 ): Node {
@@ -49,26 +47,26 @@ export function renderRollCell(
 	}
 }
 
-function renderGrouped(context: RollContext, groups: ScoreGroup, dimSmall: boolean): Node {
+function renderGrouped(context: RenderContext, groups: ScoreGroup, dimSmall: boolean): Node {
 	const { element } = context
 	const [small, large] = groups
 	const wrap = element('span', { classes: styles.rollRow })
 	if (small.length > 0) {
 		wrap.append(element('span', {
 			classes: [styles.rollGroup, dimSmall ? styles.rollGroupMuted : undefined],
-			children: small.map(die => dieNode(context, die, dimSmall)),
+			children: small.map(die => dieNode(context, die, { variant: dimSmall ? 'muted' : 'default' })),
 		}))
 	}
 	if (large.length > 0) {
 		wrap.append(element('span', {
 			classes: styles.rollGroup,
-			children: large.map(die => dieNode(context, die, false)),
+			children: large.map(die => dieNode(context, die)),
 		}))
 	}
 	return wrap
 }
 
-function renderFlush(context: RollContext, entries: ReadonlyState<Array<ValidScore>>): Node {
+function renderFlush(context: RenderContext, entries: ReadonlyState<Array<ValidScore>>): Node {
 	const { element } = context
 	if (entries.length === 0) return element('span', { classes: styles.rollEmpty })
 	const latest = entries[entries.length - 1]!
@@ -82,23 +80,15 @@ function renderFlush(context: RollContext, entries: ReadonlyState<Array<ValidSco
 	}
 	wrap.append(element('span', {
 		classes: styles.rollGroup,
-		children: dice.map(die => dieNode(context, die, false)),
+		children: dice.map(die => dieNode(context, die)),
 	}))
 	return wrap
 }
 
-function renderAll(context: RollContext, dice: DieValue[]): Node {
+function renderAll(context: RenderContext, dice: DieValue[]): Node {
 	const { element } = context
 	return element('span', {
 		classes: [styles.rollRow, styles.rollGroup],
-		children: dice.map(die => dieNode(context, die, false)),
-	})
-}
-
-function dieNode(context: RollContext, value: DieValue, muted: boolean): Node {
-	return context.create(PipDie, {
-		value,
-		variant: muted ? 'muted' : 'default',
-		ariaLabel: `${value}`,
+		children: dice.map(die => dieNode(context, die)),
 	})
 }
