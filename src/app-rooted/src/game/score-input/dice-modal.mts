@@ -121,7 +121,7 @@ export const DiceModal = component<DiceModalOptions>({
 				}),
 				create(DiceKeypad, { state }),
 				create(LiveRegion, {
-					ref: (region) => {
+					reference(region) {
 						liveAnnounce = region
 						region.textContent = announcement
 					},

@@ -103,7 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
-# Playwright
-/src/app-rooted/test-results/
-/src/app-rooted/playwright-report/
-/src/app-rooted/blob-report/
+# Playwright (any working directory it happens to be run from)
+test-results/
+playwright-report/
+blob-report/
