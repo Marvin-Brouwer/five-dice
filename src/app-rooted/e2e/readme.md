@@ -14,9 +14,10 @@ over, ending with a single option left in the picker.
 ## Running them
 
 ```sh
+pnpm test:e2e:install  # download the browser (once, per checkout)
 pnpm test:e2e          # from the repo root or src/app-rooted
 pnpm test:e2e:ui       # UI mode, for stepping through a game
-pnpm test:e2e:report    # reopen the last HTML report
+pnpm test:e2e:report   # reopen the last HTML report
 ```
 
 `test:e2e:ui` passes `--ui-port=0`, so Playwright serves the UI and opens it in your normal
@@ -28,8 +29,18 @@ Playwright starts the dev server itself and reuses one you already have
 running. On a fresh checkout you need the browser once:
 
 ```sh
-npx playwright install chromium
+pnpm test:e2e:install
 ```
+
+That downloads the exact Chromium build this Playwright release expects, so
+version matching is never something you have to think about.
+
+Reach for these scripts rather than `pnpm exec playwright …`. Playwright is a
+dependency of `@five-dice/app-rooted`, not of the workspace root, and
+`pnpm exec` resolves binaries from the current package — so from the root you
+get `Command "playwright" not found`, or, if you happen to have a global
+install, a *different* Playwright version than the one this project pins. The
+scripts forward through `--filter` and always hit the right one.
 
 If you would rather point at a Chromium you already have — a sandbox with a
 pinned build, or a system install — set `PLAYWRIGHT_CHROMIUM_PATH` to its
@@ -37,38 +48,44 @@ executable and the config will use that instead.
 
 ## NixOS
 
-Set `PLAYWRIGHT_BROWSERS_PATH` to the nixpkgs browser bundle and it works:
-
-```sh
-export PLAYWRIGHT_BROWSERS_PATH="$(nix build --no-link --print-out-paths nixpkgs#playwright-driver.browsers)"
-```
-
-Two gotchas that make this fail in ways the error messages do not explain:
-
-**The revision has to match.** Playwright resolves browsers by revision number, so
-`playwright-driver` has to be from the same Playwright release. 1.62.1 wants Chromium **r1234**
-(`playwright-core/browsers.json`). A mismatch shows up as `Executable doesn't exist at
-.../chromium-<revision>/...` rather than as a version complaint.
-
-**nixpkgs ships no `chromium-headless-shell`.** Playwright normally uses that separate, smaller
-binary for headless runs, so with the nix bundle you would get:
+Start with the normal route above — `pnpm test:e2e:install` — and make sure
+**`PLAYWRIGHT_BROWSERS_PATH` is unset** while you do. Anything that sets it
+globally, a system profile included, sends both the install and the lookup to
+that directory instead. The downloaded browsers need to be runnable, which on
+NixOS means `programs.nix-ld.enable` or an FHS environment; without one they
+install cleanly and then die the moment they launch:
 
 ```
-Executable doesn't exist at .../chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+ProtocolError: Protocol error (Browser.getVersion): Internal server error, session closed.
 ```
 
-even though the revision is right and Chromium is sitting there next to it. The config sets
-`channel: 'chromium'`, which makes Playwright use the full browser for headless runs too, so
-this is already handled — worth knowing if you ever see that error in another project.
+If you would rather use the browsers from nixpkgs, two things make that fail
+in ways the error messages do not explain. Both report as
+`Executable doesn't exist at …`, which reads like a missing install rather
+than a mismatch:
 
-If the bundle is awkward to line up, `PLAYWRIGHT_CHROMIUM_PATH=$(which chromium)` sidesteps
-browser resolution entirely for the test run. It does not cover UI mode's own window, which is
-why `test:e2e:ui` uses `--ui-port`.
+- **The revision has to match.** Playwright resolves browsers by revision
+  number, so `playwright-driver` has to come from the same Playwright release.
+  1.62.1 wants Chromium **r1234** (`playwright-core/browsers.json`).
+- **So does the directory layout.** 1.62.1 expects
+  `chromium-1234/chrome-linux64/chrome` on linux-x64. Older Playwright
+  releases used `chrome-linux/chrome`, and a `playwright-driver` built for one
+  of those will not be found even if the revision happens to line up.
 
-Unrelated but adjacent: this repo keeps `*.jpg *.wav *.mp3` in Git LFS. Without `git-lfs`
-configured, those files check out as ~130-byte pointer stubs and the app logs
-`EncodingError: Unable to decode audio data` on every run, with the end-of-game fanfare silently
-never playing. The tests pass either way, since audio failure is caught and warned.
+nixpkgs also ships no `chromium-headless-shell`, which Playwright would
+otherwise pick for a headless run. The config sets `channel: 'chromium'` so
+the full browser is used in either mode, which covers that — at the cost of a
+slightly heavier headless start everywhere.
+
+Failing all of it, `PLAYWRIGHT_CHROMIUM_PATH=$(which chromium)` skips browser
+resolution altogether for the test run. It does not cover UI mode's own
+window, which is why `test:e2e:ui` uses `--ui-port`.
+
+Unrelated but adjacent: this repo keeps `*.jpg *.wav *.mp3` in Git LFS.
+Without `git-lfs` configured, those files check out as ~130-byte pointer stubs
+and the app logs `EncodingError: Unable to decode audio data` on every run,
+with the end-of-game fanfare silently never playing. The tests pass either
+way, since audio failure is caught and warned.
 
 ## Adding to these
 
