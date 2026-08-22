@@ -18,6 +18,7 @@ pnpm test:e2e:install  # download the browser (once, per checkout)
 pnpm test:e2e          # from the repo root or src/app-rooted
 pnpm test:e2e:ui       # UI mode, for stepping through a game
 pnpm test:e2e:report   # reopen the last HTML report
+pnpm test:e2e:doctor   # what Playwright has, and where it expects it
 ```
 
 `test:e2e:ui` passes `--ui-port=0`, so Playwright serves the UI and opens it in your normal
@@ -59,6 +60,22 @@ install cleanly and then die the moment they launch:
 ProtocolError: Protocol error (Browser.getVersion): Internal server error, session closed.
 ```
 
+`pnpm test:e2e:doctor` is the fastest way to see what is going on: it prints
+the browsers Playwright can find, per installation, and then the exact
+location and download URL it expects for this release. Neither downloads
+anything.
+
+Two more traps if `PLAYWRIGHT_BROWSERS_PATH` is set:
+
+- **`playwright install` writes into it.** It creates a `__dirlock` and a
+  `.links/` directory there, so pointing it at a read-only path — a
+  `/nix/store` entry, say — cannot work. The lock is acquired with 20 retries
+  over ten minutes and prints nothing while it waits, so this can present as
+  the command simply hanging.
+- **`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` does not skip it.** That variable only
+  suppresses the npm postinstall hook; an explicit `playwright install` still
+  downloads.
+
 If you would rather use the browsers from nixpkgs, two things make that fail
 in ways the error messages do not explain. Both report as
 `Executable doesn't exist at …`, which reads like a missing install rather
@@ -67,10 +84,13 @@ than a mismatch:
 - **The revision has to match.** Playwright resolves browsers by revision
   number, so `playwright-driver` has to come from the same Playwright release.
   1.62.1 wants Chromium **r1234** (`playwright-core/browsers.json`).
-- **So does the directory layout.** 1.62.1 expects
-  `chromium-1234/chrome-linux64/chrome` on linux-x64. Older Playwright
-  releases used `chrome-linux/chrome`, and a `playwright-driver` built for one
-  of those will not be found even if the revision happens to line up.
+- **So does the directory layout.** 1.62.1's "chromium" is a *Chrome for
+  Testing* build — `test:e2e:doctor` shows it downloading from
+  `builds/cft/…/chrome-linux64.zip` — and it expects
+  `chromium-1234/chrome-linux64/chrome` on linux-x64. Older releases shipped a
+  plain Chromium under `chrome-linux/chrome`. A `playwright-driver` built for
+  one of those will not be found even if the revision happens to line up, so
+  this is not something a revision bump alone fixes.
 
 nixpkgs also ships no `chromium-headless-shell`, which Playwright would
 otherwise pick for a headless run. The config sets `channel: 'chromium'` so

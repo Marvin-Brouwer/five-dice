@@ -10,6 +10,7 @@
     "test": "pnpm --filter @five-dice/app-rooted test",
     "test:e2e": "pnpm --filter @five-dice/app-rooted test:e2e",
     "test:e2e:install": "pnpm --filter @five-dice/app-rooted test:e2e:install",
+    "test:e2e:doctor": "pnpm --filter @five-dice/app-rooted test:e2e:doctor",
     "test:e2e:ui": "pnpm --filter @five-dice/app-rooted test:e2e:ui",
     "test:e2e:report": "pnpm --filter @five-dice/app-rooted test:e2e:report",
     "lint": "pnpm --filter @five-dice/app-rooted lint",
