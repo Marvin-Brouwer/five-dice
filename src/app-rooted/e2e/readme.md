@@ -18,13 +18,20 @@ pnpm test:e2e:install  # download the browser (once, per checkout)
 pnpm test:e2e          # from the repo root or src/app-rooted
 pnpm test:e2e:ui       # UI mode, for stepping through a game
 pnpm test:e2e:report   # reopen the last HTML report
-pnpm test:e2e:doctor   # what Playwright has, and where it expects it
 ```
 
 Every run records a video of each game and a screenshot of the final board,
 both attached to the HTML report — `pnpm test:e2e:report` to watch them back.
 Traces are kept only for failures, since they run to roughly 20MB a game
 against 1.7MB for the video and screenshot together.
+
+The videos are silent, and cannot be otherwise: Playwright records by
+screencast — a stream of JPEG frames — so there is no audio track to enable.
+To actually hear the end-of-game fanfare, run headed (`pnpm test:e2e --
+--headed`). Playwright only passes Chromium `--mute-audio` for headless runs,
+so a headed one is free to make noise. It still needs the audio assets to be
+real files rather than Git LFS pointer stubs, and an audio device the browser
+can reach.
 
 `test:e2e:ui` passes `--ui-port=0`, so Playwright serves the UI and opens it in your normal
 browser instead of launching a second Chromium of its own. That is a plain improvement
@@ -65,10 +72,10 @@ install cleanly and then die the moment they launch:
 ProtocolError: Protocol error (Browser.getVersion): Internal server error, session closed.
 ```
 
-`pnpm test:e2e:doctor` is the fastest way to see what is going on: it prints
-the browsers Playwright can find, per installation, and then the exact
-location and download URL it expects for this release. Neither downloads
-anything.
+`pnpm exec playwright install --list` prints the browsers Playwright can find,
+per installation, and `--dry-run chromium` prints the exact location and
+download URL it expects for this release. Neither downloads anything, and
+between them they explain most "it cannot find the browser" situations.
 
 Two more traps if `PLAYWRIGHT_BROWSERS_PATH` is set:
 
@@ -90,8 +97,8 @@ than a mismatch:
   number, so `playwright-driver` has to come from the same Playwright release.
   1.62.1 wants Chromium **r1234** (`playwright-core/browsers.json`).
 - **So does the directory layout.** 1.62.1's "chromium" is a *Chrome for
-  Testing* build — `test:e2e:doctor` shows it downloading from
-  `builds/cft/…/chrome-linux64.zip` — and it expects
+  Testing* build — `playwright install --dry-run chromium` shows it downloading
+  from `builds/cft/…/chrome-linux64.zip` — and it expects
   `chromium-1234/chrome-linux64/chrome` on linux-x64. Older releases shipped a
   plain Chromium under `chrome-linux/chrome`. A `playwright-driver` built for
   one of those will not be found even if the revision happens to line up, so
