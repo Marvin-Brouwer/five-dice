@@ -37,29 +37,33 @@ executable and the config will use that instead.
 
 ## NixOS
 
-Playwright's downloaded browsers are dynamically linked against paths that do not exist on
-NixOS. They install without complaint and then die the moment they launch:
-
-```
-ProtocolError: Protocol error (Browser.getVersion): Internal server error, session closed.
-```
-
-Either of these fixes the test run:
+Set `PLAYWRIGHT_BROWSERS_PATH` to the nixpkgs browser bundle and it works:
 
 ```sh
-# point at a chromium that actually runs here
-export PLAYWRIGHT_CHROMIUM_PATH=$(which chromium)
-
-# or hand Playwright a browser set built for NixOS
 export PLAYWRIGHT_BROWSERS_PATH="$(nix build --no-link --print-out-paths nixpkgs#playwright-driver.browsers)"
-export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
 ```
 
-The second also fixes UI mode's own window, but the revision has to line up: Playwright 1.62.1
-wants Chromium **r1234** (see `playwright-core/browsers.json`). If the nixpkgs
-`playwright-driver` ships a different revision, the lookup fails instead. `PLAYWRIGHT_CHROMIUM_PATH`
-has no such constraint but only covers the tests, not the UI-mode window — which is why
-`test:e2e:ui` uses `--ui-port` rather than relying on it.
+Two gotchas that make this fail in ways the error messages do not explain:
+
+**The revision has to match.** Playwright resolves browsers by revision number, so
+`playwright-driver` has to be from the same Playwright release. 1.62.1 wants Chromium **r1234**
+(`playwright-core/browsers.json`). A mismatch shows up as `Executable doesn't exist at
+.../chromium-<revision>/...` rather than as a version complaint.
+
+**nixpkgs ships no `chromium-headless-shell`.** Playwright normally uses that separate, smaller
+binary for headless runs, so with the nix bundle you would get:
+
+```
+Executable doesn't exist at .../chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+even though the revision is right and Chromium is sitting there next to it. The config sets
+`channel: 'chromium'`, which makes Playwright use the full browser for headless runs too, so
+this is already handled — worth knowing if you ever see that error in another project.
+
+If the bundle is awkward to line up, `PLAYWRIGHT_CHROMIUM_PATH=$(which chromium)` sidesteps
+browser resolution entirely for the test run. It does not cover UI mode's own window, which is
+why `test:e2e:ui` uses `--ui-port`.
 
 Unrelated but adjacent: this repo keeps `*.jpg *.wav *.mp3` in Git LFS. Without `git-lfs`
 configured, those files check out as ~130-byte pointer stubs and the app logs

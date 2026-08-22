@@ -33,6 +33,13 @@ export default defineConfig({
 				...devices['Desktop Chrome'],
 				// Portrait: this is an installable phone-first PWA.
 				viewport: { width: 420, height: 1000 },
+				// Use the full browser rather than chromium-headless-shell,
+				// which Playwright would otherwise pick for a headless run.
+				// Not every distribution of the browsers ships the shell --
+				// nixpkgs' playwright-driver.browsers does not -- and the full
+				// build is the more representative thing to test against
+				// anyway. `executablePath` below still wins when it is set.
+				channel: 'chromium',
 				...(executablePath ? { launchOptions: { executablePath } } : {}),
 			},
 		},

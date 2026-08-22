@@ -15,6 +15,8 @@ export default async function globalSetup(config: FullConfig) {
 	if (baseURL === undefined) return
 
 	const browser = await chromium.launch({
+		// Matches the project config: the full browser, not the headless shell.
+		channel: 'chromium',
 		executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH,
 	})
 	try {
