@@ -27,11 +27,20 @@ against 1.7MB for the video and screenshot together.
 
 The videos are silent, and cannot be otherwise: Playwright records by
 screencast — a stream of JPEG frames — so there is no audio track to enable.
-To actually hear the end-of-game fanfare, run headed (`pnpm test:e2e --
---headed`). Playwright only passes Chromium `--mute-audio` for headless runs,
-so a headed one is free to make noise. It still needs the audio assets to be
-real files rather than Git LFS pointer stubs, and an audio device the browser
-can reach.
+To actually *hear* the end-of-game fanfare, run headed
+(`pnpm test:e2e -- --headed`). Playwright only passes Chromium `--mute-audio`
+for headless runs, so a headed one is free to make noise, given an audio
+device it can reach.
+
+Both games assert the celebration instead of relying on anyone hearing it.
+`celebration-spy.mts` counts animation frames and Web Audio playback from
+before the page loads, so `expectCelebrated` can check that the confetti
+actually animated and that the fanfare produced sound. A run without Git LFS
+fails there with a message saying so, rather than leaving a decode error in
+the console for someone to notice much later.
+
+Each game also waits for the confetti to settle before finishing, which keeps
+the recorded video from cutting off mid-celebration.
 
 `test:e2e:ui` passes `--ui-port=0`, so Playwright serves the UI and opens it in your normal
 browser instead of launching a second Chromium of its own. That is a plain improvement

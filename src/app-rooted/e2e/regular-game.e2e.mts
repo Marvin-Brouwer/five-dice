@@ -63,4 +63,9 @@ test('a full game scoring every field, with the part one bonus', async ({ page }
 	})
 
 	await game.expectFinished()
+
+	// Let the celebration finish before the test ends, so the recorded video
+	// includes it and the frame count has settled.
+	await game.waitForCelebrationToEnd()
+	await game.expectCelebrated()
 })

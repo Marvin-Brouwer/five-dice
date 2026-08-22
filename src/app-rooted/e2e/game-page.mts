@@ -2,6 +2,8 @@ import { expect, type Locator, type Page } from '@playwright/test'
 
 import type { DiceTuple, ScoreField } from '../src/game/_logic/gameConstants.ts'
 
+import { installCelebrationSpy, type CelebrationSpy } from './celebration-spy.mts'
+
 export type RowState = {
 	/** The score cell's text: a number, '.' when empty, '' when discarded. */
 	score: string
@@ -30,6 +32,7 @@ export class GamePage {
 	constructor(private readonly page: Page) {}
 
 	async goto(locale = 'en') {
+		await this.page.addInitScript(installCelebrationSpy)
 		await this.page.goto(`${locale}/score-card/`)
 		await this.page.waitForSelector('#score-card [data-field]')
 		await expect(this.sticker).toBeVisible()
@@ -111,10 +114,59 @@ export class GamePage {
 		}
 	}
 
+	celebration(): Promise<CelebrationSpy> {
+		return this.page.evaluate(() => window.__celebration)
+	}
+
+	/**
+	 * Block until the confetti has finished animating.
+	 *
+	 * A burst runs for several seconds, so without this a test finishes while
+	 * it is still going — which truncates the recorded video and, worse, makes
+	 * the frame count useless to anything measuring afterwards.
+	 */
+	async waitForCelebrationToEnd(timeout = 20_000) {
+		const settleFor = 3
+		const interval = 250
+		let previous = -1
+		let stable = 0
+
+		for (let elapsed = 0; elapsed < timeout; elapsed += interval) {
+			await this.page.waitForTimeout(interval)
+			const { rafCalls } = await this.celebration()
+			stable = rafCalls === previous ? stable + 1 : 0
+			previous = rafCalls
+			if (stable >= settleFor) return
+		}
+		throw new Error(`Confetti was still animating after ${timeout}ms`)
+	}
+
 	/** The end-of-game banner is shown and the sticker has gone. */
 	async expectFinished() {
 		await expect(this.page.locator('aside[role="status"]')).toBeVisible()
 		await expect(this.sticker).toBeHidden()
+	}
+
+	/**
+	 * The confetti ran and the fanfare made a sound.
+	 *
+	 * Call after `waitForCelebrationToEnd`, so the frame count is final.
+	 */
+	async expectCelebrated() {
+		const spy = await this.celebration()
+
+		expect(spy.rafCalls, 'the confetti should have animated').toBeGreaterThan(30)
+		expect(spy.decodeAttempts, 'the fanfare should have been loaded').toBeGreaterThan(0)
+		expect(
+			spy.soundsStarted,
+			spy.decodeFailures > 0
+				// The pointer stubs decode to nothing, so this is the failure
+				// people hit on a fresh clone without LFS. Say so, rather than
+				// leaving them to find it in a console warning.
+				? `the fanfare failed to decode (${spy.decodeFailures} of ${spy.decodeAttempts} sounds). `
+					+ 'The audio assets are probably Git LFS pointer stubs — run `git lfs pull`.'
+				: 'the fanfare should have played',
+		).toBeGreaterThan(0)
 	}
 
 	async expectInProgress() {

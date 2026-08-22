@@ -59,4 +59,9 @@ test('thirteen yahtzees stacked onto the flush row', async ({ page }) => {
 	})
 
 	await game.expectFinished()
+
+	// Let the celebration finish before the test ends, so the recorded video
+	// includes it and the frame count has settled.
+	await game.waitForCelebrationToEnd()
+	await game.expectCelebrated()
 })
