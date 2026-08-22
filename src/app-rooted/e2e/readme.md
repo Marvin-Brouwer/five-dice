@@ -21,6 +21,11 @@ pnpm test:e2e:report   # reopen the last HTML report
 pnpm test:e2e:doctor   # what Playwright has, and where it expects it
 ```
 
+Every run records a video of each game and a screenshot of the final board,
+both attached to the HTML report — `pnpm test:e2e:report` to watch them back.
+Traces are kept only for failures, since they run to roughly 20MB a game
+against 1.7MB for the video and screenshot together.
+
 `test:e2e:ui` passes `--ui-port=0`, so Playwright serves the UI and opens it in your normal
 browser instead of launching a second Chromium of its own. That is a plain improvement
 everywhere, and it is the only thing that works on systems where the bundled browser cannot
