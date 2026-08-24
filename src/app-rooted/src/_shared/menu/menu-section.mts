@@ -1,4 +1,4 @@
-import { component } from '@rooted/components'
+import { component, optional } from '@rooted/components'
 
 import styles from './menu-section.css'
 
@@ -22,13 +22,13 @@ export const MenuSection = component<MenuSectionOptions>({
 						classes: styles.label,
 						textContent: label,
 					}),
-					rightHint
-						? element('span', {
+					optional(Boolean(rightHint),
+						element('span', {
 							classes: styles.hint,
 							textContent: rightHint,
 						})
-						: undefined!,
-				].filter(Boolean),
+					),
+				],
 			}),
 		)
 	},

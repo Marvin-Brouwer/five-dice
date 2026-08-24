@@ -1,3 +1,5 @@
+import { optional } from '@rooted/components'
+
 import type { ScoreField } from '../_logic/gameConstants.ts'
 import { dice, type Dice } from '../_logic/gameConstants.ts'
 import { dieNode } from '../../_shared/die/die-node.mts'
@@ -12,13 +14,14 @@ export type ScoreDescription = {
 }
 
 /**
- * The rule description under a row title.
+ * The rule description under a row title, or nothing when the row has none.
  *
  * When a short form exists both variants are rendered and CSS picks one, with
  * the long text on the parent's aria-label so screen readers always get it.
  */
-function descriptionLabel(context: RenderContext, description: ScoreDescription): Node {
+function descriptionLabel(context: RenderContext, description?: ScoreDescription): Node | undefined {
 	const { element } = context
+	if (description === undefined) return undefined
 	const { short, long } = description
 
 	if (short === undefined) {
@@ -32,8 +35,14 @@ function descriptionLabel(context: RenderContext, description: ScoreDescription)
 		classes: [styles.descriptionLabel, styles.responsiveDescriptionLabel],
 		aria: { label: long },
 		children: [
-			element('span', { classes: styles.descriptionShort, textContent: short }),
-			element('span', { classes: styles.descriptionLong, textContent: long }),
+			element('span', {
+				classes: styles.descriptionShort,
+				textContent: short,
+			}),
+			element('span', {
+				classes: styles.descriptionLong,
+				textContent: long,
+			}),
 		],
 	})
 }
@@ -46,21 +55,28 @@ export function labelDisplay(
 	icon?: Node,
 ): Node {
 	const { element } = context
-	const children: Array<Node> = []
 
-	if (icon !== undefined) {
-		children.push(element('span', { classes: styles.labelIcon, children: icon }))
-	}
-
-	children.push(element('span', {
-		classes: styles.labelText,
+	return element('span', {
+		classes: styles.labelDisplay,
 		children: [
-			element('span', { classes: styles.labelTitle, textContent: title }),
-			...(description === undefined ? [] : [descriptionLabel(context, description)]),
+			optional(icon !== undefined,
+				element('span', {
+					classes: styles.labelIcon,
+					children: icon,
+				})
+			),
+			element('span', {
+				classes: styles.labelText,
+				children: [
+					element('span', {
+						classes: styles.labelTitle,
+						textContent: title,
+					}),
+					descriptionLabel(context, description),
+				],
+			}),
 		],
-	}))
-
-	return element('span', { classes: styles.labelDisplay, children })
+	})
 }
 
 /** The `<th scope=row>` label cell of a score row. */

@@ -1,4 +1,5 @@
-import { component, cssClass, type CssClass } from '@rooted/components'
+import { component, cssClass, optional, type CssClass } from '@rooted/components'
+import type { ElementChild } from '@rooted/elements'
 
 import type { RenderContext } from '../render-context.ts'
 
@@ -42,26 +43,47 @@ export const Sheet = component<SheetOptions>({
 	onMount({ replace, element, options }) {
 		const { as, variant, title, titleId, titleVisible, handle, content, actions, actionColumns, ref } = options
 
-		const children: Array<Node> = []
-		if (handle) {
-			children.push(element('span', { classes: styles.handle, aria: { hidden: 'true' } }))
-		}
-		children.push(element('h2', {
-			id: titleId,
-			classes: titleVisible ? styles.sheetTitle : styles.visuallyHidden,
-			textContent: title,
-		}))
-		children.push(...content)
-		children.push(element('div', {
-			classes: styles.actionsRow,
-			style: { gridTemplateColumns: actionColumns ?? '1fr 1.5fr' },
-			children: actions,
-		}))
+		const children: Array<ElementChild> = [
+			optional(handle,
+				element('span', {
+					classes: styles.handle,
+					aria: {
+						hidden: 'true',
+					},
+				})
+			),
+			element('h2', {
+				id: titleId,
+				classes: titleVisible ? styles.sheetTitle : styles.visuallyHidden,
+				textContent: title,
+			}),
+			...content,
+			element('div', {
+				classes: styles.actionsRow,
+				style: {
+					gridTemplateColumns: actionColumns ?? '1fr 1.5fr',
+				},
+				children: actions,
+			}),
+		]
 
-		const classes = [styles.sheet, variantClass(variant)]
+		const classes = [
+			styles.sheet,
+			variantClass(variant),
+		]
 		const sheet = as === 'dialog'
-			? element('dialog', { classes, aria: { modal: 'true', labelledBy: titleId }, children })
-			: element('div', { classes, children })
+			? element('dialog', {
+				classes,
+				aria: {
+					modal: 'true',
+					labelledBy: titleId,
+				},
+				children,
+			})
+			: element('div', {
+				classes,
+				children,
+			})
 
 		ref?.(sheet)
 		replace(sheet)

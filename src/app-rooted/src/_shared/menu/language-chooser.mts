@@ -1,4 +1,4 @@
-import { component, cssClass } from '@rooted/components'
+import { component, cssClass, optional } from '@rooted/components'
 import { href, navigate } from '@rooted/router'
 
 import { Icon } from '../icon/icon.mts'
@@ -68,10 +68,12 @@ export const LanguageChooser = component({
 				const selected = code === activeLocale
 				const option = element('div', {
 					role: 'option',
-					aria: { selected: String(selected) },
+					aria: {
+						selected: String(selected),
+					},
 					classes: [
-						cssClass(styles.option),
-						cssClass(selected, styles.optionSelected)
+						styles.option,
+						cssClass(selected, styles.optionSelected),
 					],
 					on: {
 						click(event) {
@@ -93,18 +95,20 @@ export const LanguageChooser = component({
 					children: [
 						element('span', {
 							classes: styles.optionShort,
-							textContent: LABELS[code].short
+							textContent: LABELS[code].short,
 						}),
 						element('span', {
 							classes: styles.optionLong,
-							textContent: LABELS[code].long
+							textContent: LABELS[code].long,
 						}),
-						...selected ? [element('span', {
-							classes: styles.optionCheck,
-							children: create(Icon, {
-								source: checkIcon,
-							}),
-						})] : []
+						optional(selected,
+							element('span', {
+								classes: styles.optionCheck,
+								children: create(Icon, {
+									source: checkIcon,
+								}),
+							})
+						),
 					],
 				})
 

@@ -1,4 +1,4 @@
-import { cssClass, type CssClass } from '@rooted/components'
+import { cssClass, cssClasses, type CssClass } from '@rooted/components'
 import type { ReadonlyState } from '@rooted/store'
 
 import type { ScoreField } from '../_logic/gameConstants.ts'
@@ -78,12 +78,15 @@ export function scoreRow(
 	]
 
 	if (into !== undefined) {
-		into.className = classes.filter(Boolean).join(' ')
+		into.className = cssClasses(...classes) ?? ''
 		into.replaceChildren(...cells)
 		return into
 	}
 
-	const row = element('tr', { classes, children: cells })
+	const row = element('tr', {
+		classes,
+		children: cells,
+	})
 	// Marks the row as a selection target; the card's stylesheet keys off it.
 	row.dataset.field = field
 	return row

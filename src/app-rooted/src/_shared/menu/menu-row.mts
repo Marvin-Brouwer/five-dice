@@ -1,4 +1,4 @@
-import { component } from '@rooted/components'
+import { component, optional } from '@rooted/components'
 import type { Store } from '@rooted/store'
 
 import styles from './menu-row.css'
@@ -29,9 +29,17 @@ export const MenuRow = component<MenuRowOptions>({
 		const labelBlock = element('span', {
 			classes: styles.labels,
 			children: [
-				element('span', { classes: styles.title, textContent: label }),
-				hint ? element('span', { classes: styles.hint, textContent: hint }) : undefined!,
-			].filter(Boolean),
+				element('span', {
+					classes: styles.title,
+					textContent: label,
+				}),
+				optional(Boolean(hint),
+					element('span', {
+						classes: styles.hint,
+						textContent: hint,
+					})
+				),
+			],
 		})
 
 		const controlWrap = element('span', {
