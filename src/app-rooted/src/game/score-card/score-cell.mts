@@ -26,8 +26,8 @@ export function scoreCell(context: RenderContext, options: ScoreCellOptions): HT
 		children: element('span', {
 			classes: [
 				styles.scoreValue,
-				cssClass(styles.scoreValueMark, text === emptyScoreMark || text === '/'),
-				cssClass(styles.scoreValueFilled, applied),
+				cssClass(text === emptyScoreMark || text === '/', styles.scoreValueMark),
+				cssClass(applied, styles.scoreValueFilled),
 			],
 			textContent: text,
 		}),

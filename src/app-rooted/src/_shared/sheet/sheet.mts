@@ -93,8 +93,8 @@ export function sheetButton(context: RenderContext, options: SheetButtonOptions)
 		type: 'button',
 		classes: [
 			styles.actionButton,
-			cssClass(styles.actionPrimary, variant === 'primary'),
-			cssClass(styles.actionSecondary, variant === 'secondary'),
+			cssClass(variant === 'primary', styles.actionPrimary),
+			cssClass(variant === 'secondary', styles.actionSecondary),
 		],
 		...(ariaLabel === undefined ? {} : { aria: { label: ariaLabel } }),
 		...(label === undefined ? {} : { textContent: label }),

@@ -65,8 +65,8 @@ export function scoreRow(
 
 	const classes = [
 		styles.rowDisplay,
-		cssClass(styles.discarded, discarded),
-		cssClass(styles.rowApplied, applied),
+		cssClass(discarded, styles.discarded),
+		cssClass(applied, styles.rowApplied),
 	]
 	const cells = [
 		labelCell(context, field, withDieIcon),

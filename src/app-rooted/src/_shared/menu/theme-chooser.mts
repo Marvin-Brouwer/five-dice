@@ -148,8 +148,8 @@ export const ThemeChooser = component({
 					},
 					classes: [
 						styles.option,
-						cssClass(styles.optionSelected, selected),
-						cssClass(styles.optionDisabled, disabled),
+						cssClass(selected, styles.optionSelected),
+						cssClass(disabled, styles.optionDisabled),
 					],
 					on: {
 						click(event) {

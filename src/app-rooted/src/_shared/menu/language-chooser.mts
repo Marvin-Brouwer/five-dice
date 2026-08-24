@@ -71,7 +71,7 @@ export const LanguageChooser = component({
 					aria: { selected: String(selected) },
 					classes: [
 						cssClass(styles.option),
-						cssClass(styles.optionSelected, selected)
+						cssClass(selected, styles.optionSelected)
 					],
 					on: {
 						click(event) {

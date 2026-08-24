@@ -178,8 +178,8 @@ export const RowOverlay = component<RowOverlayOptions>({
 					htmlFor: radioId(field),
 					classes: [
 						styles.option,
-						cssClass(styles.optionValid, variant === 'valid'),
-						cssClass(styles.optionDiscard, variant !== 'valid'),
+						cssClass(variant === 'valid', styles.optionValid),
+						cssClass(variant !== 'valid', styles.optionDiscard),
 					],
 					aria: {
 						label: localization.text`${getRowDisplayLabels()[field].title}, ${variant === 'valid' ? localization.text`apply` : localization.text`discard`}`
