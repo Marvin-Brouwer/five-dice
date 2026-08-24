@@ -141,9 +141,10 @@ export class GamePage {
 		throw new Error(`Confetti was still animating after ${timeout}ms`)
 	}
 
-	/** The end-of-game banner is shown and the sticker has gone. */
+	/** The round counter has turned into the party icon and the sticker has gone. */
 	async expectFinished() {
-		await expect(this.page.locator('aside[role="status"]')).toBeVisible()
+		await expect(this.page.locator('#score-card .round-label-finished')).toBeVisible()
+		await expect(this.page.getByText('Game finished', { exact: true })).toBeAttached()
 		await expect(this.sticker).toBeHidden()
 	}
 

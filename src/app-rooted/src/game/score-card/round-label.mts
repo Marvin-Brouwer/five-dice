@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 
 import { roundAmount } from '../_logic/gameConstants.ts'
 import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
 
@@ -21,19 +22,31 @@ export const RoundLabel = component<RoundLabelOptions>({
 
 		const label = element('span', {
 			classes: styles.roundLabel,
-			aria: { live: 'polite' },
 		})
+
+		// The party icon is decorative, so on its own the finished state is
+		// silent -- an `aria-live` label with no text announces nothing. The
+		// shared live region carries the wording instead. Its `reference`
+		// fires a microtask after this mount, so a game that is already over
+		// when the page loads has to buffer its announcement until then.
+		let region: HTMLElement | undefined
+		let pending: string | undefined
+		function announce(text: string) {
+			if (region) region.textContent = text
+			else pending = text
+		}
 
 		function render() {
 			const round = store.value.round
 			if (round > roundAmount) {
 				label.classList.add(styles.roundLabelFinished!)
-				label.setAttribute('aria-label', localization.text`Game finished`)
-				label.replaceChildren(create(Icon, { source: partyIcon }))
+				label.replaceChildren(create(Icon, {
+					source: partyIcon,
+				}))
+				announce(localization.text`Game finished`)
 				return
 			}
 			label.classList.remove(styles.roundLabelFinished!)
-			label.removeAttribute('aria-label')
 			label.replaceChildren(
 				element('span', {
 					classes: styles.roundHeading,
@@ -42,15 +55,31 @@ export const RoundLabel = component<RoundLabelOptions>({
 				element('span', {
 					classes: styles.roundLine,
 					children: [
-						element('span', { classes: styles.roundNumber, textContent: String(round) }),
-						element('span', { classes: styles.roundOf, textContent: `/${roundAmount}` }),
+						element('span', {
+							classes: styles.roundNumber,
+							textContent: String(round),
+						}),
+						element('span', {
+							classes: styles.roundOf,
+							textContent: `/${roundAmount}`,
+						}),
 					],
 				}),
 			)
+			announce('')
 		}
 
 		render()
 		store.on('change', signal, render)
-		replace(label)
+
+		replace(
+			label,
+			create(LiveRegion, {
+				reference: element => {
+					region = element
+					if (pending !== undefined) element.textContent = pending
+				},
+			}),
+		)
 	},
 })

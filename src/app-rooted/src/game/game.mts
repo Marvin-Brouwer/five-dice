@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
 import { createGameContext } from './_logic/game-context.mts'
-import { GameEndBanner } from './game-end-banner.mts'
+import { wireGameCelebration } from './game.celebration.mts'
 import { wireGameMenuBridge } from './game.menu-bridge.mts'
 import { ScoreCard } from './score-card/score-card.mts'
 import { ScoreInput } from './score-input/score-input.mts'
@@ -21,14 +21,18 @@ export const Game = component({
 		const game = createGameContext()
 
 		wireGameMenuBridge({ signal, on, store: game.pad })
+		wireGameCelebration({ signal, on, store: game.pad })
 
 		append(
-				element('div', {
+			element('div', {
 				classes: styles.page,
 				children: [
-					create(ScoreCard, { game }),
-					create(GameEndBanner, { store: game.pad }),
-					create(ScoreInput, { game }),
+					create(ScoreCard, {
+						game,
+					}),
+					create(ScoreInput, {
+						game,
+					}),
 				],
 			})
 		)
