@@ -42,7 +42,9 @@ export const DiceSlots = component<DiceSlotsOptions>({
 
 		const dieSpaces: HTMLSpanElement[] = []
 		const buttons = slotIndices.map((index) => {
-			const dieSpace = element('span', { classes: styles.slotDie })
+			const dieSpace = element('span', {
+				classes: styles.slotDie,
+			})
 			dieSpaces.push(dieSpace)
 			return element('button', {
 				type: 'button',

@@ -16,10 +16,14 @@ export function renderRollCell(
 ): Node {
 	const { element } = context
 
-	if (cell === undefined) return element('span', { classes: styles.rollEmpty })
+	if (cell === undefined) return element('span', {
+		classes: styles.rollEmpty,
+	})
 	// Discarded rows leave the roll & score cells empty; the big slash
 	// across the row (drawn by CSS) is the sole discard indicator.
-	if (isDiscarded(cell)) return element('span', { classes: styles.rollEmpty })
+	if (isDiscarded(cell)) return element('span', {
+		classes: styles.rollEmpty,
+	})
 
 	if (isFlushScore(cell)) {
 		if (field !== 'flush') return element('span')
@@ -50,7 +54,9 @@ export function renderRollCell(
 function renderGrouped(context: RenderContext, groups: ScoreGroup, dimSmall: boolean): Node {
 	const { element } = context
 	const [small, large] = groups
-	const wrap = element('span', { classes: styles.rollRow })
+	const wrap = element('span', {
+		classes: styles.rollRow,
+	})
 	if (small.length > 0) {
 		wrap.append(element('span', {
 			classes: [styles.rollGroup, dimSmall ? styles.rollGroupMuted : undefined],
@@ -68,10 +74,14 @@ function renderGrouped(context: RenderContext, groups: ScoreGroup, dimSmall: boo
 
 function renderFlush(context: RenderContext, entries: ReadonlyState<Array<ValidScore>>): Node {
 	const { element } = context
-	if (entries.length === 0) return element('span', { classes: styles.rollEmpty })
+	if (entries.length === 0) return element('span', {
+		classes: styles.rollEmpty,
+	})
 	const latest = entries[entries.length - 1]!
 	const dice = Array.from(latest) as DieValue[]
-	const wrap = element('span', { classes: styles.rollRow })
+	const wrap = element('span', {
+		classes: styles.rollRow,
+	})
 	if (entries.length > 1) {
 		wrap.append(element('span', {
 			classes: styles.rollBadge,

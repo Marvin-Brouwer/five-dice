@@ -39,7 +39,9 @@ export const Application = component({
 			localization.localized(() => create(AppBar)),
 			element('main', {
 				id: 'main-content',
-				children: create(Router, { viewTransition: true }),
+				children: create(Router, {
+					viewTransition: true,
+				}),
 			}),
 			create(Menu),
 		)

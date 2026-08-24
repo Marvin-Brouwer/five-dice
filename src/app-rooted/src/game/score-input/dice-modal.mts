@@ -62,8 +62,12 @@ export const DiceModal = component<DiceModalOptions>({
 			// the same path.
 			onClick: () => dialog.close(),
 			children: [
-				create(Icon, { source: closeIcon }),
-				element('span', { textContent: localization.text`Close` }),
+				create(Icon, {
+					source: closeIcon,
+				}),
+				element('span', {
+					textContent: localization.text`Close`,
+				}),
 			],
 		})
 
@@ -75,8 +79,12 @@ export const DiceModal = component<DiceModalOptions>({
 				slots?.focus(0)
 			},
 			children: [
-				create(Icon, { source: resetIcon }),
-				element('span', { textContent: localization.text`Reset` }),
+				create(Icon, {
+					source: resetIcon,
+				}),
+				element('span', {
+					textContent: localization.text`Reset`,
+				}),
 			],
 		})
 
@@ -108,7 +116,10 @@ export const DiceModal = component<DiceModalOptions>({
 			handle: true,
 			actionColumns: '1fr 1fr 1.5fr',
 			content: [
-				create(DiceSlots, { state, ref: (api) => { slots = api } }),
+				create(DiceSlots, {
+					state,
+					ref: (api) => { slots = api },
+				}),
 				element('div', {
 					classes: styles.band,
 					children: [
@@ -119,7 +130,9 @@ export const DiceModal = component<DiceModalOptions>({
 						bandStatus,
 					],
 				}),
-				create(DiceKeypad, { state }),
+				create(DiceKeypad, {
+					state,
+				}),
 				create(LiveRegion, {
 					reference(region) {
 						liveAnnounce = region

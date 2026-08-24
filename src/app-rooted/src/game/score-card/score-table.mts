@@ -11,7 +11,9 @@ import styles from './score-table.css'
  */
 
 export function tableColumn(context: RenderContext, className: CssClass): HTMLTableColElement {
-	return context.element('col', { classes: className })
+	return context.element('col', {
+		classes: className,
+	})
 }
 
 export type BandCell = {
@@ -40,6 +42,9 @@ export function sectionBand(context: RenderContext, cells: BandCell[]): HTMLTabl
 	})
 
 	return element('thead', {
-		children: element('tr', { classes: styles.sectionRow, children: bandCell }),
+		children: element('tr', {
+			classes: styles.sectionRow,
+			children: bandCell,
+		}),
 	})
 }

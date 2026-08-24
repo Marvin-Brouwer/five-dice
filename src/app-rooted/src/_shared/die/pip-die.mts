@@ -65,7 +65,12 @@ export const PipDie = component<PipDieOptions>({
 						}),
 						...pips.map((cell) => {
 							const [cx, cy] = CELL_XY[cell]!
-							return element('svg:circle', { cx, cy, r: 2.1, fill: pipColor })
+							return element('svg:circle', {
+								cx,
+								cy,
+								r: 2.1,
+								fill: pipColor,
+							})
 						}),
 					],
 				})

@@ -42,7 +42,9 @@ export const ScoreCard = component<ScoreCardOptions>({
 			classes: styles.banner,
 			children: [
 				create(PlayerNameField),
-				create(RoundLabel, { store }),
+				create(RoundLabel, {
+					store,
+				}),
 			],
 		})
 
@@ -67,7 +69,9 @@ export const ScoreCard = component<ScoreCardOptions>({
 					fields: partTwoFields,
 					withDieIcon: false,
 				}),
-				create(TotalsTable, { store }),
+				create(TotalsTable, {
+					store,
+				}),
 			],
 		})
 
@@ -78,7 +82,10 @@ export const ScoreCard = component<ScoreCardOptions>({
 			role: 'document',
 			children: [
 				cardInner,
-				create(EnterScoreSticker, { store, flow }),
+				create(EnterScoreSticker, {
+					store,
+					flow,
+				}),
 			],
 		})
 
