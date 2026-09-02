@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@11.0.9",
   "scripts": {
     "dev": "pnpm --filter @five-dice/app-rooted dev",
     "build": "pnpm --filter @five-dice/app-rooted build",
@@ -21,19 +22,5 @@
   },
   "devDependencies": {
     "astro": "^2.3.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "undici@<5.19.1": ">=5.19.1",
-      "undici@>=2.0.0 <5.19.1": ">=5.19.1"
-    },
-    "onlyBuiltDependencies": [
-      "@jasikpark/astro-svg-loader",
-      "esbuild",
-      "sharp"
-    ]
-  },
-  "volta": {
-    "node": "20.9.0"
   }
 }

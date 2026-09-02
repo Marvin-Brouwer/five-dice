@@ -1,3 +1,15 @@
 packages:
   - src/app
   - src/app-rooted
+
+allowBuilds:
+  '@jasikpark/astro-svg-loader': true
+  esbuild: true
+  sharp: true
+overrides:
+  "undici@<5.19.1": ">=5.19.1"
+  "undici@>=2.0.0 <5.19.1": ">=5.19.1"
+onlyBuiltDependencies:
+  - "@jasikpark/astro-svg-loader"
+  - "esbuild"
+  - "sharp"
