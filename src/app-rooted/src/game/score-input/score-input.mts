@@ -10,7 +10,7 @@ import { localization } from '../../_shared/i18n/localization.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
 import { DiceModal } from './dice-modal.mts'
-import { availableRowFields, flushDiscardFields, flushNeedsDiscard } from './row-fields.mts'
+import { availableRowFields, flushDiscardFields, flushNeedsDiscard, openRowFields } from './row-fields.mts'
 import { RowOverlay } from './row-overlay.mts'
 
 export type ScoreInputOptions = {
@@ -62,6 +62,9 @@ export const ScoreInput = component<ScoreInputOptions>({
 
 		const diceModal = create(DiceModal, {
 			flow,
+			// The picker's row set is the same before and after the roll, so
+			// the keypad can already put those rows on screen.
+			rowsSpan: () => rows.span(openRowFields(store.value.pad)),
 			onConfirm(dice) {
 				flow.toRow(dice)
 			},

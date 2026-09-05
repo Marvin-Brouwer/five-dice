@@ -2,6 +2,7 @@ import { component } from '@rooted/components'
 
 import type { DiceTuple, DieValue } from '../_logic/gameConstants.ts'
 import type { InputFlowStore } from '../_logic/input-flow-store.mts'
+import type { RowSpan } from '../score-card/row-registry.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
@@ -17,9 +18,17 @@ import styles from './dice-modal.css'
 export type DiceModalOptions = {
 	/** Shows while the wizard sits on the 'dice' step. */
 	flow: InputFlowStore
+	/**
+	 * Where the rows the picker will offer sit right now. Read on open, to
+	 * scroll them into the strip the sheet leaves free.
+	 */
+	rowsSpan: () => RowSpan | undefined
 	onConfirm: (dice: DiceTuple) => void
 	onCancel: () => void
 }
+
+/** Breathing room between the revealed rows and the edges of the strip. */
+const revealMargin = 12
 
 /**
  * The roll-entry keypad.
@@ -32,7 +41,7 @@ export const DiceModal = component<DiceModalOptions>({
 	name: 'dice-modal',
 	styles,
 	onMount({ replace, element, create, signal, options, on }) {
-		const { flow, onConfirm, onCancel } = options
+		const { flow, rowsSpan, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `dice-modal-title-${instanceId}`
 
@@ -193,7 +202,36 @@ export const DiceModal = component<DiceModalOptions>({
 			}
 		}
 
+		/**
+		 * Scroll the rows the picker will offer into the strip above the
+		 * sheet, so the next step opens with its hit targets on screen. The
+		 * page stays scrollable behind the dialog, so this is a nudge the user
+		 * can scroll away from, not a lock.
+		 */
+		function revealRows() {
+			const span = rowsSpan()
+			if (span === undefined) return
+			const strip = window.innerHeight - dialog.getBoundingClientRect().height
+			if (strip <= revealMargin * 2) return
+			const height = span.bottom - span.top
+			// Centre the band when it fits; otherwise show it from the top and
+			// let the user scroll the rest.
+			const delta = height <= strip - revealMargin * 2
+				? span.top - (strip - height) / 2
+				: span.top - revealMargin
+			if (Math.abs(delta) < 1) return
+			const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+			window.scrollBy({
+				top: delta,
+				behavior: reduceMotion ? 'auto' : 'smooth',
+			})
+		}
+
 		function show() {
+			// A carried roll means the user pressed Back rather than opening
+			// the keypad, and by then they have usually scrolled the card
+			// themselves -- so reveal only on a fresh open.
+			const fresh = flow.value.dice === undefined
 			// Carry the roll back in when the user pressed Back from the row
 			// picker, so the slots repopulate rather than reset.
 			state.reset(flow.value.dice as DiceTuple | undefined)
@@ -209,6 +247,9 @@ export const DiceModal = component<DiceModalOptions>({
 			requestAnimationFrame(() => requestAnimationFrame(() => {
 				if (focused === undefined) confirmButton.focus()
 				else slots?.focus(focused)
+				// After focus, and after the sheet has been laid out: both its
+				// height and the row positions have to be final to aim this.
+				if (fresh) revealRows()
 			}))
 		}
 

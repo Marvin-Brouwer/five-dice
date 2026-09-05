@@ -223,7 +223,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 		function showOverlay() {
 			buildRadios()
 			layer.hidden = false
-			document.body.style.overflow = 'hidden'
 			repositionLabels()
 			resizeObserver = new ResizeObserver(() => repositionLabels())
 			resizeObserver.observe(document.documentElement)
@@ -233,7 +232,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		function hideOverlay() {
 			layer.hidden = true
-			document.body.style.overflow = ''
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
 			// Only clear the selection if this overlay still owns it. Both

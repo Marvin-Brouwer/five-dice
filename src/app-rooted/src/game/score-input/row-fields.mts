@@ -16,25 +16,29 @@ import type { RowOverlayField } from './row-overlay.mts'
  * component only decides *when* to ask.
  */
 
+/**
+ * Rows still open for a roll. Which rows the picker offers never depends on
+ * the roll -- only each row's variant does -- so this can be answered before
+ * a roll exists, which is what lets the keypad scroll them into view.
+ */
+export function openRowFields(pad: ReadonlyState<ScorePad>): ScoreField[] {
+	return scoreFieldOrder.filter((field) => {
+		const cell = pad[field]
+		// The flush slot is special: discarded means done, but an existing
+		// entry does not -- a later flush stacks onto it, at the cost of
+		// sacrificing another row.
+		if (field === 'flush') return cell === undefined || !isDiscarded(cell)
+		return cell === undefined
+	})
+}
+
 /** Rows a roll can still be entered into, valid ones and discards alike. */
 export function availableRowFields(pad: ReadonlyState<ScorePad>, dice: ReadonlyState<DiceTuple>): RowOverlayField[] {
 	const scoreValue = score(dice)
-	const result: RowOverlayField[] = []
 
-	for (const field of scoreFieldOrder) {
-		const cell = pad[field]
-		if (field === 'flush') {
-			// The flush slot is special: discarded means done, but an existing
-			// entry does not -- a later flush stacks onto it, at the cost of
-			// sacrificing another row.
-			if (cell !== undefined && isDiscarded(cell)) continue
-		}
-		else if (cell !== undefined) {
-			continue
-		}
-
+	return openRowFields(pad).map((field) => {
 		const applicable = isScoreApplicableToField(scoreValue, field)
-		result.push({
+		return {
 			field,
 			variant: applicable ? 'valid' : 'discard',
 			// The card renders this through its normal row renderer, so the
@@ -42,10 +46,8 @@ export function availableRowFields(pad: ReadonlyState<ScorePad>, dice: ReadonlyS
 			// same code path as the committed row. A row that isn't
 			// applicable previews as an actual discard.
 			previewCell: applicable ? projectedCell(pad, field, scoreValue) : discard(),
-		})
-	}
-
-	return result
+		}
+	})
 }
 
 /** Rows that can be sacrificed to make room for a second or later flush. */
