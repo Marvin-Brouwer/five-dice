@@ -1,4 +1,4 @@
-import type { SeoOptions } from '@rooted/application'
+import type { SeoOptions } from '@rooted/seo'
 
 export const seo: SeoOptions = {
 	llmsTxt: {
