@@ -6,25 +6,23 @@ import { ScoreCardRoute } from '../game/_routes.mts'
 import { getRowDisplayLabels } from '../game/score-card/score-card.labels.ts'
 import { localization } from '../_shared/i18n/localization.mts'
 
-import styles from './rules.css'
+import styles from './how-to-play.css'
 
-export const Rules = component({
-	name: 'rules-page',
+export const HowToPlay = component({
+	name: 'how-to-play-page',
 	styles,
 	async onMount({ append, element, create }) {
-		// Prose lives in translated markdown; only the interactive CTA and the
+		// Prose lives in translated markdown; only the closing CTA and the
 		// score-row list (data-driven, from score-card.labels.ts) stay as
 		// component code, spliced back in at their original positions.
-		const { intro, howToPlay, outro } = await localization.branch({
+		const { intro, outro } = await localization.branch({
 			en: async () => ({
-				intro: await import('./rules-intro.en.md'),
-				howToPlay: await import('./rules-how-to-play.en.md'),
-				outro: await import('./rules-outro.en.md'),
+				intro: await import('./how-to-play-intro.en.md'),
+				outro: await import('./how-to-play-outro.en.md'),
 			}),
 			nl: async () => ({
-				intro: await import('./rules-intro.nl.md'),
-				howToPlay: await import('./rules-how-to-play.nl.md'),
-				outro: await import('./rules-outro.nl.md'),
+				intro: await import('./how-to-play-intro.nl.md'),
+				outro: await import('./how-to-play-outro.nl.md'),
 			}),
 		})
 
@@ -34,18 +32,6 @@ export const Rules = component({
 				children: [
 					create(Markdown, {
 						source: intro
-					}),
-					element('p', {
-						children: create(Link, {
-							href: href.for(ScoreCardRoute, {
-								locale: localization.currentLocale
-							}),
-							classes: styles.cta,
-							children: localization.text`Start a new game`,
-						}),
-					}),
-					create(Markdown, {
-						source: howToPlay
 					}),
 					element('ul', {
 						classes: styles.scoreOptions,
@@ -62,6 +48,15 @@ export const Rules = component({
 					}),
 					create(Markdown, {
 						source: outro
+					}),
+					element('p', {
+						children: create(Link, {
+							href: href.for(ScoreCardRoute, {
+								locale: localization.currentLocale
+							}),
+							classes: styles.cta,
+							children: localization.text`Start a new game`,
+						}),
 					}),
 				],
 			})

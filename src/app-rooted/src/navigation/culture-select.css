@@ -1,11 +1,34 @@
+/* Same shape as the landing page: one PaperCard, centred in whatever height
+   <main> lays out for it (see the `main:has(…)` rule in index.global.css).
+   `safe center` keeps a card taller than the viewport from overflowing off
+   the top; the plain `center` above it is the fallback where that keyword is
+   not understood. */
 .page {
+	flex: 1;
+	width: 100%;
 	max-width: var(--max-content-width);
 	margin: 0 auto;
+	padding-block: var(--space-4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	justify-content: safe center;
+}
+
+/* The dice and the wordmark at the top are DiceHero, shared with the home
+   card — this screen hands straight over to it, so the mark has to land in
+   the same place on both. --hero-measure is the column the hero, the line
+   below it and the locale list all share. */
+.content {
+	--hero-measure: 20rem;
+	padding: clamp(var(--space-5), 6vw, var(--space-7)) var(--space-4);
 	text-align: center;
 }
 
-.page h1 {
-	font-family: var(--font-family-display);
+.content p {
+	color: var(--color-text-secondary);
+	max-width: var(--hero-measure);
+	margin: var(--space-4) auto 0;
 }
 
 .list {
@@ -15,7 +38,7 @@
 	gap: var(--space-3);
 	padding: 0;
 	margin: var(--space-5) auto 0;
-	max-width: 20rem;
+	max-width: var(--hero-measure);
 }
 
 .link {

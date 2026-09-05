@@ -3,6 +3,7 @@ import { component } from '@rooted/components'
 import { partOneFields, partTwoFields } from '../_logic/fields.ts'
 import type { GameContext } from '../_logic/game-context.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
+import { PaperCard } from '../../_shared/paper-card/paper-card.mts'
 
 import { EnterScoreSticker } from './enter-score-sticker.mts'
 import { PlayerNameField } from './player-name-field.mts'
@@ -75,26 +76,24 @@ export const ScoreCard = component<ScoreCardOptions>({
 			],
 		})
 
-		const card = element('section', {
+		const card = create(PaperCard, {
 			// Page anchor and test hook; no longer a component contract.
 			id: 'score-card',
-			classes: styles.card,
 			role: 'document',
-			children: [
-				cardInner,
-				create(EnterScoreSticker, {
-					store,
-					flow,
-				}),
-			],
+			children: cardInner,
+			// Outside the ruled frame, so the sticker can overhang the paper.
+			overlay: create(EnterScoreSticker, {
+				store,
+				flow,
+			}),
 		})
 
 		// Card-level selection state. The stylesheet uses it to dim and
 		// highlight rows while the row picker is open.
 		function syncSelecting() {
 			const { mode } = selection.value
-			if (mode === 'none') delete card.dataset.selecting
-			else card.dataset.selecting = mode
+			if (mode === 'none') delete cardInner.dataset.selecting
+			else cardInner.dataset.selecting = mode
 		}
 		syncSelecting()
 		selection.on('change', signal, syncSelecting)

@@ -6,9 +6,9 @@ picker and all.
 | Spec | What it plays |
 |---|---|
 | `regular-game.e2e.mts` | One roll per field, in score-card order. Part one lands on exactly 63, so the bonus boundary is pinned too. Final score **314**. |
-| `yahtzee-game.e2e.mts` | Thirteen five-of-a-kinds, every one committed to the flush row. The first scores 50; the other twelve stack +100 each and sacrifice a row apiece — exactly the twelve non-flush fields. Final score **1250**. |
+| `flush-game.e2e.mts` | Thirteen five-of-a-kinds, every one committed to the flush row. The first scores 50; the other twelve stack +100 each and sacrifice a row apiece — exactly the twelve non-flush fields. Final score **1250**. |
 
-The yahtzee game is the one that exercises the flush-discard step, twelve times
+The flush game is the one that exercises the flush-discard step, twelve times
 over, ending with a single option left in the picker.
 
 ## Running them

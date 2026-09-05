@@ -1,5 +1,7 @@
 import { component } from '@rooted/components'
+import { href, Link } from '@rooted/router'
 
+import { HomeRoute } from '../content/_routes.mts'
 import { Icon } from '../_shared/icon/icon.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 import { menuStore } from '../_shared/stores/menuStore.mts'
@@ -18,12 +20,15 @@ export const AppBar = component({
 			textContent: localization.text`Skip to main content`,
 		})
 
+		// Hidden from assistive tech: the breadcrumb next to it already reads
+		// "Five dice", and both live inside the same link.
 		const monogram = element('span', {
 			classes: styles.monogram,
-			aria: { label: 'Five dice' },
+			aria: {
+				hidden: 'true'
+			},
 			children: create(PipDie, {
 				value: 5,
-				ariaLabel: 'Five dice'
 			}),
 		})
 
@@ -58,7 +63,10 @@ export const AppBar = component({
 			element('header', {
 				classes: styles.bar,
 				children: [
-					element('span', {
+					create(Link, {
+						href: href.for(HomeRoute, {
+							locale: localization.currentLocale
+						}),
 						classes: styles.title,
 						children: [monogram, breadcrumb],
 					}),

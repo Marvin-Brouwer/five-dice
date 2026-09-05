@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
-import { RulesRoute } from '../content/_routes.mts'
+import { HomeRoute } from '../content/_routes.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 
 import styles from './not-found.css'
@@ -26,7 +26,7 @@ export const NotFoundLocalized = component<NotFoundLocalizedOptions>({
 				element('p', {
 					children: [
 						create(Link, {
-							href: href.for(RulesRoute, {
+							href: href.for(HomeRoute, {
 								locale: options.locale
 							}),
 							classes: styles.link,

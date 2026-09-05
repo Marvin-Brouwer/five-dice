@@ -1,0 +1,23 @@
+/* A sheet of paper laid on the cardboard page: paper texture, a soft drop
+   shadow, and an ink rule ruled just inside the edge. */
+.sheet {
+	background: var(--background-surface);
+	background-size: var(--background-surface-size);
+	background-repeat: repeat;
+	box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
+	border: 0;
+	border-radius: 0;
+	padding: 10px;
+	display: block;
+	/* Anchors the overlay, which is positioned against the sheet. */
+	position: relative;
+	/* Callers size things against the sheet's width — the score card's
+	   discard slash does — so the sheet is the container-query container. */
+	container-type: inline-size;
+}
+
+.frame {
+	outline: 2px solid var(--color-text);
+	outline-offset: -2px;
+	background: transparent;
+}

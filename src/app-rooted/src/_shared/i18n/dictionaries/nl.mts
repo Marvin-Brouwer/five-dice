@@ -4,6 +4,8 @@ export const NewLine = '\n'
 
 export default dictionary(
 	// Route SEO (content/_routes.mts, game/_routes.mts, navigation/_routes.mts)
+	translation('A score pad for a game of five dice, playable anywhere.', 'Een scorekaart voor een potje five dice, overal te spelen.'),
+	translation('How to play - Five dice', 'Speluitleg - Five dice'),
 	translation('Rules and how to play Five dice.', 'Spelregels en hoe je Five dice speelt.'),
 	translation('Accessibility - Five dice', 'Toegankelijkheid - Five dice'),
 	translation('Accessibility statement for the Five dice app.', 'Toegankelijkheidsverklaring voor de Five dice-app.'),
@@ -36,8 +38,8 @@ export default dictionary(
 	translation('Revert the last committed score', 'Maakt de laatst ingevoerde score ongedaan'),
 	translation('About', 'Over'),
 	translation('Help & links', 'Hulp & links'),
-	translation('Rules', 'Spelregels'),
-	translation('How to play', 'Hoe te spelen'),
+	translation('How to play', 'Speluitleg'),
+	translation('Rules and scoring', 'Spelregels en scoren'),
 	translation('Accessibility', 'Toegankelijkheid'),
 	translation('Statement & keyboard map', 'Verklaring & toetsenbordoverzicht'),
 	translation('Source', 'Broncode'),
@@ -65,7 +67,7 @@ export default dictionary(
 	translation('The page you are looking for does not exist or has been moved.', 'De pagina die je zoekt bestaat niet of is verplaatst.'),
 	translation('← Back to home', '← Terug naar home'),
 
-	// Rules page (content/rules.mts)
+	// Home and how-to-play pages (content/home.mts, content/how-to-play.mts)
 	translation('Start a new game', 'Start een nieuw spel'),
 
 	// Game page (game/game.menu-bridge.mts)

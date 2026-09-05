@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 import { href } from '@rooted/router'
 
-import { AccessibilityRoute, RulesRoute } from '../../content/_routes.mts'
+import { AccessibilityRoute, HowToPlayRoute } from '../../content/_routes.mts'
 import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
 import { newGameDisabledStore, undoDisabledStore } from '../stores/gameStateStore.mts'
@@ -98,11 +98,13 @@ export const MenuContent = component<MenuContentOptions>({
 			label: localization.text`About`,
 			rightHint: localization.text`Help & links`
 		})
-		const rulesRow = create(MenuRow, {
-			label: localization.text`Rules`,
-			hint: localization.text`How to play`,
+		const howToPlayRow = create(MenuRow, {
+			label: localization.text`How to play`,
+			hint: localization.text`Rules and scoring`,
 			variant: 'link',
-			href: href.for(RulesRoute, { locale: localization.currentLocale }),
+			href: href.for(HowToPlayRoute, {
+				locale: localization.currentLocale
+			}),
 			control: create(Icon, {
 				source: chevronIcon,
 			}),
@@ -133,7 +135,7 @@ export const MenuContent = component<MenuContentOptions>({
 			children: [
 				settingsSection, themeRow, languageRow, screenLockRow,
 				gameSection, newGameRow, undoRow,
-				aboutSection, rulesRow, accessibilityRow, sourceRow,
+				aboutSection, howToPlayRow, accessibilityRow, sourceRow,
 			],
 		}))
 	},

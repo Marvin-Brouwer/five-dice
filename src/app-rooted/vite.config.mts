@@ -13,7 +13,7 @@ export default rootedManifest({
 		url: packageJson.homepage,
 		name: 'Five dice',
 		short_name: '5-dice',
-		description: 'A Yahtzee-style score-pad PWA',
+		description: 'A score-pad PWA for a game of five dice',
 		theme_color: '#303030',
 		background_color: '#f4f4f4',
 		display: 'standalone',

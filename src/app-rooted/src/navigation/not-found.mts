@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
-import { RulesRoute } from '../content/_routes.mts'
+import { HomeRoute } from '../content/_routes.mts'
 
 import styles from './not-found.css'
 
@@ -23,7 +23,7 @@ export const NotFoundPage = component({
 						create(Link, {
 							// Forced to English: this fallback only fires for URLs
 							// that don't carry a recognized locale segment at all.
-							href: href.for(RulesRoute, {
+							href: href.for(HomeRoute, {
 								locale: 'en'
 							}),
 							classes: styles.link,

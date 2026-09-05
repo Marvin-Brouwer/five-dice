@@ -1,0 +1,105 @@
+/* Claims the full height <main> lays out for it (see the `main:has(…)` rule in
+   index.global.css) and centres the card in it. `safe center` keeps a card
+   taller than the viewport from overflowing off the top; the plain `center`
+   above it is the fallback where that keyword is not understood. */
+.page {
+	flex: 1;
+	width: 100%;
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+	/* Symmetric, so the card lands optically centred rather than nudged up. */
+	padding-block: var(--space-4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	justify-content: safe center;
+}
+
+/* The landing page is one PaperCard — the same sheet the score card is built
+   from — with the pitch inside its ruled frame.
+
+   Everything below the dice shares one measure: the copy and the buttons are
+   the same width and hang off the same two edges, which is what keeps a
+   left-aligned block from reading as ragged. Change it in one place. */
+.hero {
+	/* 22rem, not 20: it is the narrowest measure where the lead's hand-set
+	   break in home.*.md lands where it was written instead of wrapping again. */
+	--hero-measure: 22rem;
+	padding: clamp(var(--space-5), 6vw, var(--space-7)) var(--space-4);
+}
+
+/* ------------------------------------------------------------- Hero copy */
+/* The dice and the wordmark above this are DiceHero, shared with the language
+   picker. Every text block sits in the shared measure; line breaks come from
+   the markdown, so nothing here second-guesses them. */
+.hero p {
+	max-width: var(--hero-measure);
+	margin-inline: auto;
+}
+
+/* The opening line reads as a lead — same face as the rest, one size up.
+   :not(.actions) keeps the button row — also a <p> — out of it. */
+.hero p:first-of-type:not(.actions) {
+	font-size: var(--font-size-lg);
+	line-height: 1.4;
+	margin-top: var(--space-5);
+}
+
+.hero p + p {
+	color: var(--color-text-secondary);
+	margin-top: var(--space-4);
+}
+
+/* ---------------------------------------------------------------- Actions */
+/* Stacked and equal width, the way culture-select lists its locales — on the
+   same measure as the copy above them. */
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	max-width: var(--hero-measure);
+	margin: var(--space-6) auto 0;
+}
+
+.cta, .cta-secondary {
+	display: block;
+	text-align: center;
+	padding: var(--space-2) var(--space-4);
+	border-radius: var(--radius-md);
+	text-decoration: none;
+	font-weight: 600;
+	transition: transform 0.12s ease, filter 0.12s ease, border-color 0.12s ease;
+}
+
+.cta {
+	background: var(--color-primary);
+	color: var(--color-primary-contrast);
+	border: 1px solid var(--color-primary);
+}
+
+.cta-secondary {
+	background: transparent;
+	color: var(--color-accent);
+	border: 1px solid var(--color-border);
+}
+
+.cta:hover, .cta:focus-visible,
+.cta-secondary:hover, .cta-secondary:focus-visible {
+	filter: brightness(1.1);
+	transform: translateY(-1px);
+}
+
+.cta-secondary:hover, .cta-secondary:focus-visible {
+	border-color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cta, .cta-secondary {
+		transition: none;
+	}
+
+	.cta:hover, .cta:focus-visible,
+	.cta-secondary:hover, .cta-secondary:focus-visible {
+		transform: none;
+	}
+}

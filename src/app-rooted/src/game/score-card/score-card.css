@@ -1,25 +1,12 @@
-.card {
-	background: var(--background-surface);
-	background-size: var(--background-surface-size);
-	background-repeat: repeat;
-	border-radius: 0;
-	border: 0;
-	box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
-	padding: 10px;
-	display: block;
-	container-type: inline-size;
-	position: relative;
-
-	--dash-width: calc(100cqi - 32px);
-}
-
+/* The paper sheet and its ink rule come from PaperCard; everything below
+   lives inside that frame. `100cqi` still means the sheet's width — PaperCard
+   is the container-query container. */
 .card-inner {
 	--col-roll: 150px;
 	--col-score: calc(3em + var(--space-1));
 	--col-totals-score: calc(var(--col-roll) + var(--col-score));
+	--dash-width: calc(100cqi - 32px);
 	border: 0;
-	outline: 2px solid var(--color-text);
-	outline-offset: -2px;
 	background: transparent;
 	display: flex;
 	flex-direction: column;
@@ -61,41 +48,41 @@
 }
 
 /* ---------------------------------------------------------- Selection state */
-.card[data-selecting="apply"] [data-field] {
+.card-inner[data-selecting="apply"] [data-field] {
 	opacity: 0.5;
 	transition: opacity 0.15s ease, background 0.15s ease;
 }
 
-.card[data-selecting="apply"] [data-field][data-target="valid"],
-.card[data-selecting="discard"] [data-field][data-target="valid"] {
+.card-inner[data-selecting="apply"] [data-field][data-target="valid"],
+.card-inner[data-selecting="discard"] [data-field][data-target="valid"] {
 	opacity: 1;
 	background: var(--color-accent-subtle);
 	box-shadow: inset 3px 0 0 var(--color-accent);
 }
 
-.card[data-selecting="discard"] [data-field] {
+.card-inner[data-selecting="discard"] [data-field] {
 	opacity: 0.5;
 	transition: opacity 0.15s ease, background 0.15s ease;
 }
 
-.card[data-selecting="discard"] [data-field][data-target="discard"] {
+.card-inner[data-selecting="discard"] [data-field][data-target="discard"] {
 	opacity: 1;
 	background: color-mix(in srgb, var(--color-warning) 12%, transparent);
 	box-shadow: inset 3px 0 0 var(--color-warning);
 }
 
-.card[data-selecting] [data-field][data-hover="true"] {
+.card-inner[data-selecting] [data-field][data-hover="true"] {
 	background: color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 
-.card[data-selecting="discard"] [data-field][data-hover="true"] {
+.card-inner[data-selecting="discard"] [data-field][data-hover="true"] {
 	background: color-mix(in srgb, var(--color-warning) 20%, transparent);
 }
 
 /* A pinned preview is not a selectable option, so the dimming above would
    hide it -- but it is the whole point of the step, so keep it at full
    contrast. */
-.card[data-selecting] [data-field][data-preview="pinned"] {
+.card-inner[data-selecting] [data-field][data-preview="pinned"] {
 	opacity: 1;
 }
 
@@ -103,6 +90,6 @@
    the hover and the committed result come from one code path. Dimming it
    marks it as provisional: between the 0.5 of a row that isn't an option and
    the 1 of an active target. */
-.card[data-selecting] [data-field][data-preview="discard"] {
+.card-inner[data-selecting] [data-field][data-preview="discard"] {
 	opacity: 0.7;
 }

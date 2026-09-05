@@ -16,7 +16,7 @@ type Round = {
  *
  * Part one lands on exactly 63 — the bonus threshold — so this also pins that
  * boundary. Flush is taken once, at round 12, so this game never reaches the
- * flush-discard step; yahtzee-game.e2e.mts covers that.
+ * flush-discard step; flush-game.e2e.mts covers that.
  */
 const rounds: Round[] = [
 	{ field: 'aces', dice: [1, 1, 1, 2, 3], score: '3' },
