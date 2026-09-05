@@ -69,6 +69,15 @@ export default dictionary(
 
 	// Home and how-to-play pages (content/home.mts, content/how-to-play.mts)
 	translation('Start a new game', 'Start een nieuw spel'),
+	translation('Roll again', 'Opnieuw gooien'),
+	translation(`Roll${NewLine}again`, `Gooi${NewLine}opnieuw`),
+	translation('Example rolls and scores', 'Voorbeeldworpen en scores'),
+	translation('Tap this to enter a roll', 'Tik hierop om een worp in te voeren'),
+	translation('Then key in the dice you rolled', 'Voer daarna de dobbelstenen in die je gooide'),
+	translation('A discarded row', 'Een vervallen rij'),
+	translation('From the menu, any time', 'Via het menu, wanneer je wilt'),
+	translation('Ready for the next one', 'Klaar voor de volgende'),
+	translation('End of the instructions', 'Einde van de uitleg'),
 
 	// Game page (game/game.menu-bridge.mts)
 	translation('You have a scorepad with changes, are you sure you want to reload the page?', 'Je hebt een scorekaart met wijzigingen, weet je zeker dat je de pagina wilt herladen?'),

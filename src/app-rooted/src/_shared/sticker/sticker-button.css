@@ -1,0 +1,64 @@
+/* A paper sticker: round, slightly rotated, thick paper border, dropping a
+   soft shadow so it reads as physical. Placement is the owner's business —
+   the score card hangs one off its corner, the guide shows one in a figure. */
+.sticker {
+	width: 64px;
+	height: 64px;
+	padding: 0;
+	border-radius: 50%;
+	border: 3px solid var(--color-white);
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	line-height: 1.15;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1px;
+	transform: rotate(-8deg);
+	box-shadow:
+		0 3px 6px rgba(28, 29, 31, 0.28),
+		0 1px 0 rgba(255, 255, 255, 0.35) inset;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sticker[hidden] {
+	display: none;
+}
+
+.sticker:hover,
+.sticker:focus-visible {
+	transform: rotate(-8deg) scale(1.05);
+	box-shadow:
+		0 6px 12px rgba(28, 29, 31, 0.35),
+		0 1px 0 rgba(255, 255, 255, 0.35) inset;
+	outline: none;
+}
+
+.sticker:active {
+	transform: rotate(-8deg) scale(0.97);
+}
+
+.sticker:disabled {
+	background: var(--color-border);
+	color: var(--color-text-muted);
+	cursor: not-allowed;
+	transform: rotate(-8deg);
+}
+
+.sticker-label {
+	white-space: pre-wrap;
+	text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sticker {
+		transition: none;
+	}
+}

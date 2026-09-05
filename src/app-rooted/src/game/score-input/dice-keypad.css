@@ -22,9 +22,12 @@
 	border-radius: 6px;
 }
 
+/* Keys are a fixed size, so the row has a hard minimum width. Callers with
+   less room than the modal has can set --keypad-die-size to shrink them —
+   the guide shows the keypad inside a figure on a narrow page. */
 .key-die {
 	display: inline-flex;
-	--dice-size: 2.5em;
+	--dice-size: var(--keypad-die-size, 2.5em);
 	width: var(--dice-size);
 	height: var(--dice-size);
 }

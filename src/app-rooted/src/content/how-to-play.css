@@ -1,35 +1,220 @@
 .page {
 	max-width: var(--max-content-width);
+	/* No vertical margin at all: the paper sits the same distance from
+	   every page edge, and level with the score pad, which has none. */
 	margin: 0 auto;
 }
 
-.page h1 {
-	font-family: var(--font-family-display);
+/* Every class in this file is `guide-` prefixed. A component's stylesheet is
+   scoped to its host's subtree, not to the elements it created, so a bare
+   `.sheet` or `.row` here would also restyle the paper card, the score
+   sections and the menu rows mounted inside this page. */
+.guide {
+	display: flex;
+	flex-direction: column;
+}
+
+/* -------------------------------------------------------------------- Bands
+   The markdown's own headings, dressed as the black bands the score card
+   uses between its parts. Values taken from .card-header / .band-title in
+   game/score-card/score-card.css and score-table.css — copied rather than
+   shared because over there the bands are <tr><td> inside a table, where a
+   component host cannot sit (see docs/table-components-in-rooted.md).
+
+   They break out of the prose padding so they reach both edges of the paper,
+   the way the card's own bands do. */
+.guide-prose :is(h1, h2), .guide-end {
+	background: var(--color-divider-strong);
+	color: var(--color-surface);
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	line-height: 1;
+	padding: 10px 12px;
+	margin: var(--space-5) calc(-1 * var(--space-4)) 0;
+}
+
+.guide-prose:first-child :is(h1, h2):first-child {
 	margin-top: 0;
 }
 
-.page h2 {
-	margin-top: var(--space-5);
+/* -------------------------------------------------------------------- Prose */
+.guide-prose {
+	padding-inline: var(--space-4);
 }
 
-.cta {
-	display: inline-block;
+.guide-prose p {
+	margin: var(--space-4) 0;
+}
+
+.guide-prose p:last-child {
+	margin-bottom: var(--space-5);
+}
+
+/* ------------------------------------------------------------ Example table
+   The real score card, filled in. It needs the column widths the card sets on
+   .card-inner, which are scoped to the card's own component. */
+.guide-example {
+	/* Room above the table for the sticker to sit in, clear of the band. */
+	margin-top: var(--space-7);
+	position: relative;
+	display: block;
+}
+
+.guide-table {
+	--col-roll: 150px;
+	--col-score: calc(3em + var(--space-1));
+	--col-totals-score: calc(var(--col-roll) + var(--col-score));
+	display: flex;
+	flex-direction: column;
+}
+
+/* Hangs off the table's corner, the way Enter score hangs off the card's. */
+.guide-roll-again {
+	position: absolute;
+	/* Sitting on the roll column's title bar rather than above it, the
+	   way the card's own sticker laps over its header. Kept left of the
+	   score column so it covers no label. */
+	bottom: calc(100% - 14px);
+	right: calc(var(--col-score) + var(--space-3));
+	z-index: 2;
+}
+
+/* ----------------------------------------------------------------- Figures
+   Real pieces of the app, shown rather than described. */
+.guide-figures {
+	display: flex;
+	flex-wrap: wrap;
+	/* Stretch, so a pair of figures shares a baseline for their captions
+	   rather than each ending wherever its subject happens to. */
+	align-items: stretch;
+	gap: var(--space-5);
+	padding: 0 var(--space-4) var(--space-5);
+}
+
+.guide-figure {
+	margin: 0;
+	/* Wide enough for the keypad once its keys shrink; under that the
+	   pair stacks rather than squashing one of them. */
+	flex: 1 1 15rem;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+}
+
+/* The sticker normally hangs over a corner, so shown on its own it needs
+   room of its own. */
+.guide-figure-subject {
+	/* A component host is display:contents, so the real boxes — a menu
+	   row's grid, the keypad's key row — are this box's own children and
+	   fill it as blocks. Anything centred says so for itself below. */
+	display: block;
+	--keypad-die-size: 1.5em;
+	flex: 1;
+	padding: var(--space-3);
+	border: 1px dashed var(--color-border);
+	border-radius: var(--radius-sm);
+	background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+}
+
+
+.guide-figure-caption {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+	text-align: center;
+}
+
+
+/* --------------------------------------------------------------------- CTA */
+.guide-actions {
+	margin: 0;
+	padding: 0 var(--space-4) var(--space-6);
+	display: flex;
+	justify-content: center;
+}
+
+.guide-cta {
+	display: block;
+	width: 100%;
+	max-width: 22rem;
+	text-align: center;
 	background: var(--color-primary);
 	color: var(--color-primary-contrast);
+	border: 1px solid var(--color-primary);
 	padding: var(--space-2) var(--space-4);
 	border-radius: var(--radius-md);
 	text-decoration: none;
 	font-weight: 600;
+	transition: transform 0.12s ease, filter 0.12s ease;
 }
 
-.cta:hover, .cta:focus-visible {
+.guide-cta:hover, .guide-cta:focus-visible {
 	filter: brightness(1.1);
+	transform: translateY(-1px);
 }
 
-.score-options {
-	padding-left: var(--space-5);
+@media (prefers-reduced-motion: reduce) {
+	.guide-cta {
+		transition: none;
+	}
+
+	.guide-cta:hover, .guide-cta:focus-visible {
+		transform: none;
+	}
 }
 
-.score-options li {
-	margin-bottom: var(--space-2);
+/* ------------------------------------------------------------ Closing rule
+   An empty band between the last chapter and the call to action: the page's
+   full stop. Its label is the only thing it says. */
+.guide-end {
+	border: 0;
+	height: 3em;
+	margin: 0 0 var(--space-5);
+	padding: 0;
+}
+
+/* The table runs straight into the next band, no paper between them — the
+   same join the score card makes between its own parts. */
+.guide-example + .guide-prose :is(h1, h2):first-child {
+	margin-top: 0;
+}
+
+/* The sticker is round and fixed-size, so it centres rather than fills. */
+.guide-figure-badge {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 76px;
+}
+
+/* The keypad's keys grow to fill their row — right in the modal it was built
+   for, sparse in a figure. Hugging them keeps the keys their own size and
+   centres the set. */
+.guide-keypad {
+	width: fit-content;
+	margin-inline: auto;
+	max-width: 100%;
+}
+
+/* The discarded-row illustration is a real section of the score card, so it
+   needs what .card-inner normally provides: the ink frame, the column widths,
+   and a query container for the slash, which is sized in `cqi` against the
+   card it is drawn on. Percentages here, not the card's fixed 150px, because
+   the figure is a fraction of the card's width. */
+.guide-figure-card {
+	--col-roll: 28%;
+	--col-score: 22%;
+	--col-totals-score: 50%;
+	--dash-width: calc(100cqi - 32px);
+	container-type: inline-size;
+	outline: 2px solid var(--color-text);
+	outline-offset: -2px;
+	background: transparent;
+	overflow: hidden;
 }
