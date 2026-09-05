@@ -204,7 +204,16 @@
 
 /* --------------------------------------------------------------- Score cell
    Line-height locks the box height so filled Caveat numerals don't push
-   the row taller than an empty ".". */
+   the row taller than an empty ".".
+
+   `vertical-align: middle` locks the row height on top of that. Left on the
+   default baseline, this inline-flex box hands the line box a baseline taken
+   from its own content — the 16px mono ".", the 22px Caveat numeral, or, when
+   a discarded row empties the cell, a synthesized one at the bottom edge. Each
+   sits differently against the cell's strut, so the row grew and shrank by a
+   pixel or two as a preview swapped the content. Aligning to the middle makes
+   the box's placement depend on the parent font alone, exactly as `.roll-row`
+   already does for the roll cell. */
 .score-value {
 	display: inline-flex;
 	align-items: center;
@@ -213,6 +222,7 @@
 	height: 22px;
 	line-height: 1;
 	text-align: right;
+	vertical-align: middle;
 	font-variant-numeric: tabular-nums;
 }
 
