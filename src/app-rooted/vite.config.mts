@@ -2,6 +2,7 @@ import { rootedManifest } from '@rooted/application'
 import { localizationSeo } from '@rooted/localization/vite'
 import { rootedMarkdown } from '@rooted/markdown/vite'
 import { generateRouteManifest } from '@rooted/router/manifest'
+import { routeSeoPlugin } from '@rooted/seo/router'
 import { defineConfig, mergeConfig } from 'vite'
 
 import packageJson from './package.json' with { type: 'json' }
@@ -26,6 +27,7 @@ const baseConfig = rootedManifest({
 			routeManifestPath: './src/_routes.g.mts',
 		}),
 		localizationSeo(),
+		routeSeoPlugin(),
 		rootedMarkdown(),
 	],
 })
