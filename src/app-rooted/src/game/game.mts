@@ -1,5 +1,7 @@
 import { component } from '@rooted/components'
 
+import { Doormat } from '../_layout/doormat/doormat.mts'
+
 import { createGameContext } from './_logic/game-context.mts'
 import { wireGameCelebration } from './game.celebration.mts'
 import { wireGameMenuBridge } from './game.menu-bridge.mts'
@@ -34,7 +36,8 @@ export const Game = component({
 						game,
 					}),
 				],
-			})
+			}),
+			create(Doormat),
 		)
 	},
 })

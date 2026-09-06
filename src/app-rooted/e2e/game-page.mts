@@ -42,12 +42,17 @@ export class GamePage {
 		return this.page.locator('#score-card button.sticker')
 	}
 
+	/**
+	 * Scoped to the keypad's own dialog. Every picker is a `<dialog>` too, so
+	 * a bare `dialog button.action-primary` matches all three primaries.
+	 */
 	private get keypadConfirm(): Locator {
-		return this.page.locator('dialog button.action-primary')
+		return this.page.locator('dialog.sheet-keypad button.action-primary')
 	}
 
+	/** The row picker and the flush picker are full-viewport modal dialogs. */
 	private get openOverlay(): Locator {
-		return this.page.locator('section[role="dialog"]:not([hidden])')
+		return this.page.locator('dialog.layer[open]')
 	}
 
 	private rowLocator(field: ScoreField): Locator {

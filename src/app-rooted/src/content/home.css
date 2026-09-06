@@ -1,19 +1,8 @@
-/* Claims the full height <main> lays out for it (see the `main:has(…)` rule in
-   index.global.css) and centres the card in it. `safe center` keeps a card
-   taller than the viewport from overflowing off the top; the plain `center`
-   above it is the fallback where that keyword is not understood. */
-.page {
-	flex: 1;
-	width: 100%;
-	max-width: var(--max-content-width);
-	margin: 0 auto;
-	/* Symmetric, so the card lands optically centred rather than nudged up. */
-	padding-block: var(--space-4);
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	justify-content: safe center;
-}
+/* The landing page used to centre its card in the viewport. It sits at the
+   top like every other content page now: with the doormat under it there is
+   enough on the page that the card no longer floats in empty space, and the
+   three prose pages start at the same height as each other and as the score
+   pad. */
 
 /* The landing page is one PaperCard — the same sheet the score card is built
    from — with the pitch inside its ruled frame.

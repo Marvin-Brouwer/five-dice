@@ -1,6 +1,7 @@
 import { component } from '@rooted/components'
 import { Markdown } from '@rooted/markdown'
 
+import { ContentCard } from '../_layout/content-card.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 
 import styles from './accessibility.css'
@@ -15,11 +16,15 @@ export const Accessibility = component({
 			nl: () => import('./accessibility.nl.md'),
 		})
 
-		append(element('article', {
-			classes: styles.page,
-			children: create(Markdown, {
-				source
-			}),
-		}))
+		append(
+			create(ContentCard, {
+				children: element('div', {
+					classes: styles.statement,
+					children: create(Markdown, {
+						source
+					}),
+				}),
+			})
+		)
 	},
 })

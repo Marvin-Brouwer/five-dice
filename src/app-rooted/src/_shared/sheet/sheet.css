@@ -7,6 +7,21 @@
    <div> inside its own layer) -- see sheet.mts for why those cannot use the
    same element. */
 .sheet {
+	/* How much of the viewport a picker sheet stands in.
+
+	   Declared on the shared base rather than on .sheet-picker so it reaches
+	   every sheet by inheritance: the dice keypad reads it off its own
+	   element when it scrolls the selectable rows into view, because what
+	   those rows have to clear is the *picker* that will be showing when they
+	   are chosen, not the much taller keypad the scroll happens under.
+
+	   .sheet-picker enforces it as a min-height below, so this is the height
+	   rather than a note about it. A sheet whose content outgrows it — a
+	   title wrapping on a very narrow screen — leaves the keypad reserving
+	   slightly too little, which lands the band a few pixels low. That is a
+	   nudge the user can scroll away from, not a lock, so it stays benign. */
+	--sheet-picker-reserve: 132px;
+
 	--color-surface: var(--color-menu-surface);
 	--color-surface-elevated: var(--color-menu-surface);
 	--color-text: var(--color-menu-text);
@@ -54,6 +69,11 @@
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+	/* Holds this rule to the height the keypad reserves for it, so the two
+	   cannot drift apart. A no-op at present -- padding, title and action row
+	   already come to exactly this -- and it only ever stops the sheet
+	   getting shorter than what was reserved. */
+	min-height: var(--sheet-picker-reserve);
 }
 
 .handle {

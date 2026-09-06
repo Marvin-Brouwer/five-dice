@@ -4,6 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"homepage": "https://marvin-brouwer.github.io/five-dice/",
+	"license": "Apache-2.0",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",

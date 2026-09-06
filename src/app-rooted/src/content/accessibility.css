@@ -1,13 +1,19 @@
-.page {
-	max-width: var(--max-content-width);
-	margin: 0 auto;
+/* The statement now sits on paper rather than bare on the cardboard, so it
+   needs the same inset from the ruled frame the guide's prose has, plus room
+   at the top and bottom that `padding-inline` alone would not give it. */
+.statement {
+	padding: var(--space-5) var(--space-4);
 }
 
-.page h1 {
+.statement h1 {
 	font-family: var(--font-family-display);
 	margin-top: 0;
 }
 
-.page h2 {
+.statement h2 {
 	margin-top: var(--space-5);
+}
+
+.statement p:last-child {
+	margin-bottom: 0;
 }

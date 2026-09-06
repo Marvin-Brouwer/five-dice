@@ -37,12 +37,12 @@ main {
 	padding: var(--page-padding);
 }
 
-/* The two landing pages centre their card in the leftover height. <main> is a
+/* The language picker centres its card in the leftover height. <main> is a
    stretched flex item, so its height is not a percentage anything inside can
    resolve against — laying it out as a flex column is what lets the page
    below claim that height with `flex: 1`. Every other page keeps plain block
    layout. */
-main:has([r-component="home-page"], [r-component="culture-select-page"]) {
+main:has([r-component="culture-select-page"]) {
 	display: flex;
 	flex-direction: column;
 }

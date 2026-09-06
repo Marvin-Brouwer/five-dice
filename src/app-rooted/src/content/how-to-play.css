@@ -1,11 +1,6 @@
-.page {
-	max-width: var(--max-content-width);
-	/* No vertical margin at all: the paper sits the same distance from
-	   every page edge, and level with the score pad, which has none. */
-	margin: 0 auto;
-}
+/* The page wrapper and its measure now come from ContentCard.
 
-/* Every class in this file is `guide-` prefixed. A component's stylesheet is
+   Every class in this file is `guide-` prefixed. A component's stylesheet is
    scoped to its host's subtree, not to the elements it created, so a bare
    `.sheet` or `.row` here would also restyle the paper card, the score
    sections and the menu rows mounted inside this page. */

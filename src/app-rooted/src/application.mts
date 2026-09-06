@@ -15,6 +15,7 @@ import './_shared/stores/themeStore.mts'
 // Services that translate stores into runtime effects (theme resolution, wake lock)
 import './_shared/services/theme-sensor.mts'
 import './_shared/services/wake-lock.mts'
+import './_shared/services/install-prompt.mts'
 
 import packageJson from '../package.json' with { type: 'json' }
 

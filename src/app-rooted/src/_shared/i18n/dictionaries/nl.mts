@@ -168,4 +168,20 @@ export default dictionary(
 	// current call sites (all pass an explicit ariaLabel), kept for API correctness.
 	translation('Empty die', 'Lege dobbelsteen'),
 	translation('Die showing {value}', 'Dobbelsteen toont {value}'),
+
+	// Doormat (_layout/doormat.mts). The brand name and the SPDX licence id in
+	// the meta line are deliberately not translated.
+	translation('Invite your friends', 'Nodig je vrienden uit'),
+	translation('Play the game together', 'Speel het spel samen'),
+	translation('Play a game of five dice with me.', 'Speel een potje five dice met mij.'),
+	translation('Link copied', 'Link gekopieerd'),
+	translation('Link copied to clipboard', 'Link naar klembord gekopieerd'),
+	translation('Site links', 'Sitelinks'),
+	translation('Accessibility statement', 'Toegankelijkheidsverklaring'),
+	translation('Report accessibility issues', 'Toegankelijkheidsproblemen melden'),
+	translation('View on GitHub', 'Bekijk op GitHub'),
+	translation('Report a bug', 'Bug melden'),
+	translation('Add to home screen', 'Toevoegen aan beginscherm'),
+	translation('Back to top', 'Terug naar boven'),
+	translation('{label} (opens in a new tab)', '{label} (opent in een nieuw tabblad)'),
 )

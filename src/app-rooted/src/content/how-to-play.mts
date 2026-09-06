@@ -13,10 +13,10 @@ import { ScoreSection } from '../game/score-card/score-section.mts'
 import { createSelectionStore } from '../game/score-card/selection-store.mts'
 import { DiceKeypad } from '../game/score-input/dice-keypad.mts'
 import { createDiceStore } from '../game/score-input/dice-state.mts'
+import { ContentCard } from '../_layout/content-card.mts'
 import { Icon } from '../_shared/icon/icon.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 import { MenuRow } from '../_shared/menu/menu-row.mts'
-import { PaperCard } from '../_shared/paper-card/paper-card.mts'
 import { StickerButton } from '../_shared/sticker/sticker-button.mts'
 
 import { examplePad } from './how-to-play.examples.ts'
@@ -215,134 +215,131 @@ export const HowToPlay = component({
 		const keypadState = createDiceStore()
 
 		append(
-			element('article', {
-				classes: styles.page,
-				children: create(PaperCard, {
-					children: element('div', {
-						classes: styles.guide,
-						children: [
-							proseBlock(prose.intro),
-							element('div', {
-								classes: styles.guideFigures,
-								children: [
-									element('figure', {
-										classes: styles.guideFigure,
-										children: [
-											element('div', {
-												classes: [styles.guideFigureSubject, styles.guideFigureBadge],
-												inert: true,
-												aria: {
-													hidden: 'true'
-												},
-												children: create(StickerButton, {
-													label: localization.text`Enter\nscore`,
-												}),
+			create(ContentCard, {
+				children: element('div', {
+					classes: styles.guide,
+					children: [
+						proseBlock(prose.intro),
+						element('div', {
+							classes: styles.guideFigures,
+							children: [
+								element('figure', {
+									classes: styles.guideFigure,
+									children: [
+										element('div', {
+											classes: [styles.guideFigureSubject, styles.guideFigureBadge],
+											inert: true,
+											aria: {
+												hidden: 'true'
+											},
+											children: create(StickerButton, {
+												label: localization.text`Enter\nscore`,
 											}),
-											element('figcaption', {
-												classes: styles.guideFigureCaption,
-												textContent: localization.text`Tap this to enter a roll`,
-											}),
-										],
-									}),
-									element('figure', {
-										classes: styles.guideFigure,
-										children: [
-											element('div', {
-												classes: styles.guideFigureSubject,
-												inert: true,
-												aria: {
-													hidden: 'true'
-												},
-												// Boxed to its natural width: the keypad's buttons grow to
-												// fill their row, which is right in the modal and sparse
-												// here, so the wrapper hugs them instead of stretching.
-												children: element('div', {
-													classes: styles.guideKeypad,
-													children: create(DiceKeypad, {
-														state: keypadState,
-													}),
-												}),
-											}),
-											element('figcaption', {
-												classes: styles.guideFigureCaption,
-												textContent: localization.text`Then key in the dice you rolled`,
-											}),
-										],
-									}),
-								],
-							}),
-
-							element('section', {
-								classes: styles.guideExample,
-								aria: {
-									label: localization.text`Example rolls and scores`
-								},
-								children: table,
-							}),
-
-							proseBlock(prose.discard),
-							// Boxed like the keypad is: the illustration wrapper stays, and
-							// the ruled card frame sits inside it.
-							figure(localization.text`A discarded row`,
-								element('div', {
-									classes: styles.guideFigureCard,
-									children: create(ScoreSection, {
-										store: discarded,
-										selection,
-										rows: createRowRegistry(),
-										title: localization.text`Part two`,
-										fields: ['chance'],
-										withDieIcon: false,
-									}),
-								})
-							),
-
-							proseBlock(prose.flush),
-
-							proseBlock(prose.undo),
-							figure(localization.text`From the menu, any time`,
-								create(MenuRow, {
-									label: localization.text`Undo last turn`,
-									hint: localization.text`Revert the last committed score`,
-									control: create(Icon, {
-										source: undoIcon,
-									}),
-								})
-							),
-
-							proseBlock(prose.ending),
-							figure(localization.text`Ready for the next one`,
-								create(MenuRow, {
-									label: localization.text`New game`,
-									hint: localization.text`Reset the score pad`,
-									control: create(Icon, {
-										source: refreshIcon,
-									}),
-								})
-							),
-
-							// Closes the instructions before the call to action, the way
-							// the card's bands close a section. Empty on purpose: it is a
-							// rule, not a heading, so it carries its meaning as a label.
-							element('hr', {
-								classes: styles.guideEnd,
-								aria: {
-									label: localization.text`End of the instructions`
-								},
-							}),
-
-							element('p', {
-								classes: styles.guideActions,
-								children: create(Link, {
-									href: href.for(ScoreCardRoute, {
-										locale: localization.currentLocale
-									}),
-									classes: styles.guideCta,
-									children: localization.text`Start a new game`,
+										}),
+										element('figcaption', {
+											classes: styles.guideFigureCaption,
+											textContent: localization.text`Tap this to enter a roll`,
+										}),
+									],
 								}),
+								element('figure', {
+									classes: styles.guideFigure,
+									children: [
+										element('div', {
+											classes: styles.guideFigureSubject,
+											inert: true,
+											aria: {
+												hidden: 'true'
+											},
+											// Boxed to its natural width: the keypad's buttons grow to
+											// fill their row, which is right in the modal and sparse
+											// here, so the wrapper hugs them instead of stretching.
+											children: element('div', {
+												classes: styles.guideKeypad,
+												children: create(DiceKeypad, {
+													state: keypadState,
+												}),
+											}),
+										}),
+										element('figcaption', {
+											classes: styles.guideFigureCaption,
+											textContent: localization.text`Then key in the dice you rolled`,
+										}),
+									],
+								}),
+							],
+						}),
+
+						element('section', {
+							classes: styles.guideExample,
+							aria: {
+								label: localization.text`Example rolls and scores`
+							},
+							children: table,
+						}),
+
+						proseBlock(prose.discard),
+						// Boxed like the keypad is: the illustration wrapper stays, and
+						// the ruled card frame sits inside it.
+						figure(localization.text`A discarded row`,
+							element('div', {
+								classes: styles.guideFigureCard,
+								children: create(ScoreSection, {
+									store: discarded,
+									selection,
+									rows: createRowRegistry(),
+									title: localization.text`Part two`,
+									fields: ['chance'],
+									withDieIcon: false,
+								}),
+							})
+						),
+
+						proseBlock(prose.flush),
+
+						proseBlock(prose.undo),
+						figure(localization.text`From the menu, any time`,
+							create(MenuRow, {
+								label: localization.text`Undo last turn`,
+								hint: localization.text`Revert the last committed score`,
+								control: create(Icon, {
+									source: undoIcon,
+								}),
+							})
+						),
+
+						proseBlock(prose.ending),
+						figure(localization.text`Ready for the next one`,
+							create(MenuRow, {
+								label: localization.text`New game`,
+								hint: localization.text`Reset the score pad`,
+								control: create(Icon, {
+									source: refreshIcon,
+								}),
+							})
+						),
+
+						// Closes the instructions before the call to action, the way
+						// the card's bands close a section. Empty on purpose: it is a
+						// rule, not a heading, so it carries its meaning as a label.
+						element('hr', {
+							classes: styles.guideEnd,
+							aria: {
+								label: localization.text`End of the instructions`
+							},
+						}),
+
+						element('p', {
+							classes: styles.guideActions,
+							children: create(Link, {
+								href: href.for(ScoreCardRoute, {
+									locale: localization.currentLocale
+								}),
+								classes: styles.guideCta,
+								children: localization.text`Start a new game`,
 							}),
-						],
-					}),
+						}),
+					],
 				}),
 			})
 		)

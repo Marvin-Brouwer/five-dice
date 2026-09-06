@@ -90,19 +90,23 @@ export const RowOverlay = component<RowOverlayOptions>({
 			actions: [cancelButton, confirmButton],
 		})
 
-		const backdrop = element('div', {
-			classes: styles.backdrop,
-		})
-
-		const layer = element('section', {
+		/**
+		 * A native modal dialog, so the focus trap, the background's
+		 * inertness, the top layer and Escape all come from the platform
+		 * rather than being re-implemented here.
+		 *
+		 * The hit targets are children of this dialog, not of the score card,
+		 * so putting it in the top layer lifts them with it — they still sit
+		 * at the rows' viewport coordinates, now above an inert card. The
+		 * backdrop is `::backdrop`, which the top layer already paints in the
+		 * right place.
+		 */
+		const layer = element('dialog', {
 			classes: styles.layer,
-			hidden: true,
 			aria: {
 				labelledBy: titleId
 			},
-			role: 'dialog',
 			children: [
-				backdrop,
 				fieldset,
 				sheet
 			],
@@ -220,18 +224,44 @@ export const RowOverlay = component<RowOverlayOptions>({
 			})
 		}
 
+		/**
+		 * Set while this overlay closes its own dialog for a step change, so
+		 * the `close` handler can tell that apart from the user dismissing it
+		 * with Escape.
+		 *
+		 * The handler is what clears it, and that is load-bearing: `close()`
+		 * *queues* the close event rather than firing it inline, so resetting
+		 * the flag on the line after `close()` would always lose the race and
+		 * make every step change look like a dismissal.
+		 */
+		let programmaticClose = false
+
+		// Escape is the platform's to handle now. It lands here, and takes the
+		// same path as the Back button so cancelling always reaches the caller.
+		layer.addEventListener('close', () => {
+			const dismissed = !programmaticClose
+			programmaticClose = false
+			if (dismissed) onCancel()
+		}, { signal })
+
 		function showOverlay() {
 			buildRadios()
-			layer.hidden = false
+			if (!layer.open) layer.showModal()
 			repositionLabels()
 			resizeObserver = new ResizeObserver(() => repositionLabels())
 			resizeObserver.observe(document.documentElement)
 			syncConfirm()
+			// showModal autofocuses the first focusable child, which is already
+			// this radio -- asserted anyway, because that resolution differs
+			// between browsers.
 			queueMicrotask(() => activeRadios[0]?.focus())
 		}
 
 		function hideOverlay() {
-			layer.hidden = true
+			if (layer.open) {
+				programmaticClose = true
+				layer.close()
+			}
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
 			// Only clear the selection if this overlay still owns it. Both
@@ -245,6 +275,10 @@ export const RowOverlay = component<RowOverlayOptions>({
 			activeLabels = []
 			confirmButton.disabled = true
 		}
+
+		// Before the first syncOpen, because showModal() throws on an element
+		// that is not in the document.
+		append(layer)
 
 		// `flow` fires on every state change, not just this overlay opening,
 		// so track the edge — otherwise moving to the next step would rebuild
@@ -268,18 +302,14 @@ export const RowOverlay = component<RowOverlayOptions>({
 			if (shown) repositionLabels()
 		})
 
+		// Escape is no longer handled here: a modal dialog dismisses itself and
+		// reports it through the `close` listener above.
 		on('document', 'keydown', (event) => {
 			if (!shown) return
-			if (event.key === 'Escape') {
-				event.preventDefault()
-				onCancel()
-			}
-			else if (event.key === 'Enter' && selectedField() !== undefined) {
+			if (event.key === 'Enter' && selectedField() !== undefined) {
 				event.preventDefault()
 				confirmButton.click()
 			}
 		})
-
-		append(layer)
 	},
 })

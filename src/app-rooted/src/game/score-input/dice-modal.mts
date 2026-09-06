@@ -31,6 +31,26 @@ export type DiceModalOptions = {
 const revealMargin = 12
 
 /**
+ * How much of the viewport the row picker's sheet will take.
+ *
+ * `--sheet-picker-reserve` is declared on the shared `.sheet` base in
+ * sheet.css, so it is inherited onto this dialog's own element — no reaching
+ * across to the picker, which is closed and unmeasurable at this point
+ * anyway. Custom properties resolve without layout, which is what makes
+ * reading a hidden component's height possible at all.
+ *
+ * Read at call time rather than cached at module load: one style lookup per
+ * keypad open, and it keeps working if the value ever becomes responsive.
+ * Returns undefined when the property is missing — a stylesheet failing to
+ * load is not a reason to guess a number and scroll the page by it.
+ */
+function pickerReserve(sheet: HTMLElement): number | undefined {
+	const declared = getComputedStyle(sheet).getPropertyValue('--sheet-picker-reserve')
+	const parsed = Number.parseFloat(declared)
+	return Number.isFinite(parsed) ? parsed : undefined
+}
+
+/**
  * The roll-entry keypad.
  *
  * A dialog shell only: the slots and the keys are their own components, and
@@ -196,29 +216,45 @@ export const DiceModal = component<DiceModalOptions>({
 			shown = open
 			if (open) show()
 			else if (dialog.open) {
-				confirmed = true   // a step change is not a dismissal
+				// A step change is not a dismissal. The flag stays raised until
+				// the next show() clears it: close() *queues* its event rather
+				// than firing it inline, so clearing it here would always lose
+				// the race and make this look like the user pressing Escape.
+				confirmed = true
 				dialog.close()
-				confirmed = false
 			}
 		}
 
 		/**
 		 * Scroll the rows the picker will offer into the strip above the
-		 * sheet, so the next step opens with its hit targets on screen. The
-		 * page stays scrollable behind the dialog, so this is a nudge the user
-		 * can scroll away from, not a lock.
+		 * sheet, so the next step opens with its hit targets on screen —
+		 * and only when they would not be. A viewport the band already fits
+		 * in does not move at all. The page stays scrollable behind the
+		 * dialog, so this is a nudge the user can scroll away from, not a
+		 * lock.
+		 *
+		 * The strip is measured against the *picker's* sheet, not this one.
+		 * The scroll happens while the keypad is up, but what the rows have to
+		 * clear is what will be on screen when they are chosen — and the
+		 * keypad is well over twice the picker's height, so reserving its own
+		 * box scrolled a viewport that already fitted.
 		 */
 		function revealRows() {
 			const span = rowsSpan()
 			if (span === undefined) return
-			const strip = window.innerHeight - dialog.getBoundingClientRect().height
+			const reserve = pickerReserve(dialog)
+			if (reserve === undefined) return
+			const strip = window.innerHeight - reserve
 			if (strip <= revealMargin * 2) return
 			const height = span.bottom - span.top
-			// Centre the band when it fits; otherwise show it from the top and
-			// let the user scroll the rest.
-			const delta = height <= strip - revealMargin * 2
-				? span.top - (strip - height) / 2
-				: span.top - revealMargin
+			const usable = strip - revealMargin * 2
+			// Move only as far as it takes to bring the band inside the strip,
+			// and not at all when it is already there. Anchoring to the top is
+			// for the two cases where that is the best available: the band is
+			// taller than the strip, or it is currently clipped above.
+			const delta = height > usable || span.top < revealMargin
+				? span.top - revealMargin
+				: Math.max(0, span.bottom - (strip - revealMargin))
 			if (Math.abs(delta) < 1) return
 			const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 			window.scrollBy({

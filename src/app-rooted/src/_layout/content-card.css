@@ -1,0 +1,9 @@
+/* The wrapper every prose page shares — was three copies of the same two
+   declarations, one per page. All three start at the top of the page now,
+   so there is nothing left for a caller to vary. */
+.content-page {
+	max-width: var(--max-content-width);
+	/* No vertical margin at all: the paper sits the same distance from every
+	   page edge, and level with the score pad, which has none. */
+	margin: 0 auto;
+}

@@ -3,9 +3,9 @@ import { Markdown } from '@rooted/markdown'
 import { href, Link } from '@rooted/router'
 
 import { ScoreCardRoute } from '../game/_routes.mts'
+import { ContentCard } from '../_layout/content-card.mts'
 import { DiceHero } from '../_shared/dice-hero/dice-hero.mts'
 import { localization } from '../_shared/i18n/localization.mts'
-import { PaperCard } from '../_shared/paper-card/paper-card.mts'
 
 import { HowToPlayRoute } from './_routes.mts'
 
@@ -21,9 +21,8 @@ export const Home = component({
 			nl: () => import('./home.nl.md'),
 		})
 
-		append(element('article', {
-			classes: styles.page,
-			children: create(PaperCard, {
+		append(
+			create(ContentCard, {
 				children: element('div', {
 					classes: styles.hero,
 					children: [
@@ -52,7 +51,7 @@ export const Home = component({
 						}),
 					],
 				}),
-			}),
-		}))
+			})
+		)
 	},
 })

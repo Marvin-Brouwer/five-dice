@@ -9,10 +9,13 @@ export type SheetVariant = 'keypad' | 'picker'
 
 export type SheetOptions = {
 	/**
-	 * `dialog` gives the top layer, a focus trap and Escape for free.
-	 * `div` is for callers that own their own layering — the row picker
-	 * cannot use a native dialog, because its hit targets sit over the score
-	 * card and it must not trap focus.
+	 * `dialog` gives the top layer, a focus trap and Escape for free. The
+	 * keypad takes it here, because its sheet *is* the whole dialog.
+	 *
+	 * `div` is for callers whose sheet is a child of a dialog they own
+	 * further out. The row picker is one: its dialog is the full-viewport
+	 * layer holding both this sheet and the per-row hit targets, so nesting a
+	 * second dialog in here would be modality twice over.
 	 */
 	as: 'dialog' | 'div'
 	variant: SheetVariant
@@ -34,8 +37,9 @@ export type SheetOptions = {
  * The bottom-sheet chrome shared by the dice keypad and the row picker:
  * handle, hidden title, content and the action bar.
  *
- * Chrome only — deliberately not modality. The two dialogs layer in
- * incompatible ways and each keeps its own strategy.
+ * Chrome only — deliberately not modality. Each caller decides where the
+ * dialog boundary sits: around the sheet itself, or further out around the
+ * sheet and whatever else the overlay puts on screen with it.
  */
 export const Sheet = component<SheetOptions>({
 	name: 'sheet-chrome',
