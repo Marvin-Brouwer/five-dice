@@ -1,9 +1,14 @@
 /* Where the sticker hangs — the look itself is _shared/sticker. Slapped onto
-   the score card's top-right corner, overlapping the paper's edge. */
+   the score card's top-right corner, overlapping the `Score card` band.
+
+   It hangs off the ruled frame rather than the paper's edge, which is what
+   keeps it clear of the masthead band above — so the 14px it used to clear
+   the paper by is measured from the rule now, and the sheet's own gutter is
+   added back to land it exactly where it always sat on the card. */
 .sticker-placement {
 	position: absolute;
-	top: -14px;
-	right: 8px;
+	top: calc(-10px - var(--sheet-gutter, 10px));
+	right: 12px;
 	z-index: 10;
 }
 

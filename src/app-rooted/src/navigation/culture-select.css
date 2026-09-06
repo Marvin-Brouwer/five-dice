@@ -15,20 +15,26 @@
 	justify-content: safe center;
 }
 
-/* The dice and the wordmark at the top are DiceHero, shared with the home
-   card — this screen hands straight over to it, so the mark has to land in
-   the same place on both. --hero-measure is the column the hero, the line
-   below it and the locale list all share. */
+/* The wordmark and the dice above this are Masthead, on the band the card
+   carries — the same letterhead the home card wears, which is what makes this
+   screen hand straight over to it. --hero-measure is the column the line
+   below and the locale list share. */
 .content {
 	--hero-measure: 20rem;
 	padding: clamp(var(--space-5), 6vw, var(--space-7)) var(--space-4);
 	text-align: center;
+	padding-top : 0;
 }
 
 .content p {
 	color: var(--color-text-secondary);
 	max-width: var(--hero-measure);
 	margin: var(--space-4) auto 0;
+}
+
+.content h2 {
+	margin-top: 0;
+	margin-bottom: var(--space-7);
 }
 
 .list {

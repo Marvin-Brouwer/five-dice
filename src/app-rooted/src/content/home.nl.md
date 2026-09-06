@@ -1,5 +1,6 @@
-Grijp vijf dobbelstenen \
-en kijk hoe ver je geluk reikt.
+## Het spel
+
+Grijp vijf dobbelstenen en kijk hoe ver je geluk reikt.
 
 Dertien rondes, drie worpen per ronde: \
 hou de stenen die je bevallen, gooi de rest opnieuw en kies dan de rij waar ze het meest opleveren. \

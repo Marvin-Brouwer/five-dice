@@ -3,6 +3,7 @@ import { component } from '@rooted/components'
 import { partOneFields, partTwoFields } from '../_logic/fields.ts'
 import type { GameContext } from '../_logic/game-context.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
+import { Masthead } from '../../_shared/masthead/masthead.mts'
 import { PaperCard } from '../../_shared/paper-card/paper-card.mts'
 
 import { EnterScoreSticker } from './enter-score-sticker.mts'
@@ -80,6 +81,9 @@ export const ScoreCard = component<ScoreCardOptions>({
 			// Page anchor and test hook; no longer a component contract.
 			id: 'score-card',
 			role: 'document',
+			// The app's letterhead, above the rule. The `Score card` band
+			// inside the frame names the pad itself, and stays.
+			heading: create(Masthead),
 			children: cardInner,
 			// Outside the ruled frame, so the sticker can overhang the paper.
 			overlay: create(EnterScoreSticker, {

@@ -2,8 +2,8 @@ import { component } from '@rooted/components'
 import { href, Link } from '@rooted/router'
 
 import { HomeRoute } from '../content/_routes.mts'
-import { DiceHero } from '../_shared/dice-hero/dice-hero.mts'
 import { localeLabels, localization } from '../_shared/i18n/localization.mts'
+import { Masthead } from '../_shared/masthead/masthead.mts'
 import { PaperCard } from '../_shared/paper-card/paper-card.mts'
 import { readRememberedLocale } from '../_shared/i18n/remembered-locale.mts'
 
@@ -33,11 +33,11 @@ export const CultureSelect = component({
 		append(element('article', {
 			classes: styles.page,
 			children: create(PaperCard, {
+				heading: create(Masthead),
 				children: element('div', {
 					classes: styles.content,
 					children: [
-						create(DiceHero),
-						element('p', {
+						element('h2', {
 							textContent: 'Choose your language'
 						}),
 						element('ul', {

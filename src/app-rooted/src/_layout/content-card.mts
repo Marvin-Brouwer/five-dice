@@ -1,6 +1,7 @@
 import { component } from '@rooted/components'
 import type { ElementChildren } from '@rooted/elements'
 
+import { Masthead } from '../_shared/masthead/masthead.mts'
 import { PaperCard } from '../_shared/paper-card/paper-card.mts'
 
 import { Doormat } from './doormat/doormat.mts'
@@ -12,7 +13,8 @@ export type ContentCardOptions = {
 }
 
 /**
- * A page of prose: one sheet of paper, with the doormat below it.
+ * A page of prose: one sheet of paper under the app's letterhead, with the
+ * doormat below it.
  *
  * The two travel together on every page that is reading rather than playing —
  * the landing page, the guide and the accessibility statement — so they are
@@ -30,6 +32,7 @@ export const ContentCard = component<ContentCardOptions>({
 			element('article', {
 				classes: styles.contentPage,
 				children: create(PaperCard, {
+					heading: create(Masthead),
 					children: options.children,
 				}),
 			}),

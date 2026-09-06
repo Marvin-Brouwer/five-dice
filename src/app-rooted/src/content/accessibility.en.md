@@ -1,4 +1,4 @@
-# Accessibility statement
+## Accessibility statement
 
 Five dice aims to be usable for everyone. We aim for WCAG 2.1 Level AA compliance: every interactive control is reachable with the keyboard, focus is always visible, contrast ratios are met in both light and dark themes, and the dice and score input use native form controls so screen readers announce them as proper groups.
 

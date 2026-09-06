@@ -3,7 +3,6 @@ import { Markdown } from '@rooted/markdown'
 
 import { StartGameButton } from '../game/start-game-button.mts'
 import { ContentCard } from '../_layout/content-card.mts'
-import { DiceHero } from '../_shared/dice-hero/dice-hero.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 
 import { HowToButton } from './how-to-button.mts'
@@ -25,7 +24,6 @@ export const Home = component({
 				children: element('div', {
 					classes: styles.hero,
 					children: [
-						create(DiceHero),
 						create(Markdown, {
 							source
 						}),

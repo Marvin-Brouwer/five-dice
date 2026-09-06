@@ -1,5 +1,6 @@
-Grab five dice \
-and see how far your luck stretches.
+## The game
+
+Grab five dice and see how far your luck stretches.
 
 Thirteen rounds, three rolls each: \
 keep the dice you like, re-roll the rest, then pick the row that makes them count. \

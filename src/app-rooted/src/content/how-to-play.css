@@ -10,27 +10,9 @@
 }
 
 /* -------------------------------------------------------------------- Bands
-   The markdown's own headings, dressed as the black bands the score card
-   uses between its parts. Values taken from .card-header / .band-title in
-   game/score-card/score-card.css and score-table.css — copied rather than
-   shared because over there the bands are <tr><td> inside a table, where a
-   component host cannot sit (see docs/table-components-in-rooted.md).
-
-   They break out of the prose padding so they reach both edges of the paper,
-   the way the card's own bands do. */
-.guide-prose :is(h1, h2), .guide-end {
-	background: var(--color-divider-strong);
-	color: var(--color-surface);
-	font-family: var(--font-mono);
-	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.16em;
-	text-transform: uppercase;
-	line-height: 1;
-	padding: 10px 12px;
-	margin: var(--space-5) calc(-1 * var(--space-4)) 0;
-}
-
+   The look and the break-out margin come from PaperCard — every page written
+   on the paper bands its headings the same way. Only where the guide's own
+   sections butt up against each other is its business, and that is here. */
 .guide-prose:first-child :is(h1, h2):first-child {
 	margin-top: 0;
 }
@@ -145,8 +127,10 @@
 
 /* ------------------------------------------------------------ Closing rule
    An empty band between the last chapter and the call to action: the page's
-   full stop. Its label is the only thing it says. */
+   full stop. Its label is the only thing it says. Not a heading, so it takes
+   the band's ink itself rather than getting it from PaperCard. */
 .guide-end {
+	background: var(--color-divider-strong);
 	border: 0;
 	height: 3em;
 	margin: 0 0 var(--space-5);
