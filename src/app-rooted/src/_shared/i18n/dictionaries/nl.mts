@@ -69,6 +69,8 @@ export default dictionary(
 
 	// Home and how-to-play pages (content/home.mts, content/how-to-play.mts)
 	translation('Start a new game', 'Start een nieuw spel'),
+	translation('About the game', 'Over het spel'),
+	translation(`Let's go!`, 'Daar gaan we!'),
 	translation('Roll again', 'Opnieuw gooien'),
 	translation(`Roll${NewLine}again`, `Gooi${NewLine}opnieuw`),
 	translation('Example rolls and scores', 'Voorbeeldworpen en scores'),

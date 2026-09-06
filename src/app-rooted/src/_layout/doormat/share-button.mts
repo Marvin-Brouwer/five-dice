@@ -1,14 +1,13 @@
 import { component } from '@rooted/components'
+import { createStore } from '@rooted/store'
 
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
-import { Icon } from '../../_shared/icon/icon.mts'
+import { ActionButton } from '../../_shared/action-button/action-button.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 
-import chevronIcon from '../../_shared/menu/menu-content.chevron.svg?raw'
-import shareIcon from './share-card.share.svg?raw'
-import styles from './share-card.css'
+import shareIcon from './share-button.share.svg?raw'
 
-/** How long the card shows "Link copied" before returning to its tagline. */
+/** How long the button shows "Link copied" before returning to its tagline. */
 const copiedMilliseconds = 2000
 
 /**
@@ -21,23 +20,26 @@ type ShareCapableNavigator = Navigator & {
 	clipboard?: { writeText(text: string): Promise<void> }
 }
 
-export type ShareCardOptions = {
+export type ShareButtonOptions = {
 	/** The link handed to the share sheet, or copied when there isn't one. */
 	url: string
 }
 
 /**
- * The "Invite your friends" card at the head of the doormat.
+ * The "Invite your friends" button at the head of the doormat.
+ *
+ * An ActionButton with the sharing behind it, the way StartGameButton and
+ * HowToButton are ActionButtons with a route behind them — so the invite at
+ * the foot of a page and the calls to action on it are one control.
  *
  * Takes the share sheet where the platform has one and falls back to the
- * clipboard where it doesn't, so the card never has to be hidden. The URL is
+ * clipboard where it doesn't, so the button never has to be hidden. The URL is
  * an option rather than read from the package manifest here, because which
- * link is worth sharing is the caller's decision, not this card's.
+ * link is worth sharing is the caller's decision, not this button's.
  */
-export const ShareCard = component<ShareCardOptions>({
-	name: 'doormat-share-card',
-	styles,
-	onMount({ append, element, create, signal, options }) {
+export const ShareButton = component<ShareButtonOptions>({
+	name: 'doormat-share-button',
+	onMount({ append, create, signal, options }) {
 		const { url } = options
 
 		// LiveRegion hands its element over in its own onMount, a microtask
@@ -51,18 +53,17 @@ export const ShareCard = component<ShareCardOptions>({
 
 		const tagline = localization.text`Play the game together`
 
-		const hint = element('span', {
-			classes: styles.hint,
-			textContent: tagline,
-		})
+		// The hint is the one part of the row that answers back, so it is the
+		// one part handed over as a store rather than as a string.
+		const hint = createStore(tagline)
 
 		let copiedTimer: number | undefined
 		function flashCopied() {
-			hint.textContent = localization.text`Link copied`
+			hint.update(() => localization.text`Link copied`)
 			announce(localization.text`Link copied to clipboard`)
 			if (copiedTimer !== undefined) clearTimeout(copiedTimer)
 			copiedTimer = window.setTimeout(() => {
-				hint.textContent = tagline
+				hint.update(() => tagline)
 				copiedTimer = undefined
 			}, copiedMilliseconds)
 		}
@@ -75,7 +76,7 @@ export const ShareCard = component<ShareCardOptions>({
 			// Absent outside a secure context, which is exactly where the
 			// share sheet is missing too — so this can genuinely be undefined.
 			if (!shareNavigator.clipboard) {
-				console.info('[share-card] neither navigator.share nor navigator.clipboard is available; the invite card cannot copy.')
+				console.info('[share-button] neither navigator.share nor navigator.clipboard is available; the invite button cannot copy.')
 				return
 			}
 			try {
@@ -83,7 +84,7 @@ export const ShareCard = component<ShareCardOptions>({
 				flashCopied()
 			}
 			catch (error) {
-				console.warn('[share-card] clipboard write failed', error)
+				console.warn('[share-button] clipboard write failed', error)
 			}
 		}
 
@@ -105,7 +106,7 @@ export const ShareCard = component<ShareCardOptions>({
 					// clipboard — copying a link they declined to share would
 					// be a surprise.
 					if ((error as Error | undefined)?.name === 'AbortError') return
-					console.warn('[share-card] share failed, falling back to clipboard', error)
+					console.warn('[share-button] share failed, falling back to clipboard', error)
 				}
 			}
 
@@ -113,38 +114,17 @@ export const ShareCard = component<ShareCardOptions>({
 		}
 
 		append(
-			element('button', {
-				type: 'button',
-				classes: styles.card,
+			create(ActionButton, {
+				variant: 'secondary',
+				label: localization.text`Invite your friends`,
+				hint: tagline,
+				hintStore: hint,
+				glyph: shareIcon,
 				on: {
-					click() {
-						void invite()
+					async click() {
+						await invite()
 					},
 				},
-				children: [
-					element('span', {
-						classes: styles.badge,
-						children: create(Icon, {
-							source: shareIcon,
-						}),
-					}),
-					element('span', {
-						classes: styles.text,
-						children: [
-							element('span', {
-								classes: styles.title,
-								textContent: localization.text`Invite your friends`,
-							}),
-							hint,
-						],
-					}),
-					element('span', {
-						classes: styles.chevron,
-						children: create(Icon, {
-							source: chevronIcon,
-						}),
-					}),
-				],
 			}),
 			create(LiveRegion, {
 				reference(region) {

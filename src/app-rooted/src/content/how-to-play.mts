@@ -1,18 +1,17 @@
 import { component } from '@rooted/components'
 import { Markdown } from '@rooted/markdown'
-import { href, Link } from '@rooted/router'
 
 import { partOneFields, partTwoFields } from '../game/_logic/fields.ts'
 import type { DiceTuple, DieValue } from '../game/_logic/gameConstants.ts'
 import { createScorePadStore } from '../game/_logic/scorePadStore.mts'
 import { createScorePad } from '../game/_logic/score/scorePad.ts'
 import { discard, score } from '../game/_logic/score/score.ts'
-import { ScoreCardRoute } from '../game/_routes.mts'
 import { createRowRegistry } from '../game/score-card/row-registry.mts'
 import { ScoreSection } from '../game/score-card/score-section.mts'
 import { createSelectionStore } from '../game/score-card/selection-store.mts'
 import { DiceKeypad } from '../game/score-input/dice-keypad.mts'
 import { createDiceStore } from '../game/score-input/dice-state.mts'
+import { StartGameButton } from '../game/start-game-button.mts'
 import { ContentCard } from '../_layout/content-card.mts'
 import { Icon } from '../_shared/icon/icon.mts'
 import { localization } from '../_shared/i18n/localization.mts'
@@ -331,13 +330,7 @@ export const HowToPlay = component({
 
 						element('p', {
 							classes: styles.guideActions,
-							children: create(Link, {
-								href: href.for(ScoreCardRoute, {
-									locale: localization.currentLocale
-								}),
-								classes: styles.guideCta,
-								children: localization.text`Start a new game`,
-							}),
+							children: create(StartGameButton),
 						}),
 					],
 				}),

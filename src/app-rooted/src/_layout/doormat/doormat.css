@@ -3,9 +3,9 @@
    Painted directly on the cardboard rather than on a paper sheet of its own,
    so it reads as the app bar's counterpart at the other end of the page —
    same mono caps, same `--color-text-on-page`, same transparent ground. The
-   one sheet down here is the share card, a slip laid on the cardboard.
+   one sheet down here is the share button, a slip laid on the cardboard.
 
-   Only the container and the grid live here. The card and the links carry
+   Only the container and the grid live here. The button and the links carry
    their own stylesheets, which also keeps these names clear of theirs: a
    component's styles are scoped to its host's *subtree*, so a `.card` or
    `.link` in this file would reach into the components mounted inside it. */

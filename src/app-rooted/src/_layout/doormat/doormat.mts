@@ -8,7 +8,7 @@ import { installAvailableStore, promptInstall } from '../../_shared/services/ins
 import packageJson from '../../../package.json' with { type: 'json' }
 
 import { DoormatLink } from './doormat-link.mts'
-import { ShareCard } from './share-card.mts'
+import { ShareButton } from './share-button.mts'
 import topIcon from './doormat.top.svg?raw'
 import styles from './doormat.css'
 
@@ -37,9 +37,9 @@ function backToTop() {
 }
 
 /**
- * The doormat at the foot of a page: share card, link grid, meta line.
+ * The doormat at the foot of a page: share button, link grid, meta line.
  *
- * Composition only — the card and every link own their own markup, styling
+ * Composition only — the button and every link own their own markup, styling
  * and behaviour. What is left here is which links there are, and the one
  * piece of state no link can know for itself: whether the browser is
  * currently offering an install prompt.
@@ -142,7 +142,7 @@ export const Doormat = component({
 				classes: styles.doormat,
 				role: 'contentinfo',
 				children: [
-					create(ShareCard, {
+					create(ShareButton, {
 						url: packageJson.homepage,
 					}),
 					links,

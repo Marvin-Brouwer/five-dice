@@ -127,41 +127,20 @@
 
 
 /* --------------------------------------------------------------------- CTA */
+/* Holds the StartGameButton — the same row the landing page ends on, so the
+   two ways into a game look the same. Only the measure lives here: the row
+   fills whatever it is given, and 22rem is the width home puts it on. The
+   padding sits inside the cap (border-box), so the row itself still comes out
+   at 22rem. */
 .guide-actions {
-	margin: 0;
-	padding: 0 var(--space-4) var(--space-6);
 	display: flex;
-	justify-content: center;
-}
-
-.guide-cta {
-	display: block;
+	/* `.guide` is a column flex, where an auto inline margin turns off the
+	   stretch — so the width has to be asked for outright, not left to it. */
 	width: 100%;
-	max-width: 22rem;
-	text-align: center;
-	background: var(--color-primary);
-	color: var(--color-primary-contrast);
-	border: 1px solid var(--color-primary);
-	padding: var(--space-2) var(--space-4);
-	border-radius: var(--radius-md);
-	text-decoration: none;
-	font-weight: 600;
-	transition: transform 0.12s ease, filter 0.12s ease;
-}
-
-.guide-cta:hover, .guide-cta:focus-visible {
-	filter: brightness(1.1);
-	transform: translateY(-1px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.guide-cta {
-		transition: none;
-	}
-
-	.guide-cta:hover, .guide-cta:focus-visible {
-		transform: none;
-	}
+	max-width: calc(22rem + var(--space-4) * 2);
+	margin-inline: auto;
+	margin-block: 0;
+	padding: 0 var(--space-4) var(--space-6);
 }
 
 /* ------------------------------------------------------------ Closing rule

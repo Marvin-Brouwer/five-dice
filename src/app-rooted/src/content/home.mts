@@ -1,13 +1,12 @@
 import { component } from '@rooted/components'
 import { Markdown } from '@rooted/markdown'
-import { href, Link } from '@rooted/router'
 
-import { ScoreCardRoute } from '../game/_routes.mts'
+import { StartGameButton } from '../game/start-game-button.mts'
 import { ContentCard } from '../_layout/content-card.mts'
 import { DiceHero } from '../_shared/dice-hero/dice-hero.mts'
 import { localization } from '../_shared/i18n/localization.mts'
 
-import { HowToPlayRoute } from './_routes.mts'
+import { HowToButton } from './how-to-button.mts'
 
 import styles from './home.css'
 
@@ -33,20 +32,8 @@ export const Home = component({
 						element('p', {
 							classes: styles.actions,
 							children: [
-								create(Link, {
-									href: href.for(HowToPlayRoute, {
-										locale: localization.currentLocale
-									}),
-									classes: styles.ctaSecondary,
-									children: localization.text`How to play`,
-								}),
-								create(Link, {
-									href: href.for(ScoreCardRoute, {
-										locale: localization.currentLocale
-									}),
-									classes: styles.cta,
-									children: localization.text`Start a new game`,
-								}),
+								create(HowToButton),
+								create(StartGameButton),
 							],
 						}),
 					],
