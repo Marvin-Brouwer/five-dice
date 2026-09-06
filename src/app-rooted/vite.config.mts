@@ -14,11 +14,10 @@ export default rootedManifest({
 		name: 'Five dice',
 		short_name: '5-dice',
 		description: 'A score-pad PWA for a game of five dice',
-		theme_color: '#303030',
-		background_color: '#f4f4f4',
+		theme_color: '#000000',
+		background_color: '#B3AEA1',
 		display: 'standalone',
 		orientation: 'portrait',
-		start_url: '/en/score-card/',
 		icons: [
 			{ src: 'pwa/192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
 			{ src: 'pwa/256x256.png', sizes: '256x256', type: 'image/png', purpose: 'any' },
