@@ -6,6 +6,7 @@ import type { RowSpan } from '../score-card/row-registry.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
+import { scrollPageTo } from '../../_shared/services/page-scroll.mts'
 import { Sheet, sheetButton } from '../../_shared/sheet/sheet.mts'
 
 import { DiceKeypad } from './dice-keypad.mts'
@@ -23,12 +24,26 @@ export type DiceModalOptions = {
 	 * scroll them into the strip the sheet leaves free.
 	 */
 	rowsSpan: () => RowSpan | undefined
+	/**
+	 * Whether the page is still this dialog's to give back once the wizard
+	 * ends. False when the move that ended it handed the scroll to someone
+	 * else — the finished game putting its totals on screen — in which case
+	 * the reveal is dropped rather than fought over.
+	 */
+	canRestoreScroll?: () => boolean
 	onConfirm: (dice: DiceTuple) => void
 	onCancel: () => void
 }
 
 /** Breathing room between the revealed rows and the edges of the strip. */
 const revealMargin = 12
+
+/**
+ * How far the page may have drifted from the reveal and still count as
+ * untouched. Covers a smooth scroll caught mid-flight and the sub-pixel
+ * rounding a fractional device pixel ratio leaves behind.
+ */
+const revealTolerance = 2
 
 /**
  * How much of the viewport the row picker's sheet will take.
@@ -61,7 +76,7 @@ export const DiceModal = component<DiceModalOptions>({
 	name: 'dice-modal',
 	styles,
 	onMount({ replace, element, create, signal, options, on }) {
-		const { flow, rowsSpan, onConfirm, onCancel } = options
+		const { flow, rowsSpan, canRestoreScroll, onConfirm, onCancel } = options
 		const instanceId = Math.random().toString(36).slice(2, 8)
 		const titleId = `dice-modal-title-${instanceId}`
 
@@ -206,6 +221,13 @@ export const DiceModal = component<DiceModalOptions>({
 		syncUi()
 
 		/**
+		 * Where the page sat before {@link revealRows} moved it, and where that
+		 * move was aimed. Both undefined whenever there is no reveal to undo.
+		 */
+		let scrollOrigin: number | undefined
+		let scrollAim: number | undefined
+
+		/**
 		 * `flow` fires on every state change, not only this dialog opening, so
 		 * track the edge.
 		 */
@@ -256,11 +278,40 @@ export const DiceModal = component<DiceModalOptions>({
 				? span.top - revealMargin
 				: Math.max(0, span.bottom - (strip - revealMargin))
 			if (Math.abs(delta) < 1) return
-			const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-			window.scrollBy({
-				top: delta,
-				behavior: reduceMotion ? 'auto' : 'smooth',
-			})
+			// Absolute rather than relative, so where this lands is known up
+			// front — scrollBy would leave the browser to clamp a delta the
+			// page cannot take, and restoring has to know what it aimed at.
+			const limit = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+			const aim = Math.min(Math.max(0, window.scrollY + delta), limit)
+			if (Math.abs(aim - window.scrollY) < 1) return
+			scrollOrigin = window.scrollY
+			scrollAim = aim
+			scrollPageTo(aim)
+		}
+
+		/**
+		 * Put the page back where the user was reading before the reveal moved
+		 * it, once the wizard is done with it — the rows only had to be on
+		 * screen for as long as they were being picked from.
+		 *
+		 * Skipped when the game has just ended — the totals have the page now
+		 * — and when the page is no longer where the reveal left it: the
+		 * reveal is a nudge the user can scroll away from, so someone who
+		 * scrolled somewhere else meant to be there and does not want it
+		 * taken back. Anywhere between here and there still counts as ours,
+		 * which is what catches a flow closed mid-scroll.
+		 */
+		function restoreReveal() {
+			const origin = scrollOrigin
+			const aim = scrollAim
+			scrollOrigin = undefined
+			scrollAim = undefined
+			if (origin === undefined || aim === undefined) return
+			if (canRestoreScroll?.() === false) return
+			const low = Math.min(origin, aim) - revealTolerance
+			const high = Math.max(origin, aim) + revealTolerance
+			if (window.scrollY < low || window.scrollY > high) return
+			scrollPageTo(origin)
 		}
 
 		function show() {
@@ -289,8 +340,23 @@ export const DiceModal = component<DiceModalOptions>({
 			}))
 		}
 
+		/**
+		 * The reveal outlives this dialog — it is aimed at the row picker's
+		 * viewport, and the picker is the step after this one — so the scroll
+		 * is given back when the wizard ends, not when the keypad closes.
+		 */
+		let active = flow.isActive()
+		function syncActive() {
+			if (flow.isActive() === active) return
+			active = !active
+			if (!active) restoreReveal()
+		}
+
 		syncOpen()
-		flow.on('change', signal, syncOpen)
+		flow.on('change', signal, () => {
+			syncOpen()
+			syncActive()
+		})
 
 		on('document', 'keydown', (event) => {
 			if (!shown) return

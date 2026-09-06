@@ -54,7 +54,8 @@
 }
 
 /* Two columns of 13px labels stop fitting somewhere under 22rem; below that
-   the grid stacks rather than hyphenating "Report accessibility issues". */
+   the grid stacks, which gives a label a full-width line before the
+   hyphenation in doormat-link.css has to do anything. */
 @media (max-width: 22rem) {
 	.links {
 		grid-template-columns: minmax(0, 1fr);

@@ -65,6 +65,10 @@ export const ScoreInput = component<ScoreInputOptions>({
 			// The picker's row set is the same before and after the roll, so
 			// the keypad can already put those rows on screen.
 			rowsSpan: () => rows.span(openRowFields(store.value.pad)),
+			// The last move of the game hands the page to the totals, which
+			// scroll themselves into view; putting the card back where the
+			// keypad found it would only fight that.
+			canRestoreScroll: () => !store.gameEnded(),
 			onConfirm(dice) {
 				flow.toRow(dice)
 			},

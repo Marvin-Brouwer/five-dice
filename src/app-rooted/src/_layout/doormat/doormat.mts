@@ -4,6 +4,7 @@ import { href } from '@rooted/router'
 import { AccessibilityRoute } from '../../content/_routes.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { installAvailableStore, promptInstall } from '../../_shared/services/install-prompt.mts'
+import { scrollPageTo } from '../../_shared/services/page-scroll.mts'
 
 import packageJson from '../../../package.json' with { type: 'json' }
 
@@ -29,11 +30,7 @@ function backToTop() {
 			preventScroll: true,
 		})
 	}
-	const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-	window.scrollTo({
-		top: 0,
-		behavior: reduceMotion ? 'auto' : 'smooth',
-	})
+	scrollPageTo(0)
 }
 
 /**

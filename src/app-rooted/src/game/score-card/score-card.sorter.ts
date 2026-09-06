@@ -63,14 +63,15 @@ export function sortFullHouse(score: ReadonlyArray<DieValue>): ScoreGroup {
 }
 
 export function sortStraight(score: ReadonlyArray<DieValue>): ScoreGroup {
-	const smallGroup = groupBy(score)
-		.filter(group => group.values.length > 1)
+	const groups = groupBy(score)
 		.sort((a, b) => a.value - b.value)
-		.flatMap(group => group.value)
-	const largeGroup = groupBy(score)
-		.filter(group => group.values.length === 1)
-		.sort((a, b) => a.value - b.value)
-		.flatMap(group => group.value)
+
+	// A run uses each face at most once, so the first of every face belongs to
+	// the run and any further copy is a stray beside it. Splitting on whole
+	// groups instead dropped those copies from the cell altogether -- a roll
+	// with a pair in it rendered four dice instead of five.
+	const smallGroup = groups.flatMap(group => group.values.slice(1))
+	const largeGroup = groups.map(group => group.value)
 
 	return [smallGroup, largeGroup]
 }

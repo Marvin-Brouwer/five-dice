@@ -23,10 +23,25 @@ export const PlayerNameField = component({
 			classes: styles.nameInput,
 			placeholder: localization.text`Your name here`,
 			value: playerNameStore.value,
+			// There is nothing to submit -- the name is saved on every
+			// keystroke -- so the phone keyboard's action key says Done and
+			// closes the keyboard rather than promising a submit that is not
+			// coming.
+			enterKeyHint: 'done',
 			on: {
 				input(event) {
 					playerNameStore.update(() => event.currentTarget.value)
 					syncClearButton()
+				},
+				keydown(event) {
+					// A bare input has no implicit submission, so Enter would
+					// otherwise do nothing at all and leave the keyboard up over
+					// the card. Modifier chords and IME composition are left
+					// alone: mid-composition Enter is picking a candidate.
+					if (event.key !== 'Enter' || event.isComposing) return
+					if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+					event.preventDefault()
+					event.currentTarget.blur()
 				},
 			},
 		})
