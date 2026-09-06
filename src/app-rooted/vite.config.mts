@@ -2,11 +2,12 @@ import { rootedManifest } from '@rooted/application'
 import { localizationSeo } from '@rooted/localization/vite'
 import { rootedMarkdown } from '@rooted/markdown/vite'
 import { generateRouteManifest } from '@rooted/router/manifest'
+import { defineConfig, mergeConfig } from 'vite'
 
 import packageJson from './package.json' with { type: 'json' }
 import { seo } from './src/seo.mts'
 
-export default rootedManifest({
+const baseConfig = rootedManifest({
 	seo,
 	webManifest: {
 		id: 'five-dice-scorecard',
@@ -34,3 +35,12 @@ export default rootedManifest({
 		rootedMarkdown(),
 	],
 })
+
+export default defineConfig(async (environment) => mergeConfig(
+	await baseConfig(environment),
+	{
+		server: {
+			allowedHosts: ['*.shares.zrok.io', 't72n5je3ae56.shares.zrok.io'],
+		},
+	},
+))

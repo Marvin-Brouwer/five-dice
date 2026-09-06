@@ -135,17 +135,43 @@ export const RowOverlay = component<RowOverlayOptions>({
 			selection.begin(mode, targets, pinnedPreview?.())
 		}
 
-		function enterRow(field: ScoreField, previewCell: PreviewCell | undefined) {
-			selection.setHover(field)
-			if (previewCell !== undefined) selection.setPreview(field, previewCell)
-			// The card has already re-rendered synchronously, so the hit
-			// targets can be re-measured against the new row heights.
-			repositionLabels()
+		/**
+		 * What each row would become, by field, so the preview can be rebuilt
+		 * from whichever row is current without the event that asked for it
+		 * having to carry the cell along.
+		 */
+		const previewCells = new Map<ScoreField, PreviewCell | undefined>()
+		let hoveredField: ScoreField | undefined
+		let focusedField: ScoreField | undefined
+
+		/**
+		 * The row the preview belongs to: what the pointer is over, else what
+		 * holds keyboard focus, else whatever is actually checked.
+		 *
+		 * The checked row is the load-bearing fallback. Safari does not focus
+		 * a radio when its label is tapped, so on iOS the first tap fires
+		 * `mouseenter` on the tapped label and then blurs the radio the dialog
+		 * autofocused, with no `focus` on the tapped one to follow. Keyed to
+		 * hover and focus alone, that blur wiped the preview the tap had just
+		 * set and the row fell back to its empty rendering -- a bare `.` where
+		 * the dice belong -- until the next tap. Chrome focuses the radio, so
+		 * it never showed there.
+		 */
+		function previewField(): ScoreField | undefined {
+			return hoveredField ?? focusedField ?? selectedField()
 		}
 
-		function leaveRow() {
-			selection.setHover(undefined)
-			selection.clearPreview()
+		function syncPreview() {
+			// Teardown blurs a radio as the dialog closes; that must not write
+			// selection state back after this overlay has handed it over.
+			if (!shown) return
+			const field = previewField()
+			const previewCell = field === undefined ? undefined : previewCells.get(field)
+			selection.setHover(field)
+			if (field !== undefined && previewCell !== undefined) selection.setPreview(field, previewCell)
+			else selection.clearPreview()
+			// The card has already re-rendered synchronously, so the hit
+			// targets can be re-measured against the new row heights.
 			repositionLabels()
 		}
 
@@ -159,7 +185,11 @@ export const RowOverlay = component<RowOverlayOptions>({
 			)
 			activeRadios = []
 			activeLabels = []
+			previewCells.clear()
+			hoveredField = undefined
+			focusedField = undefined
 			fields.forEach(({ field, variant, previewCell }, index) => {
+				previewCells.set(field, previewCell)
 				const radio = element('input', {
 					type: 'radio',
 					name: radioName,
@@ -169,12 +199,20 @@ export const RowOverlay = component<RowOverlayOptions>({
 					on: {
 						change() {
 							syncConfirm()
+							// Checking a row is intent enough to preview it,
+							// whether or not the browser moved focus along
+							// with the click.
+							syncPreview()
 						},
 						focus() {
-							enterRow(field, previewCell)
+							focusedField = field
+							syncPreview()
 						},
 						blur() {
-							leaveRow()
+							// Guarded: focus can land on the next radio before
+							// this one is told it lost it.
+							if (focusedField === field) focusedField = undefined
+							syncPreview()
 						},
 					},
 				})
@@ -191,10 +229,14 @@ export const RowOverlay = component<RowOverlayOptions>({
 					children: radio,
 					on: {
 						mouseenter() {
-							enterRow(field, previewCell)
+							hoveredField = field
+							syncPreview()
 						},
 						mouseleave() {
-							leaveRow()
+							// Guarded: the pointer can enter the next label
+							// before this one hears that it left.
+							if (hoveredField === field) hoveredField = undefined
+							syncPreview()
 						},
 					},
 				})
@@ -224,6 +266,47 @@ export const RowOverlay = component<RowOverlayOptions>({
 			})
 		}
 
+		let settleFrame: number | undefined
+
+		/**
+		 * Keep re-measuring until the page stops moving under the overlay.
+		 *
+		 * The keypad scrolls the rows the picker will offer into view with a
+		 * *smooth* scroll -- and hands the scroll back the same way once the
+		 * wizard ends -- so the picker can open while the page is still
+		 * travelling and take its measurements mid-flight. A hit target left
+		 * at a stale offset covers the wrong row, and a pick then reacts on a
+		 * row the player did not touch while the one they did touch stays
+		 * empty.
+		 *
+		 * The window `scroll` listener already covers this wherever it fires
+		 * for every frame of a smooth scroll; this covers the frames where it
+		 * does not. Self-terminating: a few still frames, or a second and a
+		 * half, whichever comes first.
+		 */
+		function trackScrollSettle() {
+			const deadline = performance.now() + 1500
+			let previous = window.scrollY
+			let stillFrames = 0
+
+			function step() {
+				settleFrame = undefined
+				if (!shown) return
+				repositionLabels()
+				stillFrames = window.scrollY === previous ? stillFrames + 1 : 0
+				previous = window.scrollY
+				if (stillFrames >= 3 || performance.now() > deadline) return
+				settleFrame = requestAnimationFrame(step)
+			}
+
+			settleFrame = requestAnimationFrame(step)
+		}
+
+		function stopScrollSettle() {
+			if (settleFrame !== undefined) cancelAnimationFrame(settleFrame)
+			settleFrame = undefined
+		}
+
 		/**
 		 * Set while this overlay closes its own dialog for a step change, so
 		 * the `close` handler can tell that apart from the user dismissing it
@@ -250,6 +333,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			repositionLabels()
 			resizeObserver = new ResizeObserver(() => repositionLabels())
 			resizeObserver.observe(document.documentElement)
+			trackScrollSettle()
 			syncConfirm()
 			// showModal autofocuses the first focusable child, which is already
 			// this radio -- asserted anyway, because that resolution differs
@@ -264,6 +348,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			}
 			resizeObserver?.disconnect()
 			resizeObserver = undefined
+			stopScrollSettle()
 			// Only clear the selection if this overlay still owns it. Both
 			// pickers subscribe to the same flow store and fire in creation
 			// order, so stepping back from the flush discard reopens the row
@@ -273,6 +358,9 @@ export const RowOverlay = component<RowOverlayOptions>({
 			fieldset.replaceChildren()
 			activeRadios = []
 			activeLabels = []
+			previewCells.clear()
+			hoveredField = undefined
+			focusedField = undefined
 			confirmButton.disabled = true
 		}
 

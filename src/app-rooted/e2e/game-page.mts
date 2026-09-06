@@ -64,12 +64,7 @@ export class GamePage {
 	 * the roll is a second or later flush, pick the row to sacrifice for it.
 	 */
 	async enterRoll(dice: DiceTuple, field: ScoreField, sacrifice?: ScoreField) {
-		await this.sticker.click()
-		await expect(this.keypadConfirm).toBeVisible()
-
-		for (const die of dice) await this.page.keyboard.press(String(die))
-		await expect(this.keypadConfirm).toBeEnabled()
-		await this.keypadConfirm.click()
+		await this.openRowPicker(dice)
 
 		await this.pick(field)
 
@@ -80,14 +75,45 @@ export class GamePage {
 		await expect(this.openOverlay).toHaveCount(0)
 	}
 
-	/** Choose a row in whichever picker is currently open. */
-	private async pick(field: ScoreField) {
+	/** Open the keypad, key in a roll, and stop with the row picker showing. */
+	async openRowPicker(dice: DiceTuple) {
+		await this.sticker.click()
+		await expect(this.keypadConfirm).toBeVisible()
+
+		for (const die of dice) await this.page.keyboard.press(String(die))
+		await expect(this.keypadConfirm).toBeEnabled()
+		await this.keypadConfirm.click()
+		await expect(this.openOverlay).toBeVisible()
+	}
+
+	/** Check a row in the open picker, leaving it unconfirmed. */
+	async select(field: ScoreField) {
 		const overlay = this.openOverlay
 		await expect(overlay).toBeVisible()
 		await overlay.locator(`label[data-field="${field}"]`).click()
-		const confirm = overlay.locator('button.action-primary')
+	}
+
+	/**
+	 * Take hover and focus off the picker, leaving only the checked row —
+	 * which is all Safari leaves behind after a tap, since it does not focus
+	 * a radio when its label is tapped.
+	 */
+	async dropHoverAndFocus() {
+		await this.page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur())
+		await this.page.mouse.move(0, 0)
+	}
+
+	/** Commit whatever is checked in the open picker. */
+	async confirmSelection() {
+		const confirm = this.openOverlay.locator('button.action-primary')
 		await expect(confirm).toBeEnabled()
 		await confirm.click()
+	}
+
+	/** Choose a row in whichever picker is currently open. */
+	private async pick(field: ScoreField) {
+		await this.select(field)
+		await this.confirmSelection()
 	}
 
 	async row(field: ScoreField): Promise<RowState> {
