@@ -85,5 +85,9 @@ export function createScorePadStore(): ScorePadStore {
  * the language switcher), so a store created inside its `onMount` would
  * reset progress on every revisit. Module scope keeps it alive for the
  * whole session, same as `playerNameStore`/`menuStore`/`themeStore`.
+ *
+ * Outliving the page is not the same as outliving the game, though: routing
+ * away from a pad with progress asks the player first, and a yes clears it
+ * once the card is off screen. See `game.menu-bridge.mts`.
  */
 export const scorePadStore = createScorePadStore()

@@ -83,6 +83,7 @@ export default dictionary(
 
 	// Game page (game/game.menu-bridge.mts)
 	translation('You have a scorepad with changes, are you sure you want to reload the page?', 'Je hebt een scorekaart met wijzigingen, weet je zeker dat je de pagina wilt herladen?'),
+	translation('You have a scorepad with changes, are you sure you want to leave the game?', 'Je hebt een scorekaart met wijzigingen, weet je zeker dat je het spel wilt verlaten?'),
 	translation('Start a new game? This will clear the current score pad.', 'Nieuw spel starten? Dit wist de huidige scorekaart.'),
 	translation('Undo your last committed round?', 'Je laatste ingevoerde ronde ongedaan maken?'),
 
