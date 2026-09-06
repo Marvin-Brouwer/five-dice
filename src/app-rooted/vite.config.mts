@@ -17,14 +17,8 @@ const baseConfig = rootedManifest({
 		description: 'A score-pad PWA for a game of five dice',
 		theme_color: '#000000',
 		background_color: '#B3AEA1',
-		display: 'standalone',
-		orientation: 'portrait',
-		icons: [
-			{ src: 'pwa/192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-			{ src: 'pwa/256x256.png', sizes: '256x256', type: 'image/png', purpose: 'any' },
-			{ src: 'pwa/384x384.png', sizes: '384x384', type: 'image/png', purpose: 'any' },
-			{ src: 'pwa/512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-		],
+		display: 'minimal-ui',
+		orientation: 'portrait'
 	},
 	plugins: [
 		generateRouteManifest({
