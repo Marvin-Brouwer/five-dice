@@ -43,6 +43,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
+      - name: Build
+        # Also generates src/_routes.g.mts, which the typecheck below needs --
+        # a Vite plugin writes it on buildStart and it is gitignored, so on a
+        # fresh checkout it does not exist until something has built.
+        run: pnpm build
+
       - name: Lint
         run: pnpm lint
 

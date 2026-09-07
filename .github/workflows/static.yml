@@ -45,16 +45,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --strict-peer-dependencies
 
+      - name: Build
+        # Through the root script, so the package is the working directory --
+        # the PWA icon generation looks for `public/icon.svg` relative to it.
+        # This also generates src/_routes.g.mts, which the typecheck below
+        # needs: a Vite plugin writes it on buildStart and it is gitignored.
+        run: pnpm build
+
       - name: Lint
         run: pnpm lint
 
       - name: Run tests
         run: pnpm test
-
-      - name: Build
-        # Through the root script, so the package is the working directory --
-        # the PWA icon generation looks for `public/icon.svg` relative to it.
-        run: pnpm build
 
       - name: Upload the built site
         uses: actions/upload-pages-artifact@v3
