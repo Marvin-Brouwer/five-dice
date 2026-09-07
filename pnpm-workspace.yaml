@@ -1,15 +1,9 @@
 packages:
-  - src/app
-  - src/app-rooted
+  - app
 
+# pnpm 11 reads `allowBuilds`; both `sharp` and `esbuild` are reached through
+# the app's own dev dependencies -- sharp via @vite-pwa/assets-generator, and
+# esbuild via the vite that vitest bundles.
 allowBuilds:
-  '@jasikpark/astro-svg-loader': true
   esbuild: true
   sharp: true
-overrides:
-  "undici@<5.19.1": ">=5.19.1"
-  "undici@>=2.0.0 <5.19.1": ">=5.19.1"
-onlyBuiltDependencies:
-  - "@jasikpark/astro-svg-loader"
-  - "esbuild"
-  - "sharp"

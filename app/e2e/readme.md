@@ -15,7 +15,7 @@ over, ending with a single option left in the picker.
 
 ```sh
 pnpm test:e2e:install  # download the browser (once, per checkout)
-pnpm test:e2e          # from the repo root or src/app-rooted
+pnpm test:e2e          # from the repo root or app/
 pnpm test:e2e:ui       # UI mode, for stepping through a game
 pnpm test:e2e:report   # reopen the last HTML report
 ```
@@ -58,7 +58,7 @@ That downloads the exact Chromium build this Playwright release expects, so
 version matching is never something you have to think about.
 
 Reach for these scripts rather than `pnpm exec playwright …`. Playwright is a
-dependency of `@five-dice/app-rooted`, not of the workspace root, and
+dependency of `@five-dice/app`, not of the workspace root, and
 `pnpm exec` resolves binaries from the current package — so from the root you
 get `Command "playwright" not found`, or, if you happen to have a global
 install, a *different* Playwright version than the one this project pins. The

@@ -4,6 +4,6 @@
  * directory and reports that it found no tests.
  *
  * The real config anchors every path to its own directory, so re-exporting it
- * is enough — see src/app-rooted/playwright.config.mts.
+ * is enough — see app/playwright.config.mts.
  */
-export { default } from './src/app-rooted/playwright.config.mts'
+export { default } from './app/playwright.config.mts'

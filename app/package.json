@@ -1,5 +1,5 @@
 {
-	"name": "@five-dice/app-rooted",
+	"name": "@five-dice/app",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",

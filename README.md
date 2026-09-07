@@ -16,7 +16,7 @@ A company game made digital.
 ## Playing the game
 
 The game is accessible as a GitHub page at: [marvin-brouwer.github.io/five-dice](https://marvin-brouwer.github.io/five-dice/).  
-This page will contain a basic game description, if you want to play the game directly, go to:  [marvin-brouwer.github.io/five-dice/score-card](https://marvin-brouwer.github.io/five-dice/score-card/).  
+This page lets you pick a language, if you want to play the game directly, go to:  [marvin-brouwer.github.io/five-dice/en/score-card](https://marvin-brouwer.github.io/five-dice/en/score-card/).  
 
 ## Contributing
 

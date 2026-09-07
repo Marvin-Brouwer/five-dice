@@ -23,17 +23,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
+          # The celebration audio lives in Git LFS. Without this the tests
+          # see pointer files where the sounds should be.
           lfs: true
-      - name: Install dependencies
-        uses: pnpm/action-setup@v2
+
+      - name: Set up pnpm
+        # No version input: the root package.json `packageManager` field is
+        # the single source of truth, and passing both is an error.
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          version: 'latest'
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --strict-peer-dependencies
+
       - name: Lint
-        run: 'pnpm lint'
+        run: pnpm lint
+
       - name: Run tests
-        run: 'pnpm test'
+        run: pnpm test
