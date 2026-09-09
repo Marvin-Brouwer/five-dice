@@ -1,7 +1,5 @@
-import { component, cssClass, optional, type CssClass } from '@rooted/components'
+import { component, optional, type CssClass } from '@rooted/components'
 import type { ElementChild } from '@rooted/elements'
-
-import type { RenderContext } from '../render-context.ts'
 
 import styles from './sheet.css'
 
@@ -96,36 +94,4 @@ export const Sheet = component<SheetOptions>({
 
 function variantClass(variant: SheetVariant): CssClass {
 	return variant === 'keypad' ? styles.sheetKeypad : styles.sheetPicker
-}
-
-export type SheetButtonOptions = {
-	variant: 'primary' | 'secondary'
-	label?: string
-	ariaLabel?: string
-	children?: Array<Node>
-	disabled?: boolean
-	onClick: () => void
-}
-
-/**
- * A sheet action button. A render function rather than a component so the
- * caller keeps a direct reference — the labels and disabled states change as
- * the dialog is used.
- */
-export function sheetButton(context: RenderContext, options: SheetButtonOptions): HTMLButtonElement {
-	const { variant, label, ariaLabel, children, disabled, onClick } = options
-
-	return context.element('button', {
-		type: 'button',
-		classes: [
-			styles.actionButton,
-			cssClass(variant === 'primary', styles.actionPrimary),
-			cssClass(variant === 'secondary', styles.actionSecondary),
-		],
-		...(ariaLabel === undefined ? {} : { aria: { label: ariaLabel } }),
-		...(label === undefined ? {} : { textContent: label }),
-		...(children === undefined ? {} : { children }),
-		...(disabled === undefined ? {} : { disabled }),
-		on: { click: onClick },
-	})
 }
