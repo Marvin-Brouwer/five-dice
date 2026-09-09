@@ -15,12 +15,6 @@
 	user-select: none;
 }
 
-.die-text {
-	font-size: calc(var(--die-size) * 0.32);
-	font-family: var(--font-family-base);
-	font-weight: 600;
-	color: var(--color-text-muted);
-}
 
 .die-row {
 	display: flex;

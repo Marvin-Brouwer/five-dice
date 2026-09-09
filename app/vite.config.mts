@@ -3,19 +3,18 @@ import { localizationSeo } from '@rooted/localization/vite'
 import { rootedMarkdown } from '@rooted/markdown/vite'
 import { generateRouteManifest } from '@rooted/router/manifest'
 import { routeSeoPlugin } from '@rooted/seo/router'
-import { defineConfig, mergeConfig } from 'vite'
 
 import packageJson from './package.json' with { type: 'json' }
 import { seo } from './src/seo.mts'
 
-const baseConfig = rootedManifest({
+export default rootedManifest({
 	seo,
 	webManifest: {
 		id: 'five-dice-scorecard',
 		url: packageJson.homepage,
 		name: 'Five dice',
 		short_name: '5-dice',
-		description: 'A score-pad PWA for a game of five dice',
+		description: 'Grab five dice and see how far your luck stretches.',
 		theme_color: '#000000',
 		background_color: '#B3AEA1',
 		display: 'minimal-ui',
@@ -31,12 +30,3 @@ const baseConfig = rootedManifest({
 		rootedMarkdown(),
 	],
 })
-
-export default defineConfig(async (environment) => mergeConfig(
-	await baseConfig(environment),
-	{
-		server: {
-			allowedHosts: ['*.shares.zrok.io', 't72n5je3ae56.shares.zrok.io'],
-		},
-	},
-))

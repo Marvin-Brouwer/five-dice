@@ -11,22 +11,6 @@
 	"typescript.format.semicolons": "remove",
 	"typescript.preferences.importModuleSpecifier": "relative",
 	"typescript.preferences.quoteStyle": "single",
-	"tslint.configFile": "tsconfig.json",
-	"tslint.jsEnable": true,
-	"tslint.packageManager": "pnpm",
-	"[Typescript]": {
-		"editor.codeActionsOnSave": {
-			"source.fixAll.tslint": "explicit"
-		}
-	},
-	"[astro]": {
-		"editor.insertSpaces": false,
-		"editor.detectIndentation": false,
-		"editor.renderWhitespace": "all",
-		"files.trimTrailingWhitespace": true,
-		"files.trimFinalNewlines": true,
-		"files.eol": "\n",
-	},
 	"html.format.indentInnerHtml": true,
 	"html.format.wrapAttributes": "force-aligned",
 	"html.format.wrapAttributesIndentSize": 2,
@@ -55,7 +39,6 @@
 	},
 	"markdown.preview.breaks": true,
 	"eslint.validate": [
-	  "astro", // Enable .astro
 	  "typescript", // Enable .ts
 	  "typescriptreact" // Enable .tsx
 	],
