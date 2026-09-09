@@ -1,4 +1,4 @@
-/* ---------------------------------------------------------------- The band
+/* The band
    The same black band the score card sets its own header on — values taken
    from .card-header / .card-title in game/score-card/score-card.css. Laid on
    the paper above the ruled frame, so it reaches the sheet's edges. */
@@ -12,7 +12,7 @@
 	color: var(--color-surface);
 }
 
-/* ---------------------------------------------------------------- Wordmark */
+/* Wordmark */
 /* Set like the app bar's wordmark: spaced mono caps. It is the page's <h1> on
    every card, so the prose below it opens at h2 (see how-to-play-intro.md). */
 .wordmark {
@@ -32,7 +32,7 @@
 	color: var(--color-surface);
 }
 
-/* ------------------------------------------------------------- Tossed dice */
+/* Tossed dice */
 .dice {
 	--dice-size: clamp(1.75rem, 5vw, 2rem);
 	display: flex;

@@ -19,7 +19,7 @@
 	padding-right: var(--space-3);
 }
 
-/* ------------------------------------------------------------- Card header */
+/* Card header */
 .card-header {
 	display: flex;
 	align-items: center;
@@ -39,7 +39,7 @@
 	color: var(--color-surface);
 }
 
-/* ------------------------------------------------------------------ Banner */
+/* Banner */
 .banner {
 	display: flex;
 	gap: var(--space-1);
@@ -47,7 +47,7 @@
 	padding: var(--space-2) var(--space-3);
 }
 
-/* ---------------------------------------------------------- Selection state */
+/* Selection state */
 .card-inner[data-selecting="apply"] [data-field] {
 	opacity: 0.5;
 	transition: opacity 0.15s ease, background 0.15s ease;

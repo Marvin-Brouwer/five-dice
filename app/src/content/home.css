@@ -27,7 +27,7 @@
 	margin-top: 0;
 }
 
-/* ------------------------------------------------------------- Hero copy */
+/* Hero copy */
 /* The wordmark and the dice are Masthead, on the band above the rule — the
    card's letterhead rather than part of this page. Every text block here sits
    in the shared measure; line breaks come from the markdown, so nothing here
@@ -51,7 +51,7 @@
 	margin-top: var(--space-4);
 }
 
-/* ---------------------------------------------------------------- Actions */
+/* Actions */
 /* Stacked and equal width, the way culture-select lists its locales — on the
    same measure as the copy above them. */
 .actions {

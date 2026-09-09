@@ -1,4 +1,4 @@
-/* -------------------------------------------------------------- Table shell */
+/* Table shell */
 .score-table {
 	width: 100%;
 	border-collapse: collapse;
@@ -110,7 +110,7 @@
 	text-align: right;
 }
 
-/* --------------------------------------------------------------- Row label
+/* Row label
    Every row is a compact two-line block: title on top, description below.
    Same layout across Part 1, Part 2 and Totals so the grid reads
    predictably regardless of description length. */
@@ -164,7 +164,7 @@
 	display: none;
 }
 
-/* ---------------------------------------------------------------- Roll cell */
+/* Roll cell */
 .roll-row {
 	display: inline-flex;
 	align-items: center;
@@ -202,7 +202,7 @@
 	letter-spacing: 0.05em;
 }
 
-/* --------------------------------------------------------------- Score cell
+/* Score cell
    Line-height locks the box height so filled Caveat numerals don't push
    the row taller than an empty ".".
 
@@ -240,7 +240,7 @@
 	transform-origin: right center;
 }
 
-/* --------------------------------------------------------------- Row states */
+/* Row states */
 .row-display {
 	position: relative;
 }
@@ -276,7 +276,7 @@
 	z-index: 1;
 }
 
-/* ----------------------------------------------------------- Final row bump */
+/* Final row bump */
 .final-row td {
 	border-top: 3px double var(--color-text);
 	padding-top: 12px;

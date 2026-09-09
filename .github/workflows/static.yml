@@ -27,13 +27,9 @@ jobs:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
         with:
-          # The celebration audio lives in Git LFS. Without this the build
-          # ships pointer files where the sounds should be.
           lfs: true
 
       - name: Set up pnpm
-        # No version input: the root package.json `packageManager` field is
-        # the single source of truth, and passing both is an error.
         uses: pnpm/action-setup@v4
 
       - name: Set up Node

@@ -42,7 +42,7 @@
 	display: flow-root;
 }
 
-/* -------------------------------------------------------------------- Bands
+/* Bands
    A heading written on the paper is a black band, the way the score card's
    own headers are. Values taken from .card-header / .band-title in
    game/score-card/score-card.css — the card's bands are <tr><td> inside a

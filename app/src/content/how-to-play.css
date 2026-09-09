@@ -9,7 +9,7 @@
 	flex-direction: column;
 }
 
-/* -------------------------------------------------------------------- Bands
+/* Bands
    The look and the break-out margin come from PaperCard — every page written
    on the paper bands its headings the same way. Only where the guide's own
    sections butt up against each other is its business, and that is here. */
@@ -17,7 +17,7 @@
 	margin-top: 0;
 }
 
-/* -------------------------------------------------------------------- Prose */
+/* Prose */
 .guide-prose {
 	padding-inline: var(--space-4);
 }
@@ -30,7 +30,7 @@
 	margin-bottom: var(--space-5);
 }
 
-/* ------------------------------------------------------------ Example table
+/* Example table
    The real score card, filled in. It needs the column widths the card sets on
    .card-inner, which are scoped to the card's own component. */
 .guide-example {
@@ -59,7 +59,7 @@
 	z-index: 2;
 }
 
-/* ----------------------------------------------------------------- Figures
+/* Figures
    Real pieces of the app, shown rather than described. */
 .guide-figures {
 	display: flex;
@@ -108,7 +108,7 @@
 }
 
 
-/* --------------------------------------------------------------------- CTA */
+/* CTA */
 /* Holds the StartGameButton — the same row the landing page ends on, so the
    two ways into a game look the same. Only the measure lives here: the row
    fills whatever it is given, and 22rem is the width home puts it on. The
@@ -125,7 +125,7 @@
 	padding: 0 var(--space-4) var(--space-6);
 }
 
-/* ------------------------------------------------------------ Closing rule
+/* Closing rule
    An empty band between the last chapter and the call to action: the page's
    full stop. Its label is the only thing it says. Not a heading, so it takes
    the band's ink itself rather than getting it from PaperCard. */
