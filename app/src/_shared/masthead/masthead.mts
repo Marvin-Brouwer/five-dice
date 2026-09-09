@@ -1,6 +1,6 @@
 import { component, cssClass } from '@rooted/components'
 
-import type { DieValue } from '../../game/_logic/gameConstants.ts'
+import type { DieValue } from '../../game/logic/gameConstants.ts'
 import { dieNode } from '../die/die-node.mts'
 
 import styles from './masthead.css'

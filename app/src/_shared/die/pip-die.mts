@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
 import { localization } from '../i18n/localization.mts'
-import type { DieValue } from '../../game/_logic/gameConstants.ts'
+import type { DieValue } from '../../game/logic/gameConstants.ts'
 
 import styles from './pip-die.css'
 

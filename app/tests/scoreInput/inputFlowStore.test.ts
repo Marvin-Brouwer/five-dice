@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 
-import { createInputFlowStore, type InputFlowStore } from '../../src/game/_logic/input-flow-store.mts'
-import type { DiceTuple } from '../../src/game/_logic/gameConstants.ts'
+import { createInputFlowStore, type InputFlowStore } from '../../src/game/logic/input-flow-store.mts'
+import type { DiceTuple } from '../../src/game/logic/gameConstants.ts'
 
 const roll: DiceTuple = [1, 2, 3, 4, 5]
 

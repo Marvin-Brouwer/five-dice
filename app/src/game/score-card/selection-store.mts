@@ -1,7 +1,7 @@
 import { createStore, type ReadonlyState, type Store } from '@rooted/store'
 
-import type { ScoreField } from '../_logic/gameConstants.ts'
-import type { ScorePad } from '../_logic/score/scorePad.ts'
+import type { ScoreField } from '../logic/gameConstants.ts'
+import type { ScorePad } from '../logic/score/scorePad.ts'
 
 /**
  * The projected value a cell would hold if the hovered row were committed.

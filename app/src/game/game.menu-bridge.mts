@@ -7,7 +7,7 @@ import { localization } from '../_shared/i18n/localization.mts'
 
 import { ScoreCardRoute } from './_routes.mts'
 
-import type { ScorePadStore } from './_logic/scorePadStore.mts'
+import type { ScorePadStore } from './logic/scorePadStore.mts'
 
 type BridgeContext = Pick<ComponentContext, 'signal' | 'on'> & { store: ScorePadStore }
 

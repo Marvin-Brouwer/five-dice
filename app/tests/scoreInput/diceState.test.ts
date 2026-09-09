@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from 'vitest'
 
-import type { DiceTuple } from '../../src/game/_logic/gameConstants.ts'
+import type { DiceTuple } from '../../src/game/logic/gameConstants.ts'
 import { createDiceStore, type DiceStore } from '../../src/game/score-input/dice-state.mts'
 
 const full: DiceTuple = [1, 2, 3, 4, 5]

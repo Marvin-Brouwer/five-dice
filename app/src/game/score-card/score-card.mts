@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
-import { partOneFields, partTwoFields } from '../_logic/fields.ts'
-import type { GameContext } from '../_logic/game-context.mts'
+import { partOneFields, partTwoFields } from '../logic/fields.ts'
+import type { GameContext } from '../logic/game-context.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { Masthead } from '../../_shared/masthead/masthead.mts'
 import { PaperCard } from '../../_shared/paper-card/paper-card.mts'

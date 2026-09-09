@@ -1,9 +1,9 @@
 import { component } from '@rooted/components'
 import type { ReadonlyState } from '@rooted/store'
 
-import type { ScoreField } from '../_logic/gameConstants.ts'
-import type { ScorePad } from '../_logic/score/scorePad.ts'
-import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import type { ScoreField } from '../logic/gameConstants.ts'
+import type { ScorePad } from '../logic/score/scorePad.ts'
+import type { ScorePadStore } from '../logic/scorePadStore.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import type { RenderContext } from '../../_shared/render-context.ts'
 

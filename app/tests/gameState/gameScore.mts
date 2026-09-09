@@ -1,5 +1,5 @@
-import type { DieValue } from '../../src/game/_logic/gameConstants.js'
-import { score, ValidScore, ScoreValue, discard } from '../../src/game/_logic/score/score.js'
+import type { DieValue } from '../../src/game/logic/gameConstants.js'
+import { score, ValidScore, ScoreValue, discard } from '../../src/game/logic/score/score.js'
 import Permutation from 'iterative-permutation'
 
 const settings = {

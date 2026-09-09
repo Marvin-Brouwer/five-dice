@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
-import type { InputFlowStore } from '../_logic/input-flow-store.mts'
-import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import type { InputFlowStore } from '../logic/input-flow-store.mts'
+import type { ScorePadStore } from '../logic/scorePadStore.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { StickerButton } from '../../_shared/sticker/sticker-button.mts'
 import { menuStore } from '../../_shared/stores/menuStore.mts'

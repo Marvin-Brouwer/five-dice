@@ -1,6 +1,6 @@
 import { createStore, type Store } from '@rooted/store'
 
-import type { DiceTuple, DieValue } from '../_logic/gameConstants.ts'
+import type { DiceTuple, DieValue } from '../logic/gameConstants.ts'
 
 export const dieValues: DieValue[] = [1, 2, 3, 4, 5, 6]
 export const slotCount = 5

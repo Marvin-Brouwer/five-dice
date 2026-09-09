@@ -1,10 +1,10 @@
 import { cssClass, cssClasses, type CssClass } from '@rooted/components'
 import type { ReadonlyState } from '@rooted/store'
 
-import type { ScoreField } from '../_logic/gameConstants.ts'
-import { isDiscarded } from '../_logic/score/score.ts'
-import { calculateScoreForPad } from '../_logic/score/scoreCalculator.ts'
-import type { ScorePad } from '../_logic/score/scorePad.ts'
+import type { ScoreField } from '../logic/gameConstants.ts'
+import { isDiscarded } from '../logic/score/score.ts'
+import { calculateScoreForPad } from '../logic/score/scoreCalculator.ts'
+import type { ScorePad } from '../logic/score/scorePad.ts'
 import type { RenderContext } from '../../_shared/render-context.ts'
 
 import { labelCell, labelDisplay, type ScoreDescription } from './label-cell.mts'

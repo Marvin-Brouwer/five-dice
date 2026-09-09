@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
-import { scoreFieldOrder } from '../../src/game/_logic/fields.ts'
-import { discard, isDiscarded, score } from '../../src/game/_logic/score/score.ts'
-import { createScorePad } from '../../src/game/_logic/score/scorePad.ts'
+import { scoreFieldOrder } from '../../src/game/logic/fields.ts'
+import { discard, isDiscarded, score } from '../../src/game/logic/score/score.ts'
+import { createScorePad } from '../../src/game/logic/score/scorePad.ts'
 import {
 	availableRowFields,
 	flushDiscardFields,

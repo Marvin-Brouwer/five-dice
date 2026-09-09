@@ -1,7 +1,7 @@
 import { optional } from '@rooted/components'
 
-import type { ScoreField } from '../_logic/gameConstants.ts'
-import { dice, type Dice } from '../_logic/gameConstants.ts'
+import type { ScoreField } from '../logic/gameConstants.ts'
+import { dice, type Dice } from '../logic/gameConstants.ts'
 import { dieNode } from '../../_shared/die/die-node.mts'
 import type { RenderContext } from '../../_shared/render-context.ts'
 

@@ -1,4 +1,4 @@
-import type { DieValue } from '../../game/_logic/gameConstants.ts'
+import type { DieValue } from '../../game/logic/gameConstants.ts'
 import type { RenderContext } from '../render-context.ts'
 
 import { PipDie, type PipDieOptions } from './pip-die.mts'

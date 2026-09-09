@@ -1,7 +1,7 @@
-import { dice, type DiceTuple, type DieValue, type ScoreField } from '../game/_logic/gameConstants.ts'
-import type { ScorePad } from '../game/_logic/score/scorePad.ts'
-import { score } from '../game/_logic/score/score.ts'
-import { isScoreApplicableToField } from '../game/_logic/score/scoreFieldValidator.ts'
+import { dice, type DiceTuple, type DieValue, type ScoreField } from '../game/logic/gameConstants.ts'
+import type { ScorePad } from '../game/logic/score/scorePad.ts'
+import { score } from '../game/logic/score/score.ts'
+import { isScoreApplicableToField } from '../game/logic/score/scoreFieldValidator.ts'
 
 const faces: DieValue[] = [1, 2, 3, 4, 5, 6]
 

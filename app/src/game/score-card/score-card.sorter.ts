@@ -1,5 +1,5 @@
-import type { DieValue } from '../_logic/gameConstants.ts'
-import type { ValidScore } from '../_logic/score/score.ts'
+import type { DieValue } from '../logic/gameConstants.ts'
+import type { ValidScore } from '../logic/score/score.ts'
 
 type Group = {
 	values: Array<DieValue>,

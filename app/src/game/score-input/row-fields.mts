@@ -1,11 +1,11 @@
 import type { ReadonlyState } from '@rooted/store'
 
-import { scoreFieldOrder } from '../_logic/fields.ts'
-import type { DiceTuple, ScoreField } from '../_logic/gameConstants.ts'
-import { discard, isDiscarded, score } from '../_logic/score/score.ts'
-import { isScoreApplicableToField } from '../_logic/score/scoreFieldValidator.ts'
-import type { ScorePad } from '../_logic/score/scorePad.ts'
-import { flushEntries, projectedCell } from '../_logic/score/scoreProjection.ts'
+import { scoreFieldOrder } from '../logic/fields.ts'
+import type { DiceTuple, ScoreField } from '../logic/gameConstants.ts'
+import { discard, isDiscarded, score } from '../logic/score/score.ts'
+import { isScoreApplicableToField } from '../logic/score/scoreFieldValidator.ts'
+import type { ScorePad } from '../logic/score/scorePad.ts'
+import { flushEntries, projectedCell } from '../logic/score/scoreProjection.ts'
 
 import type { RowOverlayField } from './row-overlay.mts'
 

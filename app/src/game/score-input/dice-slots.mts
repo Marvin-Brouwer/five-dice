@@ -1,6 +1,6 @@
 import { component } from '@rooted/components'
 
-import type { DieValue } from '../_logic/gameConstants.ts'
+import type { DieValue } from '../logic/gameConstants.ts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { PipDie } from '../../_shared/die/pip-die.mts'
 

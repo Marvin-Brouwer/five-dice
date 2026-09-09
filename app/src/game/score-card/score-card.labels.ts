@@ -1,6 +1,6 @@
 import { localization } from '../../_shared/i18n/localization.mts'
 
-import type { ScoreField } from '../_logic/gameConstants.ts'
+import type { ScoreField } from '../logic/gameConstants.ts'
 
 type RowDisplayLabel = {
 	title: string,

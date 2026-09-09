@@ -5,9 +5,9 @@
 
 import { expect, test, describe } from 'vitest'
 
-import { isScoreApplicableToField } from '../../src/game/_logic/score/scoreFieldValidator'
+import { isScoreApplicableToField } from '../../src/game/logic/score/scoreFieldValidator'
 import { generateContainingScores } from './gameScore.mjs'
-import { dice, Dice } from '../../src/game/_logic/gameConstants.js'
+import { dice, Dice } from '../../src/game/logic/gameConstants.js'
 
 describe('scoreValidator', () => {
 

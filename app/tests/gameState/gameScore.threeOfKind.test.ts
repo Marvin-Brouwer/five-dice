@@ -5,7 +5,7 @@
 
 import { expect, test, describe } from 'vitest'
 
-import { isScoreApplicableToField } from '../../src/game/_logic/score/scoreFieldValidator'
+import { isScoreApplicableToField } from '../../src/game/logic/score/scoreFieldValidator'
 import { generateRandomScores } from './gameScore.mjs'
 
 const [pattern, allowedScores, disallowedScores] = generateRandomScores(

@@ -1,7 +1,7 @@
 import { component, cssClass } from '@rooted/components'
 
-import { type ScoreField } from '../_logic/gameConstants.ts'
-import type { InputFlowStore, InputStep } from '../_logic/input-flow-store.mts'
+import { type ScoreField } from '../logic/gameConstants.ts'
+import type { InputFlowStore, InputStep } from '../logic/input-flow-store.mts'
 import type { RowRegistry } from '../score-card/row-registry.mts'
 import type { PreviewCell, RowPreview, RowVariant, SelectionMode, SelectionStore } from '../score-card/selection-store.mts'
 import { localization } from '../../_shared/i18n/localization.mts'

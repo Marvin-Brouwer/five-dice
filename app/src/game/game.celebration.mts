@@ -1,7 +1,7 @@
 import type { ComponentContext } from '@rooted/components'
 import JSConfetti from 'js-confetti'
 
-import type { ScorePadStore } from './_logic/scorePadStore.mts'
+import type { ScorePadStore } from './logic/scorePadStore.mts'
 
 import { createAudioPlayer } from './audio/audio.ts'
 

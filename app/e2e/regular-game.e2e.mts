@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import type { DiceTuple, ScoreField } from '../src/game/_logic/gameConstants.ts'
+import type { DiceTuple, ScoreField } from '../src/game/logic/gameConstants.ts'
 
 import { GamePage } from './game-page.mts'
 

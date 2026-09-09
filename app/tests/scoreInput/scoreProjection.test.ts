@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
-import { discard, score } from '../../src/game/_logic/score/score.ts'
-import { createScorePad } from '../../src/game/_logic/score/scorePad.ts'
-import { flushEntries, projectedCell } from '../../src/game/_logic/score/scoreProjection.ts'
+import { discard, score } from '../../src/game/logic/score/score.ts'
+import { createScorePad } from '../../src/game/logic/score/scorePad.ts'
+import { flushEntries, projectedCell } from '../../src/game/logic/score/scoreProjection.ts'
 
 const ones = score([1, 1, 1, 1, 1])
 const fours = score([4, 4, 4, 4, 4])

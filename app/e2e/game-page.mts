@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test'
 
-import type { DiceTuple, ScoreField } from '../src/game/_logic/gameConstants.ts'
+import type { DiceTuple, ScoreField } from '../src/game/logic/gameConstants.ts'
 
 import { installCelebrationSpy, type CelebrationSpy } from './celebration-spy.mts'
 

@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
-import type { DiceTuple, DieValue } from '../_logic/gameConstants.ts'
-import type { InputFlowStore } from '../_logic/input-flow-store.mts'
+import type { DiceTuple, DieValue } from '../logic/gameConstants.ts'
+import type { InputFlowStore } from '../logic/input-flow-store.mts'
 import type { RowSpan } from '../score-card/row-registry.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { Icon } from '../../_shared/icon/icon.mts'

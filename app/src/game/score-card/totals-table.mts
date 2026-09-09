@@ -5,8 +5,8 @@ import {
 	calculatePartOneBonus,
 	calculatePartOneSubTotal,
 	calculatePartTwoTotal,
-} from '../_logic/score/scoreCalculator.ts'
-import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+} from '../logic/score/scoreCalculator.ts'
+import type { ScorePadStore } from '../logic/scorePadStore.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import type { RenderContext } from '../../_shared/render-context.ts'
 import { scrollPageTo } from '../../_shared/services/page-scroll.mts'

@@ -143,6 +143,6 @@ expect((await game.row('aces')).score).toBe('3')
 `enterRoll` takes an optional third argument, the row to sacrifice, which is
 what a second or later flush needs.
 
-The expected scores are worked out from `src/game/_logic/score/scoreCalculator.ts`
+The expected scores are worked out from `src/game/logic/score/scoreCalculator.ts`
 and are the specification here — if one disagrees with the app, check the
 arithmetic before changing the app.

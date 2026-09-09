@@ -1,4 +1,4 @@
-import type { ScoreField } from '../_logic/gameConstants.ts'
+import type { ScoreField } from '../logic/gameConstants.ts'
 
 export type RowRegistry = {
 	set(field: ScoreField, row: HTMLElement): void

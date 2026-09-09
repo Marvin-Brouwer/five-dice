@@ -1,9 +1,9 @@
 import type { ReadonlyState } from '@rooted/store'
 import { cssClass } from '@rooted/components'
 
-import type { DieValue, ScoreField } from '../_logic/gameConstants.ts'
-import { isDiscarded, isFlushScore, type ValidScore } from '../_logic/score/score.ts'
-import type { ScorePad } from '../_logic/score/scorePad.ts'
+import type { DieValue, ScoreField } from '../logic/gameConstants.ts'
+import { isDiscarded, isFlushScore, type ValidScore } from '../logic/score/score.ts'
+import type { ScorePad } from '../logic/score/scorePad.ts'
 import { dieNode } from '../../_shared/die/die-node.mts'
 import type { RenderContext } from '../../_shared/render-context.ts'
 

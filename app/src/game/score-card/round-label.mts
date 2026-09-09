@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
-import { roundAmount } from '../_logic/gameConstants.ts'
-import type { ScorePadStore } from '../_logic/scorePadStore.mts'
+import { roundAmount } from '../logic/gameConstants.ts'
+import type { ScorePadStore } from '../logic/scorePadStore.mts'
 import { LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
