@@ -1,13 +1,11 @@
-import { component, cssClass } from '@rooted/components'
+import { component } from '@rooted/components'
 
 import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
 import { sensorAvailable } from '../services/theme-sensor.mts'
 import { themeStore, type Theme } from '../stores/themeStore.mts'
 
-import { attachDropdown } from './dropdown-controller.mts'
-import checkIcon from './theme-chooser.check.svg?raw'
-import chevronIcon from './dropdown-chevron.svg?raw'
+import { DropDown, type DropDownApi } from './drop-down.mts'
 import moonIcon from './theme-chooser.moon.svg?raw'
 import sensorIcon from './theme-chooser.sensor.svg?raw'
 import sunIcon from './theme-chooser.sun.svg?raw'
@@ -58,7 +56,7 @@ function isDarkNow(): boolean {
 export const ThemeChooser = component({
 	name: 'theme-chooser',
 	styles,
-	onMount({ append, element, create, signal, on }) {
+	onMount({ append, element, create, signal }) {
 		const statusLine = element('span', {
 			classes: styles.status,
 			aria: {
@@ -66,101 +64,40 @@ export const ThemeChooser = component({
 			},
 		})
 
-		const buttonIcon = element('span', {
-			classes: styles.buttonIcon
-		})
-		const buttonLabel = element('span', {
-			classes: styles.buttonLabel,
-			textContent: themeLabel(themeStore.value),
-		})
-		const buttonChevron = element('span', {
-			classes: styles.buttonChevron,
-			children: create(Icon, {
-				source: chevronIcon,
-			}),
-		})
+		let dropdown: DropDownApi | undefined
 
-		const button = element('button', {
-			type: 'button',
-			classes: styles.button,
-			aria: {
-				hasPopup: 'listbox',
-				label: localization.text`Theme: ${themeLabel(themeStore.value)}`
-			},
-			children: [
-				buttonIcon,
-				buttonLabel,
-				buttonChevron
-			],
-		})
-
-		const list = element('div', {
-			role: 'listbox',
-			aria: {
-				label: localization.text`Theme`
-			},
-			classes: styles.list,
-		})
-
-		function syncButton() {
+		function syncStatus() {
 			const dark = isDarkNow()
-			buttonIcon.replaceChildren(create(Icon, {
-				source: themeOption(themeStore.value).icon,
-			}))
-			buttonLabel.textContent = themeLabel(themeStore.value)
-			button.setAttribute('aria-label', localization.text`Theme: ${themeLabel(themeStore.value)}`)
-
 			const auto = themeStore.value === 'system' || themeStore.value === 'sensor'
 			statusLine.hidden = !auto
-			if (auto) {
-				statusLine.replaceChildren(
-					create(Icon, {
-						source: dark ? moonIcon : sunIcon,
-					}),
-					element('span', {
-						textContent: dark ? localization.text`Dark active` : localization.text`Light active`,
-					}),
-				)
-			}
-			else {
+			if (!auto) {
 				statusLine.textContent = ''
+				return
 			}
+			statusLine.replaceChildren(
+				create(Icon, {
+					source: dark ? moonIcon : sunIcon,
+				}),
+				element('span', {
+					textContent: dark ? localization.text`Dark active` : localization.text`Light active`,
+				}),
+			)
 		}
 
-		function buildOptions(): Node[] {
+		function items() {
 			const sensorSupported = sensorAvailable()
-			return getOptions(localization.text).map((option) => {
-				const selected = option.value === themeStore.value
+			return getOptions(localization.text).map(option => {
 				const disabled = option.value === 'sensor' && !sensorSupported
-
-				const iconWrap = element('span', {
-					classes: styles.optionIcon,
-					children: create(Icon, {
-						source: option.icon,
-					}),
-				})
-
-				const optionEl = element('div', {
-					role: 'option',
-					aria: {
-						selected: String(selected),
-						disabled: disabled ? 'true' : undefined!
-					},
-					classes: [
-						styles.option,
-						cssClass(selected, styles.optionSelected),
-						cssClass(disabled, styles.optionDisabled),
-					],
-					on: {
-						click(event) {
-							event.stopPropagation()
-							if (disabled) return
-							themeStore.update(() => option.value)
-							dropdown.close()
-						},
-					},
-					children: [
-						iconWrap,
+				return {
+					selected: option.value === themeStore.value,
+					disabled,
+					content: [
+						element('span', {
+							classes: styles.optionIcon,
+							children: create(Icon, {
+								source: option.icon,
+							}),
+						}),
 						element('span', {
 							children: [
 								element('span', {
@@ -176,27 +113,40 @@ export const ThemeChooser = component({
 							],
 						}),
 					],
-				})
-
-				if (selected) {
-					optionEl.append(element('span', {
-						classes: styles.optionCheck,
-						children: create(Icon, {
-							source: checkIcon,
-						}),
-					}))
+					onSelect() {
+						themeStore.update(() => option.value)
+						dropdown?.close()
+					},
 				}
-				return optionEl
 			})
 		}
 
-		const dropdown = attachDropdown({ button, list, buildOptions, signal, on })
+		const chooser = create(DropDown, {
+			label: localization.text`Theme`,
+			valueLabel: () => themeLabel(themeStore.value),
+			trigger: () => [
+				element('span', {
+					classes: styles.buttonIcon,
+					children: create(Icon, {
+						source: themeOption(themeStore.value).icon,
+					}),
+				}),
+				element('span', {
+					classes: styles.buttonLabel,
+					textContent: themeLabel(themeStore.value),
+				}),
+			],
+			items,
+			reference: api => {
+				dropdown = api
+			},
+		})
 
-		syncButton()
+		syncStatus()
 
 		themeStore.on('change', signal, () => {
-			syncButton()
-			dropdown.refresh()
+			syncStatus()
+			dropdown?.refresh()
 		})
 
 		// Listen for data-theme changes (theme-sensor writes it) so the status
@@ -204,21 +154,13 @@ export const ThemeChooser = component({
 		// icon itself is CSS-driven and repaints without JS involvement.
 		if (typeof MutationObserver !== 'undefined') {
 			const observer = new MutationObserver(() => {
-				syncButton()
+				syncStatus()
+				dropdown?.refresh()
 			})
 			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 			signal.addEventListener('abort', () => observer.disconnect(), { once: true })
 		}
 
-		append(
-			statusLine,
-			element('div', {
-				classes: styles.wrap,
-				children: [
-					button,
-					list
-				],
-			}),
-		)
+		append(statusLine, chooser)
 	},
 })
