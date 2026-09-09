@@ -5,7 +5,7 @@ import { HomeRoute } from '../content/_routes.mts'
 import { localeLabels, localization } from '../_shared/i18n/localization.mts'
 import { Masthead } from '../_shared/masthead/masthead.mts'
 import { PaperCard } from '../_shared/paper-card/paper-card.mts'
-import { readRememberedLocale } from '../_shared/i18n/remembered-locale.mts'
+import { getLocale } from '../_shared/i18n/remembered-locale.mts'
 
 import styles from './culture-select.css'
 
@@ -17,7 +17,7 @@ export const CultureSelect = component({
 	name: 'culture-select-page',
 	styles,
 	onMount({ append, element, create }) {
-		const remembered = readRememberedLocale()
+		const remembered = getLocale()
 		if (isSupportedLocale(remembered)) {
 			// Redirect via replaceState (not navigate/pushState) so `/` doesn't
 			// leave a history entry that bounces straight back to this redirect.

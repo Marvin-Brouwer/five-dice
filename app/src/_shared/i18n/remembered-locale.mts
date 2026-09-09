@@ -19,7 +19,7 @@ const COOKIE_NAME = 'locale'
  */
 const COOKIE_PATH = import.meta.env.BASE_URL.replace(/(.)\/$/, '$1')
 
-export function rememberLocale(locale: typeof localization.Locale): void {
+export function setLocale(locale: typeof localization.Locale): void {
 	cookieStorage.set({
 		name: COOKIE_NAME,
 		value: locale,
@@ -28,6 +28,6 @@ export function rememberLocale(locale: typeof localization.Locale): void {
 	})
 }
 
-export function readRememberedLocale(): string | undefined {
+export function getLocale(): string | undefined {
 	return cookieStorage.get<string>(COOKIE_NAME)
 }

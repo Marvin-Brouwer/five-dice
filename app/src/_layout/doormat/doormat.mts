@@ -13,7 +13,7 @@ import { ShareButton } from './share-button.mts'
 import topIcon from './doormat.top.svg?raw'
 import styles from './doormat.css'
 
-const repositoryUrl = 'https://github.com/Marvin-Brouwer/five-dice'
+const repositoryUrl = packageJson.repository.url
 const bugReportUrl = `${repositoryUrl}/issues/new?assignees=&labels=bug&template=bug_report.md&title=`
 // The template filename really is misspelled in .github/ISSUE_TEMPLATE — do
 // not "fix" it here, the URL has to match the file on disk.

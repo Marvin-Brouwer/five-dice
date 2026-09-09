@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 
 import { localization } from './localization.mts'
-import { rememberLocale } from './remembered-locale.mts'
+import { setLocale } from './remembered-locale.mts'
 
 /** Non-rendering component that keeps the remembered-locale cookie in sync with the URL across every navigation. */
 export const LocaleSync = component({
@@ -14,5 +14,5 @@ export const LocaleSync = component({
 })
 
 function persist() {
-	if (localization.route.valid) rememberLocale(localization.currentLocale)
+	if (localization.route.valid) setLocale(localization.currentLocale)
 }

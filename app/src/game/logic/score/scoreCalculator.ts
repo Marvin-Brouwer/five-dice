@@ -1,6 +1,5 @@
 import type { ReadonlyState } from '@rooted/store'
 
-import { partOneFields, partTwoFields } from '../fields.ts'
 import type { DieValue, ScoreField } from '../gameConstants.ts'
 import { InvalidScoreError } from './invalidScoreError.ts'
 import { ValidScore, isDiscarded, isFlushScore } from './score.ts'
@@ -66,8 +65,14 @@ export function calculateFlush(score: ReadonlyState<Array<ValidScore>>): number 
 
 export function calculatePartOneSubTotal(scorePad: ReadonlyState<ScorePad>): number {
 
-	return partOneFields
-		.reduce((total, field) => total + calculateScoreForPad(scorePad, field), 0)
+	return (
+		calculateScoreForPad(scorePad, 'aces') +
+		calculateScoreForPad(scorePad, 'deuces') +
+		calculateScoreForPad(scorePad, 'threes') +
+		calculateScoreForPad(scorePad, 'fours') +
+		calculateScoreForPad(scorePad, 'fives') +
+		calculateScoreForPad(scorePad, 'sixes')
+	)
 }
 
 const partOneBonus = 35
@@ -84,8 +89,15 @@ export function calculatePartOneBonus(partOneSubTotal: number): number {
 
 export function calculatePartTwoTotal(scorePad: ReadonlyState<ScorePad>): number {
 
-	return partTwoFields
-		.reduce((total, field) => total + calculateScoreForPad(scorePad, field), 0)
+	return (
+		calculateScoreForPad(scorePad, 'threeOfKind') +
+		calculateScoreForPad(scorePad, 'fourOfKind') +
+		calculateScoreForPad(scorePad, 'fullHouse') +
+		calculateScoreForPad(scorePad, 'smallStraight') +
+		calculateScoreForPad(scorePad, 'largeStraight') +
+		calculateScoreForPad(scorePad, 'flush') +
+		calculateScoreForPad(scorePad, 'chance')
+	)
 }
 
 export function calculateGameTotal(partOneTotal: number, bonus: number, partTwoTotal: number): number {

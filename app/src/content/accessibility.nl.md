@@ -1,4 +1,4 @@
-## Toegankelijkheids<wbr/>verklaring
+## Toegankelijkheidsverklaring
 
 Five dice streeft ernaar voor iedereen bruikbaar te zijn. We streven naar naleving van WCAG 2.1 niveau AA: elke interactieve bediening is bereikbaar met het toetsenbord, focus is altijd zichtbaar, contrastverhoudingen voldoen in zowel het lichte als het donkere thema, en de dobbelstenen en score-invoer gebruiken native formulierelementen zodat schermlezers ze als correcte groepen aankondigen.
 

@@ -56,9 +56,9 @@ async function releaseIfHeld() {
 if (typeof document !== 'undefined') {
 	if (screenLockStore.value) void acquire()
 
-	screenLockStore.on('change', new AbortController().signal, ({ detail }) => {
-		if (detail.state) void acquire()
-		else void releaseIfHeld()
+	screenLockStore.on('change', new AbortController().signal, async ({ detail }) => {
+		if (detail.state) await acquire()
+		else await releaseIfHeld()
 	})
 
 	document.addEventListener('visibilitychange', () => {

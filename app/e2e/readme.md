@@ -68,65 +68,49 @@ If you would rather point at a Chromium you already have — a sandbox with a
 pinned build, or a system install — set `PLAYWRIGHT_CHROMIUM_PATH` to its
 executable and the config will use that instead.
 
-## NixOS
-
-Start with the normal route above — `pnpm test:e2e:install` — and make sure
-**`PLAYWRIGHT_BROWSERS_PATH` is unset** while you do. Anything that sets it
-globally, a system profile included, sends both the install and the lookup to
-that directory instead. The downloaded browsers need to be runnable, which on
-NixOS means `programs.nix-ld.enable` or an FHS environment; without one they
-install cleanly and then die the moment they launch:
-
-```
-ProtocolError: Protocol error (Browser.getVersion): Internal server error, session closed.
-```
+## When the browser will not start
 
 `pnpm exec playwright install --list` prints the browsers Playwright can find,
 per installation, and `--dry-run chromium` prints the exact location and
 download URL it expects for this release. Neither downloads anything, and
 between them they explain most "it cannot find the browser" situations.
 
-Two more traps if `PLAYWRIGHT_BROWSERS_PATH` is set:
+**`PLAYWRIGHT_BROWSERS_PATH` redirects both the install and the lookup.** If
+anything in your environment sets it globally, `pnpm test:e2e:install` writes
+somewhere other than where you expect. Two traps follow from that:
 
 - **`playwright install` writes into it.** It creates a `__dirlock` and a
-  `.links/` directory there, so pointing it at a read-only path — a
-  `/nix/store` entry, say — cannot work. The lock is acquired with 20 retries
-  over ten minutes and prints nothing while it waits, so this can present as
-  the command simply hanging.
+  `.links/` directory there, so pointing it at a read-only path cannot work.
+  The lock is acquired with 20 retries over ten minutes and prints nothing
+  while it waits, so this can present as the command simply hanging.
 - **`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` does not skip it.** That variable only
   suppresses the npm postinstall hook; an explicit `playwright install` still
   downloads.
 
-If you would rather use the browsers from nixpkgs, two things make that fail
-in ways the error messages do not explain. Both report as
-`Executable doesn't exist at …`, which reads like a missing install rather
-than a mismatch:
+**Browsers packaged by your OS or package manager usually will not be found.**
+Playwright resolves browsers by revision number and by directory layout, and
+both have to match the Playwright release exactly — 1.62.1 wants Chromium
+**r1234** (`playwright-core/browsers.json`) laid out as
+`chromium-1234/chrome-linux64/chrome` on linux-x64, because its "chromium" is a
+*Chrome for Testing* build. Older releases shipped a plain Chromium under
+`chrome-linux/chrome`. Either mismatch reports as `Executable doesn't exist at
+…`, which reads like a missing install rather than a mismatch, so a version
+bump alone will not fix it.
 
-- **The revision has to match.** Playwright resolves browsers by revision
-  number, so `playwright-driver` has to come from the same Playwright release.
-  1.62.1 wants Chromium **r1234** (`playwright-core/browsers.json`).
-- **So does the directory layout.** 1.62.1's "chromium" is a *Chrome for
-  Testing* build — `playwright install --dry-run chromium` shows it downloading
-  from `builds/cft/…/chrome-linux64.zip` — and it expects
-  `chromium-1234/chrome-linux64/chrome` on linux-x64. Older releases shipped a
-  plain Chromium under `chrome-linux/chrome`. A `playwright-driver` built for
-  one of those will not be found even if the revision happens to line up, so
-  this is not something a revision bump alone fixes.
+Some distributions also ship no `chromium-headless-shell`, which Playwright
+would otherwise pick for a headless run. The config sets `channel: 'chromium'`
+so the full browser is used in either mode, which covers that — at the cost of
+a slightly heavier headless start everywhere.
 
-nixpkgs also ships no `chromium-headless-shell`, which Playwright would
-otherwise pick for a headless run. The config sets `channel: 'chromium'` so
-the full browser is used in either mode, which covers that — at the cost of a
-slightly heavier headless start everywhere.
-
-Failing all of it, `PLAYWRIGHT_CHROMIUM_PATH=$(which chromium)` skips browser
-resolution altogether for the test run. It does not cover UI mode's own
-window, which is why `test:e2e:ui` uses `--ui-port`.
+Failing all of it, set `PLAYWRIGHT_CHROMIUM_PATH` to a Chromium you already
+have and the config uses it directly, skipping browser resolution for the test
+run. It does not cover UI mode's own window, which is why `test:e2e:ui` uses
+`--ui-port`.
 
 Unrelated but adjacent: this repo keeps `*.jpg *.wav *.mp3` in Git LFS.
 Without `git-lfs` configured, those files check out as ~130-byte pointer stubs
 and the app logs `EncodingError: Unable to decode audio data` on every run,
-with the end-of-game fanfare silently never playing. The tests pass either
-way, since audio failure is caught and warned.
+with the end-of-game fanfare silently never playing.
 
 ## Adding to these
 

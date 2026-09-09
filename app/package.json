@@ -4,6 +4,10 @@
 	"version": "0.0.1",
 	"type": "module",
 	"homepage": "https://marvin-brouwer.github.io/five-dice/",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Marvin-Brouwer/five-dice"
+	},
 	"license": "Apache-2.0",
 	"scripts": {
 		"dev": "vite",

@@ -3,7 +3,7 @@ import { href, navigate } from '@rooted/router'
 
 import { Icon } from '../icon/icon.mts'
 import { localeLabels, localization, Locale } from '../i18n/localization.mts'
-import { rememberLocale } from '../i18n/remembered-locale.mts'
+import { setLocale } from '../i18n/remembered-locale.mts'
 
 import { attachDropdown } from './dropdown-controller.mts'
 import chevronIcon from './dropdown-chevron.svg?raw'
@@ -88,7 +88,7 @@ export const LanguageChooser = component({
 							// on the popstate navigate() fires, rather than updating
 							// this button's own label ahead of the rest of the UI.
 							button.disabled = true
-							rememberLocale(code)
+							setLocale(code)
 							navigate(href.path(pathForLocale(code)))
 						},
 					},
