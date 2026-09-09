@@ -90,9 +90,8 @@ export const DoormatLink = component<DoormatLinkOptions>({
 						label: localization.text`${label} (opens in a new tab)`
 					},
 					children: [
-						// TODO https://github.com/Marvin-Brouwer/rooted/issues/297
-						label as unknown as Node,
-						trailingMarker as Element as Node
+						label,
+						trailingMarker,
 					],
 				})
 			)
