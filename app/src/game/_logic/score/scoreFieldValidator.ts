@@ -7,20 +7,20 @@ export function isScoreApplicableToField(score: ScoreValue, field: ScoreField): 
 	if (isFlushScore(score)) return field === 'flush'
 
 	switch (field) {
-	case 'aces': return score.includes(dice[field])
-	case 'deuces': return score.includes(dice[field])
-	case 'threes': return score.includes(dice[field])
-	case 'fours': return score.includes(dice[field])
-	case 'fives': return score.includes(dice[field])
-	case 'sixes': return score.includes(dice[field])
+		case 'aces': return score.includes(dice[field])
+		case 'deuces': return score.includes(dice[field])
+		case 'threes': return score.includes(dice[field])
+		case 'fours': return score.includes(dice[field])
+		case 'fives': return score.includes(dice[field])
+		case 'sixes': return score.includes(dice[field])
 
-	case 'threeOfKind': return hasSomeOfKind(3, score)
-	case 'fourOfKind': return hasSomeOfKind(4, score)
-	case 'fullHouse': return isFullHouse(score)
-	case 'smallStraight': return isSmallStraight(score)
-	case 'largeStraight': return isLargeStraight(score)
-	case 'flush': return isFlush(score)
-	case 'chance': return true
+		case 'threeOfKind': return hasSomeOfKind(3, score)
+		case 'fourOfKind': return hasSomeOfKind(4, score)
+		case 'fullHouse': return isFullHouse(score)
+		case 'smallStraight': return isSmallStraight(score)
+		case 'largeStraight': return isLargeStraight(score)
+		case 'flush': return isFlush(score)
+		case 'chance': return true
 	}
 }
 

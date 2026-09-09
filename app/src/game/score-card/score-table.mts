@@ -35,7 +35,10 @@ export function sectionBand(context: RenderContext, cells: BandCell[]): HTMLTabl
 		children: element('div', {
 			classes: styles.bandInner,
 			children: cells.map(cell => element('span', {
-				classes: [styles.bandCell, cell.classes],
+				classes: [
+					styles.bandCell,
+					cell.classes,
+				],
 				textContent: cell.text,
 			})),
 		}),

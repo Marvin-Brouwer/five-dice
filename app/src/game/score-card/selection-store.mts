@@ -39,7 +39,11 @@ export type SelectionState = {
 }
 
 export type SelectionStore = Store<SelectionState> & {
-	begin(mode: SelectionMode, targets: Partial<Record<ScoreField, RowVariant>>, pinned?: RowPreview): void
+	begin(
+		mode: SelectionMode,
+		targets: Partial<Record<ScoreField, RowVariant>>,
+		pinned?: RowPreview,
+	): void
 	setHover(field: ScoreField | undefined): void
 	setPreview(field: ScoreField, cell: PreviewCell): void
 	clearPreview(): void
@@ -47,7 +51,13 @@ export type SelectionStore = Store<SelectionState> & {
 }
 
 function idleState(): SelectionState {
-	return { mode: 'none', targets: {}, hover: undefined, preview: undefined, pinned: undefined }
+	return {
+		mode: 'none',
+		targets: {},
+		hover: undefined,
+		preview: undefined,
+		pinned: undefined,
+	}
 }
 
 /**
@@ -60,25 +70,50 @@ function idleState(): SelectionState {
 export function createSelectionStore(): SelectionStore {
 	const store = createStore<SelectionState>(idleState())
 
-	function begin(mode: SelectionMode, targets: Partial<Record<ScoreField, RowVariant>>, pinned?: RowPreview) {
-		store.update(() => ({ mode, targets, hover: undefined, preview: undefined, pinned }))
+	function begin(
+		mode: SelectionMode,
+		targets: Partial<Record<ScoreField, RowVariant>>,
+		pinned?: RowPreview,
+	) {
+		store.update(() => ({
+			mode,
+			targets,
+			hover: undefined,
+			preview: undefined,
+			pinned,
+		}))
 	}
 
 	function setHover(field: ScoreField | undefined) {
-		store.update(state => { state.hover = field })
+		store.update(state => {
+			state.hover = field
+		})
 	}
 
 	function setPreview(field: ScoreField, cell: PreviewCell) {
-		store.update(state => { state.preview = { field, cell } })
+		store.update(state => {
+			state.preview = {
+				field,
+				cell,
+			}
+		})
 	}
 
 	function clearPreview() {
-		store.update(state => { state.preview = undefined })
+		store.update(state => {
+			state.preview = undefined
+		})
 	}
 
 	function end() {
 		store.update(() => idleState())
 	}
 
-	return Object.assign(store, { begin, setHover, setPreview, clearPreview, end })
+	return Object.assign(store, {
+		begin,
+		setHover,
+		setPreview,
+		clearPreview,
+		end,
+	})
 }

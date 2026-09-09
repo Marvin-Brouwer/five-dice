@@ -106,7 +106,10 @@ export const DiceSlots = component<DiceSlotsOptions>({
 				}))
 				buttons[index]!.setAttribute('aria-label', label)
 				buttons[index]!.classList.toggle(styles.slotActive!, focused)
-				painted[index] = { value, focused }
+				painted[index] = {
+				value,
+				focused,
+			}
 			}
 
 			// Keep DOM focus with the store, but only while the user is
@@ -126,7 +129,9 @@ export const DiceSlots = component<DiceSlotsOptions>({
 
 		replace(element('div', {
 			role: 'group',
-			aria: { label: localization.text`Your five dice` },
+			aria: {
+				label: localization.text`Your five dice`,
+			},
 			classes: styles.slotsRow,
 			children: buttons,
 		}))

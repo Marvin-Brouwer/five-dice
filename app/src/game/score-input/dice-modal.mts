@@ -184,7 +184,11 @@ export const DiceModal = component<DiceModalOptions>({
 					},
 				}),
 			],
-			actions: [closeButton, resetButton, confirmButton],
+			actions: [
+			closeButton,
+			resetButton,
+			confirmButton,
+		],
 			ref: (el) => {
 				dialog = el as HTMLDialogElement
 				// Escape, the backdrop and the Close button all land here, so

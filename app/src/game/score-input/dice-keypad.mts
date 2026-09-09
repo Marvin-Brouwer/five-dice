@@ -20,7 +20,9 @@ export const DiceKeypad = component<DiceKeypadOptions>({
 		const buttons = dieValues.map(value => element('button', {
 			type: 'button',
 			classes: styles.keypadButton,
-			aria: { label: localization.text`Add a ${value}` },
+			aria: {
+				label: localization.text`Add a ${value}`,
+			},
 			children: element('span', {
 				classes: styles.keyDie,
 				children: create(PipDie, {
@@ -37,7 +39,9 @@ export const DiceKeypad = component<DiceKeypadOptions>({
 
 		replace(element('div', {
 			role: 'group',
-			aria: { label: localization.text`Dice keys` },
+			aria: {
+				label: localization.text`Dice keys`,
+			},
 			classes: styles.keysRow,
 			children: buttons,
 		}))
