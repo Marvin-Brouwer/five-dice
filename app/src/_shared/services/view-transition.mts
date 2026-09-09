@@ -19,7 +19,7 @@
  * not reject them.
  *
  * TODO: drop this once the router holds on to its own transition promises.
- * https://github.com/Marvin-Brouwer/rooted/issues
+ * https://github.com/Marvin-Brouwer/rooted/issues/319
  */
 if (typeof document !== 'undefined' && 'startViewTransition' in document) {
 	const startViewTransition = document.startViewTransition
