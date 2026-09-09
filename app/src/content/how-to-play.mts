@@ -19,21 +19,11 @@ import { MenuRow } from '../_shared/menu/menu-row.mts'
 import { StickerButton } from '../_shared/sticker/sticker-button.mts'
 
 import { examplePad } from './how-to-play.examples.ts'
+import { RollingExampleTable } from './rolling-example-table.mts'
 import styles from './how-to-play.css'
 
 import refreshIcon from '../_shared/menu/menu-content.refresh.svg?raw'
 import undoIcon from '../_shared/menu/menu-content.undo.svg?raw'
-
-const scrambleTicks = 8
-const tickMilliseconds = 70
-
-function reducedMotion(): boolean {
-	return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
-}
-
-function randomRoll(): DiceTuple {
-	return Array.from({ length: 5 }, () => (1 + Math.floor(Math.random() * 6)) as DieValue) as DiceTuple
-}
 
 /**
  * Class names here are `guide-` prefixed on purpose. A component's stylesheet
@@ -104,100 +94,7 @@ export const HowToPlay = component({
 			})
 		}
 
-		// The example table is the real score card, filled in: same rows, same
-		// sorting and dimming of the dice that don't count, same score column.
-		// Its own store, so nothing here can touch a game in progress.
-		const demo = createScorePadStore()
-		const selection = createSelectionStore()
-		const rows = createRowRegistry()
-
-		let timer: number | undefined
-		function stop() {
-			if (timer !== undefined) clearInterval(timer)
-			timer = undefined
-		}
-
-		function show(pad: ReturnType<typeof examplePad>) {
-			demo.update(state => {
-				state.pad = pad
-			})
-		}
-
-		/** Random faces for a beat, then a roll each row would really accept. */
-		function reroll() {
-			stop()
-			if (reducedMotion()) {
-				show(examplePad())
-				return
-			}
-			let tick = 0
-			timer = window.setInterval(() => {
-				tick++
-				if (tick >= scrambleTicks) {
-					stop()
-					show(examplePad())
-					return
-				}
-				show(scrambledPad())
-			}, tickMilliseconds)
-		}
-
-		/** Mid-tumble faces. Not valid rolls — they are never shown at rest. */
-		function scrambledPad(): ReturnType<typeof examplePad> {
-			const pad = examplePad()
-			for (const field of [...partOneFields, ...partTwoFields]) {
-				if (field === 'flush') pad.flush = [score(randomRoll())]
-				else pad[field] = score(randomRoll())
-			}
-			return pad
-		}
-
-		show(examplePad())
-		signal.addEventListener('abort', stop)
-
-		const table = element('div', {
-			classes: styles.guideTable,
-			children: [
-				create(ScoreSection, {
-					store: demo,
-					selection,
-					rows,
-					title: localization.text`Part one`,
-					fields: partOneFields,
-					withDieIcon: true,
-				}),
-				create(ScoreSection, {
-					store: demo,
-					selection,
-					rows,
-					title: localization.text`Part two`,
-					fields: partTwoFields,
-					withDieIcon: false,
-				}),
-				create(StickerButton, {
-					label: localization.text`Roll\nagain`,
-					ariaLabel: localization.text`Roll again`,
-					classes: styles.guideRollAgain,
-					on: {
-						click: reroll,
-					},
-				}),
-			],
-		})
-
-		// Nothing scrolled past should have finished tumbling before it was
-		// seen, so the first roll waits until the table is actually on screen.
-		if (reducedMotion() || typeof IntersectionObserver === 'undefined') {
-			reroll()
-		} else {
-			const observer = new IntersectionObserver(entries => {
-				if (!entries.some(entry => entry.isIntersecting)) return
-				observer.disconnect()
-				reroll()
-			}, { rootMargin: '0px 0px -10% 0px' })
-			observer.observe(table)
-			signal.addEventListener('abort', () => observer.disconnect())
-		}
+		const table = create(RollingExampleTable)
 
 		// A keypad of its own, so the guide can show the real thing without
 		// reaching into a game in progress. Nothing reads this store back.
@@ -285,7 +182,7 @@ export const HowToPlay = component({
 								classes: styles.guideFigureCard,
 								children: create(ScoreSection, {
 									store: discarded,
-									selection,
+									selection: createSelectionStore(),
 									rows: createRowRegistry(),
 									title: localization.text`Part two`,
 									fields: ['chance'],

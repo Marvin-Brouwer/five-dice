@@ -40,25 +40,6 @@
 	display: block;
 }
 
-.guide-table {
-	--col-roll: 150px;
-	--col-score: calc(3em + var(--space-1));
-	--col-totals-score: calc(var(--col-roll) + var(--col-score));
-	display: flex;
-	flex-direction: column;
-}
-
-/* Hangs off the table's corner, the way Enter score hangs off the card's. */
-.guide-roll-again {
-	position: absolute;
-	/* Sitting on the roll column's title bar rather than above it, the
-	   way the card's own sticker laps over its header. Kept left of the
-	   score column so it covers no label. */
-	bottom: calc(100% - 14px);
-	right: calc(var(--col-score) + var(--space-3));
-	z-index: 2;
-}
-
 /* Figures
    Real pieces of the app, shown rather than described. */
 .guide-figures {
@@ -97,7 +78,6 @@
 	background: color-mix(in srgb, var(--color-surface) 55%, transparent);
 }
 
-
 .guide-figure-caption {
 	font-family: var(--font-mono);
 	font-size: 9px;
@@ -106,7 +86,6 @@
 	color: var(--color-text-muted);
 	text-align: center;
 }
-
 
 /* CTA */
 /* Holds the StartGameButton — the same row the landing page ends on, so the
