@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 import { createStore } from '@rooted/store'
 
-import { LiveRegion } from '../../_shared/a11y/live-region.mts'
+import { createAnnouncementStore, LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { ActionButton } from '../../_shared/action-button/action-button.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 
@@ -42,13 +42,9 @@ export const ShareButton = component<ShareButtonOptions>({
 	onMount({ append, create, signal, options }) {
 		const { url } = options
 
-		// LiveRegion hands its element over in its own onMount, a microtask
-		// after ours, so the first announcement has to be buffered.
-		let liveAnnounce: HTMLElement | undefined
-		let announcement = ''
+		const announcement = createAnnouncementStore()
 		function announce(text: string) {
-			announcement = text
-			if (liveAnnounce) liveAnnounce.textContent = text
+			announcement.update(() => text)
 		}
 
 		const tagline = localization.text`Play the game together`
@@ -127,10 +123,7 @@ export const ShareButton = component<ShareButtonOptions>({
 				},
 			}),
 			create(LiveRegion, {
-				reference(region) {
-					liveAnnounce = region
-					region.textContent = announcement
-				},
+				store: announcement,
 			}),
 		)
 	},

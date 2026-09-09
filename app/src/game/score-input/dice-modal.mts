@@ -3,7 +3,7 @@ import { component } from '@rooted/components'
 import type { DiceTuple, DieValue } from '../logic/gameConstants.ts'
 import type { InputFlowStore } from '../logic/input-flow-store.mts'
 import type { RowSpan } from '../score-card/row-registry.mts'
-import { LiveRegion } from '../../_shared/a11y/live-region.mts'
+import { createAnnouncementStore, LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { scrollPageTo } from '../../_shared/services/page-scroll.mts'
@@ -84,13 +84,11 @@ export const DiceModal = component<DiceModalOptions>({
 		const state = createDiceStore()
 		let slots: DiceSlotsApi | undefined
 
-		// LiveRegion hands its element over in its own onMount, which is a
-		// microtask after ours, so the first announcement has to be buffered.
-		let liveAnnounce: HTMLElement | undefined
-		let announcement = ''
+		// The region lives inside the dialog on purpose: everything outside
+		// the top layer is inert to assistive tech while it is open.
+		const announcement = createAnnouncementStore()
 		function announce(text: string) {
-			announcement = text
-			if (liveAnnounce) liveAnnounce.textContent = text
+			announcement.update(() => text)
 		}
 
 		const bandStatus = element('span', {
@@ -179,10 +177,7 @@ export const DiceModal = component<DiceModalOptions>({
 					state,
 				}),
 				create(LiveRegion, {
-					reference(region) {
-						liveAnnounce = region
-						region.textContent = announcement
-					},
+					store: announcement,
 				}),
 			],
 			actions: [

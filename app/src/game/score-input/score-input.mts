@@ -5,7 +5,7 @@ import { discard, score } from '../logic/score/score.ts'
 import { isScoreApplicableToField } from '../logic/score/scoreFieldValidator.ts'
 import { projectedCell } from '../logic/score/scoreProjection.ts'
 import type { GameContext } from '../logic/game-context.mts'
-import { LiveRegion } from '../../_shared/a11y/live-region.mts'
+import { createAnnouncementStore, LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { getRowDisplayLabels } from '../score-card/score-card.labels.ts'
 
@@ -23,11 +23,12 @@ export const ScoreInput = component<ScoreInputOptions>({
 		const { game } = options
 		const { pad: store, flow, selection, rows } = game
 
-		let liveAnnounce!: HTMLElement
+		const announcement = createAnnouncementStore()
+		function announce(text: string) {
+			announcement.update(() => text)
+		}
 		const liveRegion = create(LiveRegion, {
-			reference(region) {
-				liveAnnounce = region
-			}
+			store: announcement,
 		})
 
 		function applyAndClose(field: ScoreField, flushDiscardField?: Exclude<ScoreField, 'flush'>) {
@@ -37,25 +38,25 @@ export const ScoreInput = component<ScoreInputOptions>({
 			try {
 				if (!isScoreApplicableToField(scoreValue, field)) {
 					store.apply({ field, score: discard() })
-					liveAnnounce.textContent = localization.text`Discarded ${getRowDisplayLabels()[field].title}.`
+					announce(localization.text`Discarded ${getRowDisplayLabels()[field].title}.`)
 				}
 				else if (field === 'flush') {
 					if (flushDiscardField) {
 						store.apply({ field: 'flush', score: scoreValue, discard: flushDiscardField })
-						liveAnnounce.textContent = localization.text`Flush applied. Discarded ${getRowDisplayLabels()[flushDiscardField].title}.`
+						announce(localization.text`Flush applied. Discarded ${getRowDisplayLabels()[flushDiscardField].title}.`)
 					}
 					else {
 						store.apply({ field: 'flush', score: scoreValue })
-						liveAnnounce.textContent = localization.text`First flush applied.`
+						announce(localization.text`First flush applied.`)
 					}
 				}
 				else {
 					store.apply({ field, score: scoreValue })
-					liveAnnounce.textContent = localization.text`Applied ${getRowDisplayLabels()[field].title}.`
+					announce(localization.text`Applied ${getRowDisplayLabels()[field].title}.`)
 				}
 			}
 			catch (e) {
-				liveAnnounce.textContent = (e as Error).message
+				announce((e as Error).message)
 			}
 			flow.close()
 		}

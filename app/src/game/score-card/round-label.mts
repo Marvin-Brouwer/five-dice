@@ -2,7 +2,7 @@ import { component } from '@rooted/components'
 
 import { roundAmount } from '../logic/gameConstants.ts'
 import type { ScorePadStore } from '../logic/scorePadStore.mts'
-import { LiveRegion } from '../../_shared/a11y/live-region.mts'
+import { createAnnouncementStore, LiveRegion } from '../../_shared/a11y/live-region.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { Icon } from '../../_shared/icon/icon.mts'
 
@@ -26,14 +26,10 @@ export const RoundLabel = component<RoundLabelOptions>({
 
 		// The party icon is decorative, so on its own the finished state is
 		// silent -- an `aria-live` label with no text announces nothing. The
-		// shared live region carries the wording instead. Its `reference`
-		// fires a microtask after this mount, so a game that is already over
-		// when the page loads has to buffer its announcement until then.
-		let region: HTMLElement | undefined
-		let pending: string | undefined
+		// live region carries the wording instead.
+		const announcement = createAnnouncementStore()
 		function announce(text: string) {
-			if (region) region.textContent = text
-			else pending = text
+			announcement.update(() => text)
 		}
 
 		function render() {
@@ -75,10 +71,7 @@ export const RoundLabel = component<RoundLabelOptions>({
 		replace(
 			label,
 			create(LiveRegion, {
-				reference: element => {
-					region = element
-					if (pending !== undefined) element.textContent = pending
-				},
+				store: announcement,
 			}),
 		)
 	},
