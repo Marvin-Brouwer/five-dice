@@ -17,7 +17,6 @@ import './_shared/services/theme-sensor.mts'
 import './_shared/services/wake-lock.mts'
 import './_shared/services/install-prompt.mts'
 import './_shared/services/navigation-guard.mts'
-import './_shared/services/view-transition.mts'
 
 import packageJson from '../package.json' with { type: 'json' }
 

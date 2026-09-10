@@ -16,7 +16,7 @@ function readInitialTheme(): Theme {
 export const themeStore = createStore<Theme>(readInitialTheme())
 
 if (typeof document !== 'undefined') {
-	themeStore.on('change', new AbortController().signal, ({ detail }) => {
+	themeStore.on('change', ({ detail }) => {
 		cookieStorage.set(COOKIE_NAME, detail.state)
 	})
 }

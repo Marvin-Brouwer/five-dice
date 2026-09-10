@@ -11,7 +11,7 @@ function readInitial(): boolean {
 export const screenLockStore = createStore<boolean>(readInitial())
 
 if (typeof window !== 'undefined') {
-	screenLockStore.on('change', new AbortController().signal, ({ detail }) => {
+	screenLockStore.on('change', ({ detail }) => {
 		localStorage.set(STORAGE_KEY, detail.state)
 	})
 }
