@@ -1,0 +1,93 @@
+/* Dark palette. Design intent: the score-card mostly keeps its look
+   (dark ink on light paper, black bars, ruled grid) — only the paper
+   colour turns aged yellow, the cardboard darkens, and the app menu
+   becomes a dark card close to the cardboard. */
+
+:root[data-theme="dark"] {
+	/* Cardboard behind everything — much darker warm brown */
+	--color-page:              #2a2622;
+	--color-text-on-page:      #f6f5f0;
+
+	/* Paper: warm off-white leaning gray — barely-yellow paper */
+	--color-surface:           #e6e2d5;
+	--color-surface-elevated:  #ebe8dc;
+
+	/* Text stays dark ink because the paper is still a light surface */
+	--color-text:              #1c1d1f;
+	--color-text-secondary:    #3a3c40;
+	--color-text-muted:        #7a7c80;
+	--color-text-inverted:     var(--color-surface);
+
+	/* Borders stay dark on paper */
+	--color-border:            rgba(28, 29, 31, 0.16);
+	--color-border-subtle:     rgba(28, 29, 31, 0.08);
+	--color-divider-strong:    #1c1d1f;   /* black bars stay black */
+
+	/* Sticker blue — darker deep ink */
+	--color-accent:            #22407d;
+	--color-accent-subtle:     rgba(34, 64, 125, 0.14);
+	--color-accent-contrast:   #ffffff;
+
+	/* Die tokens: face stays white, dots/border ink */
+	/* Dice stay white with dark ink dots even in dark mode. */
+	--color-die-face:          #ffffff;
+	--color-die-dot:           #1c1d1f;
+	--color-die-border:        #1c1d1f;
+
+	/* Menu: dark card close to cardboard, light text.
+	   The menu re-maps --color-surface / --color-text / etc. internally
+	   so its children (rows, sections, choosers) automatically pick this
+	   up without individual dark-mode rules. */
+	--color-menu-surface:      #3a352e;
+	--color-menu-text:         #f6f5f0;
+	--color-menu-text-secondary: #d4d3ce;
+	--color-menu-text-muted:   #a8a29b;
+	--color-menu-border:       rgba(246, 245, 240, 0.16);
+	--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
+
+	/* Paper texture: subtle warm-yellow polygons instead of near-white */
+	--background-surface:
+		url("./src/_shared/textures/paper-texture-dark.svg"),
+		var(--color-surface);
+}
+
+/* System-follow fallback: if no explicit data-theme is set but the OS
+   prefers dark, apply the same overrides so first paint matches before
+   the theme-sensor service resolves. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--color-page:              #2a2622;
+		--color-text-on-page:      #f6f5f0;
+
+		--color-surface:           #e6e2d5;
+		--color-surface-elevated:  #ebe8dc;
+
+		--color-text:              #1c1d1f;
+		--color-text-secondary:    #3a3c40;
+		--color-text-muted:        #7a7c80;
+		--color-text-inverted:     var(--color-surface);
+
+		--color-border:            rgba(28, 29, 31, 0.16);
+		--color-border-subtle:     rgba(28, 29, 31, 0.08);
+		--color-divider-strong:    #1c1d1f;
+
+		--color-accent:            #22407d;
+		--color-accent-subtle:     rgba(34, 64, 125, 0.14);
+		--color-accent-contrast:   #ffffff;
+
+		--color-die-face:          var(--color-white);
+		--color-die-dot:           var(--color-text);
+		--color-die-border:        var(--color-text);
+
+		--color-menu-surface:      #3a352e;
+		--color-menu-text:         #f6f5f0;
+		--color-menu-text-secondary: #d4d3ce;
+		--color-menu-text-muted:   #a8a29b;
+		--color-menu-border:       rgba(246, 245, 240, 0.16);
+		--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
+
+		--background-surface:
+			url("./src/_shared/textures/paper-texture-dark.svg"),
+			var(--color-surface);
+	}
+}

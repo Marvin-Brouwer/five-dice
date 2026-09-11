@@ -1,0 +1,77 @@
+/* Global styles — loaded via <link rel="stylesheet"> in index.html so the
+   rooted CSS loader does not scope these selectors (which would prevent
+   them from matching html/body/#app/main). */
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+	background: var(--background-page);
+	background-size: var(--background-page-size);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	font-size: var(--font-size-base);
+	line-height: var(--line-height-base);
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+}
+
+#app {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+main {
+	flex: 1;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	padding: var(--page-padding);
+}
+
+/* The language picker centres its card in the leftover height. <main> is a
+   stretched flex item, so its height is not a percentage anything inside can
+   resolve against — laying it out as a flex column is what lets the page
+   below claim that height with `flex: 1`. Every other page keeps plain block
+   layout. */
+main:has([r-component="culture-select-page"]) {
+	display: flex;
+	flex-direction: column;
+}
+
+a {
+	color: var(--color-accent);
+}
+
+:focus-visible {
+	outline: var(--focus-ring-width) solid var(--color-focus-ring);
+	outline-offset: 2px;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	background: var(--color-text);
+	color: var(--color-text-inverted);
+	padding: var(--space-2) var(--space-4);
+	z-index: 999;
+}
+
+.skip-link:focus {
+	left: var(--space-2);
+	top: var(--space-2);
+}
+
+button {
+	font: inherit;
+	cursor: pointer;
+}

@@ -1,0 +1,144 @@
+import { component } from '@rooted/components'
+import { href } from '@rooted/router'
+
+import { AccessibilityRoute, HowToPlayRoute } from '../../content/_routes.mts'
+import { Icon } from '../icon/icon.mts'
+import { localization } from '../i18n/localization.mts'
+import { newGameDisabledStore, undoDisabledStore } from '../stores/gameStateStore.mts'
+import { screenLockStore } from '../stores/screenLockStore.mts'
+
+import { LanguageChooser } from './language-chooser.mts'
+import { MenuRow } from './menu-row.mts'
+import { MenuSection } from './menu-section.mts'
+import { OnOffSegment } from './on-off-segment.mts'
+import { ThemeChooser } from './theme-chooser.mts'
+
+import chevronIcon from './menu-content.chevron.svg?raw'
+import refreshIcon from './menu-content.refresh.svg?raw'
+import undoIcon from './menu-content.undo.svg?raw'
+import styles from './menu.css'
+
+export type MenuContentOptions = {
+	onClose: () => void
+}
+
+/** The menu's scrollable body. Fully rebuilt (not patched) whenever the locale
+    changes, so any localization.text call in here just needs to be written,
+    no per-string reactivity plumbing required. See menu.mts. */
+export const MenuContent = component<MenuContentOptions>({
+	name: 'menu-content',
+	styles,
+	onMount({ append, element, create, options }) {
+		const { onClose } = options
+
+		const themeControl = element('span', {
+			classes: styles.controlWrap,
+			children: create(ThemeChooser),
+		})
+		const languageControl = create(LanguageChooser)
+		const screenLockControl = create(OnOffSegment, {
+			store: screenLockStore,
+			aria: {
+				label: localization.text`Keep screen on`,
+			},
+			idPrefix: 'menu-screen-lock',
+		})
+
+		const settingsSection = create(MenuSection, {
+			label: localization.text`Settings`,
+			rightHint: localization.text`Preferences`
+		})
+		const themeRow = create(MenuRow, {
+			label: localization.text`Theme`,
+			hint: localization
+				.text`System & sensor follow the device · Light/Dark force it`,
+			control: themeControl,
+		})
+		const languageRow = create(MenuRow, {
+			label: localization.text`Language`,
+			hint: localization.text`App and rules text`,
+			control: languageControl,
+		})
+		const screenLockRow = create(MenuRow, {
+			label: localization.text`Keep screen on`,
+			hint: localization.text`Disable lock while playing`,
+			control: screenLockControl,
+		})
+
+		const gameSection = create(MenuSection, {
+			label: localization.text`Game`,
+			rightHint: localization.text`Actions`
+		})
+		const newGameRow = create(MenuRow, {
+			label: localization.text`New game`,
+			hint: localization.text`Reset the score pad`,
+			variant: 'button',
+			disabledStore: newGameDisabledStore,
+			onSelect() {
+				onClose()
+				window.dispatchEvent(new CustomEvent('five-dice:new-game'))
+			},
+			control: create(Icon, {
+				source: refreshIcon,
+			}),
+		})
+		const undoRow = create(MenuRow, {
+			label: localization.text`Undo last turn`,
+			hint: localization.text`Revert the last committed score`,
+			variant: 'button',
+			disabledStore: undoDisabledStore,
+			onSelect() {
+				onClose()
+				window.dispatchEvent(new CustomEvent('five-dice:undo'))
+			},
+			control: create(Icon, {
+				source: undoIcon,
+			}),
+		})
+
+		const aboutSection = create(MenuSection, {
+			label: localization.text`About`,
+			rightHint: localization.text`Help & links`
+		})
+		const howToPlayRow = create(MenuRow, {
+			label: localization.text`How to play`,
+			hint: localization.text`Rules and scoring`,
+			variant: 'link',
+			href: href.for(HowToPlayRoute, {
+				locale: localization.currentLocale
+			}),
+			control: create(Icon, {
+				source: chevronIcon,
+			}),
+		})
+		const accessibilityRow = create(MenuRow, {
+			label: localization.text`Accessibility`,
+			hint: localization.text`Statement & keyboard map`,
+			variant: 'link',
+			href: href.for(AccessibilityRoute, {
+				locale: localization.currentLocale
+			}),
+			control: create(Icon, {
+				source: chevronIcon,
+			}),
+		})
+		const sourceRow = create(MenuRow, {
+			label: localization.text`Source`,
+			hint: 'github.com/marvin-brouwer/five-dice',
+			variant: 'external-link',
+			href: 'https://github.com/marvin-brouwer/five-dice',
+			control: create(Icon, {
+				source: chevronIcon,
+			}),
+		})
+
+		append(element('div', {
+			classes: styles.content,
+			children: [
+				settingsSection, themeRow, languageRow, screenLockRow,
+				gameSection, newGameRow, undoRow,
+				aboutSection, howToPlayRow, accessibilityRow, sourceRow,
+			],
+		}))
+	},
+})

@@ -1,0 +1,62 @@
+/* One cell of the doormat's link grid. Scoped to this component, so the
+   names stay short — the only things mounted inside are an Icon and the
+   control itself. */
+
+/* A block box with inline content, not a flex row: the ↗ and ↑ have to take
+   part in line-wrapping so they hug the last word. As a flex item the glyph
+   was pinned to the row's end instead, which stranded it against line one of
+   a label that wrapped to two — "Toegankelijkheidsproblemen melden" does.
+
+   One rule for anchors and buttons alike, so an action sits on the same
+   baseline as the links it shares a grid with. */
+.link {
+	display: block;
+	/* Dutch compounds a whole English phrase into one word, and a cell is not
+	   wide enough for "Toegankelijkheidsproblemen" — so let the browser break
+	   it where the language allows. The dictionary it picks comes from the
+	   document language, which @rooted/localization sets on <html> from the
+	   route's locale segment, so this follows the language switcher for free.
+	   Safari still wants the prefix. */
+	-webkit-hyphens: auto;
+	hyphens: auto;
+	padding: 2px 0;
+	margin: 0;
+	border: 0;
+	border-radius: 3px;
+	background: none;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	line-height: 1.35;
+	text-align: left;
+	text-decoration: none;
+	color: var(--color-text-on-page);
+	cursor: pointer;
+}
+
+.link:hover,
+.link:focus-visible {
+	text-decoration: underline;
+}
+
+/* `display` above outranks the UA's `[hidden] { display: none }` — one class
+   plus this component's scope attribute against a bare attribute selector —
+   so a link marked hidden would otherwise stay on screen. Nothing sets that
+   today (the doormat takes its install row out of the DOM instead), but the
+   defect is in this rule, not in whoever reaches for a platform attribute
+   and reasonably expects it to work. */
+.link[hidden] {
+	display: none;
+}
+
+/* Dimmed so the affordance reads as punctuation on the label rather than as
+   an icon in its own right. */
+.glyph {
+	display: inline-block;
+	margin-left: 5px;
+	/* Optically centres an 11px glyph against 13px text; `middle` sits it too
+	   high against this face. */
+	vertical-align: -1px;
+	opacity: 0.65;
+}

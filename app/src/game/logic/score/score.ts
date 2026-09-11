@@ -1,0 +1,62 @@
+import type { ReadonlyState } from '@rooted/store'
+
+import type { DieValue } from '../gameConstants.ts'
+
+const inspectSymbol = Symbol.for('nodejs.util.inspect.custom')
+const scoreSymbol = Symbol.for('score')
+
+export type ValidScore =
+    & [ DieValue, DieValue, DieValue, DieValue, DieValue ]
+    & { [scoreSymbol]: 'validScore', toString(): string }
+
+export type DiscardedScore =
+    & { [scoreSymbol]: 'discardedScore', toString(): string }
+
+export type ScoreValue = ValidScore | DiscardedScore
+export type ScoreContainer = ScoreValue | ReadonlyArray<ValidScore>
+
+type AnyScoreInput =
+    | ReadonlyState<ValidScore>
+    | ReadonlyState<DiscardedScore>
+    | ReadonlyState<Array<ValidScore>>
+
+function discardToString() {
+	return '/'
+}
+const discardedScore: Readonly<DiscardedScore> = Object.freeze(Object.assign({
+	[scoreSymbol]: 'discardedScore'
+},{
+
+	[inspectSymbol]: discardToString,
+
+	toString: discardToString
+})) as Readonly<DiscardedScore>
+
+export function discard(): Readonly<DiscardedScore> { return discardedScore }
+export function score(value: ReadonlyState<[one: DieValue, two: DieValue, three: DieValue, four: DieValue, five: DieValue]>): ValidScore {
+
+	function toString() {
+		return `[ ${value.join(' ')} ]`
+	}
+	return Object.assign(
+		[],
+		value,
+		{
+
+			[scoreSymbol]: 'validScore',
+			[inspectSymbol]: toString,
+
+			toString
+		}) as ValidScore
+}
+
+export function isDiscarded(score: AnyScoreInput): score is ReadonlyState<DiscardedScore> {
+	if (Array.isArray(score)) return false
+	return (score as Record<symbol, unknown>)[scoreSymbol] === 'discardedScore'
+}
+export function isFlushScore(score: AnyScoreInput): score is ReadonlyState<Array<ValidScore>> {
+	if (score === undefined) return false
+	if (isDiscarded(score)) return false
+
+	return !Object.getOwnPropertySymbols(score).includes(scoreSymbol)
+}

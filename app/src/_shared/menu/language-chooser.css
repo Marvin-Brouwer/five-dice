@@ -1,0 +1,36 @@
+/* Layout, list and option chrome come from drop-down.css; this file styles
+   only the content this chooser puts in them. */
+:root {
+	--drop-down-option-columns: 32px 1fr 14px;
+}
+
+.short {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	color: var(--color-text);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.long {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--color-text-muted);
+	letter-spacing: 0.05em;
+}
+
+.option-short {
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--color-text);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.option-long {
+	font-family: var(--font-sans);
+	font-size: 13px;
+	color: var(--color-text);
+}

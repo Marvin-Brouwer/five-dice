@@ -1,0 +1,9 @@
+.die {
+	display: inline-block;
+	line-height: 0;
+	flex: 0 0 auto;
+	/* Callers override --dice-size on a wrapper to fix the size; unset,
+	   it follows the current font-size so the die scales with text. */
+	width: var(--dice-size, 1em);
+	height: var(--dice-size, 1em);
+}

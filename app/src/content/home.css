@@ -1,0 +1,63 @@
+/* The landing page used to centre its card in the viewport. It sits at the
+   top like every other content page now: with the doormat under it there is
+   enough on the page that the card no longer floats in empty space, and the
+   three prose pages start at the same height as each other and as the score
+   pad. */
+
+/* The landing page is one PaperCard — the same sheet the score card is built
+   from — with the pitch inside its ruled frame, under the card's letterhead.
+
+   Everything in the frame shares one measure: the copy and the buttons are
+   the same width and hang off the same two edges, which is what keeps a
+   left-aligned block from reading as ragged. Change it in one place. */
+.hero {
+	/* 22rem, not 20: it is the narrowest measure where the lead's hand-set
+	   break in home.*.md lands where it was written instead of wrapping again. */
+	--hero-measure: 22rem;
+	/* Inline only. The page opens on a band, which breaks out of this padding
+	   to reach both edges of the paper and sits flush against the rule, so
+	   any padding above it would be paper the band should have covered. */
+	padding-inline: var(--space-4);
+	padding-bottom: clamp(var(--space-5), 6vw, var(--space-7));
+}
+
+/* The band's ink and its break-out margin are PaperCard's; the page only says
+   that its first one closes against the rule. */
+.hero :is(h1, h2):first-child {
+	margin-top: 0;
+}
+
+/* Hero copy */
+/* The wordmark and the dice are Masthead, on the band above the rule — the
+   card's letterhead rather than part of this page. Every text block here sits
+   in the shared measure; line breaks come from the markdown, so nothing here
+   second-guesses them. */
+.hero p {
+	max-width: var(--hero-measure);
+	margin-inline: auto;
+}
+
+/* The opening line reads as a lead — same face as the rest, one size up.
+   :not(.actions) keeps the button row — also a <p> — out of it. Its top
+   margin is the paper between the opening band and the copy. */
+.hero p:first-of-type:not(.actions) {
+	font-size: var(--font-size-lg);
+	line-height: 1.4;
+	margin-top: var(--space-5);
+}
+
+.hero p + p {
+	color: var(--color-text-secondary);
+	margin-top: var(--space-4);
+}
+
+/* Actions */
+/* Stacked and equal width, the way culture-select lists its locales — on the
+   same measure as the copy above them. */
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	max-width: var(--hero-measure);
+	margin: var(--space-6) auto 0;
+}

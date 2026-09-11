@@ -1,0 +1,21 @@
+/* Class names stay `guide-` prefixed: they are the guide's own naming,
+   and the rules moved here with the markup that uses them. */
+
+.guide-table {
+	--col-roll: 150px;
+	--col-score: calc(3em + var(--space-1));
+	--col-totals-score: calc(var(--col-roll) + var(--col-score));
+	display: flex;
+	flex-direction: column;
+}
+
+/* Hangs off the table's corner, the way Enter score hangs off the card's. */
+.guide-roll-again {
+	position: absolute;
+	/* Sitting on the roll column's title bar rather than above it, the
+	   way the card's own sticker laps over its header. Kept left of the
+	   score column so it covers no label. */
+	bottom: calc(100% - 14px);
+	right: calc(var(--col-score) + var(--space-3));
+	z-index: 2;
+}

@@ -1,0 +1,29 @@
+/* Dashed section rule between the slots and the keys. */
+.band {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 14px 0;
+	margin: 16px 0;
+	border-top: 1px dashed var(--color-border);
+	border-bottom: 1px dashed var(--color-border);
+}
+
+.band-label {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	color: var(--color-text-secondary);
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+.band-status {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--color-accent);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+/* Keys row: six equal columns of die-faces */

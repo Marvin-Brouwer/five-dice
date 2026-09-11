@@ -1,0 +1,24 @@
+/* The statement sits on paper rather than bare on the cardboard, so it takes
+   the same inset from the ruled frame the guide's prose has — padding-inline
+   only, because the bands break out of it to reach both edges. The bands
+   themselves are PaperCard's; all this page says is where its first one
+   sits and how the prose between them is spaced. */
+.statement {
+	padding-inline: var(--space-4);
+}
+
+/* The first band closes against the rule rather than floating below it. */
+.statement :is(h1, h2):first-child {
+	margin-top: 0;
+}
+
+/* Prose */
+.statement p {
+	margin: var(--space-4) 0;
+}
+
+/* The last line needs paper under it before the rule, the way the guide's
+   chapters do. */
+.statement p:last-child {
+	margin-bottom: var(--space-5);
+}

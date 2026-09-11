@@ -1,0 +1,63 @@
+/* The doormat: page chrome at the foot of the content.
+
+   Painted directly on the cardboard rather than on a paper sheet of its own,
+   so it reads as the app bar's counterpart at the other end of the page —
+   same mono caps, same `--color-text-on-page`, same transparent ground. The
+   one sheet down here is the share button, a slip laid on the cardboard.
+
+   Only the container and the grid live here. The button and the links carry
+   their own stylesheets, which also keeps these names clear of theirs: a
+   component's styles are scoped to its host's *subtree*, so a `.card` or
+   `.link` in this file would reach into the components mounted inside it. */
+
+.doormat {
+	width: 100%;
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+	/* Tight to the card above it on purpose: the doormat already reads as
+	   separate by sitting on bare cardboard while the content sits on paper,
+	   so the gap does not have to carry that job as well. Home adds another
+	   --space-4 of its own, from the symmetric padding that optically centres
+	   the hero card. */
+	padding: var(--space-4) var(--space-2) var(--space-5);
+	color: var(--color-text-on-page);
+	font-family: var(--font-sans);
+}
+
+/* The link cells come from DoormatLink, whose host is display:contents — so
+   the controls themselves land here as the grid items. */
+.links {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--space-2) var(--space-4);
+	margin-top: var(--space-5);
+}
+
+.rule {
+	border: 0;
+	border-top: 1px solid var(--color-border);
+	margin: var(--space-5) 0 var(--space-3);
+}
+
+.meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-3);
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: 10.5px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--color-text-on-page);
+	opacity: 0.65;
+}
+
+/* Two columns of 13px labels stop fitting somewhere under 22rem; below that
+   the grid stacks, which gives a label a full-width line before the
+   hyphenation in doormat-link.css has to do anything. */
+@media (max-width: 22rem) {
+	.links {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

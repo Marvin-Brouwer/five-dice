@@ -1,0 +1,49 @@
+.group {
+	display: inline-flex;
+	border: 1.5px solid var(--color-text);
+	border-radius: 4px;
+	overflow: hidden;
+	padding: 0;
+	background: transparent;
+	cursor: pointer;
+	font: inherit;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.group:focus-visible {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
+}
+
+.segment {
+	padding: 6px 11px;
+	background: transparent;
+	color: var(--color-text);
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	user-select: none;
+	-webkit-user-select: none;
+	pointer-events: none;
+}
+
+.segment-on {
+	border-right: 1.5px solid var(--color-text);
+}
+
+.group[data-state="on"] .segment-on {
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+}
+
+.group[data-state="off"] .segment-off {
+	background: var(--color-text);
+	color: var(--color-surface);
+}

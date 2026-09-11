@@ -1,0 +1,79 @@
+/* Layout, list and option chrome come from drop-down.css; this file styles
+   only the content this chooser puts in them, plus its status line. */
+:root {
+	--drop-down-option-columns: 20px 1fr 14px;
+	--drop-down-list-min-width: 200px;
+}
+
+.status {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-family: var(--font-mono);
+	font-size: 9px;
+	font-weight: 600;
+	color: var(--color-text-muted);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	margin-bottom: 5px;
+	justify-content: flex-end;
+}
+
+.status svg {
+	color: var(--color-text-secondary);
+}
+
+.button-icon {
+	display: inline-flex;
+	color: var(--color-text);
+}
+
+.button-label {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--color-text);
+}
+
+.option-icon {
+	display: inline-flex;
+	color: var(--color-text);
+}
+
+.option-label {
+	display: block;
+	font-family: var(--font-sans);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-text);
+}
+
+.option-sub {
+	display: block;
+	font-family: var(--font-mono);
+	font-size: 9.5px;
+	color: var(--color-text-muted);
+	margin-top: 1px;
+	letter-spacing: 0.03em;
+}
+
+.option-disabled {
+	cursor: not-allowed;
+}
+
+.option-disabled .option-label,
+.option-disabled .option-icon {
+	color: var(--color-text-muted);
+}
+
+/* System/sensor icons carry both a light and a dark glyph; the resolved
+   theme picks which one paints, no JS re-render needed. */
+:global(:root[data-theme="dark"] .theme-glyph-light) {
+	display: none;
+}
+
+:global(:root:not([data-theme="dark"]) .theme-glyph-dark) {
+	display: none;
+}

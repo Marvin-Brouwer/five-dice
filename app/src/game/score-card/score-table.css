@@ -1,0 +1,288 @@
+/* Table shell */
+.score-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	border: 0;
+	background: transparent;
+}
+
+/* Section band — one flex cell so intra-band edges can't create sub-pixel
+   artifacts on high-DPI screens. */
+.section-row td.section-name {
+	background: var(--color-divider-strong);
+	color: var(--color-surface);
+	font-family: var(--font-mono);
+	padding: 0;
+	border: 0;
+}
+
+.band-inner {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+.band-cell {
+	display: block;
+	padding: 8px 8px;
+	line-height: 1;
+}
+
+.band-title {
+	flex: 1 1 auto;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.band-roll {
+	flex: 0 0 var(--col-roll);
+	font-size: 9px;
+	letter-spacing: 0.18em;
+	font-weight: 600;
+	text-transform: uppercase;
+	text-align: left;
+	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
+	white-space: nowrap;
+}
+
+.band-score {
+	flex: 0 0 var(--col-score);
+	font-size: 9px;
+	letter-spacing: 0.2em;
+	font-weight: 600;
+	text-transform: uppercase;
+	text-align: right;
+	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
+}
+
+.band-totals-score {
+	flex: 0 0 var(--col-totals-score);
+	font-size: 9px;
+	letter-spacing: 0.2em;
+	font-weight: 600;
+	text-transform: uppercase;
+	text-align: right;
+	color: color-mix(in srgb, var(--color-surface) 82%, transparent);
+}
+
+/* Ruled grid — every body cell gets an ink border, except at the outer
+   edges of the table where the card-inner's 2px frame takes over. */
+.score-table tbody th,
+.score-table tbody td {
+	padding: 5px 8px;
+	text-align: left;
+	vertical-align: middle;
+	border: 1px solid var(--color-text);
+}
+
+.score-table tbody tr > *:first-child { border-left: 0; }
+.score-table tbody tr > *:last-child { border-right: 0; }
+
+.score-table tbody td.roll-column,
+.score-table tbody td.score-column,
+.score-table tbody td.totals-column {
+	text-align: right;
+}
+
+/* Column widths — driven by CSS variables on .card-inner so the ruled
+   grid stays aligned across Part 1, Part 2 and Totals. */
+.label-column {
+	width: auto;
+}
+
+.roll-column {
+	width: var(--col-roll);
+	text-align: right;
+}
+
+.score-column {
+	width: var(--col-score);
+	text-align: right;
+}
+
+.totals-column {
+	width: var(--col-totals-score);
+	text-align: right;
+}
+
+/* Row label
+   Every row is a compact two-line block: title on top, description below.
+   Same layout across Part 1, Part 2 and Totals so the grid reads
+   predictably regardless of description length. */
+.label-display {
+	display: flex;
+	align-items: center;
+	gap: 0.4em;
+	line-height: 1.15;
+	min-width: 0;
+}
+
+.label-icon {
+	display: inline-flex;
+	--dice-size: 1.125em;
+}
+
+.label-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	line-height: 1.15;
+}
+
+.label-title {
+	font-family: var(--font-sans);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-text);
+	line-height: 1.15;
+}
+
+.description-label {
+	font-family: var(--font-mono);
+	font-size: 9px;
+	color: var(--color-text-muted);
+	letter-spacing: 0.02em;
+	line-height: 1.15;
+	margin-top: 1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Always show the short variant when available; the `long` variant is
+   still in the DOM for screen readers (via aria-label on the parent). */
+.description-short {
+	display: inline;
+}
+
+.description-long {
+	display: none;
+}
+
+/* Roll cell */
+.roll-row {
+	display: inline-flex;
+	align-items: center;
+	gap: 1em;
+	flex-wrap: nowrap;
+	--dice-size: 1.125em;
+	height: 1.125em;
+	vertical-align: middle;
+}
+
+.roll-group {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+}
+
+.roll-group-muted {
+	opacity: 0.4;
+}
+
+.roll-empty {
+	display: inline-block;
+	width: 1em;
+	height: 1.125em;
+	vertical-align: middle;
+}
+
+.roll-badge {
+	font-family: var(--font-mono);
+	font-size: 10px;
+	color: var(--color-accent);
+	padding: 2px 4px;
+	background: var(--color-accent-subtle);
+	border-radius: 3px;
+	letter-spacing: 0.05em;
+}
+
+/* Score cell
+   Line-height locks the box height so filled Caveat numerals don't push
+   the row taller than an empty ".".
+
+   `vertical-align: middle` locks the row height on top of that. Left on the
+   default baseline, this inline-flex box hands the line box a baseline taken
+   from its own content — the 16px mono ".", the 22px Caveat numeral, or, when
+   a discarded row empties the cell, a synthesized one at the bottom edge. Each
+   sits differently against the cell's strut, so the row grew and shrank by a
+   pixel or two as a preview swapped the content. Aligning to the middle makes
+   the box's placement depend on the parent font alone, exactly as `.roll-row`
+   already does for the roll cell. */
+.score-value {
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-end;
+	min-width: 2.5ch;
+	height: 22px;
+	line-height: 1;
+	text-align: right;
+	vertical-align: middle;
+	font-variant-numeric: tabular-nums;
+}
+
+.score-value-mark {
+	font-family: var(--font-mono);
+	font-size: 16px;
+	color: var(--color-text-muted);
+}
+
+.score-value-filled {
+	font-family: var(--font-hand);
+	font-size: 22px;
+	color: var(--color-accent);
+	transform: rotate(-3deg);
+	transform-origin: right center;
+}
+
+/* Row states */
+.row-display {
+	position: relative;
+}
+
+.discarded .label-title,
+.discarded .description-label {
+	color: var(--color-text-muted);
+}
+
+/* Single ink slash spanning the whole row. Anchored to the label cell
+   because <tr> positioning is quirky; width uses the container-query
+   inline size of the card (which owns container-type: inline-size) so
+   the slash reaches the row's right edge regardless of column widths. */
+.discarded th {
+	position: relative;
+	overflow: visible;
+}
+
+.discarded th::after {
+	content: "";
+	position: absolute;
+	left: 50cqi;
+	top: 50%;
+	width: var(--dash-width);
+	height: 2px;
+	background: var(--color-text);
+	transform:
+		translateY(-50% )
+		translateX(-50%)
+		rotate(-2deg);
+	transform-origin: center center;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Final row bump */
+.final-row td {
+	border-top: 3px double var(--color-text);
+	padding-top: 12px;
+}
+
+.final-row .label-title,
+.final-row .score-value {
+	font-weight: 700;
+}

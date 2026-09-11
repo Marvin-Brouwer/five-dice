@@ -1,0 +1,62 @@
+/* Same shape as the landing page: one PaperCard, centred in whatever height
+   <main> lays out for it (see the `main:has(…)` rule in index.global.css).
+   `safe center` keeps a card taller than the viewport from overflowing off
+   the top; the plain `center` above it is the fallback where that keyword is
+   not understood. */
+.page {
+	flex: 1;
+	width: 100%;
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+	padding-block: var(--space-4);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	justify-content: safe center;
+}
+
+/* The wordmark and the dice above this are Masthead, on the band the card
+   carries — the same letterhead the home card wears, which is what makes this
+   screen hand straight over to it. --hero-measure is the column the line
+   below and the locale list share. */
+.content {
+	--hero-measure: 20rem;
+	padding: clamp(var(--space-5), 6vw, var(--space-7)) var(--space-4);
+	text-align: center;
+	padding-top : 0;
+}
+
+.content p {
+	color: var(--color-text-secondary);
+	max-width: var(--hero-measure);
+	margin: var(--space-4) auto 0;
+}
+
+.content h2 {
+	margin-top: 0;
+	margin-bottom: var(--space-7);
+}
+
+.list {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	padding: 0;
+	margin: var(--space-5) auto 0;
+	max-width: var(--hero-measure);
+}
+
+.link {
+	display: block;
+	background: var(--color-primary);
+	color: var(--color-primary-contrast);
+	padding: var(--space-2) var(--space-4);
+	border-radius: var(--radius-md);
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.link:hover, .link:focus-visible {
+	filter: brightness(1.1);
+}

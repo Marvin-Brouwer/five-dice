@@ -1,0 +1,33 @@
+.keys-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 6px;
+}
+
+.keypad-button {
+	background: transparent;
+	border: 0;
+	padding: 4px;
+	cursor: pointer;
+	color: inherit;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 1 1 0;
+}
+
+.keypad-button:focus-visible {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
+/* Keys are a fixed size, so the row has a hard minimum width. Callers with
+   less room than the modal has can set --keypad-die-size to shrink them —
+   the guide shows the keypad inside a figure on a narrow page. */
+.key-die {
+	display: inline-flex;
+	--dice-size: var(--keypad-die-size, 2.5em);
+	width: var(--dice-size);
+	height: var(--dice-size);
+}

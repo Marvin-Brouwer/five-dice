@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Playwright (any working directory it happens to be run from)
+test-results/
+playwright-report/
+blob-report/

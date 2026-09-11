@@ -1,0 +1,134 @@
+/* A slip of paper on the page: the same surface token as PaperCard, but a
+   drawn border rather than the ruled frame, because at this size the frame's
+   inset outline reads as a box inside a box.
+
+   The one stylesheet behind every action row in the app — this file is what
+   the share button, the guide's call to action and the landing page's two
+   rows all render through, so there is nowhere for them to drift apart.
+
+   Scoped to this component, so the names stay short: the only things mounted
+   inside are two Icons and the control itself.
+
+   One rule for anchors and buttons alike — the variants below set their own
+   background and border, so nothing here has to undo a UA default twice. */
+.button {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	align-items: center;
+	gap: var(--space-3);
+	width: 100%;
+	margin: 0;
+	padding: var(--space-3) var(--space-4);
+	border-radius: var(--radius-sm);
+	box-shadow: 0 2px 0 rgba(28, 29, 31, 0.10);
+	text-align: left;
+	text-decoration: none;
+	font: inherit;
+	cursor: pointer;
+	transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+/* The quiet row: paper, ink border, accent badge. */
+.button-secondary {
+	background: var(--color-surface);
+	border: 1px solid var(--color-divider-strong);
+	color: var(--color-text);
+}
+
+.button-secondary .badge {
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+}
+
+/* The primary row inverts it — the sheet itself is the accent — so a page
+   that offers two of these still has one obvious first move. The badge flips
+   with it: paper disc, accent glyph. */
+.button-primary {
+	background: var(--color-accent);
+	border: 1px solid var(--color-divider-strong);
+	color: var(--color-accent-contrast);
+}
+
+.button-primary .badge {
+	background: var(--color-surface);
+	color: var(--color-accent);
+}
+
+.button-primary .title,
+.button-primary .hint,
+.button-primary .chevron {
+	color: var(--color-accent-contrast);
+}
+
+/* The hint is the one line that cannot carry full contrast on the accent
+   sheet without competing with the title. */
+.button-primary .hint {
+	opacity: 0.75;
+}
+
+.button:hover, .button:focus-visible {
+	filter: brightness(1.1);
+	transform: translateY(-1px);
+}
+
+.badge {
+	flex: 0 0 auto;
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+/* Both lines are the page's sans — a row that changes typeface halfway down
+   reads as two things stacked rather than one control. What separates them is
+   weight, size and colour, plus the capitals here: with the mono gone, the
+   label needs something of its own to stay the line you read first.
+
+   Set in CSS rather than typed into the strings, so they stay ordinary
+   sentences for the dictionary and for a screen reader. Caps need air the way
+   the app's other uppercase runs get it — the mono bands on the guide, the
+   doormat's meta line — though less of it, because this is a label to read
+   rather than chrome to skim. */
+/* Both lines set tight — the page's 1.5 leading is for prose, and at that
+   measure two stacked lines drift apart into two separate things instead of
+   reading as one label and its footnote. */
+.title {
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	line-height: 1.2;
+	text-transform: uppercase;
+	color: var(--color-text);
+}
+
+.hint {
+	font-family: var(--font-sans);
+	font-size: 11px;
+	letter-spacing: 0.01em;
+	line-height: 1.25;
+	color: var(--color-accent);
+}
+
+.chevron {
+	display: inline-flex;
+	align-items: center;
+	color: var(--color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.button {
+		transition: none;
+	}
+
+	.button:hover, .button:focus-visible {
+		transform: none;
+	}
+}

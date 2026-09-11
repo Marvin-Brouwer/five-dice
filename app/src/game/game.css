@@ -1,0 +1,14 @@
+/* The page's own layout element. This cannot live on the component host:
+   rooted forces `display: contents` on every host, so it has no box to lay
+   out -- and a `:host` rule would not match anyway, since the loader
+   prefixes every selector with the scope attribute. */
+.page {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+	/* Same measure as the content pages, so the pad and the guide that
+	   explains it are the same sheet of paper at every width. */
+	width: 100%;
+	max-width: var(--max-content-width);
+	margin-inline: auto;
+}

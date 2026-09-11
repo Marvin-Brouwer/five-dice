@@ -3,20 +3,17 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
+    "dev": "pnpm --filter @five-dice/app dev",
+    "build": "pnpm --filter @five-dice/app build",
+    "preview": "pnpm --filter @five-dice/app preview",
     "test": "pnpm --filter @five-dice/app test",
-    "lint": "pnpm --filter @five-dice/app lint"
-  },
-  "devDependencies": {
-    "astro": "^2.3.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "undici@<5.19.1": ">=5.19.1",
-      "undici@>=2.0.0 <5.19.1": ">=5.19.1"
-    }
-  },
-  "volta": {
-    "node": "20.9.0"
+    "test:e2e": "pnpm --filter @five-dice/app test:e2e",
+    "test:e2e:install": "pnpm --filter @five-dice/app test:e2e:install",
+    "test:e2e:ui": "pnpm --filter @five-dice/app test:e2e:ui",
+    "test:e2e:report": "pnpm --filter @five-dice/app test:e2e:report",
+    "lint": "pnpm --filter @five-dice/app lint",
+    "test:all": "pnpm -r test"
   }
 }

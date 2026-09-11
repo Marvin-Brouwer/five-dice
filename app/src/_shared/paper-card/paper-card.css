@@ -1,0 +1,70 @@
+/* A sheet of paper laid on the cardboard page: paper texture, a soft drop
+   shadow, and an ink rule ruled just inside the edge. */
+.sheet {
+	/* The gutter between the paper's edge and what is laid on it: the ink
+	   rule, and the heading band above it. */
+	--sheet-gutter: 10px;
+	background: var(--background-surface);
+	background-size: var(--background-surface-size);
+	background-repeat: repeat;
+	box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
+	border: 0;
+	border-radius: 0;
+	padding: var(--sheet-gutter);
+	display: block;
+	/* Callers size things against the sheet's width — the score card's
+	   discard slash does — so the sheet is the container-query container. */
+	container-type: inline-size;
+}
+
+/* The letterhead sits in the same gutter the rule does, and holds itself off
+   the rule below by the width of that gutter. */
+.heading {
+	margin-bottom: var(--sheet-gutter);
+}
+
+/* Anchors the overlay. It hangs off the ruled frame rather than the paper's
+   edge, so a card with a heading band doesn't have its sticker land on the
+   band. A plain div, so `100cqi` inside the frame still measures the sheet. */
+.frame-slot {
+	position: relative;
+}
+
+.frame {
+	outline: 2px solid var(--color-text);
+	outline-offset: -2px;
+	background: transparent;
+	/* The rule is an outline, which draws over the frame without giving it a
+	   border to stop margins at — so a last paragraph's bottom margin used to
+	   collapse straight out of the card and turn up as blank paper below the
+	   rule. flow-root keeps what is written on the paper inside the ruled
+	   edge, margins and all. */
+	display: flow-root;
+}
+
+/* Bands
+   A heading written on the paper is a black band, the way the score card's
+   own headers are. Values taken from .card-header / .band-title in
+   game/score-card/score-card.css — the card's bands are <tr><td> inside a
+   table, where a component host cannot sit (see
+   docs/table-components-in-rooted.md), so they cannot share this rule.
+
+   It lives here rather than on each prose page because all three want the
+   same band, and here it reaches only what is written inside the rule — the
+   letterhead in the heading slot above is not a band of this kind.
+
+   Bands break out of the page's own inline padding to touch both edges of
+   the paper. A page that pads by something other than --space-4 says so in
+   --prose-padding. */
+.frame :is(h1, h2) {
+	background: var(--color-divider-strong);
+	color: var(--color-surface);
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	line-height: 1;
+	padding: 10px 12px;
+	margin: var(--space-5) calc(-1 * var(--prose-padding, var(--space-4))) 0;
+}

@@ -1,0 +1,96 @@
+/* Full-screen navigation view. No backdrop — the menu is the screen.
+   The menu re-maps the base color tokens to their menu-* variants so
+   dark mode can turn the menu into a dark card without also dyeing the
+   score card. Children read var(--color-surface) etc. as usual. */
+.sheet {
+	--color-surface: var(--color-menu-surface);
+	--color-surface-elevated: var(--color-menu-surface);
+	--color-text: var(--color-menu-text);
+	--color-text-secondary: var(--color-menu-text-secondary);
+	--color-text-muted: var(--color-menu-text-muted);
+	--color-border: var(--color-menu-border);
+	--color-border-subtle: var(--color-menu-border-subtle);
+
+	border: 0;
+	padding: 0;
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+	max-width: 100vw;
+	max-height: 100vh;
+	background: var(--color-surface);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+	inset: 0;
+	overflow: hidden;
+	flex-direction: column;
+}
+
+.sheet[open] {
+	display: flex;
+}
+
+.sheet:not([open]) {
+	display: none;
+}
+
+.sheet::backdrop {
+	background: transparent;
+}
+
+/* Top nav bar: title + close X, mono uppercase, matches app-bar rhythm. */
+.nav-bar {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 14px;
+	background: var(--color-surface);
+	color: var(--color-text);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.nav-title {
+	font-family: var(--font-mono);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.22em;
+	text-transform: uppercase;
+	color: var(--color-text);
+}
+
+.nav-close {
+	background: transparent;
+	border: 0;
+	padding: 6px;
+	color: var(--color-text-secondary);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+}
+
+.nav-close:hover,
+.nav-close:focus-visible {
+	background: var(--color-border-subtle);
+	color: var(--color-text);
+	outline: none;
+}
+
+.nav-close-icon {
+	display: inline-flex;
+}
+
+/* Scrollable content area — takes the remaining height. */
+.content {
+	flex: 1 1 auto;
+	overflow-y: auto;
+	padding: 0 18px 22px;
+}
+
+.control-wrap {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: flex-end;
+}

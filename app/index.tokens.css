@@ -1,0 +1,105 @@
+:root {
+	/* Colours: backgrounds */
+	/* Semantic name → design term (from Direction A.v2 mockup) */
+	--color-page:              #b8b2a6;                       /* design: cardboard */
+	--color-surface:           #f6f5f0;                       /* design: paper */
+	--color-surface-elevated:  #ffffff;                       /* choosers, tooltips, popovers */
+
+	/* Colours: text */
+	--color-text:              #1c1d1f;                       /* design: ink */
+	--color-text-secondary:    #3a3c40;                       /* design: ink2 */
+	--color-text-muted:        #7a7c80;                       /* design: muted */
+	--color-text-on-page:      #3a3c40;                       /* text placed directly on --color-page (matches app bar chrome) */
+	--color-text-inverted:     var(--color-surface);          /* used by skip-link etc. */
+
+	/* Colours: borders / dividers */
+	--color-border:            rgba(28, 29, 31, 0.14);        /* design: hair */
+	--color-border-subtle:     rgba(28, 29, 31, 0.08);        /* design: hair2 */
+	--color-divider-strong:    #1c1d1f;                       /* design: rule (opaque section rule) */
+
+	/* Colours: accent (blue ink) */
+	--color-accent:            #1f3f7a;
+	--color-accent-subtle:     rgba(31, 63, 122, 0.10);
+	--color-accent-contrast:   #ffffff;
+
+	/* Physical "white" objects that stay white in both themes: die faces,
+	   the sticker's paper border. Not a paper-tint. */
+	--color-white:             #ffffff;
+
+	/* Colours: menu surface (theme-aware)
+	   The app menu paints on its own surface so dark mode can turn the
+	   menu into a dark card without also dyeing the paper score-card. */
+	--color-menu-surface:      var(--color-surface);
+	--color-menu-text:         var(--color-text);
+	--color-menu-text-secondary: var(--color-text-secondary);
+	--color-menu-text-muted:   var(--color-text-muted);
+	--color-menu-border:       var(--color-border);
+	--color-menu-border-subtle: var(--color-border-subtle);
+
+	/* Legacy aliases still referenced by score-card / game components */
+	--color-bg:                var(--color-page);
+	--color-surface-alt:       var(--color-border-subtle);
+	--color-primary:           var(--color-accent);
+	--color-primary-contrast:  var(--color-accent-contrast);
+	/* Dice are always white with dark ink dots/border, regardless of theme
+	   or the menu/keyboard's remapped surface — pin them to concrete values. */
+	--color-die-face:          #ffffff;
+	--color-die-dot:           #1c1d1f;
+	--color-die-border:        #1c1d1f;
+	--color-success:           #2a6f4a;
+	--color-warning:           #c77700;
+	--color-error:             #b00020;
+
+	/* Focus */
+	--color-focus:             var(--color-accent);
+	--color-focus-ring:        var(--color-accent);
+	--focus-ring-width:        3px;
+
+	/* Composed backgrounds */
+	/* Cardboard noise behind the warm-gray page colour. */
+	--background-page:
+		url("./src/_shared/textures/page-noise.svg"),
+		var(--color-page);
+	--background-page-size:    200px 200px, auto;
+
+	/* Paper texture: soft cellular polygons behind the paper card */
+	--background-surface:
+		url("./src/_shared/textures/paper-texture.svg"),
+		var(--color-surface);
+	--background-surface-size: 200px 100px, auto;
+
+	/* Typography */
+	--font-sans:               "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--font-mono:               "IBM Plex Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+	--font-hand:               "Caveat", "Kalam", cursive;
+
+	/* Legacy aliases */
+	--font-family-base:        var(--font-sans);
+	--font-family-display:     var(--font-sans);
+
+	--line-height-base:        1.5;
+	--font-size-base:          16px;
+	--font-size-sm:            0.875rem;
+	--font-size-lg:            1.25rem;
+	--font-size-xl:            1.75rem;
+
+	/* Spacing */
+	--space-1:                 0.25rem;
+	--space-2:                 0.5rem;
+	--space-3:                 0.75rem;
+	--space-4:                 1rem;
+	--space-5:                 1.5rem;
+	--space-6:                 2rem;
+	--space-7:                 3rem;
+
+	/* Radii */
+	--radius-sm:               4px;
+	--radius-md:               8px;
+	--radius-lg:               16px;
+
+	/* Dice / layout */
+	--die-size:                clamp(2.5rem, 12vw, 4rem);
+	--die-gap:                 var(--space-2);
+	--max-content-width:       60ch;
+	--page-padding:            clamp(var(--space-2), 2vw, var(--space-4));
+}

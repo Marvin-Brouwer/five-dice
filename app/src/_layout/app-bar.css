@@ -1,0 +1,82 @@
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	background: var(--color-text);
+	color: var(--color-text-inverted);
+	padding: var(--space-2) var(--space-4);
+	z-index: 999;
+}
+
+.skip-link:focus {
+	left: var(--space-2);
+	top: var(--space-2);
+}
+
+.bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-3);
+	padding: var(--space-2) var(--page-padding) var(--space-2) var(--page-padding) ;
+	background: transparent;
+}
+
+.title {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	min-width: 0;
+	overflow: hidden;
+	text-decoration: none;
+	color: inherit;
+	border-radius: 4px;
+}
+
+.title:hover,
+.title:focus-visible {
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.monogram {
+	flex: 0 0 auto;
+	/* Font-size drives the die's size (1em × 1em). Change this to resize. */
+	font-size: 22px;
+	line-height: 1;
+	color: var(--color-text-on-page);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.breadcrumb {
+	font-family: var(--font-mono);
+	font-size: 14px;
+	letter-spacing: 0.14em;
+	color: var(--color-text-on-page);
+	text-transform: uppercase;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.kebab {
+	flex: 0 0 auto;
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+	border: 1px solid var(--color-border);
+	background: transparent;
+	color: var(--color-text-on-page);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	padding: 0;
+}
+
+.kebab:hover,
+.kebab:focus-visible {
+	background: rgba(255, 255, 255, 0.08);
+	color: var(--color-text-on-page);
+}

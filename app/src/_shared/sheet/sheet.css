@@ -1,0 +1,175 @@
+/* Bottom sheet. Anchored to the viewport bottom, rounded top corners, soft
+   top shadow, no side borders. Re-maps the base colour tokens to the menu
+   palette so every sheet shares the app menu's surface in both light and
+   dark mode.
+
+   Shared by the dice keypad (a native <dialog>) and the row picker (a plain
+   <div> inside its own layer) -- see sheet.mts for why those cannot use the
+   same element. */
+.sheet {
+	/* How much of the viewport a picker sheet stands in.
+
+	   Declared on the shared base rather than on .sheet-picker so it reaches
+	   every sheet by inheritance: the dice keypad reads it off its own
+	   element when it scrolls the selectable rows into view, because what
+	   those rows have to clear is the *picker* that will be showing when they
+	   are chosen, not the much taller keypad the scroll happens under.
+
+	   .sheet-picker enforces it as a min-height below, so this is the height
+	   rather than a note about it. A sheet whose content outgrows it — a
+	   title wrapping on a very narrow screen — leaves the keypad reserving
+	   slightly too little, which lands the band a few pixels low. That is a
+	   nudge the user can scroll away from, not a lock, so it stays benign. */
+	--sheet-picker-reserve: 132px;
+
+	--color-surface: var(--color-menu-surface);
+	--color-surface-elevated: var(--color-menu-surface);
+	--color-text: var(--color-menu-text);
+	--color-text-secondary: var(--color-menu-text-secondary);
+	--color-text-muted: var(--color-menu-text-muted);
+	--color-border: var(--color-menu-border);
+	--color-border-subtle: var(--color-menu-border-subtle);
+
+	position: fixed;
+	inset: auto 0 0 0;
+	width: 100vw;
+	margin: 0;
+	border: 0;
+	background: var(--color-surface);
+	border-top-left-radius: 18px;
+	border-top-right-radius: 18px;
+	box-shadow: 0 -20px 50px rgba(28, 29, 31, 0.22);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+
+	padding-left: 18px;
+	padding-right: 18px;
+	padding-bottom: calc(var(--sheet-pad-bottom, 18px) + env(safe-area-inset-bottom));
+}
+
+.sheet::backdrop {
+	background: var(--sheet-scrim, rgba(28, 29, 31, 0.22));
+}
+
+/* The keypad scrolls if the viewport is short; its title is visually hidden
+   so the content starts flush against the handle. */
+.sheet-keypad {
+	--sheet-pad-bottom: 22px;
+	padding-top: 0;
+	max-width: 100vw;
+	max-height: 92vh;
+	overflow-y: auto;
+}
+
+/* The picker is a short stack, laid out by its own layer. */
+.sheet-picker {
+	--sheet-pad-bottom: 18px;
+	padding-top: 14px;
+	z-index: 1003;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	/* Holds this rule to the height the keypad reserves for it, so the two
+	   cannot drift apart. A no-op at present -- padding, title and action row
+	   already come to exactly this -- and it only ever stops the sheet
+	   getting shorter than what was reserved. */
+	min-height: var(--sheet-picker-reserve);
+}
+
+.handle {
+	display: block;
+	width: 36px;
+	height: 4px;
+	border-radius: 2px;
+	background: var(--color-border);
+	margin: 8px auto 14px;
+}
+
+/* Mono section rule, shared with the keypad's band label. */
+.sheet-title {
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--color-text-secondary);
+	text-align: left;
+	margin: 0 0 4px;
+	padding: 12px 0;
+	border-top: 1px dashed var(--color-border);
+	border-bottom: 1px dashed var(--color-border);
+}
+
+/* Present to assistive tech, invisible on screen. */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+.actions-row {
+	display: grid;
+	/* Two buttons. Callers with a third pass their own columns. */
+	grid-template-columns: 1fr 1.5fr;
+	gap: 8px;
+}
+
+/* The picker's sheet is a flex column and spaces its children with `gap`;
+   the keypad's is a block, so its action row needs the margin itself. */
+.sheet-keypad .actions-row {
+	margin-top: 14px;
+}
+
+.action-button {
+	padding: 12px 14px;
+	border-radius: var(--radius-sm);
+	font-family: var(--font-mono);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+
+/* The keypad packs three buttons into the same width, so its type is a notch
+   smaller. */
+.sheet-keypad .action-button {
+	padding: 11px;
+	font-size: 10px;
+	letter-spacing: 0.14em;
+}
+
+.action-secondary {
+	background: transparent;
+	color: var(--color-text-secondary);
+	border: 1.5px solid var(--color-border);
+}
+
+.action-secondary:hover,
+.action-secondary:focus-visible {
+	background: var(--color-border-subtle);
+	color: var(--color-text);
+}
+
+.action-primary {
+	background: var(--color-accent);
+	color: var(--color-accent-contrast);
+	border: 0;
+	font-weight: 700;
+}
+
+.action-primary:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}

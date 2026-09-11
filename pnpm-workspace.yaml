@@ -1,2 +1,26 @@
-# packages:
-#   - src/app/*
+packages:
+  - app
+
+# pnpm 11 reads `allowBuilds`; both `sharp` and `esbuild` are reached through
+# the app's own dev dependencies -- sharp via @vite-pwa/assets-generator, and
+# esbuild via the vite that vitest bundles.
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+# The @rooted/* and @rooted-adapters/* alphas are published as this app needs
+# them, so they are always younger than the release-age gate.
+minimumReleaseAgeExclude:
+  - '@rooted-adapters/github-pages@1.0.0-alpha.16'
+  - '@rooted/adapter@1.0.0-alpha.16'
+  - '@rooted/application@1.0.0-alpha.28'
+  - '@rooted/components@1.0.0-alpha.19'
+  - '@rooted/elements@1.0.0-alpha.11'
+  - '@rooted/events@1.0.0-alpha.11'
+  - '@rooted/localization@1.0.0-alpha.12'
+  - '@rooted/markdown@1.0.0-alpha.7'
+  - '@rooted/router@1.0.0-alpha.23'
+  - '@rooted/seo@1.0.0-alpha.10'
+  - '@rooted/util@1.0.0-alpha.9'
+  - '@rooted/storage@1.0.0-alpha.7'
+  - '@rooted/store@1.0.0-alpha.6'
