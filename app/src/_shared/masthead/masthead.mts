@@ -35,7 +35,10 @@ export const Masthead = component({
 		// Decoration only — the wordmark beside them says the same thing in
 		// words, so the dice stay out of the a11y tree.
 		const dice = element('div', {
-			classes: [styles.dice, cssClass(!hasSettled, styles.settling)],
+			classes: [
+				styles.dice,
+				cssClass(!hasSettled, styles.settling),
+			],
 			aria: {
 				hidden: 'true'
 			},

@@ -1,4 +1,5 @@
 import { cssClass } from '@rooted/components'
+import type { Aria, ElementChildren } from '@rooted/elements'
 
 import type { RenderContext } from '../render-context.ts'
 
@@ -7,8 +8,8 @@ import styles from './sheet.css'
 export type SheetButtonOptions = {
 	variant: 'primary' | 'secondary'
 	label?: string
-	ariaLabel?: string
-	children?: Array<Node>
+	aria?: Pick<Aria, 'label'>
+	children?: ElementChildren
 	disabled?: boolean
 	onClick: () => void
 }
@@ -23,7 +24,7 @@ export type SheetButtonOptions = {
  * around it, so the rule has to sit where both class names are owned.
  */
 export function sheetButton(context: RenderContext, options: SheetButtonOptions): HTMLButtonElement {
-	const { variant, label, ariaLabel, children, disabled, onClick } = options
+	const { variant, label, aria, children, disabled, onClick } = options
 
 	return context.element('button', {
 		type: 'button',
@@ -32,10 +33,10 @@ export function sheetButton(context: RenderContext, options: SheetButtonOptions)
 			cssClass(variant === 'primary', styles.actionPrimary),
 			cssClass(variant === 'secondary', styles.actionSecondary),
 		],
-		...(ariaLabel === undefined ? {} : { aria: { label: ariaLabel } }),
-		...(label === undefined ? {} : { textContent: label }),
-		...(children === undefined ? {} : { children }),
-		...(disabled === undefined ? {} : { disabled }),
+		aria,
+		textContent: label,
+		children,
+		disabled,
 		on: {
 			click: onClick,
 		},

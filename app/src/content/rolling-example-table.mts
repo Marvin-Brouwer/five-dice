@@ -103,7 +103,9 @@ export const RollingExampleTable = component({
 				}),
 				create(StickerButton, {
 					label: localization.text`Roll\nagain`,
-					ariaLabel: localization.text`Roll again`,
+					aria: {
+						label: localization.text`Roll again`,
+					},
 					classes: styles.guideRollAgain,
 					on: {
 						click: reroll,

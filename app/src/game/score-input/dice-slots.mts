@@ -15,7 +15,7 @@ export type DiceSlotsApi = {
 export type DiceSlotsOptions = {
 	state: DiceStore
 	/** Handed the focus API once, at mount. */
-	ref?: (api: DiceSlotsApi) => void
+	reference?: (api: DiceSlotsApi) => void
 }
 
 type Painted = { value: DieValue | undefined, focused: boolean }
@@ -38,7 +38,7 @@ export const DiceSlots = component<DiceSlotsOptions>({
 	name: 'dice-slots',
 	styles,
 	onMount({ replace, element, create, signal, options }) {
-		const { state, ref } = options
+		const { state, reference } = options
 
 		const dieSpaces: HTMLSpanElement[] = []
 		const buttons = slotIndices.map((index) => {
@@ -102,7 +102,9 @@ export const DiceSlots = component<DiceSlotsOptions>({
 				dieSpaces[index]!.replaceChildren(create(PipDie, {
 					value,
 					variant: focused ? 'active' : 'default',
-					ariaLabel: label,
+					aria: {
+						label: label,
+					},
 				}))
 				buttons[index]!.setAttribute('aria-label', label)
 				buttons[index]!.classList.toggle(styles.slotActive!, focused)
@@ -125,7 +127,7 @@ export const DiceSlots = component<DiceSlotsOptions>({
 		// 'update', not 'change': clearing an already-empty slot is a no-op
 		// write that still has to repaint.
 		state.on('update', signal, render)
-		ref?.({ focus: focusSlot })
+		reference?.({ focus: focusSlot })
 
 		replace(element('div', {
 			role: 'group',

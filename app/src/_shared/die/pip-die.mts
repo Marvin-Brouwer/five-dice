@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import type { Aria } from '@rooted/elements'
 
 import { localization } from '../i18n/localization.mts'
 import type { DieValue } from '../../game/logic/gameConstants.ts'
@@ -25,14 +26,14 @@ const CELL_XY: Array<[number, number]> = [
 export type PipDieOptions = {
 	value: DieValue | undefined
 	variant?: 'default' | 'active' | 'muted'
-	ariaLabel?: string
+	aria?: Pick<Aria, 'label'>
 }
 
 export const PipDie = component<PipDieOptions>({
 	name: 'pip-die',
 	styles,
 	onMount({ append, element, options }) {
-		const { value, variant = 'default', ariaLabel } = options
+		const { value, variant = 'default', aria } = options
 
 		const pips = value === undefined ? [] : PIPS[value]
 		// Dice faces are physically white in every theme, so pips and border
@@ -49,7 +50,7 @@ export const PipDie = component<PipDieOptions>({
 				classes: styles.die,
 				role: 'img',
 				aria: {
-					label: renderAriaLabel(ariaLabel, value)
+					label: renderAriaLabel(aria?.label, value)
 				},
 				children: element('svg', {
 					viewBox: '0 0 24 24',
@@ -79,7 +80,7 @@ export const PipDie = component<PipDieOptions>({
 	},
 })
 
-function renderAriaLabel(ariaLabel: string | undefined, value: number | undefined): string | null | undefined {
+function renderAriaLabel(ariaLabel: string | null | undefined, value: number | undefined): string | null | undefined {
 
 	if (!!ariaLabel) return ariaLabel
 	if (!value) return localization.text`Empty die`

@@ -116,6 +116,8 @@
 
 .actions-row {
 	display: grid;
+	/* Two buttons. Callers with a third pass their own columns. */
+	grid-template-columns: 1fr 1.5fr;
 	gap: 8px;
 }
 

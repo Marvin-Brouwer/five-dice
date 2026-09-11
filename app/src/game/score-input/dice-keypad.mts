@@ -27,7 +27,9 @@ export const DiceKeypad = component<DiceKeypadOptions>({
 				classes: styles.keyDie,
 				children: create(PipDie, {
 					value,
-					ariaLabel: localization.text`Add a ${value}`,
+					aria: {
+						label: localization.text`Add a ${value}`,
+					},
 				}),
 			}),
 			on: {

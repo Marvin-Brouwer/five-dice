@@ -46,7 +46,7 @@ export const CultureSelect = component({
 								children: create(Link, {
 									href: href.for(HomeRoute, { locale }),
 									classes: styles.link,
-									children: localeLabels[locale],
+									children: localeLabels[locale].long,
 								}),
 							})),
 						}),

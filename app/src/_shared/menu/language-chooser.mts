@@ -7,11 +7,6 @@ import { setLocale } from '../i18n/remembered-locale.mts'
 import { DropDown, type DropDownApi } from './drop-down.mts'
 import styles from './language-chooser.css'
 
-const LABELS: Record<Locale, { short: string, long: string }> = {
-	en: { short: 'EN', long: localeLabels.en },
-	nl: { short: 'NL', long: localeLabels.nl },
-}
-
 /** Swaps the locale segment of the current path, keeping the rest of the URL intact. */
 function pathForLocale(locale: Locale): string {
 	const current = href.current().pathOnly
@@ -32,15 +27,15 @@ export const LanguageChooser = component({
 		append(
 			create(DropDown, {
 				label: localization.text`Language`,
-				valueLabel: () => LABELS[activeLocale].long,
+				triggerLabel: () => localization.text`Language: ${localeLabels[activeLocale].long}`,
 				trigger: () => [
 					element('span', {
 						classes: styles.short,
-						textContent: LABELS[activeLocale].short,
+						textContent: localeLabels[activeLocale].short,
 					}),
 					element('span', {
 						classes: styles.long,
-						textContent: LABELS[activeLocale].long,
+						textContent: localeLabels[activeLocale].long,
 					}),
 				],
 				items: () => localization.supportedLocales.map(code => {
@@ -50,11 +45,11 @@ export const LanguageChooser = component({
 						content: [
 							element('span', {
 								classes: styles.optionShort,
-								textContent: LABELS[code].short,
+								textContent: localeLabels[code].short,
 							}),
 							element('span', {
 								classes: styles.optionLong,
-								textContent: LABELS[code].long,
+								textContent: localeLabels[code].long,
 							}),
 						],
 						onSelect() {

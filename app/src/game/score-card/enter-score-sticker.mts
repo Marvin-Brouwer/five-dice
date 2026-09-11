@@ -43,7 +43,9 @@ export const EnterScoreSticker = component<EnterScoreStickerOptions>({
 		append(
 			create(StickerButton, {
 				label: localization.text`Enter\nscore`,
-				ariaLabel: localization.text`Enter score`,
+				aria: {
+					label: localization.text`Enter score`,
+				},
 				classes: styles.stickerPlacement,
 				on: {
 					click() {

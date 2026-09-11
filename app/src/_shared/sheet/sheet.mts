@@ -1,5 +1,5 @@
-import { component, optional, type CssClass } from '@rooted/components'
-import type { ElementChild } from '@rooted/elements'
+import { component, cssClass, optional, type CssClass } from '@rooted/components'
+import type { ElementChild, ElementChildren } from '@rooted/elements'
 
 import styles from './sheet.css'
 
@@ -23,12 +23,12 @@ export type SheetOptions = {
 	titleVisible?: boolean
 	/** Grab handle above the content. The picker has none. */
 	handle?: boolean
-	content: Array<Node>
+	content: ElementChildren
 	actions: Array<Node>
 	/** CSS grid columns for the action row. Defaults to two buttons. */
 	actionColumns?: string
 	/** Handed the sheet element once, at mount. */
-	ref?: (element: HTMLElement) => void
+	reference?: (element: HTMLElement) => void
 }
 
 /**
@@ -43,7 +43,7 @@ export const Sheet = component<SheetOptions>({
 	name: 'sheet-chrome',
 	styles,
 	onMount({ replace, element, options }) {
-		const { as, variant, title, titleId, titleVisible, handle, content, actions, actionColumns, ref } = options
+		const { as, variant, title, titleId, titleVisible, handle, content, actions, actionColumns, reference } = options
 
 		const children: Array<ElementChild> = [
 			optional(handle,
@@ -56,14 +56,17 @@ export const Sheet = component<SheetOptions>({
 			),
 			element('h2', {
 				id: titleId,
-				classes: titleVisible ? styles.sheetTitle : styles.visuallyHidden,
+				classes: [
+					styles.sheetTitle,
+					cssClass(!titleVisible, styles.visuallyHidden),
+				],
 				textContent: title,
 			}),
-			...content,
+			...(Array.isArray(content) ? content : [content]),
 			element('div', {
 				classes: styles.actionsRow,
 				style: {
-					gridTemplateColumns: actionColumns ?? '1fr 1.5fr',
+					gridTemplateColumns: actionColumns,
 				},
 				children: actions,
 			}),
@@ -87,7 +90,7 @@ export const Sheet = component<SheetOptions>({
 				children,
 			})
 
-		ref?.(sheet)
+		reference?.(sheet)
 		replace(sheet)
 	},
 })

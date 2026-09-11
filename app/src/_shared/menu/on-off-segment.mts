@@ -1,4 +1,5 @@
 import { component, type CssClass } from '@rooted/components'
+import type { Aria } from '@rooted/elements'
 import type { Store } from '@rooted/store'
 
 import { localization } from '../i18n/localization.mts'
@@ -7,7 +8,7 @@ import styles from './on-off-segment.css'
 
 export type OnOffSegmentOptions = {
 	store: Store<boolean>
-	ariaLabel: string
+	aria: Pick<Aria, 'label'>
 	idPrefix: string
 }
 
@@ -36,7 +37,7 @@ export const OnOffSegment = component<OnOffSegmentOptions>({
 	name: 'on-off-segment',
 	styles,
 	onMount({ append, element, create, signal, options }) {
-		const { store, ariaLabel } = options
+		const { store, aria } = options
 
 		function sync() {
 			const value = store.value
@@ -49,7 +50,7 @@ export const OnOffSegment = component<OnOffSegmentOptions>({
 				type: 'button',
 				role: 'switch',
 				aria: {
-					label: ariaLabel,
+					label: aria.label,
 					checked: String(store.value)
 				},
 				classes: styles.group,

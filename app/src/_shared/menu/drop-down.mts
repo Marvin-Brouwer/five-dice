@@ -21,7 +21,7 @@ export type DropDownItem = {
 export type DropDownApi = {
 	/** Close the list. */
 	close(): void
-	/** Re-read `trigger`, `valueLabel` and `items`, and repaint. */
+	/** Re-read `trigger`, `triggerLabel` and `items`, and repaint. */
 	refresh(): void
 	/** Disable the trigger, for a pick that will not come back. */
 	disableTrigger(): void
@@ -31,12 +31,17 @@ export type DropDownOptions = {
 	/** Names the control — "Language", "Theme". Labels the listbox. */
 	label: string
 	/**
-	 * Both of these are re-read on `refresh()`, so a caller whose trigger
-	 * changes with the value does not have to hold on to its own nodes.
+	 * The trigger's accessible name, naming the control and its current value.
+	 *
+	 * Composed by the caller rather than from `label` here, so it goes through
+	 * `localization.text` and a locale can order or punctuate it its own way.
 	 */
-	/** The current value in words. The trigger reads out as "label: this". */
-	valueLabel: () => string
-	/** The trigger's content, minus the chevron the dropdown appends. */
+	triggerLabel: () => string
+	/**
+	 * The trigger's content, minus the chevron the dropdown appends. Re-read on
+	 * `refresh()`, so a caller whose trigger changes with the value does not
+	 * have to hold on to its own nodes.
+	 */
 	trigger: () => Array<ElementChild>
 	items: () => Array<DropDownItem>
 	reference?: (api: DropDownApi) => void
@@ -57,7 +62,7 @@ export const DropDown = component<DropDownOptions>({
 	name: 'drop-down',
 	styles,
 	onMount({ append, element, create, signal, on, options }) {
-		const { label, valueLabel, trigger, items } = options
+		const { label, triggerLabel, trigger, items } = options
 
 		const buttonContent = element('span', {
 			classes: styles.buttonContent,
@@ -69,7 +74,7 @@ export const DropDown = component<DropDownOptions>({
 			classes: styles.button,
 			aria: {
 				hasPopup: 'listbox',
-				label: `${label}: ${valueLabel()}`,
+				label: triggerLabel(),
 			},
 			children: [
 				buttonContent,
@@ -135,7 +140,7 @@ export const DropDown = component<DropDownOptions>({
 			close: () => dropdown.close(),
 			refresh() {
 				buttonContent.replaceChildren(...trigger().filter(child => child !== undefined && child !== null))
-				button.setAttribute('aria-label', `${label}: ${valueLabel()}`)
+				button.setAttribute('aria-label', triggerLabel())
 				dropdown.refresh()
 			},
 			disableTrigger() {

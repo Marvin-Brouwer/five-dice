@@ -123,7 +123,7 @@ export const ThemeChooser = component({
 
 		const chooser = create(DropDown, {
 			label: localization.text`Theme`,
-			valueLabel: () => themeLabel(themeStore.value),
+			triggerLabel: () => localization.text`Theme: ${themeLabel(themeStore.value)}`,
 			trigger: () => [
 				element('span', {
 					classes: styles.buttonIcon,

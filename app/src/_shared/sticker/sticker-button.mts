@@ -1,13 +1,13 @@
 import { component } from '@rooted/components'
 import type { CssClass } from '@rooted/components'
-import type { HtmlElementProperties } from '@rooted/elements'
+import type { Aria, HtmlElementProperties } from '@rooted/elements'
 
 import styles from './sticker-button.css'
 
 export type StickerButtonOptions = {
 	/** Label text. `\n` breaks the line, as the card's "Enter\nscore" does. */
 	label: string
-	ariaLabel?: string
+	aria?: Pick<Aria, 'label'>
 	/** Forwarded to the button, same shape as `element('button', { on })`. */
 	on?: HtmlElementProperties<'button'>['on']
 	/** Placement, from whichever owner is positioning it. */
@@ -31,14 +31,14 @@ export const StickerButton = component<StickerButtonOptions>({
 	name: 'sticker-button',
 	styles,
 	onMount({ append, element, options }) {
-		const { label, ariaLabel, on, classes, reference } = options
+		const { label, aria, on, classes, reference } = options
 
 		const button = append(
 			element('button', {
 				type: 'button',
 				classes: [styles.sticker, classes],
 				aria: {
-					label: ariaLabel
+					label: aria?.label
 				},
 				on,
 				children: element('span', {

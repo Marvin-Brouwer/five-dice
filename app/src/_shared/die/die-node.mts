@@ -12,7 +12,9 @@ export type DieNodeOptions = Omit<PipDieOptions, 'value'>
 export function dieNode(context: RenderContext, value: DieValue, options: DieNodeOptions = {}): Node {
 	return context.create(PipDie, {
 		value,
-		ariaLabel: `${value}`,
+		aria: {
+			label: `${value}`,
+		},
 		...options,
 	})
 }

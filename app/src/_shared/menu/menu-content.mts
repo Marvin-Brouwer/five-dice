@@ -38,7 +38,9 @@ export const MenuContent = component<MenuContentOptions>({
 		const languageControl = create(LanguageChooser)
 		const screenLockControl = create(OnOffSegment, {
 			store: screenLockStore,
-			ariaLabel: localization.text`Keep screen on`,
+			aria: {
+				label: localization.text`Keep screen on`,
+			},
 			idPrefix: 'menu-screen-lock',
 		})
 

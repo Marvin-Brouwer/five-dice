@@ -100,7 +100,9 @@ export const DiceModal = component<DiceModalOptions>({
 
 		const closeButton = sheetButton(context, {
 			variant: 'secondary',
-			ariaLabel: localization.text`Close and cancel`,
+			aria: {
+				label: localization.text`Close and cancel`,
+			},
 			// Routed through the dialog so Escape and this button take exactly
 			// the same path.
 			onClick: () => dialog.close(),
@@ -116,7 +118,9 @@ export const DiceModal = component<DiceModalOptions>({
 
 		const resetButton = sheetButton(context, {
 			variant: 'secondary',
-			ariaLabel: localization.text`Clear all dice`,
+			aria: {
+				label: localization.text`Clear all dice`,
+			},
 			onClick() {
 				state.reset()
 				slots?.focus(0)
@@ -161,7 +165,7 @@ export const DiceModal = component<DiceModalOptions>({
 			content: [
 				create(DiceSlots, {
 					state,
-					ref: (api) => { slots = api },
+					reference: (api) => { slots = api },
 				}),
 				element('div', {
 					classes: styles.band,
@@ -185,7 +189,7 @@ export const DiceModal = component<DiceModalOptions>({
 			resetButton,
 			confirmButton,
 		],
-			ref: (el) => {
+			reference: (el) => {
 				dialog = el as HTMLDialogElement
 				// Escape, the backdrop and the Close button all land here, so
 				// cancelling always reaches the caller.
