@@ -1,14 +1,8 @@
 import type { EventBuilder } from '@rooted/elements/events'
 
 export type DropdownController = {
-	/** True when the list is currently open. */
-	readonly isOpen: () => boolean
-	/** Open the list; rebuilds the options and positions it. */
-	open(): void
 	/** Close the list. */
 	close(): void
-	/** Toggle open/close. */
-	toggle(): void
 	/**
 	 * Rebuild the options and reposition. Call after external state changes
 	 * that need the list to reflect (e.g. a store update while the list is
@@ -107,11 +101,13 @@ export function attachDropdown({
 		if (open) position()
 	})
 
+	// Opening is the button's own business, handled by the click listener
+	// above, so there is no `open` or `toggle` here and nothing has needed to
+	// ask whether the list is open.
 	return {
-		isOpen: () => open,
-		open: () => setOpen(true),
 		close: () => setOpen(false),
-		toggle: () => setOpen(!open),
-		refresh: () => { if (open) render() },
+		refresh: () => {
+			if (open) render()
+		},
 	}
 }
