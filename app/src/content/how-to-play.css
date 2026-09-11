@@ -117,8 +117,10 @@
 }
 
 /* The table runs straight into the next band, no paper between them — the
-   same join the score card makes between its own parts. */
-.guide-example + .guide-prose :is(h1, h2):first-child {
+   same join the score card makes between its own parts. Set by the section
+   itself rather than by adjacency: each one is its own component now, so
+   `.guide-example + .guide-prose` would no longer be a sibling pair. */
+.guide-prose-flush :is(h1, h2):first-child {
 	margin-top: 0;
 }
 
