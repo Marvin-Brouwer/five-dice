@@ -57,6 +57,7 @@ export type DropDownOptions = {
  * No keyboard support yet: the rows are `div[role=option]` with no roving
  * tabindex, `aria-activedescendant` or arrow handling. That was true of both
  * choosers before this, and this is the one place it now needs adding.
+ * https://github.com/Marvin-Brouwer/five-dice/issues/91
  */
 export const DropDown = component<DropDownOptions>({
 	name: 'drop-down',
