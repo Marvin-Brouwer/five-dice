@@ -76,10 +76,14 @@ export const ThemeChooser = component({
 			}
 			statusLine.replaceChildren(
 				create(Icon, {
-					source: dark ? moonIcon : sunIcon,
+					source: dark
+						? moonIcon
+						: sunIcon,
 				}),
 				element('span', {
-					textContent: dark ? localization.text`Dark active` : localization.text`Light active`,
+					textContent: dark
+						? localization.text`Dark active`
+						: localization.text`Light active`,
 				}),
 			)
 		}

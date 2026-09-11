@@ -105,7 +105,9 @@ export const DiceSlots = component<DiceSlotsOptions>({
 				dieSpaces[index]!.replaceChildren(
 					create(PipDie, {
 						value,
-						variant: focused ? 'active' : 'default',
+						variant: focused
+							? 'active'
+							: 'default',
 						aria: {
 							label,
 						},
