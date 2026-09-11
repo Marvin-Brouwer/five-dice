@@ -11,8 +11,8 @@ importers:
   app:
     dependencies:
       '@rooted/components':
-        specifier: 1.0.0-alpha.18
-        version: 1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.19
+        version: 1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/elements':
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11(@rooted/events@1.0.0-alpha.11)
@@ -20,14 +20,14 @@ importers:
         specifier: 1.0.0-alpha.11
         version: 1.0.0-alpha.11
       '@rooted/localization':
-        specifier: 1.0.0-alpha.11
-        version: 1.0.0-alpha.11(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.12
+        version: 1.0.0-alpha.12(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/markdown':
-        specifier: 1.0.0-alpha.6
-        version: 1.0.0-alpha.6(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.7
+        version: 1.0.0-alpha.7(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/router':
-        specifier: 1.0.0-alpha.22
-        version: 1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.23
+        version: 1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/storage':
         specifier: 1.0.0-alpha.7
         version: 1.0.0-alpha.7(@rooted/util@1.0.0-alpha.9)
@@ -45,17 +45,17 @@ importers:
         specifier: ^1.62.1
         version: 1.62.1
       '@rooted-adapters/github-pages':
-        specifier: 1.0.0-alpha.15
-        version: 1.0.0-alpha.15(@rooted/adapter@1.0.0-alpha.15(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.16
+        version: 1.0.0-alpha.16(@rooted/adapter@1.0.0-alpha.16(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/adapter':
-        specifier: 1.0.0-alpha.15
-        version: 1.0.0-alpha.15(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.16
+        version: 1.0.0-alpha.16(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/application':
-        specifier: 1.0.0-alpha.27
-        version: 1.0.0-alpha.27(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(rolldown@1.0.3)(vite-bundle-analyzer@1.3.9)(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.28
+        version: 1.0.0-alpha.28(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(rolldown@1.0.3)(vite-bundle-analyzer@1.3.9)(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/seo':
-        specifier: 1.0.0-alpha.9
-        version: 1.0.0-alpha.9(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+        specifier: 1.0.0-alpha.10
+        version: 1.0.0-alpha.10(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.43
@@ -1183,15 +1183,15 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@rooted-adapters/github-pages@1.0.0-alpha.15':
-    resolution: {integrity: sha512-TJFdz8e9Bzd0FkXNYdqp5iN2pk6t/COBm+R1vIJ1k6viID7YG39xRybrwEEYKgF/wZJSZ9upd2hkQW8ckgNaAw==}
+  '@rooted-adapters/github-pages@1.0.0-alpha.16':
+    resolution: {integrity: sha512-abHp08Jc+Kqacy+L5IIryY6+1wBH3W9i1OX86Vf7sZB/Rd6rrQfJyHmHWv206zTtpqSnYVl8FU9Px/gEAxM9Hw==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
-      '@rooted/adapter': 1.0.0-alpha.15
+      '@rooted/adapter': 1.0.0-alpha.16
       vite: '>= 8.0.1'
 
-  '@rooted/adapter@1.0.0-alpha.15':
-    resolution: {integrity: sha512-DyaY19xDOkSVv6KNc10Olye8v2LP9aIDkhsft7kASEFJFGeiMvRd/+X219YA+KvGlteevTax3Nfs4fq/Bbb2MA==}
+  '@rooted/adapter@1.0.0-alpha.16':
+    resolution: {integrity: sha512-QpZMwa9nKlFVKAjdYwEWNS9/7q77amQ29vvjH6bftUUEZCN016/CInO0WBhUp5vjK7i3Clpw50mrWSeiJU1wrw==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
       rolldown: '>= 1.0.0'
@@ -1200,17 +1200,17 @@ packages:
       rolldown:
         optional: true
 
-  '@rooted/application@1.0.0-alpha.27':
-    resolution: {integrity: sha512-1URZRck/LlnyoZC2MPOqAEMxtSbOzoSVxY0NNSWkwvlt9+bo7s+mr70hPC3sN39RbD0oEY7Hw+kwakMq9hW0Dg==}
+  '@rooted/application@1.0.0-alpha.28':
+    resolution: {integrity: sha512-fdh5qKd54wj9rGZhklg9lMQR2c/nvUwarGmSFRUS86lTiMOYGOTpxxUKzxHjLo71ejxb/LOiHPmOwC7gnNHTJQ==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
-      '@rooted/components': 1.0.0-alpha.18
+      '@rooted/components': 1.0.0-alpha.19
       vite: '>= 8.0.1'
       vite-bundle-analyzer: '>=  1.3.6'
       vite-plugin-pwa: '>= 1.2.0'
 
-  '@rooted/components@1.0.0-alpha.18':
-    resolution: {integrity: sha512-jvdo0c7KsU6OO5tqLiJVpz24uUIfndxZOT69uPdeobFUREHo99boQolhTTvG5ajD/mjA1VQJFy5h79l7KtU3fQ==}
+  '@rooted/components@1.0.0-alpha.19':
+    resolution: {integrity: sha512-XU/vseR2W1RnZGqv6BF8dicix7hX/KgXDLQ2BhFgN7BL9Tyoa+VEa+4ZEjZKQJP5VizdNEeP0zFDhJx8+0+MPQ==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
       vite: '>=8.0.1'
@@ -1225,35 +1225,35 @@ packages:
     resolution: {integrity: sha512-V99ut/isEVD5t4UCY1EN0L9zUv19UqxDoEYXJLo58bPFwfCHC3Rxy2rFBY8G0W1qMKsOUfPbz3FlBq1cTadXNw==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
 
-  '@rooted/localization@1.0.0-alpha.11':
-    resolution: {integrity: sha512-xGz01CU0JbB+YInB4NMuh68w8qddf3mAnoaRCqewhDHdEULvpVSUZdFZUF1aiReZMr4IPpZkm+wvuvmKvBm3vg==}
+  '@rooted/localization@1.0.0-alpha.12':
+    resolution: {integrity: sha512-L6lYw7+7nNnY9QqhoqFoHWWK+N1U7WBdf2YKkn5ZR/GkvQjfkwpjiwVB5xWWz+r/vy0JyIlkPX5HBxG/hpZALw==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
-      '@rooted/components': 1.0.0-alpha.18
-      '@rooted/router': 1.0.0-alpha.22
+      '@rooted/components': 1.0.0-alpha.19
+      '@rooted/router': 1.0.0-alpha.23
       '@rooted/util': 1.0.0-alpha.9
       vite: '>=8.0.1'
 
-  '@rooted/markdown@1.0.0-alpha.6':
-    resolution: {integrity: sha512-4SdO2Zw4DUTh0qfbC4jvch+8ZQj7faKl8u84eSN/BZIFtefgaukG/dOBnlqvhHo8zvE2PBMDQUoikJXTy4g0Lg==}
+  '@rooted/markdown@1.0.0-alpha.7':
+    resolution: {integrity: sha512-gUKfM/ZSXc529tys2m/6Fuu9cT0B9dhR/oVP2gVNVpafM30jg+TS0dVJNDLc8k+A7yvoBUFTFHn+zDaSf6eFrg==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
-      '@rooted/components': 1.0.0-alpha.18
+      '@rooted/components': 1.0.0-alpha.19
       vite: '>=8.0.1'
 
-  '@rooted/router@1.0.0-alpha.22':
-    resolution: {integrity: sha512-RBS/u0e3ooPru4uHw6jq1ra4u12FGsgY8DT+RvGcQF/da/gTtKPF43mq7bL0Wmq867aYkfB/Ae3USi6ELqhvfg==}
+  '@rooted/router@1.0.0-alpha.23':
+    resolution: {integrity: sha512-eQYJqrpjumY3tFWJc0v0NT681wzz3odySB28M09mOtbYvmQFEkEgPZOqAzjFVyqGY8XCkOECA1+1FYuMbOF8/g==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
-      '@rooted/components': 1.0.0-alpha.18
+      '@rooted/components': 1.0.0-alpha.19
       '@rooted/util': 1.0.0-alpha.9
       vite: '>=8.0.1'
 
-  '@rooted/seo@1.0.0-alpha.9':
-    resolution: {integrity: sha512-wWHEv9n4Lgc14kRI6ama9xDq3X3SOOnNC0MPYJ/8HkBgJgedv3DrR1IIsC4bizsk28qFzERdhwDw2n1lqscn2Q==}
+  '@rooted/seo@1.0.0-alpha.10':
+    resolution: {integrity: sha512-EkVzInTytTcyzzzGmK1fbFVgXslFu8qPXhKfwb0EsLv6O79+lH/gS86Q521nhCMDxHj8KuWAaWCQRNUflhKdxw==}
     engines: {node: '>=22.0.0', pnpm: '>=10.0.0'}
     peerDependencies:
-      '@rooted/router': 1.0.0-alpha.22
+      '@rooted/router': 1.0.0-alpha.23
       vite: '>=8.0.1'
       vite-plugin-pwa: '>= 1.2.0'
     peerDependenciesMeta:
@@ -3844,12 +3844,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.62.2':
     optional: true
 
-  '@rooted-adapters/github-pages@1.0.0-alpha.15(@rooted/adapter@1.0.0-alpha.15(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted-adapters/github-pages@1.0.0-alpha.16(@rooted/adapter@1.0.0-alpha.16(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
-      '@rooted/adapter': 1.0.0-alpha.15(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/adapter': 1.0.0-alpha.16(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       vite: 8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)
 
-  '@rooted/adapter@1.0.0-alpha.15(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/adapter@1.0.0-alpha.16(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
       happy-dom: 20.14.0
       vite: 8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)
@@ -3859,11 +3859,11 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@rooted/application@1.0.0-alpha.27(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(rolldown@1.0.3)(vite-bundle-analyzer@1.3.9)(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/application@1.0.0-alpha.28(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(rolldown@1.0.3)(vite-bundle-analyzer@1.3.9)(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
-      '@rooted/adapter': 1.0.0-alpha.15(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
-      '@rooted/components': 1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
-      '@rooted/seo': 1.0.0-alpha.9(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/adapter': 1.0.0-alpha.16(rolldown@1.0.3)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/components': 1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/seo': 1.0.0-alpha.10(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/util': 1.0.0-alpha.9
       '@vite-pwa/assets-generator': 1.0.2
       tinyglobby: 0.2.17
@@ -3876,7 +3876,7 @@ snapshots:
       - rolldown
       - utf-8-validate
 
-  '@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
       '@rooted/elements': 1.0.0-alpha.11(@rooted/events@1.0.0-alpha.11)
       '@rooted/util': 1.0.0-alpha.9
@@ -3892,24 +3892,24 @@ snapshots:
     dependencies:
       '@rooted/util': 1.0.0-alpha.9
 
-  '@rooted/localization@1.0.0-alpha.11(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/localization@1.0.0-alpha.12(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
-      '@rooted/components': 1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
-      '@rooted/router': 1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/components': 1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/router': 1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/util': 1.0.0-alpha.9
       vite: 8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)
 
-  '@rooted/markdown@1.0.0-alpha.6(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/markdown@1.0.0-alpha.7(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
-      '@rooted/components': 1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/components': 1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       gray-matter: 4.0.3
       html-minifier-terser: 7.2.0
       marked: 18.0.12
       vite: 8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)
 
-  '@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
-      '@rooted/components': 1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/components': 1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
       '@rooted/util': 1.0.0-alpha.9
       happy-dom: 20.14.0
       jiti: 2.7.0
@@ -3919,13 +3919,13 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@rooted/seo@1.0.0-alpha.9(@rooted/router@1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
+  '@rooted/seo@1.0.0-alpha.10(@rooted/router@1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(vite-plugin-pwa@1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1))(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))':
     dependencies:
       tinyglobby: 0.2.17
       vite: 8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)
       vite-plugin-pwa: 1.3.0(@vite-pwa/assets-generator@1.0.2)(supports-color@7.2.0)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))(workbox-build@7.4.1(@types/babel__core@7.20.5)(supports-color@7.2.0))(workbox-window@7.4.1)
     optionalDependencies:
-      '@rooted/router': 1.0.0-alpha.22(@rooted/components@1.0.0-alpha.18(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
+      '@rooted/router': 1.0.0-alpha.23(@rooted/components@1.0.0-alpha.19(@rooted/events@1.0.0-alpha.11)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0)))(@rooted/util@1.0.0-alpha.9)(vite@8.0.16(@types/node@20.19.43)(jiti@2.7.0)(terser@5.48.0))
 
   '@rooted/storage@1.0.0-alpha.7(@rooted/util@1.0.0-alpha.9)':
     dependencies:
