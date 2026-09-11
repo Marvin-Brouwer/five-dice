@@ -1,3 +1,4 @@
+import { githubPagesAdapter } from '@rooted-adapters/github-pages'
 import { rootedManifest } from '@rooted/application'
 import { localizationSeo } from '@rooted/localization/vite'
 import { rootedMarkdown } from '@rooted/markdown/vite'
@@ -28,5 +29,6 @@ export default rootedManifest({
 		localizationSeo(),
 		routeSeoPlugin(),
 		rootedMarkdown(),
+		githubPagesAdapter(),
 	],
 })

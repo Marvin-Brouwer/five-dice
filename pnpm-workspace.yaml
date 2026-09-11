@@ -8,9 +8,10 @@ allowBuilds:
   esbuild: true
   sharp: true
 
-# The @rooted/* alphas are published as this app needs them, so they are
-# always younger than the release-age gate.
+# The @rooted/* and @rooted-adapters/* alphas are published as this app needs
+# them, so they are always younger than the release-age gate.
 minimumReleaseAgeExclude:
+  - '@rooted-adapters/github-pages@1.0.0-alpha.15'
   - '@rooted/adapter@1.0.0-alpha.15'
   - '@rooted/application@1.0.0-alpha.27'
   - '@rooted/components@1.0.0-alpha.18'
