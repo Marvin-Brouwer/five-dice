@@ -1,13 +1,13 @@
 import { component } from '@rooted/components'
 
-import { Icon } from '../_shared/icon/icon.mts'
-import { localization } from '../_shared/i18n/localization.mts'
-import { MenuRow } from '../_shared/menu/menu-row.mts'
+import { Icon } from '../../_shared/icon/icon.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
+import { MenuRow } from '../../_shared/menu/menu-row.mts'
 
-import { figure, proseBlock } from './guide-parts.mts'
-import styles from './how-to-play.css'
+import { figure, proseBlock } from './parts.mts'
+import styles from '../how-to-play.css'
 
-import refreshIcon from '../_shared/menu/menu-content.refresh.svg?raw'
+import refreshIcon from '../../_shared/menu/menu-content.refresh.svg?raw'
 
 /** The "New game" row, shown where it actually lives. */
 export const GuideEnding = component({
@@ -15,11 +15,14 @@ export const GuideEnding = component({
 	styles,
 	async onMount({ append, element, create }) {
 		const prose = await localization.branch({
-			en: () => import('./how-to-play-ending.en.md'),
-			nl: () => import('./how-to-play-ending.nl.md'),
+			en: () => import('./ending.en.md'),
+			nl: () => import('./ending.nl.md'),
 		})
 
-		const context = { element, create }
+		const context = {
+			element,
+			create,
+		}
 
 		append(
 			proseBlock(context, prose),

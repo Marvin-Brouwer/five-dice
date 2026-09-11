@@ -2,13 +2,13 @@ import { component } from '@rooted/components'
 
 import { ContentCard } from '../_layout/content-card.mts'
 
-import { GuideBasics } from './guide-basics.mts'
-import { GuideClose } from './guide-close.mts'
-import { GuideDiscard } from './guide-discard.mts'
-import { GuideEnding } from './guide-ending.mts'
-import { GuideExample } from './guide-example.mts'
-import { GuideFlush } from './guide-flush.mts'
-import { GuideUndo } from './guide-undo.mts'
+import { GuideBasics } from './guide/basics.mts'
+import { GuideClose } from './guide/close.mts'
+import { GuideDiscard } from './guide/discard.mts'
+import { GuideEnding } from './guide/ending.mts'
+import { GuideExample } from './guide/example.mts'
+import { GuideFlush } from './guide/flush.mts'
+import { GuideUndo } from './guide/undo.mts'
 import styles from './how-to-play.css'
 
 /**

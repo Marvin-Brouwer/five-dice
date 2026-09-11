@@ -157,7 +157,10 @@ export const ThemeChooser = component({
 				syncStatus()
 				dropdown?.refresh()
 			})
-			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+			observer.observe(document.documentElement, {
+				attributes: true,
+				attributeFilter: ['data-theme'],
+			})
 			signal.addEventListener('abort', () => observer.disconnect(), { once: true })
 		}
 

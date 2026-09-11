@@ -1,12 +1,12 @@
 import { component } from '@rooted/components'
 
-import { DiceKeypad } from '../game/score-input/dice-keypad.mts'
-import { createDiceStore } from '../game/score-input/dice-state.mts'
-import { localization } from '../_shared/i18n/localization.mts'
-import { StickerButton } from '../_shared/sticker/sticker-button.mts'
+import { DiceKeypad } from '../../game/score-input/dice-keypad.mts'
+import { createDiceStore } from '../../game/score-input/dice-state.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
+import { StickerButton } from '../../_shared/sticker/sticker-button.mts'
 
-import { proseBlock } from './guide-parts.mts'
-import styles from './how-to-play.css'
+import { proseBlock } from './parts.mts'
+import styles from '../how-to-play.css'
 
 /** How a turn is entered: the sticker that opens the keypad, and the keypad. */
 export const GuideBasics = component({
@@ -14,8 +14,8 @@ export const GuideBasics = component({
 	styles,
 	async onMount({ append, element, create }) {
 		const prose = await localization.branch({
-			en: () => import('./how-to-play-intro.en.md'),
-			nl: () => import('./how-to-play-intro.nl.md'),
+			en: () => import('./intro.en.md'),
+			nl: () => import('./intro.nl.md'),
 		})
 
 		// A keypad of its own, so the guide can show the real thing without

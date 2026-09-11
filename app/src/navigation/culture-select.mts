@@ -19,11 +19,18 @@ export const CultureSelect = component({
 	onMount({ append, element, create }) {
 		const remembered = getLocale()
 		if (isSupportedLocale(remembered)) {
-			// Redirect via replaceState (not navigate/pushState) so `/` doesn't
-			// leave a history entry that bounces straight back to this redirect.
-			const target = href.for(HomeRoute, { locale: remembered })
+			// replaceState rather than navigate(), which always pushes: a pushed
+			// entry sends Back to `/`, which redirects here again, and there is
+			// no way out. The router has no replace mode yet, so the popstate it
+			// listens for is dispatched by hand.
+			// https://github.com/Marvin-Brouwer/rooted/issues/325
+			const target = href.for(HomeRoute, {
+				locale: remembered,
+			})
 			history.replaceState(undefined, '', target.href)
-			window.dispatchEvent(new PopStateEvent('popstate', { state: undefined }))
+			window.dispatchEvent(new PopStateEvent('popstate', {
+				state: undefined,
+			}))
 			return
 		}
 
@@ -38,13 +45,15 @@ export const CultureSelect = component({
 					classes: styles.content,
 					children: [
 						element('h2', {
-							textContent: 'Choose your language'
+							textContent: 'Choose your language',
 						}),
 						element('ul', {
 							classes: styles.list,
 							children: localization.supportedLocales.map(locale => element('li', {
 								children: create(Link, {
-									href: href.for(HomeRoute, { locale }),
+									href: href.for(HomeRoute, {
+										locale,
+									}),
 									classes: styles.link,
 									children: localeLabels[locale].long,
 								}),

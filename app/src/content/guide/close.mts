@@ -1,9 +1,9 @@
 import { component } from '@rooted/components'
 
-import { StartGameButton } from '../game/start-game-button.mts'
-import { localization } from '../_shared/i18n/localization.mts'
+import { StartGameButton } from '../../game/start-game-button.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
 
-import styles from './how-to-play.css'
+import styles from '../how-to-play.css'
 
 /** Closes the instructions and hands over to the game. */
 export const GuideClose = component({

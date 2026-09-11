@@ -36,10 +36,11 @@ export const StickerButton = component<StickerButtonOptions>({
 		const button = append(
 			element('button', {
 				type: 'button',
-				classes: [styles.sticker, classes],
-				aria: {
-					label: aria?.label
-				},
+				classes: [
+					styles.sticker,
+					classes,
+				],
+				aria,
 				on,
 				children: element('span', {
 					classes: styles.stickerLabel,

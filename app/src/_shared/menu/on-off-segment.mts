@@ -22,11 +22,18 @@ type SegmentLabelOptions = {
 const SegmentLabel = component<SegmentLabelOptions>({
 	name: 'on-off-segment-label',
 	onMount({ append, element, options }) {
-		append(element('span', {
-			classes: [styles.segment, options.class],
-			textContent: options.text,
-			aria: { hidden: 'true' },
-		}))
+		append(
+			element('span', {
+				classes: [
+					styles.segment,
+					options.class,
+				],
+				textContent: options.text,
+				aria: {
+					hidden: 'true',
+				},
+			})
+		)
 	},
 })
 

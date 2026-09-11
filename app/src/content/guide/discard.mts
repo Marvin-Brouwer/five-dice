@@ -1,15 +1,15 @@
 import { component } from '@rooted/components'
 
-import { createScorePadStore } from '../game/logic/scorePadStore.mts'
-import { createScorePad } from '../game/logic/score/scorePad.ts'
-import { discard } from '../game/logic/score/score.ts'
-import { createRowRegistry } from '../game/score-card/row-registry.mts'
-import { ScoreSection } from '../game/score-card/score-section.mts'
-import { createSelectionStore } from '../game/score-card/selection-store.mts'
-import { localization } from '../_shared/i18n/localization.mts'
+import { createScorePadStore } from '../../game/logic/scorePadStore.mts'
+import { createScorePad } from '../../game/logic/score/scorePad.ts'
+import { discard } from '../../game/logic/score/score.ts'
+import { createRowRegistry } from '../../game/score-card/row-registry.mts'
+import { ScoreSection } from '../../game/score-card/score-section.mts'
+import { createSelectionStore } from '../../game/score-card/selection-store.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
 
-import { figure, proseBlock } from './guide-parts.mts'
-import styles from './how-to-play.css'
+import { figure, proseBlock } from './parts.mts'
+import styles from '../how-to-play.css'
 
 /** Giving a row up, shown with a real section of the card rather than a drawing. */
 export const GuideDiscard = component({
@@ -17,8 +17,8 @@ export const GuideDiscard = component({
 	styles,
 	async onMount({ append, element, create }) {
 		const prose = await localization.branch({
-			en: () => import('./how-to-play-discard.en.md'),
-			nl: () => import('./how-to-play-discard.nl.md'),
+			en: () => import('./discard.en.md'),
+			nl: () => import('./discard.nl.md'),
 		})
 
 		// One real section of the card with its only row given up on, so the
@@ -31,7 +31,10 @@ export const GuideDiscard = component({
 			}
 		})
 
-		const context = { element, create }
+		const context = {
+			element,
+			create,
+		}
 
 		append(
 			// Runs straight on from the example table above, so the heading

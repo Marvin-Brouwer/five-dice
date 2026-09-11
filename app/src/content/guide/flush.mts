@@ -1,9 +1,9 @@
 import { component } from '@rooted/components'
 
-import { localization } from '../_shared/i18n/localization.mts'
+import { localization } from '../../_shared/i18n/localization.mts'
 
-import { proseBlock } from './guide-parts.mts'
-import styles from './how-to-play.css'
+import { proseBlock } from './parts.mts'
+import styles from '../how-to-play.css'
 
 /** What the flush row does. Prose only — the score card shows the rest. */
 export const GuideFlush = component({
@@ -11,10 +11,15 @@ export const GuideFlush = component({
 	styles,
 	async onMount({ append, element, create }) {
 		const prose = await localization.branch({
-			en: () => import('./how-to-play-flush.en.md'),
-			nl: () => import('./how-to-play-flush.nl.md'),
+			en: () => import('./flush.en.md'),
+			nl: () => import('./flush.nl.md'),
 		})
 
-		append(proseBlock({ element, create }, prose))
+		append(
+			proseBlock(
+				{ element, create },
+				prose
+			)
+		)
 	},
 })

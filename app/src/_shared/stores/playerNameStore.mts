@@ -9,9 +9,7 @@ function readInitial(): string {
 
 export const playerNameStore = createStore<string>(readInitial())
 
-if (typeof window !== 'undefined') {
-	playerNameStore.on('change', ({ detail }) => {
-		if (detail.state) localStorage.set(STORAGE_KEY, detail.state)
-		else localStorage.removeItem(STORAGE_KEY)
-	})
-}
+playerNameStore.on('change', ({ detail }) => {
+	if (detail.state) localStorage.set(STORAGE_KEY, detail.state)
+	else localStorage.removeItem(STORAGE_KEY)
+})

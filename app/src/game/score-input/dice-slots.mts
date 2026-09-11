@@ -18,7 +18,10 @@ export type DiceSlotsOptions = {
 	reference?: (api: DiceSlotsApi) => void
 }
 
-type Painted = { value: DieValue | undefined, focused: boolean }
+type Painted = {
+	value: DieValue | undefined
+	focused: boolean
+}
 
 function slotLabel(index: number, value: DieValue | undefined, focused: boolean): string {
 	if (value !== undefined) return localization.text`Slot ${index + 1}: ${value}`
@@ -99,19 +102,21 @@ export const DiceSlots = component<DiceSlotsOptions>({
 				const label = slotLabel(index, value, focused)
 				// PipDie renders once at mount and has no update path, so it
 				// has to be recreated -- but only for the slots that changed.
-				dieSpaces[index]!.replaceChildren(create(PipDie, {
-					value,
-					variant: focused ? 'active' : 'default',
-					aria: {
-						label: label,
-					},
-				}))
+				dieSpaces[index]!.replaceChildren(
+					create(PipDie, {
+						value,
+						variant: focused ? 'active' : 'default',
+						aria: {
+							label,
+						},
+					})
+				)
 				buttons[index]!.setAttribute('aria-label', label)
 				buttons[index]!.classList.toggle(styles.slotActive!, focused)
 				painted[index] = {
-				value,
-				focused,
-			}
+					value,
+					focused,
+				}
 			}
 
 			// Keep DOM focus with the store, but only while the user is

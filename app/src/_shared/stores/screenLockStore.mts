@@ -10,8 +10,6 @@ function readInitial(): boolean {
 /** User preference for whether to hold a screen wake-lock while the app is open. */
 export const screenLockStore = createStore<boolean>(readInitial())
 
-if (typeof window !== 'undefined') {
-	screenLockStore.on('change', ({ detail }) => {
-		localStorage.set(STORAGE_KEY, detail.state)
-	})
-}
+screenLockStore.on('change', ({ detail }) => {
+	localStorage.set(STORAGE_KEY, detail.state)
+})

@@ -1,8 +1,9 @@
+import { optional } from '@rooted/components'
 import { Markdown } from '@rooted/markdown'
 
-import type { RenderContext } from '../_shared/render-context.ts'
+import type { RenderContext } from '../../_shared/render-context.ts'
 
-import styles from './how-to-play.css'
+import styles from '../how-to-play.css'
 
 /**
  * Render functions rather than components: every guide section declares
@@ -20,7 +21,7 @@ export function proseBlock(context: RenderContext, source: unknown, flush = fals
 	return context.element('div', {
 		classes: [
 			styles.guideProse,
-			flush ? styles.guideProseFlush : undefined,
+			optional(flush, styles.guideProseFlush),
 		],
 		children: context.create(Markdown, {
 			source: source as never,

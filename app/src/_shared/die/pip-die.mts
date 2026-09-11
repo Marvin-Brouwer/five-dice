@@ -54,11 +54,22 @@ export const PipDie = component<PipDieOptions>({
 				},
 				children: element('svg', {
 					viewBox: '0 0 24 24',
-					aria: { hidden: 'true' },
-					style: { display: 'block', width: '100%', height: '100%' },
+					aria: {
+						hidden: 'true',
+					},
+					style: {
+						display: 'block',
+						width: '100%',
+						height: '100%',
+					},
 					children: [
 						element('svg:rect', {
-							x: 1, y: 1, width: 22, height: 22, rx: 3, ry: 3,
+							x: 1,
+							y: 1,
+							width: 22,
+							height: 22,
+							rx: 3,
+							ry: 3,
 							fill: rectFill,
 							stroke,
 							'stroke-width': strokeWidth,

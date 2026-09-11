@@ -1,4 +1,4 @@
-import { component } from '@rooted/components'
+import { component, optional } from '@rooted/components'
 
 import type { DiceTuple, DieValue } from '../logic/gameConstants.ts'
 import type { InputFlowStore } from '../logic/input-flow-store.mts'
@@ -63,7 +63,7 @@ const revealTolerance = 2
 function pickerReserve(sheet: HTMLElement): number | undefined {
 	const declared = getComputedStyle(sheet).getPropertyValue('--sheet-picker-reserve')
 	const parsed = Number.parseFloat(declared)
-	return Number.isFinite(parsed) ? parsed : undefined
+	return optional(Number.isFinite(parsed), parsed)
 }
 
 /**
