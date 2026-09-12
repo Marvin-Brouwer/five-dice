@@ -1,7 +1,10 @@
 :root {
-	/* Native UI rendered by the browser — scrollbars, form controls, the dialog
-	   backdrop — follows this. Without it they stay light even in dark mode. */
-	color-scheme: light;
+	/* Native UI rendered by the browser — scrollbars, text-selection, the
+	   caret — follows this, and so does the chrome an installed app is given.
+	   Pinned to dark in both themes: the app draws every control it has, so
+	   nothing here is a native widget that would have to follow the palette,
+	   and a light scheme is what leaves the installed app's bar white. */
+	color-scheme: dark;
 
 	/* Colours: backgrounds */
 	/* Semantic name → design term (from Direction A.v2 mockup) */
