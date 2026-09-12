@@ -1,28 +1,38 @@
-import { cookieStorage } from '@rooted/storage/web'
+import { cookieStorage, localStorage } from '@rooted/storage/web'
 import { createStore } from '@rooted/store'
-
-import { setPreferenceCookie } from './preference-cookie.mts'
 
 export type Theme = 'system' | 'sensor' | 'light' | 'dark'
 
-const COOKIE_NAME = 'theme'
+const STORAGE_KEY = 'theme'
 
-function readInitialTheme(): Theme {
-	const stored = cookieStorage.get<string>(COOKIE_NAME)
-	if (stored === 'system' || stored === 'sensor' || stored === 'light' || stored === 'dark') return stored
-	// Back-compat: previous versions used 'auto'
-	if (stored === 'auto') return 'system'
-	return 'system'
+function isTheme(value: string | undefined): value is Theme {
+	return value === 'system' || value === 'sensor' || value === 'light' || value === 'dark'
 }
 
-const initialTheme = readInitialTheme()
+/**
+ * The theme used to live in a cookie, which the browser dropped at the end of
+ * the session unless it was given an expiry. Carry an existing choice over
+ * once, then drop the cookie — nothing reads it any more.
+ */
+function migrateCookie(): Theme | undefined {
+	const stored = cookieStorage.get<string>(STORAGE_KEY)
+	if (stored === undefined) return undefined
+	cookieStorage.removeItem(STORAGE_KEY)
+	// Versions older still used 'auto' for what is now 'system'.
+	const migrated = stored === 'auto' ? 'system' : stored
+	if (!isTheme(migrated)) return undefined
+	localStorage.set(STORAGE_KEY, migrated)
+	return migrated
+}
 
-export const themeStore = createStore<Theme>(initialTheme)
+function readInitialTheme(): Theme {
+	const stored = localStorage.get<string>(STORAGE_KEY)
+	if (isTheme(stored)) return stored
+	return migrateCookie() ?? 'system'
+}
+
+export const themeStore = createStore<Theme>(readInitialTheme())
 
 themeStore.on('change', ({ detail }) => {
-	setPreferenceCookie(COOKIE_NAME, detail.state)
+	localStorage.set(STORAGE_KEY, detail.state)
 })
-
-// Re-stamp on load, so the cookie keeps its 400 days for as long as the app
-// stays in use and a session cookie left by an older version is replaced.
-setPreferenceCookie(COOKIE_NAME, initialTheme)

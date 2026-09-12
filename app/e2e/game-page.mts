@@ -230,6 +230,11 @@ export class GamePage {
 		await expect(this.themeTrigger).toHaveAccessibleName(`Theme: ${theme}`)
 	}
 
+	/** The remembered theme, straight out of the storage the app persists it to. */
+	async storedTheme(): Promise<string | null> {
+		return this.page.evaluate(() => window.localStorage.getItem('theme'))
+	}
+
 	/** What `theme-sensor` resolved the choice to: 'light' or 'dark'. */
 	async resolvedTheme(): Promise<string | undefined> {
 		return this.page.evaluate(() => document.documentElement.dataset.theme)

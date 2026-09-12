@@ -5,16 +5,15 @@ import { GamePage } from './game-page.mts'
 /**
  * The chosen theme has to outlive the browser session.
  *
- * The cookie used to be written through `cookieStorage.set(name, value)`,
- * which leaves `Expires` off. A cookie without one is a session cookie: it
- * survives a reload, so this looked fine in a tab, and it is thrown away the
- * moment the last window closes. On a phone -- where the app is installed and
- * gets evicted rather than closed -- that is most of the time, and the menu
- * came back on "System" with the device deciding again.
+ * It used to be kept in a cookie written without an `Expires`, which makes it
+ * a session cookie: it survives a reload, so this looked fine in a tab, and
+ * the browser throws it away the moment the last window closes. On a phone —
+ * where the installed app is evicted rather than closed — that is most of the
+ * time, and the menu came back on "System" with the device deciding again.
  *
- * The reload below covers the round trip through the store. The expiry
- * assertion is the part that actually pins the bug, because a session cookie
- * reloads perfectly well.
+ * A reload cannot catch that on its own, so the stored value is asserted
+ * directly. `localStorage` has no expiry to get wrong, which is the point of
+ * keeping it there rather than in a cookie.
  */
 test('the chosen theme is remembered across sessions', async ({ page, context }) => {
 	const game = new GamePage(page)
@@ -24,13 +23,11 @@ test('the chosen theme is remembered across sessions', async ({ page, context })
 	await game.chooseTheme('Dark')
 	expect(await game.resolvedTheme(), 'picking Dark should darken the page').toBe('dark')
 
-	const [cookie] = (await context.cookies()).filter(c => c.name === 'theme')
-	expect(cookie, 'the choice should be written to the theme cookie').toBeDefined()
-	expect(cookie.value).toBe('dark')
-	// Playwright reports a session cookie as -1, which is the regression.
-	expect(cookie.expires, 'the theme cookie must not be a session cookie').toBeGreaterThan(0)
-	expect(cookie.expires * 1000, 'the theme cookie should outlive the session by months')
-		.toBeGreaterThan(Date.now() + 30 * 24 * 60 * 60 * 1000)
+	expect(await game.storedTheme(), 'the choice should be written to localStorage').toBe('dark')
+	expect(
+		(await context.cookies()).map(c => c.name),
+		'the theme should not be kept in a cookie, which the session would take with it',
+	).not.toContain('theme')
 
 	await page.reload()
 	await page.waitForSelector('#score-card [data-field]')
@@ -38,4 +35,33 @@ test('the chosen theme is remembered across sessions', async ({ page, context })
 
 	await game.openMenu()
 	await expect(game.themeTrigger, 'the menu should still show Dark').toHaveAccessibleName('Theme: Dark')
+})
+
+/**
+ * Anyone who already picked a theme has it in the old cookie. They should not
+ * be reset to "System" by the move to localStorage.
+ */
+test('a theme left in the old cookie is carried over', async ({ page, context }) => {
+	// Seeded exactly the way the old code wrote it: no expiry, and scoped to
+	// the app base rather than the origin. The path has to match for the
+	// clean-up to be able to delete it again.
+	await context.addCookies([{
+		name: 'theme',
+		value: 'dark',
+		domain: 'localhost',
+		path: '/five-dice',
+	}])
+
+	const game = new GamePage(page)
+	await game.goto()
+
+	expect(await game.resolvedTheme(), 'the cookie choice should still apply').toBe('dark')
+	expect(await game.storedTheme(), 'and should have moved into localStorage').toBe('dark')
+	expect(
+		(await context.cookies()).map(c => c.name),
+		'the migrated cookie should be cleaned up',
+	).not.toContain('theme')
+
+	await game.openMenu()
+	await expect(game.themeTrigger, 'the menu should show the carried-over choice').toHaveAccessibleName('Theme: Dark')
 })
