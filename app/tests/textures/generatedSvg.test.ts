@@ -4,7 +4,9 @@ import { fileURLToPath } from 'node:url'
 
 import { describe, expect, test } from 'vitest'
 
-import { noiseVariantCount, paperVariantCount } from '../../src/_shared/textures/textures.g.mts'
+import { patternIdPlaceholder } from '../../src/_shared/textures/paper-texture-markup.mts'
+import { paperTextures } from '../../src/_shared/textures/paper-textures.g.mts'
+import { noiseVariantCount } from '../../src/_shared/textures/textures.g.mts'
 
 /**
  * Guards the committed texture files themselves, not just the functions that
@@ -19,8 +21,7 @@ describe('generated textures', () => {
 
 	test('every declared variant is on disk', () => {
 		const expected = [
-			...Array.from({ length: paperVariantCount }, (_, v) => `paper-texture-${v}.svg`),
-			...Array.from({ length: paperVariantCount }, (_, v) => `paper-texture-${v}-dark.svg`),
+			...Array.from({ length: paperTextures.length }, (_, v) => `paper-texture-${v}.svg`),
 			...Array.from({ length: noiseVariantCount }, (_, v) => `page-noise-${v}.svg`),
 		].sort()
 
@@ -44,6 +45,23 @@ describe('generated textures', () => {
 		expect(markup).toContain('xmlns="http://www.w3.org/2000/svg"')
 		expect(markup.endsWith('</svg>\n')).toBe(true)
 	})
+
+	test.each(svgNames.filter((name) => name.startsWith('paper-texture')))(
+		'%s is themeable: facets are custom properties, not baked colours', (name) => {
+			const markup = read(name)
+
+			// The whole point of the component: a literal colour here would need a
+			// second file per theme, which is what this replaced.
+			expect(markup).not.toMatch(/fill="#[0-9a-f]{3,8}"/)
+			expect(markup).toMatch(/fill="var\(--paper-shade-[012]\)"/)
+
+			// The placeholder the component swaps for a per-instance id. Duplicated
+			// between the generator and the component, so check they still agree.
+			expect(markup).toContain(`id="${patternIdPlaceholder}"`)
+			expect(markup).toContain(`fill="url(#${patternIdPlaceholder})"`)
+			expect(markup).toContain('patternUnits="userSpaceOnUse"')
+			expect(markup).toContain('width="200" height="100"')
+		})
 
 	test.each(svgNames.filter((name) => name.startsWith('paper-texture')))(
 		'%s tiles: opposite edges are split alike and shaded alike', (name) => {
@@ -72,13 +90,4 @@ describe('generated textures', () => {
 			expect(facets[8].fill).toBe(facets[6].fill)
 		})
 
-	test.each(Array.from({ length: paperVariantCount }, (_, variant) => variant))(
-		'paper variant %i pairs light and dark on identical geometry', (variant) => {
-			const geometry = (markup: string) => markup.replace(/ fill="#[0-9a-f]{6}"/g, '')
-			const light = read(`paper-texture-${variant}.svg`)
-			const dark = read(`paper-texture-${variant}-dark.svg`)
-
-			expect(geometry(dark)).toBe(geometry(light))
-			expect(dark).not.toBe(light)
-		})
 })

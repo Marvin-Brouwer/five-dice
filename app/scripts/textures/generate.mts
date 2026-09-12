@@ -16,8 +16,9 @@
  * made again.
  *
  * Variant 0 of both kinds is a fixed preset — the hand-drawn original — and
- * ignores --seed. It is also the pre-boot CSS default, so a device that hasn't
- * picked yet shows the texture this app has always had.
+ * ignores --seed. For the noise it is also the pre-boot CSS default, so the page
+ * has its grain before any script runs. The paper has no such default: it is a
+ * component, and a device without a variant gets a plain sheet.
  */
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -26,9 +27,7 @@ import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
 
 import { createNoiseSeed, renderNoiseTexture } from './noise.mts'
-import {
-	createPaperMesh, darkPalette, lightPalette, originalPaperMesh, renderPaperTexture,
-} from './paper.mts'
+import { createPaperMesh, originalPaperMesh, renderPaperTexture } from './paper.mts'
 import { createRandom, variantSeed } from './random.mts'
 
 type Kind = 'paper' | 'noise'
@@ -42,11 +41,8 @@ const filePattern: Record<Kind, RegExp> = {
 	noise: /^page-noise-(\d+)\.svg$/,
 }
 
-function paperFiles(variant: number) {
-	return {
-		light: join(texturesDir, `paper-texture-${variant}.svg`),
-		dark: join(texturesDir, `paper-texture-${variant}-dark.svg`),
-	}
+function paperFile(variant: number) {
+	return join(texturesDir, `paper-texture-${variant}.svg`)
 }
 
 function noiseFile(variant: number) {
@@ -89,29 +85,21 @@ const moduleHeader = [
 	' */',
 ].join('\n')
 
-function renderCss(paperCount: number, noiseCount: number): string {
+function renderCss(noiseCount: number): string {
 	const lines = [
 		moduleHeader,
 		'',
-		'/* The variant a device landed on, set by _shared/services/texture-variant.mts.',
-		'   :root carries variant 0, so the page renders the original texture before',
-		'   the module runs and if scripting is off entirely. */',
+		'/* The page grain only. The paper is a component (paper-texture.mts), because',
+		'   its facets are themed with custom properties and an SVG behind url() can',
+		'   never see them. The noise needs no such thing: it is translucent, so the',
+		'   page colour below it does the theming.',
+		'',
+		'   The variant is set by _shared/services/texture-variant.mts; :root carries',
+		'   variant 0 so the page has its grain before that module runs. */',
 		':root {',
-		'\t--texture-paper:      url("./paper-texture-0.svg");',
-		'\t--texture-paper-dark: url("./paper-texture-0-dark.svg");',
 		'\t--texture-noise:      url("./page-noise-0.svg");',
 		'}',
 	]
-
-	for (let variant = 1; variant < paperCount; variant++) {
-		lines.push(
-			'',
-			`:root[data-paper="${variant}"] {`,
-			`\t--texture-paper:      url("./paper-texture-${variant}.svg");`,
-			`\t--texture-paper-dark: url("./paper-texture-${variant}-dark.svg");`,
-			'}',
-		)
-	}
 
 	for (let variant = 1; variant < noiseCount; variant++) {
 		lines.push(
@@ -125,12 +113,30 @@ function renderCss(paperCount: number, noiseCount: number): string {
 	return `${lines.join('\n')}\n`
 }
 
-function renderModule(paperCount: number, noiseCount: number): string {
+function renderModule(noiseCount: number): string {
 	return [
 		moduleHeader,
 		'',
-		`export const paperVariantCount = ${paperCount}`,
 		`export const noiseVariantCount = ${noiseCount}`,
+		'',
+	].join('\n')
+}
+
+/**
+ * The paper meshes, inlined rather than referenced: the facets are filled with
+ * custom properties, which only resolve once the markup is part of the
+ * document. The paper variant count is this array's length — one source of
+ * truth rather than a number that can drift from the files on disk.
+ */
+function renderPaperModule(paperCount: number): string {
+	const variants = Array.from({ length: paperCount }, (_, variant) => variant)
+	return [
+		moduleHeader,
+		'',
+		...variants.map((variant) =>
+			`import paperTexture${variant} from './paper-texture-${variant}.svg?raw'`),
+		'',
+		`export const paperTextures = [${variants.map((v) => `paperTexture${v}`).join(', ')}]`,
 		'',
 	].join('\n')
 }
@@ -168,13 +174,10 @@ function generatePaper(variant: number, seed: number, dryRun: boolean): void {
 	const mesh = variant === 0
 		? originalPaperMesh
 		: createPaperMesh(createRandom(variantSeed(seed, 'paper', variant)))
-	const header = svgHeader('paper', variant, seed)
-	const { light, dark } = paperFiles(variant)
-
-	writeIfChanged(light, renderPaperTexture(mesh, lightPalette, header), dryRun)
-	// Same geometry, different palette: the ambient-light sensor can flip the
-	// theme mid-game and the paper must recolour without rearranging itself.
-	writeIfChanged(dark, renderPaperTexture(mesh, darkPalette, header), dryRun)
+	// One file per variant, whatever the theme: the facets are filled with
+	// custom properties, so the ambient-light sensor flipping mid-game recolours
+	// the paper without it rearranging itself.
+	writeIfChanged(paperFile(variant), renderPaperTexture(mesh, svgHeader('paper', variant, seed)), dryRun)
 }
 
 function generateNoise(variant: number, seed: number, dryRun: boolean): void {
@@ -237,8 +240,9 @@ function main(): void {
 		}
 	}
 
-	writeIfChanged(join(texturesDir, 'textures.g.css'), renderCss(counts.paper, counts.noise), dryRun)
-	writeIfChanged(join(texturesDir, 'textures.g.mts'), renderModule(counts.paper, counts.noise), dryRun)
+	writeIfChanged(join(texturesDir, 'textures.g.css'), renderCss(counts.noise), dryRun)
+	writeIfChanged(join(texturesDir, 'textures.g.mts'), renderModule(counts.noise), dryRun)
+	writeIfChanged(join(texturesDir, 'paper-textures.g.mts'), renderPaperModule(counts.paper), dryRun)
 
 	console.log(`${written.length} written${written.length ? `: ${written.join(', ')}` : ''}`)
 	if (unchanged.length) console.log(`${unchanged.length} unchanged`)
@@ -249,10 +253,7 @@ function main(): void {
 		.filter((name) => {
 			const match = filePattern[kind].exec(name)
 			return match !== null && Number(match[1]) >= counts[kind]
-		})
-		.flatMap((name) => kind === 'paper'
-			? [name, name.replace('.svg', '-dark.svg')]
-			: [name]))
+		}))
 
 	if (orphans.length) {
 		console.warn(`\nunreferenced, delete by hand if you meant to drop them:\n  ${orphans.join('\n  ')}`)

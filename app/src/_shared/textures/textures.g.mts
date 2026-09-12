@@ -6,5 +6,4 @@
  * Regenerate with: pnpm generate:textures
  */
 
-export const paperVariantCount = 5
 export const noiseVariantCount = 5

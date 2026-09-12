@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
 import {
-	createPaperMesh, darkPalette, isBalanced, lightPalette, originalPaperMesh, paperTriangles,
-	renderPaperTexture, type PaperMesh,
+	createPaperMesh, isBalanced, originalPaperMesh, paperTriangles, renderPaperTexture,
+	shadeProperty, type PaperMesh,
 } from '../../scripts/textures/paper.mts'
 import { createRandom, variantSeed } from '../../scripts/textures/random.mts'
 
@@ -28,7 +28,7 @@ describe('paper mesh', () => {
 	})
 
 	test('different seeds draw different meshes', () => {
-		const rendered = new Set(meshes.map((mesh) => renderPaperTexture(mesh, lightPalette, '')))
+		const rendered = new Set(meshes.map((mesh) => renderPaperTexture(mesh, '')))
 
 		// Not all 300 need be unique — the parameter space is finite — but a
 		// generator collapsing onto a handful of meshes would defeat the point.
@@ -92,12 +92,13 @@ describe('paper mesh', () => {
 		}
 	})
 
-	test('light and dark share geometry so the paper does not rearrange on a theme flip', () => {
-		const mesh = meshes[0]
-		const geometry = (markup: string) => markup.replace(/ fill="#[0-9a-f]{6}"/g, '')
+	test('facets are filled with custom properties, never baked colours', () => {
+		// One mesh per variant instead of a light and a dark copy: the theme
+		// swaps the three tokens, and the geometry never moves with it.
+		const markup = renderPaperTexture(meshes[0], '')
 
-		expect(geometry(renderPaperTexture(mesh, darkPalette, '')))
-			.toBe(geometry(renderPaperTexture(mesh, lightPalette, '')))
+		expect(markup).not.toMatch(/fill="#/)
+		for (const shade of [0, 1, 2]) expect(markup).toContain(shadeProperty(shade))
 	})
 
 	test('variant 0 is the hand-drawn original', () => {
@@ -114,10 +115,10 @@ describe('paper mesh', () => {
 	})
 
 	test('markup is a tab-indented 200x100 tile ending in a newline', () => {
-		const markup = renderPaperTexture(originalPaperMesh, lightPalette, '<!-- header -->')
+		const markup = renderPaperTexture(originalPaperMesh, '<!-- header -->')
 
 		expect(markup.startsWith('<!-- header -->\n<svg ')).toBe(true)
-		expect(markup).toContain('viewBox="0 0 200 100"')
+		expect(markup).toContain('patternUnits="userSpaceOnUse"')
 		expect(markup.match(/<polygon /g)).toHaveLength(10)
 		expect(markup.endsWith('</svg>\n')).toBe(true)
 	})

@@ -45,10 +45,10 @@
 	--color-menu-border:       rgba(246, 245, 240, 0.16);
 	--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
 
-	/* Paper texture: subtle warm-yellow polygons instead of near-white */
-	--background-surface:
-		var(--texture-paper-dark),
-		var(--color-surface);
+	/* Paper texture: subtle warm-yellow facets instead of near-white */
+	--paper-shade-0:           #e3dfd1;
+	--paper-shade-1:           #dcd8ca;
+	--paper-shade-2:           #e8e4d6;
 }
 
 /* System-follow fallback: if no explicit data-theme is set but the OS
@@ -86,8 +86,8 @@
 		--color-menu-border:       rgba(246, 245, 240, 0.16);
 		--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
 
-		--background-surface:
-			var(--texture-paper-dark),
-			var(--color-surface);
+		--paper-shade-0:           #e3dfd1;
+		--paper-shade-1:           #dcd8ca;
+		--paper-shade-2:           #e8e4d6;
 	}
 }

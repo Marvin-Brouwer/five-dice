@@ -5,8 +5,12 @@
 	   rule, and the heading band above it. */
 	--sheet-gutter: 10px;
 	background: var(--background-surface);
-	background-size: var(--background-surface-size);
-	background-repeat: repeat;
+	/* Anchors the texture, which is absolutely positioned behind the contents,
+	   and — via isolate — makes this the stacking context its negative z-index
+	   is measured against. Without the isolation the texture paints behind this
+	   background instead of on top of it, and the sheet comes out blank. */
+	position: relative;
+	isolation: isolate;
 	box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
 	border: 0;
 	border-radius: 0;

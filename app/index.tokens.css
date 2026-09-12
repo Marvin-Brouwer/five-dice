@@ -69,11 +69,14 @@
 		var(--color-page);
 	--background-page-size:    200px 200px, auto;
 
-	/* Paper texture: soft cellular polygons behind the paper card */
-	--background-surface:
-		var(--texture-paper),
-		var(--color-surface);
-	--background-surface-size: 200px 100px, auto;
+	/* Paper texture: the three tones its facets are drawn from. The mesh itself
+	   is a component (_shared/textures/paper-texture.mts) that fills its facets
+	   with these, so one set of meshes serves every theme. */
+	--paper-shade-0:           #f4f6f9;
+	--paper-shade-1:           #edf1f5;
+	--paper-shade-2:           #f7f9fb;
+
+	--background-surface:      var(--color-surface);
 
 	/* Typography */
 	--font-sans:               "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;

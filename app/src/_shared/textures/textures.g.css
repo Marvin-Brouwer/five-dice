@@ -6,33 +6,15 @@
  * Regenerate with: pnpm generate:textures
  */
 
-/* The variant a device landed on, set by _shared/services/texture-variant.mts.
-   :root carries variant 0, so the page renders the original texture before
-   the module runs and if scripting is off entirely. */
+/* The page grain only. The paper is a component (paper-texture.mts), because
+   its facets are themed with custom properties and an SVG behind url() can
+   never see them. The noise needs no such thing: it is translucent, so the
+   page colour below it does the theming.
+
+   The variant is set by _shared/services/texture-variant.mts; :root carries
+   variant 0 so the page has its grain before that module runs. */
 :root {
-	--texture-paper:      url("./paper-texture-0.svg");
-	--texture-paper-dark: url("./paper-texture-0-dark.svg");
 	--texture-noise:      url("./page-noise-0.svg");
-}
-
-:root[data-paper="1"] {
-	--texture-paper:      url("./paper-texture-1.svg");
-	--texture-paper-dark: url("./paper-texture-1-dark.svg");
-}
-
-:root[data-paper="2"] {
-	--texture-paper:      url("./paper-texture-2.svg");
-	--texture-paper-dark: url("./paper-texture-2-dark.svg");
-}
-
-:root[data-paper="3"] {
-	--texture-paper:      url("./paper-texture-3.svg");
-	--texture-paper-dark: url("./paper-texture-3-dark.svg");
-}
-
-:root[data-paper="4"] {
-	--texture-paper:      url("./paper-texture-4.svg");
-	--texture-paper-dark: url("./paper-texture-4-dark.svg");
 }
 
 :root[data-noise="1"] {

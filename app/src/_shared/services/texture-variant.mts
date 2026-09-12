@@ -1,6 +1,7 @@
 import { localStorage } from '@rooted/storage/web'
 
-import { noiseVariantCount, paperVariantCount } from '../textures/textures.g.mts'
+import { paperTextures } from '../textures/paper-textures.g.mts'
+import { noiseVariantCount } from '../textures/textures.g.mts'
 
 /**
  * Gives each device its own paper and cardboard.
@@ -41,10 +42,18 @@ function readVariant(key: string, count: number): number {
 	return variant
 }
 
+/**
+ * The mesh this device draws its paper with, handed to `PaperTexture` by
+ * `PaperCard`. Undefined off the document — server-side there is nothing to
+ * pick for, and the card renders a plain sheet.
+ */
+export const paperTextureVariant = typeof document === 'undefined'
+	? undefined
+	: readVariant(paperKey, paperTextures.length)
+
 if (typeof document !== 'undefined') {
-	// Read by textures.g.css. Until this runs the page shows variant 0, which is
-	// the original hand-drawn texture — so losing the race to first paint costs
-	// nothing more than the texture this app has always had.
-	document.documentElement.dataset.paper = String(readVariant(paperKey, paperVariantCount))
+	// The grain is still a CSS background, so it travels as an attribute. Until
+	// this runs the page shows variant 0 — losing the race to first paint costs
+	// nothing more than the grain this app has always had.
 	document.documentElement.dataset.noise = String(readVariant(noiseKey, noiseVariantCount))
 }

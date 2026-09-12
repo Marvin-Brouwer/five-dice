@@ -1,0 +1,20 @@
+/* The mesh sits behind everything written on the sheet.
+
+   A negative z-index paints above its stacking context's background but below
+   the content in it — which is exactly where the texture belongs, but only if
+   .sheet is that stacking context. It isn't on its own: `container-type`
+   turned out not to establish one in Chromium, and the texture vanished behind
+   the sheet's own background colour. `isolation: isolate` on .sheet is what
+   traps it. */
+.texture {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+}
+
+.texture svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+}

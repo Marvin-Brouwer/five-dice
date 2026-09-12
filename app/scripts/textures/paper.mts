@@ -19,11 +19,23 @@
 export const paperWidth = 200
 export const paperHeight = 100
 
-/** The three shades a mesh is drawn from, lightest role first. */
-export type PaperPalette = readonly [string, string, string]
+/**
+ * Facets are filled with custom properties rather than literal colours, so one
+ * mesh serves every theme. The actual shades live in index.tokens.css beside
+ * the rest of the palette; this file only decides which of the three a facet
+ * gets. That works because the markup is inlined into the document — an SVG
+ * loaded through `url()` renders in secure static mode and never sees the
+ * page's cascade.
+ */
+export const shadeProperty = (shade: number) => `var(--paper-shade-${shade})`
 
-export const lightPalette: PaperPalette = ['#f4f6f9', '#edf1f5', '#f7f9fb']
-export const darkPalette: PaperPalette = ['#e3dfd1', '#dcd8ca', '#e8e4d6']
+/**
+ * Placeholder for the pattern's id, swapped for a per-instance one when the
+ * texture is mounted. Two cards showing the same variant would otherwise carry
+ * duplicate ids, and unmounting the first would take the `<defs>` the second is
+ * still pointing at with it.
+ */
+export const patternIdPlaceholder = '__ID__'
 
 export type Point = readonly [number, number]
 
@@ -151,16 +163,23 @@ export function createPaperMesh(random: () => number): PaperMesh {
 	throw new Error('Could not draw a well-formed paper mesh in 100 attempts')
 }
 
-export function renderPaperTexture(mesh: PaperMesh, palette: PaperPalette, header: string): string {
+export function renderPaperTexture(mesh: PaperMesh, header: string): string {
 	const polygons = paperTriangles(mesh).map((triangle, index) => {
 		const points = triangle.map(([x, y]) => `${x},${y}`).join(' ')
-		return `\t<polygon points="${points}" fill="${palette[mesh.shades[index]]}"/>`
+		return `\t\t\t<polygon points="${points}" fill="${shadeProperty(mesh.shades[index])}"/>`
 	})
 
+	// A <pattern> rather than a bare tile: the sheet is sized by its content, so
+	// the texture repeats to fill whatever the card turns out to be.
 	return [
 		header,
-		`<svg xmlns="http://www.w3.org/2000/svg" width="${paperWidth}" height="${paperHeight}" viewBox="0 0 ${paperWidth} ${paperHeight}">`,
+		'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">',
+		'\t<defs>',
+		`\t\t<pattern id="${patternIdPlaceholder}" width="${paperWidth}" height="${paperHeight}" patternUnits="userSpaceOnUse">`,
 		...polygons,
+		'\t\t</pattern>',
+		'\t</defs>',
+		`\t<rect width="100%" height="100%" fill="url(#${patternIdPlaceholder})"/>`,
 		'</svg>',
 		'',
 	].join('\n')
