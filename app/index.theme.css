@@ -4,8 +4,6 @@
    becomes a dark card close to the cardboard. */
 
 :root[data-theme="dark"] {
-	color-scheme: dark;
-
 	/* Cardboard behind everything — much darker warm brown */
 	--color-page:              #2a2622;
 	--color-text-on-page:      #f6f5f0;
@@ -58,8 +56,6 @@
    the theme-sensor service resolves. */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
-		color-scheme: dark;
-
 		--color-page:              #2a2622;
 		--color-text-on-page:      #f6f5f0;
 
