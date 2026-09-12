@@ -22,7 +22,13 @@ export default rootedManifest({
 		// the chosen theme; this is what the installer bakes in.
 		theme_color: '#b8b2a6',
 		background_color: '#b8b2a6',
-		display: 'minimal-ui',
+		// Prefer the minimal-ui strip — it carries a back button, and Chrome
+		// tints it with theme_color. A UA that does not support minimal-ui
+		// falls back off `display` rather than off this list, and bare
+		// `display: 'minimal-ui'` falls all the way back to 'browser' — no app
+		// window at all. Naming standalone there keeps that floor sane.
+		display_override: ['minimal-ui'],
+		display: 'standalone',
 		orientation: 'portrait'
 	},
 	plugins: [
