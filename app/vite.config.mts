@@ -16,12 +16,8 @@ export default rootedManifest({
 		name: 'Five dice',
 		short_name: '5-dice',
 		description: 'Grab five dice and see how far your luck stretches.',
-		// Both mirror --color-page (index.tokens.css): the chrome and the splash
-		// continue the cardboard the app bar sits on instead of cutting a black
-		// bar across the top. theme-color.mts keeps the live chrome in step with
-		// the chosen theme; this is what the installer bakes in.
-		theme_color: '#b8b2a6',
-		background_color: '#b8b2a6',
+		theme_color: '#000000',
+		background_color: '#B3AEA1',
 		// Prefer the minimal-ui strip — it carries a back button, and Chrome
 		// tints it with theme_color. A UA that does not support minimal-ui
 		// falls back off `display` rather than off this list, and bare
