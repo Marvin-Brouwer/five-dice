@@ -16,9 +16,8 @@ export function createNoiseSeed(random: () => number): number {
 	return Math.floor(random() * 10000)
 }
 
-export function renderNoiseTexture(seed: number, header: string): string {
+export function renderNoiseTexture(seed: number): string {
 	return [
-		header,
 		`<svg viewBox="0 0 ${noiseSize} ${noiseSize}" xmlns="http://www.w3.org/2000/svg">`,
 		'\t<filter id="n">',
 		`\t\t<feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" seed="${seed}" stitchTiles="stitch"/>`,

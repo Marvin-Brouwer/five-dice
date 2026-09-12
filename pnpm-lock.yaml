@@ -59,6 +59,9 @@ importers:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.43
+      happy-dom:
+        specifier: ^20.14.0
+        version: 20.14.0
       iterative-permutation:
         specifier: ^1.0.0
         version: 1.0.0

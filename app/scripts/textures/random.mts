@@ -1,7 +1,7 @@
 /**
  * Deterministic randomness for the texture generator. A generated variant has
- * to be reproducible from its seed — the seed is printed and written into each
- * file's header so a mesh you like can be made again.
+ * to be reproducible from its seed, so that re-running with a seed you noted
+ * brings a mesh you liked back.
  */
 
 /** mulberry32 — small, fast, and good enough for jittering a dozen points. */

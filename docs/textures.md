@@ -12,7 +12,9 @@ would collide about 80% of the time, 25 about 22%.
 
 ## Two textures, two mechanisms
 
-**The paper is a component.** Its facets are filled with `var(--paper-shade-*)`,
+**The paper is a component**, and its meshes load on demand — a device draws
+one, so the other four stay out of the bundle it parses before first paint. Each
+is its own ~1 KB chunk. Its facets are filled with `var(--paper-shade-*)`,
 so one mesh serves every theme — the dark theme swaps three tokens and the
 geometry never moves. That only works because the markup is inlined into the
 document: an SVG loaded through CSS `url()` renders in *secure static mode*, an
@@ -42,11 +44,16 @@ a timestamp. A fifth of everyone who opens the app has the same value, so it
 cannot single out a device, which keeps it a style preference alongside `theme`
 rather than something that needs consenting to.
 
-For the noise, `:root` carries variant 0, so the page has its grain before the
-service runs. The paper has no such default: `PaperTexture` draws nothing when
-the variant is missing or names a mesh that doesn't exist, leaving a plain
-sheet. Defaulting it to variant 0 would quietly crowd every such device onto one
-mesh, which is the opposite of the point.
+Neither kind has a default variant. `PaperTexture` draws nothing when the
+variant is missing or names a mesh that doesn't exist, and `--texture-noise` is
+`none` until `data-noise` is set — so before a device picks, the card is a plain
+sheet and the page is its plain colour. Defaulting either to variant 0 would
+quietly crowd every such device onto one look, which is the opposite of the
+point.
+
+`none` rather than leaving `--texture-noise` undefined, though: an undefined
+custom property makes `--background-page` invalid at computed-value time, which
+takes the page *colour* down with it and leaves the page transparent.
 
 A stored value that no longer names a real variant is re-drawn rather than left
 to fall through — otherwise shrinking the variant count would pile every
@@ -80,8 +87,8 @@ pnpm generate:textures:noise
 
 Each variant draws from its own stream, so `--variant 3 --seed 1234` always
 gives the same mesh no matter what else is regenerated beside it. The seed is
-printed and written into each file's header, so a variant you like can be made
-again. Regenerate one until you like it, then keep it:
+printed — note it down if you like what came out, because the files carry no
+provenance of their own. Regenerate one until you like it, then keep it:
 
 ```
 pnpm generate:textures:paper --variant 3          # prints e.g. "seed 40213"
@@ -94,16 +101,16 @@ together, so the runtime can't drift from how many files exist. The paper
 variant count is simply `paperTextures.length`. Dropping back to five leaves the
 sixth on disk and warns — deleting art is your call, not the script's.
 
-Note what these files are **not**: build output. They carry no `.g.` suffix and
-nothing regenerates them on `pnpm build`. They are checked-in art, and the
-script is the tool you reach for when a mesh wants replacing or a variant
-adding — the opposite of `src/_routes.g.mts`, which is gitignored and rebuilt
-by a Vite plugin every time. Editing a texture by hand is fine; just know that
-regenerating that variant overwrites it.
+Note what these files are **not**: build output. They carry no `.g.` suffix, no
+"DO NOT EDIT" banner, and nothing regenerates them on `pnpm build`. They are
+checked-in art, and the script is the tool you reach for when a mesh wants
+replacing or a variant adding — the opposite of `src/_routes.g.mts`, which is
+gitignored and rebuilt by a Vite plugin every time. Editing a texture by hand is
+fine; just know that regenerating that variant overwrites it.
 
 Variant 0 of both kinds is a fixed preset, not a draw, and ignores `--seed`. Its
-geometry is the original hand-drawn mesh, which is also what makes noise
-variant 0 safe as the pre-boot default.
+geometry is the original hand-drawn mesh — the look this app shipped with before
+any of this existed, kept so it stays in the rotation.
 
 ## What the generator has to respect
 
@@ -130,12 +137,12 @@ every variant reads as the same material. Be aware the variants are only weakly
 distinguishable by eye: a different seed gives a different grain, not a
 different-looking grain.
 
-**Both are XML.** An SVG comment containing `--` makes the file unparseable and
-the browser paints nothing at all, with no error anywhere — so the header avoids
-it, the generator refuses to write a file that breaks the rule, and
-`tests/textures/generatedSvg.test.ts` checks every committed file. This cost a
-debugging session once; it renders fine in every check that inspects the CSS
-rather than the pixels.
+**Both are XML.** The files carry no comments, but if you add one: `--` inside
+an XML comment makes the whole file unparseable and the browser paints nothing
+at all, with no error anywhere. The generator refuses to write a file that
+breaks the rule and `tests/textures/generatedSvg.test.ts` checks every committed
+file. This cost a debugging session once; it renders fine in every check that
+inspects the CSS rather than the pixels.
 
 ## Tests
 
@@ -143,11 +150,13 @@ rather than the pixels.
 shade balance, no collapsed facet, determinism), the noise markup, the variant
 picker, the mesh switching and id stamping, and the committed SVGs themselves.
 
-The switching logic lives in `paper-texture-markup.mts` rather than beside the
-component, because `component()` injects its stylesheet at module load and
-vitest runs on node with no document. The one thing it cannot check is
-whether a given mesh looks good — that is why the variants are art-directed
-files rather than generated at runtime.
+`paperTexture.test.ts` is the one file that runs on happy-dom rather than node,
+via a `@vitest-environment` docblock: it imports the component, and
+`component()` injects its stylesheet at module load, which needs a document.
+Scoped to that file so the rest of the suite stays on plain node.
+
+The one thing the suite cannot check is whether a given mesh looks good — that
+is why the variants are art-directed files rather than generated at runtime.
 
 Note that no `toHaveScreenshot` tests exist today. When they are added, the
 fixture has to seed both `localStorage` keys or the per-device variant will make

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 import { describe, expect, test } from 'vitest'
 
-import { patternIdPlaceholder } from '../../src/_shared/textures/paper-texture-markup.mts'
+import { patternIdPlaceholder } from '../../scripts/textures/paper.mts'
 import { paperTextures } from '../../src/_shared/textures/paper-textures.mts'
 import { noiseVariantCount } from '../../src/_shared/textures/page-noise.mts'
 
@@ -33,15 +33,15 @@ describe('generated textures', () => {
 	test.each(svgNames)('%s is well-formed XML', (name) => {
 		const markup = read(name)
 
-		// Regression: the generated header separated its clauses with " -- ".
-		// XML forbids "--" inside a comment, so the browser rejected all fifteen
-		// files and the page painted no texture whatsoever — silently, because
-		// the CSS variable still resolved to a plausible-looking data URI.
+		// The files carry no comments now, but a hand-added one still has to
+		// obey this: XML forbids "--" inside a comment, and an SVG that isn't
+		// well-formed is rejected outright — the texture stops painting with no
+		// error anywhere. That cost a debugging session once.
 		for (const comment of markup.match(/<!--[\s\S]*?-->/g) ?? []) {
 			expect(comment.slice(4, -3)).not.toContain('--')
 		}
 
-		expect(markup.startsWith('<!--')).toBe(true)
+		expect(markup.startsWith('<svg')).toBe(true)
 		expect(markup).toContain('xmlns="http://www.w3.org/2000/svg"')
 		expect(markup.endsWith('</svg>\n')).toBe(true)
 	})
@@ -55,8 +55,9 @@ describe('generated textures', () => {
 			expect(markup).not.toMatch(/fill="#[0-9a-f]{3,8}"/)
 			expect(markup).toMatch(/fill="var\(--paper-shade-[012]\)"/)
 
-			// The placeholder the component swaps for a per-instance id. Duplicated
-			// between the generator and the component, so check they still agree.
+			// The placeholder the component swaps for a per-instance id, as the
+			// generator spells it. paperTexture.test.ts checks the component
+			// still spells it the same way.
 			expect(markup).toContain(`id="${patternIdPlaceholder}"`)
 			expect(markup).toContain(`fill="url(#${patternIdPlaceholder})"`)
 			expect(markup).toContain('patternUnits="userSpaceOnUse"')

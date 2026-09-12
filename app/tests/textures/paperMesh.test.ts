@@ -28,7 +28,7 @@ describe('paper mesh', () => {
 	})
 
 	test('different seeds draw different meshes', () => {
-		const rendered = new Set(meshes.map((mesh) => renderPaperTexture(mesh, '')))
+		const rendered = new Set(meshes.map((mesh) => renderPaperTexture(mesh)))
 
 		// Not all 300 need be unique — the parameter space is finite — but a
 		// generator collapsing onto a handful of meshes would defeat the point.
@@ -95,7 +95,7 @@ describe('paper mesh', () => {
 	test('facets are filled with custom properties, never baked colours', () => {
 		// One mesh per variant instead of a light and a dark copy: the theme
 		// swaps the three tokens, and the geometry never moves with it.
-		const markup = renderPaperTexture(meshes[0], '')
+		const markup = renderPaperTexture(meshes[0])
 
 		expect(markup).not.toMatch(/fill="#/)
 		for (const shade of [0, 1, 2]) expect(markup).toContain(shadeProperty(shade))
@@ -115,9 +115,11 @@ describe('paper mesh', () => {
 	})
 
 	test('markup is a tab-indented 200x100 tile ending in a newline', () => {
-		const markup = renderPaperTexture(originalPaperMesh, '<!-- header -->')
+		const markup = renderPaperTexture(originalPaperMesh)
 
-		expect(markup.startsWith('<!-- header -->\n<svg ')).toBe(true)
+		// No header comment: these are art files, and a banner on a ten-line
+		// drawing is noise. The seed lives in the generator's output instead.
+		expect(markup.startsWith('<svg ')).toBe(true)
 		expect(markup).toContain('patternUnits="userSpaceOnUse"')
 		expect(markup.match(/<polygon /g)).toHaveLength(10)
 		expect(markup.endsWith('</svg>\n')).toBe(true)

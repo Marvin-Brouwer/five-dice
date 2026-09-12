@@ -10,9 +10,16 @@
    never see them. The noise needs no such thing: it is translucent, so the
    page colour below it does the theming.
 
-   The variant is set by _shared/services/texture-variant.mts; :root carries
-   variant 0 so the page has its grain before that module runs. */
+   No variant until _shared/services/texture-variant.mts picks one: before
+   that the page is its plain colour, the same way an unpicked card is a
+   plain sheet. `none` rather than nothing, because an undefined custom
+   property would make --background-page invalid and take the page colour
+   down with it. */
 :root {
+	--texture-noise:      none;
+}
+
+:root[data-noise="0"] {
 	--texture-noise:      url("./page-noise-0.svg");
 }
 

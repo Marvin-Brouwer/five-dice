@@ -163,7 +163,7 @@ export function createPaperMesh(random: () => number): PaperMesh {
 	throw new Error('Could not draw a well-formed paper mesh in 100 attempts')
 }
 
-export function renderPaperTexture(mesh: PaperMesh, header: string): string {
+export function renderPaperTexture(mesh: PaperMesh): string {
 	const polygons = paperTriangles(mesh).map((triangle, index) => {
 		const points = triangle.map(([x, y]) => `${x},${y}`).join(' ')
 		return `\t\t\t<polygon points="${points}" fill="${shadeProperty(mesh.shades[index])}"/>`
@@ -172,7 +172,6 @@ export function renderPaperTexture(mesh: PaperMesh, header: string): string {
 	// A <pattern> rather than a bare tile: the sheet is sized by its content, so
 	// the texture repeats to fill whatever the card turns out to be.
 	return [
-		header,
 		'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">',
 		'\t<defs>',
 		`\t\t<pattern id="${patternIdPlaceholder}" width="${paperWidth}" height="${paperHeight}" patternUnits="userSpaceOnUse">`,

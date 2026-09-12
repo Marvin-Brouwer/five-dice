@@ -11,14 +11,13 @@
  *   --dry-run       report the writes without making them
  *
  * Each variant draws from its own stream, so `--variant 3 --seed 1234` always
- * gives the same mesh no matter what else is regenerated alongside it. The seed
- * that produced a file is written into its header, so a variant you like can be
- * made again.
+ * gives the same mesh no matter what else is regenerated alongside it. Note the
+ * seed this prints if you want a mesh back: the files carry no provenance of
+ * their own, on purpose — they are art, and art doesn't need a banner.
  *
  * Variant 0 of both kinds is a fixed preset — the hand-drawn original — and
- * ignores --seed. For the noise it is also the pre-boot CSS default, so the page
- * has its grain before any script runs. The paper has no such default: it is a
- * component, and a device without a variant gets a plain sheet.
+ * ignores --seed. Neither kind is a default, though: until a device picks, the
+ * card is a plain sheet and the page is its plain colour.
  */
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -63,23 +62,11 @@ function countOnDisk(kind: Kind): number {
 	return highest + 1
 }
 
-function svgHeader(kind: Kind, variant: number, seed: number): string {
-	// No "--" anywhere in here, which rules out spelling the flags out: XML
-	// forbids "--" inside a comment, and an SVG that isn't well-formed is
-	// rejected outright by the browser — the texture silently stops painting.
-	// The variant and seed are what you need to make this file again;
-	// docs/textures.md has the command they go on.
-	const origin = variant === 0
-		? `${kind} variant 0, the fixed original preset`
-		: `${kind} variant ${variant}, seed ${seed}`
-	return `<!-- scripts/textures/generate.mts: ${origin}. Regenerating it overwrites this file. -->`
-}
-
 /**
- * These files are checked in on purpose: they are art, not build output. The
- * script exists for when a mesh wants replacing or a variant adding, and it
- * only ever rewrites the variants you ask it for — so the header says where a
- * file came from rather than warning you off it.
+ * Only the .mts and .css files carry this. The SVGs get nothing: they are art,
+ * and a banner on a ten-line drawing is noise. Checked in on purpose either
+ * way — the script is for when a mesh wants replacing or a variant adding, and
+ * it only ever rewrites the variants you ask it for.
  */
 const moduleHeader = [
 	'/**',
@@ -99,14 +86,17 @@ function renderCss(noiseCount: number): string {
 		'   never see them. The noise needs no such thing: it is translucent, so the',
 		'   page colour below it does the theming.',
 		'',
-		'   The variant is set by _shared/services/texture-variant.mts; :root carries',
-		'   variant 0 so the page has its grain before that module runs. */',
+		'   No variant until _shared/services/texture-variant.mts picks one: before',
+		'   that the page is its plain colour, the same way an unpicked card is a',
+		'   plain sheet. `none` rather than nothing, because an undefined custom',
+		'   property would make --background-page invalid and take the page colour',
+		'   down with it. */',
 		':root {',
-		'\t--texture-noise:      url("./page-noise-0.svg");',
+		'\t--texture-noise:      none;',
 		'}',
 	]
 
-	for (let variant = 1; variant < noiseCount; variant++) {
+	for (let variant = 0; variant < noiseCount; variant++) {
 		lines.push(
 			'',
 			`:root[data-noise="${variant}"] {`,
@@ -128,20 +118,23 @@ function renderModule(noiseCount: number): string {
 }
 
 /**
- * The paper meshes, inlined rather than referenced: the facets are filled with
- * custom properties, which only resolve once the markup is part of the
- * document. The paper variant count is this array's length — one source of
- * truth rather than a number that can drift from the files on disk.
+ * The paper meshes, as loaders rather than imports. A device draws exactly one,
+ * so the other four have no business in the bundle it parses at startup — and
+ * the markup has to be inlined rather than referenced, because the facets are
+ * filled with custom properties that only resolve inside the document.
+ *
+ * The paper variant count is this array's length: one source of truth rather
+ * than a number that can drift from the files on disk.
  */
 function renderPaperModule(paperCount: number): string {
 	const variants = Array.from({ length: paperCount }, (_, variant) => variant)
 	return [
 		moduleHeader,
 		'',
+		'export const paperTextures = [',
 		...variants.map((variant) =>
-			`import paperTexture${variant} from './paper-texture-${variant}.svg?raw'`),
-		'',
-		`export const paperTextures = [${variants.map((v) => `paperTexture${v}`).join(', ')}]`,
+			`\t() => import('./paper-texture-${variant}.svg?raw'),`),
+		']',
 		'',
 	].join('\n')
 }
@@ -182,14 +175,14 @@ function generatePaper(variant: number, seed: number, dryRun: boolean): void {
 	// One file per variant, whatever the theme: the facets are filled with
 	// custom properties, so the ambient-light sensor flipping mid-game recolours
 	// the paper without it rearranging itself.
-	writeIfChanged(paperFile(variant), renderPaperTexture(mesh, svgHeader('paper', variant, seed)), dryRun)
+	writeIfChanged(paperFile(variant), renderPaperTexture(mesh), dryRun)
 }
 
 function generateNoise(variant: number, seed: number, dryRun: boolean): void {
 	const noiseSeed = variant === 0
 		? 0
 		: createNoiseSeed(createRandom(variantSeed(seed, 'noise', variant)))
-	writeIfChanged(noiseFile(variant), renderNoiseTexture(noiseSeed, svgHeader('noise', variant, seed)), dryRun)
+	writeIfChanged(noiseFile(variant), renderNoiseTexture(noiseSeed), dryRun)
 }
 
 function parseInteger(value: string | undefined, name: string): number | undefined {
