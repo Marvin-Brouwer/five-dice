@@ -1,50 +1,23 @@
-import { registerSW } from 'virtual:pwa-register'
-
-import { newGameDisabledStore } from '../stores/gameStateStore.mts'
-
 /**
- * How often a tab that stays open asks whether a newer deployment has landed.
+ * How often a running app asks whether a newer deployment has landed.
  *
- * The browser checks the worker script by itself on navigation, and an
- * installed score pad does not navigate: it is opened once and left running
- * for the length of a game night. Without a timer, that session would never
- * hear about a new version at all.
+ * Nothing here reloads anything: the worker is generated with
+ * `skipWaiting`/`clientsClaim`, so a new version takes over as soon as it
+ * installs, and the app shows it the next time the document loads — a
+ * refresh, or a closed app opened again.
+ *
+ * What a running app does not do by itself is *find out*. The browser
+ * re-checks the worker script on a document load and otherwise leaves it
+ * alone, and an installed score pad is opened once and left running for a
+ * game night. Without a check of its own, the new worker would not start
+ * installing until the next launch, and installing is not showing — so the
+ * refresh that should have brought the new version would come back on the
+ * old one, and the version after it would be a launch behind for good.
  */
 const updateIntervalMs = 60 * 60 * 1000
 
-let reloadScheduled = false
-
-/**
- * Swap the page over to the version the new worker is already serving.
- *
- * By the time this is called the new worker has activated and claimed the
- * page — it is built with `skipWaiting`/`clientsClaim` — so every request
- * from here on is answered out of the new precache. The chunks this page was
- * built against are no longer in it, which makes any not-yet-loaded route a
- * 404 waiting to happen. Reloading is what closes that window.
- *
- * The pad lives in memory only, so a reload mid-game throws a scorepad away.
- * That is the one thing worth waiting for: `newGameDisabledStore` is false
- * exactly while there is progress to lose, so a game in progress defers the
- * reload until the pad is empty again.
- */
-function reloadWhenIdle(): void {
-	if (reloadScheduled) return
-	reloadScheduled = true
-
-	if (newGameDisabledStore.value) {
-		location.reload()
-		return
-	}
-
-	newGameDisabledStore.on('change', ({ detail }) => {
-		if (detail.state) location.reload()
-	})
-}
-
-function pollForUpdates(swRegistration: ServiceWorkerRegistration | undefined): void {
-	if (!swRegistration) return
-	const registration = swRegistration
+async function pollForUpdates(): Promise<void> {
+	const registration = await navigator.serviceWorker.ready
 
 	function checkForUpdate() {
 		registration.update().catch((error) => {
@@ -55,25 +28,17 @@ function pollForUpdates(swRegistration: ServiceWorkerRegistration | undefined): 
 
 	setInterval(checkForUpdate, updateIntervalMs)
 	// Coming back to a backgrounded app is the moment an update is most
-	// likely to be waiting, and the moment it is cheapest to take.
+	// likely to be waiting, and the moment it is cheapest to pick up: a
+	// player who backgrounded the app is a player who may close it next.
 	document.addEventListener('visibilitychange', () => {
 		if (document.visibilityState === 'visible') checkForUpdate()
 	})
 	window.addEventListener('online', checkForUpdate)
 }
 
-if (typeof window !== 'undefined') {
-	registerSW({
-		// Registration would otherwise wait for `load`; nothing here competes
-		// with first paint, and registering early is what lets the first
-		// update check happen on this visit rather than the next one.
-		immediate: true,
-		onNeedReload: reloadWhenIdle,
-		onRegisteredSW(_scriptUrl, registration) {
-			pollForUpdates(registration)
-		},
-		onRegisterError(error) {
-			console.warn('[app-update] service worker registration failed', error)
-		},
-	})
+// The worker itself is registered by the script vite-plugin-pwa injects into
+// the page; `ready` waits for whatever that registration ends up being. In
+// dev there is no worker and no registration, and this simply never resolves.
+if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+	void pollForUpdates()
 }
