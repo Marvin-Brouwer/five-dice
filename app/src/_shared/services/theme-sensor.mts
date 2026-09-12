@@ -1,4 +1,5 @@
 import { themeStore, type Theme } from '../stores/themeStore.mts'
+import { syncThemeColor } from './theme-color.mts'
 
 type SensorLike = {
 	illuminance: number
@@ -22,6 +23,9 @@ let lastResolved: Resolved | undefined
 function apply(resolved: Resolved) {
 	if (typeof document === 'undefined') return
 	document.documentElement.dataset.theme = resolved
+	// The browser chrome reads its colour off the tokens, so it has to be
+	// repainted after the theme attribute lands, not before.
+	syncThemeColor()
 	lastResolved = resolved
 }
 

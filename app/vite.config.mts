@@ -16,8 +16,12 @@ export default rootedManifest({
 		name: 'Five dice',
 		short_name: '5-dice',
 		description: 'Grab five dice and see how far your luck stretches.',
-		theme_color: '#000000',
-		background_color: '#B3AEA1',
+		// Both mirror --color-page (index.tokens.css): the chrome and the splash
+		// continue the cardboard the app bar sits on instead of cutting a black
+		// bar across the top. theme-color.mts keeps the live chrome in step with
+		// the chosen theme; this is what the installer bakes in.
+		theme_color: '#b8b2a6',
+		background_color: '#b8b2a6',
 		display: 'minimal-ui',
 		orientation: 'portrait'
 	},

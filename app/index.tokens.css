@@ -1,4 +1,8 @@
 :root {
+	/* Native UI rendered by the browser — scrollbars, form controls, the dialog
+	   backdrop — follows this. Without it they stay light even in dark mode. */
+	color-scheme: light;
+
 	/* Colours: backgrounds */
 	/* Semantic name → design term (from Direction A.v2 mockup) */
 	--color-page:              #b8b2a6;                       /* design: cardboard */

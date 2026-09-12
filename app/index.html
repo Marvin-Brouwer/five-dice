@@ -6,7 +6,15 @@
 		<link rel="icon" type="image/svg+xml" href="/icon.svg" />
 		<link rel="alternate icon" href="/icon.ico" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
-		<meta name="theme-color" content="#000000" />
+		<!--
+			Browser chrome — the minimal-ui toolbar, the status bar, the splash — paints with
+			these. They mirror --color-page from index.tokens.css / index.theme.css so the
+			chrome continues the cardboard the app bar sits on. The pair covers first paint by
+			OS preference; theme-color.mts takes over once the app has resolved what the player
+			actually picked (system / sensor / light / dark).
+		-->
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#b8b2a6" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2a2622" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="Five dice — a score-pad PWA for a game of five dice." />
 		<title>Five dice</title>
