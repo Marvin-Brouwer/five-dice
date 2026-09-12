@@ -1,20 +1,21 @@
-import { cookieStorage } from '@rooted/storage/web'
+import { localStorage } from '@rooted/storage/web'
 import { createStore } from '@rooted/store'
 
 export type Theme = 'system' | 'sensor' | 'light' | 'dark'
 
-const COOKIE_NAME = 'theme'
+const STORAGE_KEY = 'theme'
+
+function isTheme(value: string | undefined): value is Theme {
+	return value === 'system' || value === 'sensor' || value === 'light' || value === 'dark'
+}
 
 function readInitialTheme(): Theme {
-	const stored = cookieStorage.get<string>(COOKIE_NAME)
-	if (stored === 'system' || stored === 'sensor' || stored === 'light' || stored === 'dark') return stored
-	// Back-compat: previous versions used 'auto'
-	if (stored === 'auto') return 'system'
-	return 'system'
+	const stored = localStorage.get<string>(STORAGE_KEY)
+	return isTheme(stored) ? stored : 'system'
 }
 
 export const themeStore = createStore<Theme>(readInitialTheme())
 
 themeStore.on('change', ({ detail }) => {
-	cookieStorage.set(COOKIE_NAME, detail.state)
+	localStorage.set(STORAGE_KEY, detail.state)
 })

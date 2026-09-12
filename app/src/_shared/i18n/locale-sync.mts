@@ -3,7 +3,7 @@ import { component } from '@rooted/components'
 import { localization } from './localization.mts'
 import { setLocale } from './remembered-locale.mts'
 
-/** Non-rendering component that keeps the remembered-locale cookie in sync with the URL across every navigation. */
+/** Non-rendering component that keeps the remembered locale in sync with the URL across every navigation. */
 export const LocaleSync = component({
 	name: 'locale-sync',
 	onMount({ on }) {

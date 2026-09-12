@@ -205,4 +205,38 @@ export class GamePage {
 		await expect(this.page.locator('aside[role="status"]')).toBeHidden()
 		await expect(this.sticker).toBeVisible()
 	}
+
+	// --- The app menu -------------------------------------------------------
+
+	/** Opens the menu sheet and waits for it to be on screen. */
+	async openMenu() {
+		await this.page.getByRole('button', { name: 'Menu', exact: true }).click()
+		await expect(this.themeTrigger).toBeVisible()
+	}
+
+	/**
+	 * The theme dropdown's trigger. Its accessible name carries the current
+	 * choice -- "Theme: Dark" -- which is what the menu shows the player, so
+	 * asserting on it is asserting on what they see.
+	 */
+	get themeTrigger(): Locator {
+		return this.page.getByRole('button', { name: /^Theme: / })
+	}
+
+	/** Picks a theme from the open menu, by the option's visible label. */
+	async chooseTheme(theme: 'System' | 'Sensor' | 'Light' | 'Dark') {
+		await this.themeTrigger.click()
+		await this.page.getByRole('option', { name: new RegExp(`^${theme}`) }).click()
+		await expect(this.themeTrigger).toHaveAccessibleName(`Theme: ${theme}`)
+	}
+
+	/** The remembered theme, straight out of the storage the app persists it to. */
+	async storedTheme(): Promise<string | null> {
+		return this.page.evaluate(() => window.localStorage.getItem('theme'))
+	}
+
+	/** What `theme-sensor` resolved the choice to: 'light' or 'dark'. */
+	async resolvedTheme(): Promise<string | undefined> {
+		return this.page.evaluate(() => document.documentElement.dataset.theme)
+	}
 }
