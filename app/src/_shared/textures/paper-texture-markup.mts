@@ -1,4 +1,4 @@
-import { paperTextures } from './paper-textures.g.mts'
+import { paperTextures } from './paper-textures.mts'
 
 /**
  * Picking a mesh and stamping its pattern id, kept apart from the component

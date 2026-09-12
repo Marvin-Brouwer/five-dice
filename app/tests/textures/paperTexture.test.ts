@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import {
 	paperTextureMarkup, patternIdPlaceholder,
 } from '../../src/_shared/textures/paper-texture-markup.mts'
-import { paperTextures } from '../../src/_shared/textures/paper-textures.g.mts'
+import { paperTextures } from '../../src/_shared/textures/paper-textures.mts'
 
 describe('paperTexture', () => {
 

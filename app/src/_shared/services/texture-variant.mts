@@ -1,7 +1,7 @@
 import { localStorage } from '@rooted/storage/web'
 
-import { paperTextures } from '../textures/paper-textures.g.mts'
-import { noiseVariantCount } from '../textures/textures.g.mts'
+import { paperTextures } from '../textures/paper-textures.mts'
+import { noiseVariantCount } from '../textures/page-noise.mts'
 
 /**
  * Gives each device its own paper and cardboard.

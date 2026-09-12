@@ -34,7 +34,7 @@ a warm surface and no amount of black or white gets you there.
 `app/src/_shared/services/texture-variant.mts` picks a number per kind on first
 visit and stores it under `texture-paper` / `texture-noise`. The paper variant
 is exported and handed to `PaperTexture` by `PaperCard`; the noise variant is
-written to `<html data-noise>`, which `textures.g.css` turns into
+written to `<html data-noise>`, which `page-noise.css` turns into
 `--texture-noise` for `--background-page`.
 
 What is stored is the chosen variant — a number under five — not a random id or
@@ -88,11 +88,18 @@ pnpm generate:textures:paper --variant 3          # prints e.g. "seed 40213"
 pnpm generate:textures:paper --variant 3 --seed 40213   # that one, again
 ```
 
-Adding a sixth mesh is `--count 6`: the SVGs, `paper-textures.g.mts`,
-`textures.g.css` and the noise count in `textures.g.mts` are all written
+Adding a sixth mesh is `--count 6`: the SVGs, `paper-textures.mts`,
+`page-noise.css` and the noise count in `page-noise.mts` are all written
 together, so the runtime can't drift from how many files exist. The paper
 variant count is simply `paperTextures.length`. Dropping back to five leaves the
 sixth on disk and warns — deleting art is your call, not the script's.
+
+Note what these files are **not**: build output. They carry no `.g.` suffix and
+nothing regenerates them on `pnpm build`. They are checked-in art, and the
+script is the tool you reach for when a mesh wants replacing or a variant
+adding — the opposite of `src/_routes.g.mts`, which is gitignored and rebuilt
+by a Vite plugin every time. Editing a texture by hand is fine; just know that
+regenerating that variant overwrites it.
 
 Variant 0 of both kinds is a fixed preset, not a draw, and ignores `--seed`. Its
 geometry is the original hand-drawn mesh, which is also what makes noise

@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, test } from 'vitest'
 
 import { patternIdPlaceholder } from '../../src/_shared/textures/paper-texture-markup.mts'
-import { paperTextures } from '../../src/_shared/textures/paper-textures.g.mts'
-import { noiseVariantCount } from '../../src/_shared/textures/textures.g.mts'
+import { paperTextures } from '../../src/_shared/textures/paper-textures.mts'
+import { noiseVariantCount } from '../../src/_shared/textures/page-noise.mts'
 
 /**
  * Guards the committed texture files themselves, not just the functions that
