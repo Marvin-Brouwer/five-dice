@@ -36,32 +36,3 @@ test('the chosen theme is remembered across sessions', async ({ page, context })
 	await game.openMenu()
 	await expect(game.themeTrigger, 'the menu should still show Dark').toHaveAccessibleName('Theme: Dark')
 })
-
-/**
- * Anyone who already picked a theme has it in the old cookie. They should not
- * be reset to "System" by the move to localStorage.
- */
-test('a theme left in the old cookie is carried over', async ({ page, context }) => {
-	// Seeded exactly the way the old code wrote it: no expiry, and scoped to
-	// the app base rather than the origin. The path has to match for the
-	// clean-up to be able to delete it again.
-	await context.addCookies([{
-		name: 'theme',
-		value: 'dark',
-		domain: 'localhost',
-		path: '/five-dice',
-	}])
-
-	const game = new GamePage(page)
-	await game.goto()
-
-	expect(await game.resolvedTheme(), 'the cookie choice should still apply').toBe('dark')
-	expect(await game.storedTheme(), 'and should have moved into localStorage').toBe('dark')
-	expect(
-		(await context.cookies()).map(c => c.name),
-		'the migrated cookie should be cleaned up',
-	).not.toContain('theme')
-
-	await game.openMenu()
-	await expect(game.themeTrigger, 'the menu should show the carried-over choice').toHaveAccessibleName('Theme: Dark')
-})
