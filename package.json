@@ -14,6 +14,9 @@
     "test:e2e:ui": "pnpm --filter @five-dice/app test:e2e:ui",
     "test:e2e:report": "pnpm --filter @five-dice/app test:e2e:report",
     "lint": "pnpm --filter @five-dice/app lint",
+    "generate:textures": "pnpm --filter @five-dice/app generate:textures",
+    "generate:textures:paper": "pnpm --filter @five-dice/app generate:textures:paper",
+    "generate:textures:noise": "pnpm --filter @five-dice/app generate:textures:noise",
     "test:all": "pnpm -r test"
   }
 }

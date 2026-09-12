@@ -47,7 +47,7 @@
 
 	/* Paper texture: subtle warm-yellow polygons instead of near-white */
 	--background-surface:
-		url("./src/_shared/textures/paper-texture-dark.svg"),
+		var(--texture-paper-dark),
 		var(--color-surface);
 }
 
@@ -87,7 +87,7 @@
 		--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
 
 		--background-surface:
-			url("./src/_shared/textures/paper-texture-dark.svg"),
+			var(--texture-paper-dark),
 			var(--color-surface);
 	}
 }

@@ -65,13 +65,13 @@
 	/* Composed backgrounds */
 	/* Cardboard noise behind the warm-gray page colour. */
 	--background-page:
-		url("./src/_shared/textures/page-noise.svg"),
+		var(--texture-noise),
 		var(--color-page);
 	--background-page-size:    200px 200px, auto;
 
 	/* Paper texture: soft cellular polygons behind the paper card */
 	--background-surface:
-		url("./src/_shared/textures/paper-texture.svg"),
+		var(--texture-paper),
 		var(--color-surface);
 	--background-surface-size: 200px 100px, auto;
 
