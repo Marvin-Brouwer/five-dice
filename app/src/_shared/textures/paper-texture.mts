@@ -1,10 +1,9 @@
 import { component } from '@rooted/components'
 
-import { paperTextures } from './paper-textures.mts'
 import styles from './paper-texture.css'
 
 /**
- * The paper card's low-poly sheet, one of `paperTextures.length` meshes.
+ * The paper card's low-poly sheet.
  *
  * A component rather than a CSS background because the facets are filled with
  * `var(--paper-shade-*)`: an SVG behind `url()` renders in secure static mode
@@ -13,6 +12,26 @@ import styles from './paper-texture.css'
  * how one mesh serves every theme — the same trick `Icon` uses for
  * `currentColor`.
  */
+
+/**
+ * The meshes, lazily and by directory rather than by list: adding a sixth is
+ * dropping a sixth file next to the others, with nothing to regenerate and no
+ * count that can drift from what is on disk. A device draws one, so the other
+ * four never reach the bundle it parses before first paint.
+ */
+const meshes = import.meta.glob<string>('./paper-texture-*.svg', {
+	query: '?raw',
+	import: 'default',
+})
+
+/** Sorted by number, or `paper-texture-10` would land before `paper-texture-2`. */
+const variantOf = (path: string) => Number(path.replace(/\D+/g, ''))
+
+const paperTextures = Object.entries(meshes)
+	.sort(([a], [b]) => variantOf(a) - variantOf(b))
+	.map(([, load]) => load)
+
+export const paperTextureCount = paperTextures.length
 
 export type PaperTextureOptions = {
 	/**
@@ -23,48 +42,16 @@ export type PaperTextureOptions = {
 	variant?: number
 }
 
-/**
- * What the generated meshes carry in place of a real id. Kept in step with
- * `scripts/textures/paper.mts` by `tests/textures/generatedSvg.test.ts` — app
- * code can't import from the build scripts, so the literal lives in both places
- * and a test holds them together.
- */
-export const patternIdPlaceholder = '__ID__'
-
-/**
- * Pattern ids have to be unique per instance. Two cards drawing the same mesh
- * would otherwise emit the same id, both `url(#…)` references would resolve to
- * whichever came first in the document, and unmounting that card would take the
- * `<defs>` the other one is still pointing at — its texture would vanish.
- */
-let instance = 0
-
-/**
- * Loads the mesh for `variant` and stamps its pattern id — or resolves to
- * nothing when the variant is missing or names a mesh that doesn't exist.
- * Drawing nothing leaves a plain sheet, which is the right answer for a device
- * that hasn't picked yet: putting it on variant 0 would quietly crowd everyone
- * onto the same mesh.
- */
-export async function paperTextureMarkup(
-	variant: number | undefined, id: string,
-): Promise<string | undefined> {
-	if (!Number.isInteger(variant)) return undefined
-
-	const load = paperTextures[variant as number]
-	if (load === undefined) return undefined
-
-	const { default: markup } = await load()
-	return markup.replaceAll(patternIdPlaceholder, id)
-}
-
 export const PaperTexture = component<PaperTextureOptions>({
 	name: 'paper-texture',
 	styles,
 	async onMount({ append, element, options, signal }) {
-		const markup = await paperTextureMarkup(options.variant, `paper-texture-${instance++}`)
+		const load = paperTextures[options.variant ?? -1]
+		if (load === undefined) return
+
+		const markup = await load()
 		// The mesh arrives a tick late, by which time the card may be gone.
-		if (markup === undefined || signal.aborted) return
+		if (signal.aborted) return
 
 		append(element('span', {
 			classes: styles.texture,

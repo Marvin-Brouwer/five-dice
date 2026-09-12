@@ -1,17 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-	<defs>
-		<pattern id="__ID__" width="200" height="100" patternUnits="userSpaceOnUse">
-			<polygon points="0,0 113,0 51,57" fill="var(--paper-shade-0)"/>
-			<polygon points="0,0 0,50 51,57" fill="var(--paper-shade-2)"/>
-			<polygon points="113,0 200,0 149,48" fill="var(--paper-shade-1)"/>
-			<polygon points="113,0 51,57 149,48" fill="var(--paper-shade-2)"/>
-			<polygon points="200,0 200,50 149,48" fill="var(--paper-shade-2)"/>
-			<polygon points="0,50 51,57 113,100" fill="var(--paper-shade-0)"/>
-			<polygon points="0,50 0,100 113,100" fill="var(--paper-shade-0)"/>
-			<polygon points="51,57 149,48 113,100" fill="var(--paper-shade-1)"/>
-			<polygon points="149,48 200,50 200,100" fill="var(--paper-shade-0)"/>
-			<polygon points="149,48 113,100 200,100" fill="var(--paper-shade-1)"/>
-		</pattern>
-	</defs>
-	<rect width="100%" height="100%" fill="url(#__ID__)"/>
+	<pattern id="paper-texture" width="200" height="100" patternUnits="userSpaceOnUse">
+		<polygon points="0,0 113,0 51,57" fill="var(--paper-shade-0)"/>
+		<polygon points="0,0 0,50 51,57" fill="var(--paper-shade-2)"/>
+		<polygon points="113,0 200,0 149,48" fill="var(--paper-shade-1)"/>
+		<polygon points="113,0 51,57 149,48" fill="var(--paper-shade-2)"/>
+		<polygon points="200,0 200,50 149,48" fill="var(--paper-shade-2)"/>
+		<polygon points="0,50 51,57 113,100" fill="var(--paper-shade-0)"/>
+		<polygon points="0,50 0,100 113,100" fill="var(--paper-shade-0)"/>
+		<polygon points="51,57 149,48 113,100" fill="var(--paper-shade-1)"/>
+		<polygon points="149,48 200,50 200,100" fill="var(--paper-shade-0)"/>
+		<polygon points="149,48 113,100 200,100" fill="var(--paper-shade-1)"/>
+	</pattern>
+	<rect width="100%" height="100%" fill="url(#paper-texture)"/>
 </svg>

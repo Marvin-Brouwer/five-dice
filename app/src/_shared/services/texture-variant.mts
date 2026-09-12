@@ -1,7 +1,7 @@
 import { localStorage } from '@rooted/storage/web'
 
-import { paperTextures } from '../textures/paper-textures.mts'
 import { noiseVariantCount } from '../textures/page-noise.mts'
+import { paperTextureCount } from '../textures/paper-texture.mts'
 
 /**
  * Gives each device its own paper and cardboard.
@@ -49,7 +49,7 @@ function readVariant(key: string, count: number): number {
  */
 export const paperTextureVariant = typeof document === 'undefined'
 	? undefined
-	: readVariant(paperKey, paperTextures.length)
+	: readVariant(paperKey, paperTextureCount)
 
 if (typeof document !== 'undefined') {
 	// The grain is still a CSS background, so it travels as an attribute. Until

@@ -30,12 +30,12 @@ export const paperHeight = 100
 export const shadeProperty = (shade: number) => `var(--paper-shade-${shade})`
 
 /**
- * Placeholder for the pattern's id, swapped for a per-instance one when the
- * texture is mounted. Two cards showing the same variant would otherwise carry
- * duplicate ids, and unmounting the first would take the `<defs>` the second is
- * still pointing at with it.
+ * The id the tile's `<rect>` points at. Fixed, not per-instance: two cards
+ * drawing the same mesh do emit the same id, but each carries its own copy of
+ * the pattern and SVG id references resolve live — remove one card and the
+ * other keeps painting from its own. Measured, not assumed.
  */
-export const patternIdPlaceholder = '__ID__'
+export const patternId = 'paper-texture'
 
 export type Point = readonly [number, number]
 
@@ -166,19 +166,19 @@ export function createPaperMesh(random: () => number): PaperMesh {
 export function renderPaperTexture(mesh: PaperMesh): string {
 	const polygons = paperTriangles(mesh).map((triangle, index) => {
 		const points = triangle.map(([x, y]) => `${x},${y}`).join(' ')
-		return `\t\t\t<polygon points="${points}" fill="${shadeProperty(mesh.shades[index])}"/>`
+		return `\t\t<polygon points="${points}" fill="${shadeProperty(mesh.shades[index])}"/>`
 	})
 
-	// A <pattern> rather than a bare tile: the sheet is sized by its content, so
-	// the texture repeats to fill whatever the card turns out to be.
+	// The polygons are one 200x100 tile, but the sheet is sized by its content,
+	// and inline SVG has no equivalent of background-repeat. `<pattern>` is what
+	// tiles it, and a `<rect>` filled with that pattern is what paints it over
+	// however big the card turns out to be.
 	return [
 		'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">',
-		'\t<defs>',
-		`\t\t<pattern id="${patternIdPlaceholder}" width="${paperWidth}" height="${paperHeight}" patternUnits="userSpaceOnUse">`,
+		`\t<pattern id="${patternId}" width="${paperWidth}" height="${paperHeight}" patternUnits="userSpaceOnUse">`,
 		...polygons,
-		'\t\t</pattern>',
-		'\t</defs>',
-		`\t<rect width="100%" height="100%" fill="url(#${patternIdPlaceholder})"/>`,
+		'\t</pattern>',
+		`\t<rect width="100%" height="100%" fill="url(#${patternId})"/>`,
 		'</svg>',
 		'',
 	].join('\n')

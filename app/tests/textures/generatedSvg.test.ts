@@ -4,8 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 import { describe, expect, test } from 'vitest'
 
-import { patternIdPlaceholder } from '../../scripts/textures/paper.mts'
-import { paperTextures } from '../../src/_shared/textures/paper-textures.mts'
+import { patternId } from '../../scripts/textures/paper.mts'
 import { noiseVariantCount } from '../../src/_shared/textures/page-noise.mts'
 
 /**
@@ -19,15 +18,23 @@ const read = (name: string) => readFileSync(join(texturesDir, name), 'utf8')
 
 describe('generated textures', () => {
 
-	test('every declared variant is on disk', () => {
-		const expected = [
-			...Array.from({ length: paperTextures.length }, (_, v) => `paper-texture-${v}.svg`),
-			...Array.from({ length: noiseVariantCount }, (_, v) => `page-noise-${v}.svg`),
-		].sort()
+	test('the noise files match the count the CSS was written for', () => {
+		const noiseNames = svgNames.filter((name) => name.startsWith('page-noise'))
 
-		// A count that outruns the files leaves those devices with no texture at
-		// all, and files past the count ship bytes nothing references.
-		expect(svgNames).toEqual(expected)
+		// The paper needs no such check: the component globs the directory, so
+		// its count is the files. Only the noise carries a written-down number.
+		expect(noiseNames).toEqual(
+			Array.from({ length: noiseVariantCount }, (_, v) => `page-noise-${v}.svg`))
+	})
+
+	test('paper variants are numbered without gaps', () => {
+		// The stored variant indexes the sorted glob, not the filename. Delete
+		// paper-texture-1.svg and everyone above it silently shifts down a mesh.
+		const numbers = svgNames
+			.filter((name) => name.startsWith('paper-texture'))
+			.map((name) => Number(name.replace(/\D+/g, '')))
+
+		expect(numbers).toEqual(numbers.map((_, index) => index))
 	})
 
 	test.each(svgNames)('%s is well-formed XML', (name) => {
@@ -55,11 +62,10 @@ describe('generated textures', () => {
 			expect(markup).not.toMatch(/fill="#[0-9a-f]{3,8}"/)
 			expect(markup).toMatch(/fill="var\(--paper-shade-[012]\)"/)
 
-			// The placeholder the component swaps for a per-instance id, as the
-			// generator spells it. paperTexture.test.ts checks the component
-			// still spells it the same way.
-			expect(markup).toContain(`id="${patternIdPlaceholder}"`)
-			expect(markup).toContain(`fill="url(#${patternIdPlaceholder})"`)
+			// The tile has to be a <pattern> painted through a <rect>: inline SVG
+			// has no background-repeat, and the sheet is sized by its content.
+			expect(markup).toContain(`id="${patternId}"`)
+			expect(markup).toContain(`fill="url(#${patternId})"`)
 			expect(markup).toContain('patternUnits="userSpaceOnUse"')
 			expect(markup).toContain('width="200" height="100"')
 		})

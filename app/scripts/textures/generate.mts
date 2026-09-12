@@ -117,28 +117,6 @@ function renderModule(noiseCount: number): string {
 	].join('\n')
 }
 
-/**
- * The paper meshes, as loaders rather than imports. A device draws exactly one,
- * so the other four have no business in the bundle it parses at startup — and
- * the markup has to be inlined rather than referenced, because the facets are
- * filled with custom properties that only resolve inside the document.
- *
- * The paper variant count is this array's length: one source of truth rather
- * than a number that can drift from the files on disk.
- */
-function renderPaperModule(paperCount: number): string {
-	const variants = Array.from({ length: paperCount }, (_, variant) => variant)
-	return [
-		moduleHeader,
-		'',
-		'export const paperTextures = [',
-		...variants.map((variant) =>
-			`\t() => import('./paper-texture-${variant}.svg?raw'),`),
-		']',
-		'',
-	].join('\n')
-}
-
 const written: string[] = []
 const unchanged: string[] = []
 
@@ -240,7 +218,6 @@ function main(): void {
 
 	writeIfChanged(join(texturesDir, 'page-noise.css'), renderCss(counts.noise), dryRun)
 	writeIfChanged(join(texturesDir, 'page-noise.mts'), renderModule(counts.noise), dryRun)
-	writeIfChanged(join(texturesDir, 'paper-textures.mts'), renderPaperModule(counts.paper), dryRun)
 
 	console.log(`${written.length} written${written.length ? `: ${written.join(', ')}` : ''}`)
 	if (unchanged.length) console.log(`${unchanged.length} unchanged`)

@@ -13,10 +13,11 @@ would collide about 80% of the time, 25 about 22%.
 ## Two textures, two mechanisms
 
 **The paper is a component**, and its meshes load on demand — a device draws
-one, so the other four stay out of the bundle it parses before first paint. Each
-is its own ~1 KB chunk. Its facets are filled with `var(--paper-shade-*)`,
-so one mesh serves every theme — the dark theme swaps three tokens and the
-geometry never moves. That only works because the markup is inlined into the
+one, so the other four stay out of the bundle it parses before first paint. They
+are found with `import.meta.glob`, so there is no list to maintain: a sixth mesh
+is a sixth file in the directory. Its facets are filled with
+`var(--paper-shade-*)`, so one mesh serves every theme — the dark theme swaps
+three tokens and the geometry never moves. That only works because the markup is inlined into the
 document: an SVG loaded through CSS `url()` renders in *secure static mode*, an
 isolated document with no access to the page's cascade, and would paint those
 fills black. `Icon` relies on the same thing for `currentColor`.
@@ -59,11 +60,15 @@ A stored value that no longer names a real variant is re-drawn rather than left
 to fall through — otherwise shrinking the variant count would pile every
 affected device onto the default.
 
-`PaperTexture` also stamps a unique `<pattern>` id into each instance. Two cards
-drawing the same mesh would otherwise emit duplicate ids, both `url(#…)`
-references would resolve to whichever came first, and unmounting that card would
-take the `<defs>` the survivor still points at — its texture would vanish
-mid-session.
+The mesh is a `<pattern>` painted through a full-size `<rect>`, not bare
+polygons. The polygons are one 200x100 tile and the sheet is sized by its
+content, so something has to repeat them — and inline SVG has no equivalent of
+`background-repeat`. `<pattern>` is that something.
+
+The pattern id is fixed rather than per-instance. Two cards drawing the same
+mesh do emit the same id, but each carries its own copy of the pattern and SVG
+id references resolve live: remove one card and the other keeps painting from
+its own. Checked in a browser rather than assumed.
 
 One more thing worth knowing if you move the texture: it is positioned at
 `z-index: -1`, which paints above its stacking context's background and below
@@ -95,11 +100,15 @@ pnpm generate:textures:paper --variant 3          # prints e.g. "seed 40213"
 pnpm generate:textures:paper --variant 3 --seed 40213   # that one, again
 ```
 
-Adding a sixth mesh is `--count 6`: the SVGs, `paper-textures.mts`,
-`page-noise.css` and the noise count in `page-noise.mts` are all written
-together, so the runtime can't drift from how many files exist. The paper
-variant count is simply `paperTextures.length`. Dropping back to five leaves the
-sixth on disk and warns — deleting art is your call, not the script's.
+Adding a sixth mesh is `--count 6`. For the paper that is all of it: the
+component globs the directory, so the file *is* the registration. For the noise
+the script also rewrites `page-noise.css` and the count in `page-noise.mts`,
+which have to agree with the files. Dropping back to five leaves the sixth on
+disk and warns — deleting art is your call, not the script's.
+
+Keep the paper files numbered without gaps. The stored variant indexes the
+sorted glob, not the filename, so deleting `paper-texture-1.svg` shifts everyone
+above it onto a different mesh. `generatedSvg.test.ts` checks this.
 
 Note what these files are **not**: build output. They carry no `.g.` suffix, no
 "DO NOT EDIT" banner, and nothing regenerates them on `pnpm build`. They are
@@ -148,12 +157,12 @@ inspects the CSS rather than the pixels.
 
 `app/tests/textures/` covers the mesh invariants (seam pairing, shared splits,
 shade balance, no collapsed facet, determinism), the noise markup, the variant
-picker, the mesh switching and id stamping, and the committed SVGs themselves.
+picker, and the committed SVGs themselves.
 
-`paperTexture.test.ts` is the one file that runs on happy-dom rather than node,
-via a `@vitest-environment` docblock: it imports the component, and
-`component()` injects its stylesheet at module load, which needs a document.
-Scoped to that file so the rest of the suite stays on plain node.
+`textureVariant.test.ts` is the one file that runs on happy-dom rather than
+node, via a `@vitest-environment` docblock: it reaches the component for the
+mesh count, and `component()` injects its stylesheet at module load, which needs
+a document. Scoped to that file so the rest of the suite stays on plain node.
 
 The one thing the suite cannot check is whether a given mesh looks good — that
 is why the variants are art-directed files rather than generated at runtime.
