@@ -9,18 +9,6 @@
 		<meta name="theme-color" content="#000000" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="Five dice — a score-pad PWA for a game of five dice." />
-		<!--
-			The og: tags themselves are injected per page at build time, from the
-			route's own seo and `defaultOgImage` in src/seo.mts. These three are
-			the same on every page, so they are written once here.
-
-			`twitter:card` is the one tag that decides a card's *format*, and X
-			reads it from the twitter: namespace only — everything else it takes
-			from og:. It is worth setting exactly because the image is 1.91:1;
-			with a square one it would ask for a banner and get letterboxing.
-			The dimensions let a scraper lay the card out before it has fetched
-			the image — they must match the card in scripts/social-card/card.mts.
-		-->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
