@@ -1,9 +1,15 @@
 import { component } from '@rooted/components'
+import { localStorage } from '@rooted/storage/web'
 
 import styles from './paper-texture.css'
 
 /**
- * The paper card's low-poly sheet.
+ * The paper card's low-poly sheet, and the one thing about this app that
+ * differs per device.
+ *
+ * The score pad gets passed around a table, so two players holding their phones
+ * side by side should not be looking at the same sheet. A mesh is picked on
+ * first visit and kept.
  *
  * A component rather than a CSS background because the facets are filled with
  * `var(--paper-shade-*)`: an SVG behind `url()` renders in secure static mode
@@ -31,22 +37,46 @@ const paperTextures = Object.entries(meshes)
 	.sort(([a], [b]) => variantOf(a) - variantOf(b))
 	.map(([, load]) => load)
 
-export const paperTextureCount = paperTextures.length
+/**
+ * What is stored is the chosen mesh — a number under five — not a random id or
+ * a timestamp. A fifth of everyone who opens the app has the same value, so it
+ * cannot single out a device, which keeps it a style preference alongside
+ * `theme` rather than anything that needs consenting to.
+ */
+const storageKey = 'texture-paper'
 
-export type PaperTextureOptions = {
-	/**
-	 * Which mesh to draw, normally the device's stored variant. Nothing is
-	 * rendered when it is missing or names a mesh that doesn't exist, which
-	 * leaves a plain sheet rather than putting everyone on the same mesh.
-	 */
-	variant?: number
+/**
+ * Keeps the stored mesh when it still names one that exists, and draws a new
+ * one otherwise. The re-draw matters when a mesh is dropped: without it every
+ * device above the new count would render no texture at all.
+ */
+export function resolveVariant(stored: unknown, count: number, random: () => number): number {
+	const isUsable = typeof stored === 'number'
+		&& Number.isInteger(stored)
+		&& stored >= 0
+		&& stored < count
+	return isUsable ? stored as number : Math.floor(random() * count)
 }
 
-export const PaperTexture = component<PaperTextureOptions>({
+/** Undefined off the document: server-side there is nothing to pick for. */
+function pickMesh(): number | undefined {
+	if (typeof document === 'undefined') return undefined
+
+	const stored = localStorage.get(storageKey)
+	const variant = resolveVariant(stored, paperTextures.length, Math.random)
+	if (variant !== stored) localStorage.set(storageKey, variant)
+	return variant
+}
+
+const variant = pickMesh()
+
+export const PaperTexture = component({
 	name: 'paper-texture',
 	styles,
-	async onMount({ append, element, options, signal }) {
-		const load = paperTextures[options.variant ?? -1]
+	async onMount({ append, element, signal }) {
+		// Nothing to draw off the document, or if the stored mesh has since been
+		// deleted — a plain sheet beats crowding those devices onto mesh 0.
+		const load = paperTextures[variant ?? -1]
 		if (load === undefined) return
 
 		const markup = await load()

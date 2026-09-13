@@ -1,7 +1,6 @@
 import { component } from '@rooted/components'
 import type { ElementChild, ElementChildren } from '@rooted/elements'
 
-import { paperTextureVariant } from '../services/texture-variant.mts'
 import { PaperTexture } from '../textures/paper-texture.mts'
 import styles from './paper-card.css'
 
@@ -51,9 +50,7 @@ export const PaperCard = component<PaperCardOptions>({
 			children: [
 				// First child, and absolutely positioned, so it backs everything
 				// written on the paper without taking part in the sheet's layout.
-				create(PaperTexture, {
-					variant: paperTextureVariant,
-				}),
+				create(PaperTexture),
 				headingSlot,
 				element('div', {
 					classes: styles.frameSlot,

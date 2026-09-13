@@ -2,20 +2,20 @@
  * @vitest-environment happy-dom
  * @vitest-environment-options { "settings": { "disableCSSFileLoading": true } }
  *
- * texture-variant.mts reaches paper-texture.mts for the mesh count, and
- * component() injects its stylesheet at module load — that needs a document.
- * Scoped here so the rest of the suite stays on plain node.
+ * paper-texture.mts calls component(), which injects its stylesheet at module
+ * load — that needs a document. Scoped here so the rest of the suite stays on
+ * plain node.
  */
 
 import { describe, expect, test } from 'vitest'
 
-import { resolveVariant } from '../../src/_shared/services/texture-variant.mts'
+import { resolveVariant } from '../../src/_shared/textures/paper-texture.mts'
 
 const never = () => {
 	throw new Error('should not have drawn a new variant')
 }
 
-describe('textureVariant', () => {
+describe('paperTexture', () => {
 
 	test('keeps a stored variant', () => {
 		expect(resolveVariant(3, 5, never)).toBe(3)

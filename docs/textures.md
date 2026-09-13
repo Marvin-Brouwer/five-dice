@@ -23,11 +23,12 @@ inlined into the document: an SVG loaded through CSS `url()` renders in *secure
 static mode*, an isolated document with no access to the page's cascade, and
 would paint those fills black. `Icon` relies on the same thing for `currentColor`.
 
-**The noise is a plain CSS background.** It needs none of this: it is
-translucent, so the page colour below shows through and the theme only has to
-change that colour. That is why it never needed a dark counterpart while the
-paper needed one per variant, and it is why it needs no component — nothing
-about it varies.
+**The noise is a plain CSS background**, hand-kept, one file. It needs none of
+this: it is translucent, so the page colour below shows through and the theme
+only has to change that colour. That is why it never needed a dark counterpart
+while the paper needed one per variant, why it needs no component, and why it
+has nothing to generate — `feTurbulence` with three numbers in it is easier to
+edit than to script.
 
 The paper couldn't have used the noise's trick, incidentally. A neutral wash can
 reproduce the dark palette almost exactly (per-channel alpha spread 0.006–0.056)
@@ -36,10 +37,10 @@ a warm surface and no amount of black or white gets you there.
 
 ## How a device gets its variant
 
-`app/src/_shared/services/texture-variant.mts` picks a mesh on first visit and
-stores it under `texture-paper`. It is exported and handed to `PaperTexture` by
-`PaperCard`. The grain is a fixed `url()` in `index.tokens.css` and involves no
-JavaScript at all.
+`PaperTexture` picks a mesh on first visit and stores it under `texture-paper`.
+Picking, persisting and drawing all live in that one component — `PaperCard`
+just renders it, with nothing to pass. The grain is a fixed `url()` in
+`index.tokens.css` and involves no JavaScript at all.
 
 What is stored is the chosen mesh — a number under five — not a random id or a
 timestamp. A fifth of everyone who opens the app has the same value, so it
@@ -73,15 +74,17 @@ what makes it work.
 ## Regenerating
 
 ```
-pnpm generate:textures                    # both kinds, every variant
-pnpm generate:textures:paper
-pnpm generate:textures:noise
+pnpm generate:textures
 
-  --count <n>      how many variants exist   (default: what's on disk, else 5)
-  --variant <n>    regenerate only this one  (repeatable)
+  --count <n>      how many meshes exist     (default: what's on disk, else 5)
+  --variant <n>    regenerate only this mesh (repeatable)
   --seed <n>       run seed                  (default: random — always printed)
   --dry-run        report the writes without making them
 ```
+
+Only the paper is generated. The grain is a single hand-kept file, so there is
+nothing to script for it — change `baseFrequency`, `numOctaves` or the opacity
+in `page-noise.svg` directly.
 
 Each variant draws from its own stream, so `--variant 3 --seed 1234` always
 gives the same mesh no matter what else is regenerated beside it. The seed is
@@ -89,18 +92,13 @@ printed — note it down if you like what came out, because the files carry no
 provenance of their own. Regenerate one until you like it, then keep it:
 
 ```
-pnpm generate:textures:paper --variant 3          # prints e.g. "seed 40213"
-pnpm generate:textures:paper --variant 3 --seed 40213   # that one, again
+pnpm generate:textures --variant 3               # prints e.g. "seed 40213"
+pnpm generate:textures --variant 3 --seed 40213  # that one, again
 ```
 
 Adding a sixth mesh is `--count 6`, and that is all of it: the component globs
 the directory, so the file *is* the registration. Dropping back to five leaves
 the sixth on disk and warns — deleting art is your call, not the script's.
-
-`--count` and `--variant` are paper-only. The grain is one file, and `--seed`
-re-rolls it only when you name it: `pnpm generate:textures:noise --seed 777`.
-Regenerating everything with a noted mesh seed leaves the grain alone, so you
-can reproduce a mesh without quietly changing the page under it.
 
 Keep the paper files numbered without gaps. The stored variant indexes the
 sorted glob, not the filename, so deleting `paper-texture-1.svg` shifts everyone
@@ -115,10 +113,9 @@ fine; just know that regenerating that variant overwrites it.
 
 Mesh 0 is a fixed preset, not a draw, and ignores `--seed`. Its geometry is the
 original hand-drawn mesh — the look this app shipped with before any of this
-existed, kept so it stays in the rotation. The grain likewise defaults to seed
-0, which is the SVG default and therefore the grain the app has always had.
+existed, kept so it stays in the rotation.
 
-## What the generator has to respect
+## What the textures have to respect
 
 **The paper tile is 200x100 and repeats**, which constrains the geometry:
 
@@ -136,12 +133,14 @@ existed, kept so it stays in the rotation. The grain likewise defaults to seed
   flat. Requiring merely that all three appear is not enough; it lets through
   meshes where eight facets share one shade.
 
-**The noise tile is 200x200** and is genuinely procedural — `feTurbulence` takes
-a `seed`, and `stitchTiles="stitch"` keeps the field tiling for any of them.
-That is exactly why it doesn't vary per device: a different seed gives a
-different grain, not a different-*looking* grain, and nobody could tell two
-apart. If you re-roll it, `baseFrequency`, `numOctaves` and the opacity are the
-knobs that actually change how it reads.
+**The noise tile is 200x200**, and `stitchTiles="stitch"` is what keeps the
+field tiling — leave it on if you edit it.
+
+It carries no `seed`. The default of 0 is the only one it has ever used, so
+writing it out said nothing. Nor does it vary per device: a different seed gives
+a different grain, not a different-*looking* grain, and nobody could tell two
+apart. `baseFrequency`, `numOctaves` and the opacity are the knobs that actually
+change how it reads.
 
 **Both are XML.** The files carry no comments, but if you add one: `--` inside
 an XML comment makes the whole file unparseable and the browser paints nothing
@@ -153,14 +152,14 @@ inspects the CSS rather than the pixels.
 ## Tests
 
 `app/tests/textures/` covers the mesh invariants (seam pairing, shared splits,
-shade balance, no collapsed facet, determinism), the noise markup, the mesh
-picker, and the committed SVGs themselves — including that the grain is still
-one file and the meshes are still numbered without gaps.
+shade balance, no collapsed facet, determinism), the mesh picker, and the
+committed SVGs themselves — including that the grain is still one file and the
+meshes are still numbered without gaps.
 
-`textureVariant.test.ts` is the one file that runs on happy-dom rather than
-node, via a `@vitest-environment` docblock: it reaches the component for the
-mesh count, and `component()` injects its stylesheet at module load, which needs
-a document. Scoped to that file so the rest of the suite stays on plain node.
+`paperTexture.test.ts` is the one file that runs on happy-dom rather than node,
+via a `@vitest-environment` docblock: it imports the component, and
+`component()` injects its stylesheet at module load, which needs a document.
+Scoped to that file so the rest of the suite stays on plain node.
 
 The one thing the suite cannot check is whether a given mesh looks good — that
 is why the variants are art-directed files rather than generated at runtime.
