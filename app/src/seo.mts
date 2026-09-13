@@ -5,6 +5,17 @@ import type { SeoOptions } from '@rooted/seo'
 const baseUrl = packageJson.homepage.slice(0, -1)
 
 export const seo: SeoOptions = {
+	/**
+	 * The link preview. Absolute, because the tag is injected verbatim into
+	 * pages several directories deep and a relative path would resolve against
+	 * whichever one the scraper happened to read.
+	 *
+	 * Without this the fallback is `pwa-512x512.png`, an app icon: square, and
+	 * so rendered as a small thumbnail card rather than the wide banner every
+	 * platform gives a 1.91:1 image. The card is drawn by
+	 * `scripts/social-card/` — see docs/social-card.md.
+	 */
+	defaultOgImage: `${baseUrl}/og-card.png`,
 	llmsTxt: {
 		// No headings in here: llms.txt reserves `##` sections for link lists.
 		intro: [
