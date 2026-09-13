@@ -87,14 +87,15 @@ ${tokensCss}
 			   negative z-index paints behind the sheet's own background and
 			   the paper comes out blank.
 
-			   flow-root for the same reason .frame there has it: the band
-			   below is placed by a top margin, and with nothing to stop it
-			   that margin collapses straight out of the sheet and moves the
-			   paper down the card instead of the band. */
+			   It centres the band rather than the band offsetting itself: a
+			   top margin on the only child in flow collapses straight out of
+			   the sheet and moves the paper down the card instead. */
 			.sheet {
 				position: relative;
 				isolation: isolate;
-				display: flow-root;
+				display: flex;
+				align-items: center;
+				justify-content: center;
 				width: 100%;
 				height: 100%;
 				background: var(--background-surface);
@@ -122,12 +123,14 @@ ${tokensCss}
 			}
 
 			/* The masthead band, laid across the sheet rather than reaching
-			   its edges, and sitting a little above centre — more paper below
-			   it than above, the way a pad's letterhead does. */
+			   its edges, with an even margin of paper all the way round. The
+			   dice hang over its top edge, so the band is centred and the
+			   ink on it sits a touch high — that is the toss, not a
+			   mismeasured box. */
 			.masthead {
 				width: 1000px;
 				height: 220px;
-				margin: 186px auto 0;
+				flex: none;
 				background: var(--color-divider-strong);
 				color: var(--color-surface);
 				display: flex;
