@@ -22,7 +22,6 @@ const read = (path: string) => readFileSync(appDir + path, 'utf8')
 const html = socialCardHtml({
 	tokensCss: read('index.tokens.css'),
 	paperTexture0: read('src/_shared/textures/paper-texture-0.svg'),
-	pageNoiseTexture: 'data:image/svg+xml;base64,',
 	fontsCss: '',
 })
 
@@ -57,8 +56,21 @@ describe('the social card', () => {
 
 		expect(dice).toContain('fill="var(--color-die-face)"')
 		expect(dice).toContain('stroke="var(--color-die-border)"')
+		expect(html).toContain('background: var(--background-surface)')
+		expect(html).toContain('background: var(--color-divider-strong)')
 		expect(html).toContain('font-family: var(--font-mono)')
-		expect(html).toContain('font-family: var(--font-hand)')
+	})
+
+	test('carries no sentence to translate', () => {
+		// One image serves /en/ and /nl/ both. The wordmark is a name and stays
+		// — the app does not translate it either — but a line of copy on the
+		// card would be an English card everywhere it was shared.
+		const words = html
+			.slice(html.indexOf('<body>'))
+			.replace(/<[^>]*>/g, ' ')
+			.trim()
+
+		expect(words).toBe('Five dice')
 	})
 
 })

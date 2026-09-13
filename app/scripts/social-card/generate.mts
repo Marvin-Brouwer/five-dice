@@ -7,9 +7,9 @@
  *   --html <path>   also write the page the screenshot is of, for a look
  *   --dry-run       report the write without making it
  *
- * Chromium takes the picture, because the card is the app's own CSS —
- * tokens, the paper mesh, the mono wordmark, the handwritten tagline — and a
- * browser is the only thing that renders that faithfully. It needs the fonts,
+ * Chromium takes the picture, because the card is the app's own CSS — the
+ * tokens, the paper mesh, the mono wordmark — and a browser is the only thing
+ * that renders that faithfully. It needs the font,
  * so this one wants a network connection; the result is committed, so nobody
  * needs to run it to build the app.
  *
@@ -30,12 +30,10 @@ const appDir = fileURLToPath(new URL('../../', import.meta.url))
 const read = (path: string) => readFileSync(resolve(appDir, path), 'utf8')
 
 /**
- * The two faces the card is set in — the wordmark's mono caps and the hand the
- * tagline is written in — from the same foundry index.html loads them from.
- * Only the weights the card uses: everything here is fetched and inlined.
+ * The face the wordmark is set in, from the same foundry index.html loads it
+ * from. Only the weight the card uses: everything here is fetched and inlined.
  */
-const fontsHref = 'https://fonts.googleapis.com/css2'
-	+ '?family=Caveat:wght@500&family=IBM+Plex+Mono:wght@700'
+const fontsHref = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@700'
 
 /**
  * Google Fonts serves a different stylesheet per browser. Asking as Chromium
@@ -58,7 +56,6 @@ const dryRun = values['dry-run']
 const html = socialCardHtml({
 	tokensCss: read('index.tokens.css'),
 	paperTexture0: read('src/_shared/textures/paper-texture-0.svg'),
-	pageNoiseTexture: toDataUri(read('src/_shared/textures/page-noise.svg')),
 	fontsCss: await fetchFonts(),
 })
 
@@ -80,21 +77,12 @@ if (dryRun) {
 }
 
 /**
- * An SVG small enough to carry inline, and one a CSS `url()` can read: the
- * grain is painted as a background, which rules out the inlined-markup route
- * the paper mesh takes.
- */
-function toDataUri(markup: string): string {
-	return `data:image/svg+xml;base64,${Buffer.from(markup).toString('base64')}`
-}
-
-/**
  * The stylesheet, with every font file it points at pulled in and inlined.
  *
  * The page then has nothing to load, so the shot cannot race a face that is
  * still arriving, and the intermediate `--html` opens the same everywhere. The
- * card is set in ASCII, so the Cyrillic, Greek and Vietnamese cuts of these
- * families are skipped — they are fetched by the hundred kilobytes and never
+ * card is set in ASCII, so the Cyrillic, Greek and Vietnamese cuts of the
+ * family are skipped — they are fetched by the hundred kilobytes and never
  * draw a glyph.
  */
 async function fetchFonts(): Promise<string> {

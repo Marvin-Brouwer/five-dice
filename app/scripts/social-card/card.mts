@@ -5,11 +5,14 @@
  * on without launching Chromium, and so the thing that decides what the card
  * looks like is a page you can open in a browser rather than a canvas API.
  *
- * It is the app's own look, stacked: cardboard page, a sheet of paper with the
- * mesh behind it, the masthead band with the dice tossed above the wordmark,
- * and the tagline written on the paper below the rule. Nothing here invents a
+ * It is the app's own look, stacked: a sheet of paper with the mesh behind it,
+ * ruled just inside its edge, and the masthead band laid across it with the
+ * dice tossed over its top edge above the wordmark. Nothing here invents a
  * colour or a font — the tokens are read off index.tokens.css, so a palette
  * change reaches the card by regenerating it.
+ *
+ * No sentence anywhere on it, on purpose: one image serves every locale, and
+ * the wordmark is a name rather than something to translate.
  */
 
 import {
@@ -34,21 +37,12 @@ const heroRoll: Array<{ value: DieValue, tilt: number }> = [
 	{ value: 2, tilt: -6 },
 ]
 
-/**
- * The line the web manifest describes the app with — see `webManifest.description`
- * in vite.config.mts. Deliberately not localized: `og:image` is one image for
- * every locale, and the wordmark above it isn't translated either.
- */
-const tagline = 'Grab five dice and see how far your luck stretches.'
-
 export type SocialCardAssets = {
 	/** Contents of index.tokens.css — the card's colours and fonts come from it. */
 	tokensCss: string
 	/** One paper mesh from src/_shared/textures, inlined so its facets see the cascade. */
 	paperTexture0: string
-	/** The cardboard grain, as a data URI: the only form a CSS `url()` can carry here. */
-	pageNoiseTexture: string
-	/** Self-contained `@font-face` rules for the two faces the card is set in. */
+	/** Self-contained `@font-face` rules for the face the wordmark is set in. */
 	fontsCss: string
 }
 
@@ -68,7 +62,7 @@ function dieMarkup({ value, tilt }: { value: DieValue, tilt: number }): string {
 }
 
 export function socialCardHtml(assets: SocialCardAssets): string {
-	const { tokensCss, paperTexture0, pageNoiseTexture, fontsCss } = assets
+	const { tokensCss, paperTexture0, fontsCss } = assets
 
 	return `<!DOCTYPE html>
 <html lang="en">
@@ -81,44 +75,29 @@ ${fontsCss}
 ${tokensCss}
 		</style>
 		<style>
-			/* The page is painted in a document of its own rather than by
-			   loading the app, so the two backgrounds it composes are restated
-			   here: the grain as a data URI, because the stylesheet's relative
-			   url() has no document to be relative to. */
-			:root {
-				--background-page: url("${pageNoiseTexture}"), var(--color-page);
-			}
-
 			html, body {
 				margin: 0;
 				width: ${cardWidth}px;
 				height: ${cardHeight}px;
 			}
 
-			/* The cardboard the pad is laid on. */
-			.page {
-				box-sizing: border-box;
-				width: 100%;
-				height: 100%;
-				padding: 44px;
-				background: var(--background-page);
-				background-size: var(--background-page-size);
-			}
+			/* The card is a sheet of paper and nothing else — no cardboard
+			   around it. Values from _shared/paper-card/paper-card.css, which
+			   is also where the isolate comes from: without it the mesh's
+			   negative z-index paints behind the sheet's own background and
+			   the paper comes out blank.
 
-			/* A sheet of the same paper, in landscape — values from
-			   _shared/paper-card/paper-card.css. */
+			   flow-root for the same reason .frame there has it: the band
+			   below is placed by a top margin, and with nothing to stop it
+			   that margin collapses straight out of the sheet and moves the
+			   paper down the card instead of the band. */
 			.sheet {
-				--sheet-gutter: 10px;
-				box-sizing: border-box;
 				position: relative;
 				isolation: isolate;
+				display: flow-root;
 				width: 100%;
 				height: 100%;
-				padding: var(--sheet-gutter);
 				background: var(--background-surface);
-				box-shadow: 0 12px 32px rgba(28, 29, 31, 0.15);
-				display: flex;
-				flex-direction: column;
 			}
 
 			.texture {
@@ -133,27 +112,46 @@ ${tokensCss}
 				height: 100%;
 			}
 
-			/* The masthead, stacked: at this size the dice have room to sit
-			   above the wordmark instead of beside it. */
+			/* The ink rule, ruled just inside the paper's edge. Thin on
+			   purpose: it is a pen line on a pad, and the sheet is what the
+			   eye should land on. */
+			.rule {
+				position: absolute;
+				inset: 19px;
+				border: 2px solid var(--color-text);
+			}
+
+			/* The masthead band, laid across the sheet rather than reaching
+			   its edges, and sitting a little above centre — more paper below
+			   it than above, the way a pad's letterhead does. */
 			.masthead {
+				width: 1000px;
+				height: 220px;
+				margin: 186px auto 0;
+				background: var(--color-divider-strong);
+				color: var(--color-surface);
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				gap: 24px;
-				padding: 44px 40px 46px;
-				margin-bottom: var(--sheet-gutter);
-				background: var(--color-divider-strong);
-				color: var(--color-surface);
 			}
 
 			.dice {
 				display: flex;
-				gap: 16px;
+				/* Tossed onto the band, so they land over its top edge rather
+				   than inside it — the same negative margin the masthead uses
+				   to hang them off the band beside the wordmark. */
+				margin-top: -16px;
+			}
+
+			/* Close enough that the tilted corners overlap: five dice thrown
+			   together, not five dice laid out in a row. */
+			.die + .die {
+				margin-left: -6px;
 			}
 
 			.die {
-				width: 92px;
-				height: 92px;
+				width: 105px;
+				height: 105px;
 				transform: rotate(var(--tilt));
 			}
 
@@ -166,51 +164,25 @@ ${tokensCss}
 			/* Set like the masthead's wordmark: spaced mono caps. The trailing
 			   letter-spacing is trimmed off so the caps stay optically centred. */
 			.wordmark {
-				margin: 0 -0.14em 0 0;
+				margin: 26px -0.14em 0 0;
 				font-family: var(--font-mono);
-				font-size: 84px;
+				font-size: 74px;
 				font-weight: 700;
 				letter-spacing: 0.14em;
 				text-transform: uppercase;
 				line-height: 1;
 			}
-
-			/* The ruled frame, with the tagline written inside it in the same
-			   hand the score card is filled in with. */
-			.frame {
-				flex: 1;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				outline: 2px solid var(--color-text);
-				outline-offset: -2px;
-			}
-
-			.tagline {
-				margin: 0;
-				max-width: 20ch;
-				font-family: var(--font-hand);
-				font-size: 54px;
-				font-weight: 500;
-				line-height: 1.2;
-				text-align: center;
-				color: var(--color-accent);
-			}
 		</style>
 	</head>
 
 	<body>
-		<div class="page">
-			<div class="sheet">
-				<span class="texture">${paperTexture0}</span>
-				<header class="masthead">
-					<div class="dice">${heroRoll.map(dieMarkup).join('')}</div>
-					<h1 class="wordmark">Five dice</h1>
-				</header>
-				<div class="frame">
-					<p class="tagline">${tagline}</p>
-				</div>
-			</div>
+		<div class="sheet">
+			<span class="texture">${paperTexture0}</span>
+			<div class="rule"></div>
+			<header class="masthead">
+				<div class="dice">${heroRoll.map(dieMarkup).join('')}</div>
+				<h1 class="wordmark">Five dice</h1>
+			</header>
 		</div>
 	</body>
 </html>
