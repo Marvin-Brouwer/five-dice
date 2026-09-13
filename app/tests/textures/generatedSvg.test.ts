@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, test } from 'vitest'
 
 import { patternId } from '../../scripts/textures/paper.mts'
-import { noiseVariantCount } from '../../src/_shared/textures/page-noise.mts'
 
 /**
  * Guards the committed texture files themselves, not just the functions that
@@ -18,13 +17,11 @@ const read = (name: string) => readFileSync(join(texturesDir, name), 'utf8')
 
 describe('generated textures', () => {
 
-	test('the noise files match the count the CSS was written for', () => {
-		const noiseNames = svgNames.filter((name) => name.startsWith('page-noise'))
-
-		// The paper needs no such check: the component globs the directory, so
-		// its count is the files. Only the noise carries a written-down number.
-		expect(noiseNames).toEqual(
-			Array.from({ length: noiseVariantCount }, (_, v) => `page-noise-${v}.svg`))
+	test('the grain is one file, not a set', () => {
+		// It used to vary per device. Nobody could tell, so it stopped — and a
+		// stray page-noise-N.svg would be a leftover, not a variant.
+		expect(svgNames.filter((name) => name.startsWith('page-noise')))
+			.toEqual(['page-noise.svg'])
 	})
 
 	test('paper variants are numbered without gaps', () => {

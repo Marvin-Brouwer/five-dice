@@ -1,23 +1,28 @@
 /**
  * Regenerates the tiling textures under src/_shared/textures.
  *
- *   pnpm generate:textures                      both kinds, every variant
- *   pnpm generate:textures:paper                paper only
- *   pnpm generate:textures:noise                noise only
+ *   pnpm generate:textures                      both
+ *   pnpm generate:textures:paper                the paper meshes
+ *   pnpm generate:textures:noise                the page grain
  *
- *   --count <n>     how many variants exist   (default: what's on disk, else 5)
- *   --variant <n>   regenerate only this one  (repeatable)
- *   --seed <n>      run seed                  (default: random — always printed)
+ *   --count <n>     how many paper meshes exist (default: what's on disk, else 5)
+ *   --variant <n>   regenerate only this mesh   (repeatable)
+ *   --seed <n>      run seed                    (default: random — always printed)
  *   --dry-run       report the writes without making them
  *
- * Each variant draws from its own stream, so `--variant 3 --seed 1234` always
- * gives the same mesh no matter what else is regenerated alongside it. Note the
+ * Only the paper varies per device, so only the paper has variants. The grain
+ * is one file: a different `feTurbulence` seed gives a different grain, not a
+ * different-looking one, so there was nothing for a player to notice. `--count`
+ * and `--variant` are paper-only; the noise just takes `--seed` if you want to
+ * re-roll its grain.
+ *
+ * Each mesh draws from its own stream, so `--variant 3 --seed 1234` always
+ * gives the same one no matter what else is regenerated alongside it. Note the
  * seed this prints if you want a mesh back: the files carry no provenance of
  * their own, on purpose — they are art, and art doesn't need a banner.
  *
- * Variant 0 of both kinds is a fixed preset — the hand-drawn original — and
- * ignores --seed. Neither kind is a default, though: until a device picks, the
- * card is a plain sheet and the page is its plain colour.
+ * Mesh 0 is a fixed preset, the hand-drawn original, and ignores --seed. It is
+ * not a default: until a device picks, the card is a plain sheet.
  */
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -35,86 +40,26 @@ const kinds: Kind[] = ['paper', 'noise']
 const defaultCount = 5
 const texturesDir = fileURLToPath(new URL('../../src/_shared/textures/', import.meta.url))
 
-const filePattern: Record<Kind, RegExp> = {
-	paper: /^paper-texture-(\d+)\.svg$/,
-	noise: /^page-noise-(\d+)\.svg$/,
-}
+const paperPattern = /^paper-texture-(\d+)\.svg$/
 
 function paperFile(variant: number) {
 	return join(texturesDir, `paper-texture-${variant}.svg`)
 }
 
-function noiseFile(variant: number) {
-	return join(texturesDir, `page-noise-${variant}.svg`)
-}
+const noiseFile = join(texturesDir, 'page-noise.svg')
 
 /**
- * Highest variant index on disk, plus one — not a file count, so a gap left by
- * a deleted file doesn't silently renumber the variants after it.
+ * Highest mesh index on disk, plus one — not a file count, so a gap left by a
+ * deleted file doesn't silently renumber the meshes after it.
  */
-function countOnDisk(kind: Kind): number {
+function countOnDisk(): number {
 	if (!existsSync(texturesDir)) return 0
 	let highest = -1
 	for (const name of readdirSync(texturesDir)) {
-		const match = filePattern[kind].exec(name)
+		const match = paperPattern.exec(name)
 		if (match) highest = Math.max(highest, Number(match[1]))
 	}
 	return highest + 1
-}
-
-/**
- * Only the .mts and .css files carry this. The SVGs get nothing: they are art,
- * and a banner on a ten-line drawing is noise. Checked in on purpose either
- * way — the script is for when a mesh wants replacing or a variant adding, and
- * it only ever rewrites the variants you ask it for.
- */
-const moduleHeader = [
-	'/**',
-	' * Written by scripts/textures/generate.mts, and checked in.',
-	' *',
-	' * Not build output: regenerating a variant is something you do on purpose,',
-	' * and it overwrites that variant alone. See docs/textures.md.',
-	' */',
-].join('\n')
-
-function renderCss(noiseCount: number): string {
-	const lines = [
-		moduleHeader,
-		'',
-		'/* The page grain only. The paper is a component (paper-texture.mts), because',
-		'   its facets are themed with custom properties and an SVG behind url() can',
-		'   never see them. The noise needs no such thing: it is translucent, so the',
-		'   page colour below it does the theming.',
-		'',
-		'   No variant until _shared/services/texture-variant.mts picks one: before',
-		'   that the page is its plain colour, the same way an unpicked card is a',
-		'   plain sheet. `none` rather than nothing, because an undefined custom',
-		'   property would make --background-page invalid and take the page colour',
-		'   down with it. */',
-		':root {',
-		'\t--texture-noise:      none;',
-		'}',
-	]
-
-	for (let variant = 0; variant < noiseCount; variant++) {
-		lines.push(
-			'',
-			`:root[data-noise="${variant}"] {`,
-			`\t--texture-noise:      url("./page-noise-${variant}.svg");`,
-			'}',
-		)
-	}
-
-	return `${lines.join('\n')}\n`
-}
-
-function renderModule(noiseCount: number): string {
-	return [
-		moduleHeader,
-		'',
-		`export const noiseVariantCount = ${noiseCount}`,
-		'',
-	].join('\n')
 }
 
 const written: string[] = []
@@ -156,11 +101,13 @@ function generatePaper(variant: number, seed: number, dryRun: boolean): void {
 	writeIfChanged(paperFile(variant), renderPaperTexture(mesh), dryRun)
 }
 
-function generateNoise(variant: number, seed: number, dryRun: boolean): void {
-	const noiseSeed = variant === 0
-		? 0
-		: createNoiseSeed(createRandom(variantSeed(seed, 'noise', variant)))
-	writeIfChanged(noiseFile(variant), renderNoiseTexture(noiseSeed), dryRun)
+/**
+ * One file, and by default the same one: seed 0 is the SVG default, so this
+ * reproduces the grain the app has always had. Pass --seed to re-roll it.
+ */
+function generateNoise(seed: number | undefined, dryRun: boolean): void {
+	const noiseSeed = seed === undefined ? 0 : createNoiseSeed(createRandom(seed))
+	writeIfChanged(noiseFile, renderNoiseTexture(noiseSeed), dryRun)
 }
 
 function parseInteger(value: string | undefined, name: string): number | undefined {
@@ -189,50 +136,45 @@ function main(): void {
 
 	const selected = values.kind === undefined ? kinds : [values.kind as Kind]
 	const dryRun = values['dry-run'] === true
-	const seed = parseInteger(values.seed, 'seed') ?? Math.floor(Math.random() * 0xFFFFFFFF)
+	const seed = parseInteger(values.seed, 'seed')
 	const countArg = parseInteger(values.count, 'count')
 	if (countArg === 0) throw new Error('--count must be at least 1')
 
-	const counts: Record<Kind, number> = {
-		paper: countOnDisk('paper') || defaultCount,
-		noise: countOnDisk('noise') || defaultCount,
-	}
-	for (const kind of selected) {
-		if (countArg !== undefined) counts[kind] = countArg
-	}
+	if (selected.includes('paper')) {
+		const count = countArg ?? (countOnDisk() || defaultCount)
+		const requested = values.variant?.map((value) => parseInteger(value, 'variant')!)
+			?? Array.from({ length: count }, (_, index) => index)
 
-	const requested = values.variant?.map((value) => parseInteger(value, 'variant')!)
+		// Printed rather than recorded: the files carry no provenance, so this
+		// line is the only way back to a mesh you liked.
+		const paperSeed = seed ?? Math.floor(Math.random() * 0xFFFFFFFF)
+		console.log(`paper seed ${paperSeed}${dryRun ? ' (dry run)' : ''}`)
 
-	console.log(`seed ${seed}${dryRun ? ' (dry run)' : ''}`)
-
-	for (const kind of selected) {
-		const variants = requested ?? Array.from({ length: counts[kind] }, (_, index) => index)
-		for (const variant of variants) {
-			if (variant >= counts[kind]) {
-				throw new Error(`--variant ${variant} is outside the ${counts[kind]} ${kind} variants`)
+		for (const variant of requested) {
+			if (variant >= count) {
+				throw new Error(`--variant ${variant} is outside the ${count} paper meshes`)
 			}
-			if (kind === 'paper') generatePaper(variant, seed, dryRun)
-			else generateNoise(variant, seed, dryRun)
+			generatePaper(variant, paperSeed, dryRun)
+		}
+
+		// Meshes past the count are no longer globbed by the component. Left in
+		// place rather than deleted — removing art is the user's call.
+		const orphans = readdirSync(texturesDir).filter((name) => {
+			const match = paperPattern.exec(name)
+			return match !== null && Number(match[1]) >= count
+		})
+		if (orphans.length) {
+			console.warn(`\nunreferenced, delete by hand if you meant to drop them:\n  ${orphans.join('\n  ')}`)
 		}
 	}
 
-	writeIfChanged(join(texturesDir, 'page-noise.css'), renderCss(counts.noise), dryRun)
-	writeIfChanged(join(texturesDir, 'page-noise.mts'), renderModule(counts.noise), dryRun)
+	// --seed is for the meshes. Regenerating everything with a noted seed must
+	// not quietly change the page grain too, so the noise re-rolls only when you
+	// asked for the noise by name.
+	if (selected.includes('noise')) generateNoise(values.kind === 'noise' ? seed : undefined, dryRun)
 
 	console.log(`${written.length} written${written.length ? `: ${written.join(', ')}` : ''}`)
 	if (unchanged.length) console.log(`${unchanged.length} unchanged`)
-
-	// Files above the variant count are no longer referenced by the generated
-	// CSS. Left in place rather than deleted — removing art is the user's call.
-	const orphans = kinds.flatMap((kind) => readdirSync(texturesDir)
-		.filter((name) => {
-			const match = filePattern[kind].exec(name)
-			return match !== null && Number(match[1]) >= counts[kind]
-		}))
-
-	if (orphans.length) {
-		console.warn(`\nunreferenced, delete by hand if you meant to drop them:\n  ${orphans.join('\n  ')}`)
-	}
 }
 
 main()

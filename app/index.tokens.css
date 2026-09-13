@@ -63,9 +63,12 @@
 	--focus-ring-width:        3px;
 
 	/* Composed backgrounds */
-	/* Cardboard noise behind the warm-gray page colour. */
+	/* Cardboard noise behind the warm-gray page colour. One grain for everyone:
+	   a different feTurbulence seed gives a different grain, not a
+	   different-looking one, so there was nothing for a player to notice. The
+	   paper is where this app varies per device. */
 	--background-page:
-		var(--texture-noise),
+		url("./src/_shared/textures/page-noise.svg"),
 		var(--color-page);
 	--background-page-size:    200px 200px, auto;
 

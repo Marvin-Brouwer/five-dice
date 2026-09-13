@@ -1,16 +1,15 @@
 import { localStorage } from '@rooted/storage/web'
 
-import { noiseVariantCount } from '../textures/page-noise.mts'
 import { paperTextureCount } from '../textures/paper-texture.mts'
 
 /**
- * Gives each device its own paper and cardboard.
+ * Gives each device its own sheet of paper.
  *
  * The pad gets passed around a table, so two players holding their phones side
- * by side should not be looking at the same sheet. Paper and grain are drawn
- * separately — five of each is 25 combinations, which keeps a collision between
- * four players at the same table uncommon rather than the coin-flip it would be
- * if one number picked both.
+ * by side should not be looking at the same one. Five meshes means four players
+ * will often have a pair between them — but the grain that used to vary
+ * alongside it never read as different to anyone, so the combinations it added
+ * were only ever arithmetic.
  *
  * What is stored is the chosen variant, not a random id or a timestamp: a
  * number under five, shared with a fifth of everyone who opens the app. It
@@ -19,13 +18,11 @@ import { paperTextureCount } from '../textures/paper-texture.mts'
  */
 
 const paperKey = 'texture-paper'
-const noiseKey = 'texture-noise'
 
 /**
- * Keeps the stored variant when it still names one that exists, and draws a new
- * one otherwise. The re-draw matters when the variant count shrinks: without it
- * every device above the new count would fall through to the CSS default and
- * pile onto variant 0.
+ * Keeps the stored mesh when it still names one that exists, and draws a new
+ * one otherwise. The re-draw matters when a mesh is dropped: without it every
+ * device above the new count would render no texture at all.
  */
 export function resolveVariant(stored: unknown, count: number, random: () => number): number {
 	const isUsable = typeof stored === 'number'
@@ -35,10 +32,10 @@ export function resolveVariant(stored: unknown, count: number, random: () => num
 	return isUsable ? stored as number : Math.floor(random() * count)
 }
 
-function readVariant(key: string, count: number): number {
-	const stored = localStorage.get(key)
+function readVariant(count: number): number {
+	const stored = localStorage.get(paperKey)
 	const variant = resolveVariant(stored, count, Math.random)
-	if (variant !== stored) localStorage.set(key, variant)
+	if (variant !== stored) localStorage.set(paperKey, variant)
 	return variant
 }
 
@@ -49,11 +46,4 @@ function readVariant(key: string, count: number): number {
  */
 export const paperTextureVariant = typeof document === 'undefined'
 	? undefined
-	: readVariant(paperKey, paperTextureCount)
-
-if (typeof document !== 'undefined') {
-	// The grain is still a CSS background, so it travels as an attribute. Until
-	// this runs the page shows variant 0 — losing the race to first paint costs
-	// nothing more than the grain this app has always had.
-	document.documentElement.dataset.noise = String(readVariant(noiseKey, noiseVariantCount))
-}
+	: readVariant(paperTextureCount)
