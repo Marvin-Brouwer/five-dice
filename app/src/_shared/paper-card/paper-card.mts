@@ -1,6 +1,7 @@
 import { component } from '@rooted/components'
 import type { ElementChild, ElementChildren } from '@rooted/elements'
 
+import { PaperTexture } from '../textures/paper-texture.mts'
 import styles from './paper-card.css'
 
 export type PaperCardOptions = {
@@ -30,7 +31,7 @@ export type PaperCardOptions = {
 export const PaperCard = component<PaperCardOptions>({
 	name: 'paper-card',
 	styles,
-	onMount({ append, element, options }) {
+	onMount({ append, create, element, options }) {
 		const { children, heading, overlay, id, role } = options
 
 		// Wrapped rather than appended as-is: the gap between the band and the
@@ -47,6 +48,9 @@ export const PaperCard = component<PaperCardOptions>({
 			role,
 			classes: styles.sheet,
 			children: [
+				// First child, and absolutely positioned, so it backs everything
+				// written on the paper without taking part in the sheet's layout.
+				create(PaperTexture),
 				headingSlot,
 				element('div', {
 					classes: styles.frameSlot,
