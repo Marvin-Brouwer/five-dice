@@ -15,6 +15,7 @@
     "test:e2e:report": "pnpm --filter @five-dice/app test:e2e:report",
     "lint": "pnpm --filter @five-dice/app lint",
     "generate:textures": "pnpm --filter @five-dice/app generate:textures",
+    "generate:social-card": "pnpm --filter @five-dice/app generate:social-card",
     "test:all": "pnpm -r test"
   }
 }

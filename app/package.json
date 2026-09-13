@@ -17,6 +17,7 @@
 		"test:watch": "vitest",
 		"lint": "tsc --noEmit && tsc --noEmit -p tsconfig.scripts.json",
 		"generate:textures": "node scripts/textures/generate.mts",
+		"generate:social-card": "node scripts/social-card/generate.mts",
 		"test:e2e": "playwright test",
 		"test:e2e:install": "playwright install chromium",
 		"test:e2e:ui": "playwright test --ui-port=0",
