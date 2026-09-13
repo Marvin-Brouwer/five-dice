@@ -40,46 +40,33 @@ card out before it has fetched the image.
 Astro app that nothing referenced, smaller and squarer than the fallback it
 would have replaced. It is gone.
 
-## Regenerating
+## It is a hand-kept file
 
-```sh
-pnpm generate:social-card
-```
+Unlike the paper textures, the card has no generator. It was drawn once, as a
+screenshot of a page built from the app's own tokens, and then the machinery
+was thrown away: a share card changes when the brand changes, which is to say
+about never, and a build step nobody runs is a build step that rots.
 
-Rerun it when the palette, the wordmark or the masthead changes. The PNG is
-committed, so nobody needs to run it to build the app, and the build does not
-run it.
+So if it does need redrawing, redraw it — by hand, in a browser, or however
+suits — rather than looking for a script. What it is made of:
 
-`app/scripts/social-card/card.mts` is the design: a page, in the app's own CSS.
-`generate.mts` is a screenshot of that page — Chromium takes it, because the
-card is real CSS (the tokens, the paper mesh, the mono wordmark) and a browser
-is the only thing that renders that faithfully. Passing `--html <path>` writes
-the page out to open yourself.
-
-Two things are deliberately not restated in the script:
-
-- **The colours and faces** come from `app/index.tokens.css`, read at generate
-  time. A palette change reaches the card by regenerating it.
-- **The dice** come from `src/_shared/die/pip-geometry.ts`, which `PipDie`
-  draws from too. A Node script cannot import a component, and pip positions
-  copied into one would drift the first time a pip moved.
-
-The wordmark's face is fetched from Google Fonts — the same one `index.html`
-loads — and inlined into the page before the shot, so this is the one script
-here that wants a network connection. Inlining it is also what makes the shot
-reproducible: the page has nothing left to load, so it cannot race a face that
-is still arriving.
-
-If Playwright has no browser it can download (a sandbox with a pinned
-Chromium), point `PLAYWRIGHT_CHROMIUM_PATH` at one — the same escape hatch
-`playwright.config.mts` offers the e2e suite.
+- **The paper** is `--background-surface` with `src/_shared/textures/paper-texture-0.svg`
+  behind it, filled from `--paper-shade-0..2`, and a 2px `--color-text` rule
+  inset 19px.
+- **The band** is `--color-divider-strong`, 1000 × 220, centred, with the
+  dice hanging 16px over its top edge — the same overhang the masthead gives
+  them beside the wordmark.
+- **The dice** are the masthead's roll, 5 1 3 6 2, at the masthead's tilts
+  (−8°, 5°, −3°, 9°, −6°), drawn like `PipDie` draws them.
+- **The wordmark** is `--font-mono` 700 at 74px, `0.14em` letter-spacing,
+  uppercase, in `--color-surface`.
 
 ## Tests
 
-`app/tests/socialCard/` checks the shape of the committed PNG, that the card
-still tosses the masthead's roll, that it takes its colours from the tokens,
-that the only words on it are still the wordmark, and that the tags describing
-it match the image they describe.
+`app/tests/socialCard/` checks the shape of the committed PNG and that the tags
+describing it still match the image they describe — swap in a card of another
+size and the suite says so rather than shipping a preview that lays itself out
+wrong.
 
 It does not check whether the card looks good. That is a judgement call, and a
 screenshot test of it would fail on a font-rendering difference rather than on
