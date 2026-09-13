@@ -39,6 +39,12 @@
 	z-index: 20;
 }
 
+/* The list holds focus while it is open, but the active option is what the
+   user is actually pointed at — one indicator, not two. */
+.list:focus-visible {
+	outline: none;
+}
+
 .option {
 	display: grid;
 	/* Leading slot, label, check. The leading slot is sized by the caller,
@@ -53,6 +59,14 @@
 
 .option-selected {
 	background: var(--color-border-subtle);
+}
+
+/* Keyboard focus, standing in for the ring the list itself does not draw.
+   Inset, so it does not clip against the list's own padding, and it still
+   reads over the selected row's background. */
+.option[data-active='true'] {
+	outline: 2px solid var(--color-focus);
+	outline-offset: -2px;
 }
 
 .option-disabled {

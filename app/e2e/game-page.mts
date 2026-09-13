@@ -215,6 +215,24 @@ export class GamePage {
 	}
 
 	/**
+	 * The menu sheet itself, only while it is on screen.
+	 *
+	 * Picked out by the choosers it holds rather than by its label, which is
+	 * localized, or by `.sheet` alone, which the dice keypad shares.
+	 */
+	get menuSheet(): Locator {
+		return this.page.locator('dialog.sheet[open]:has([aria-haspopup="listbox"])')
+	}
+
+	/**
+	 * The language dropdown's trigger. Like the theme one, its accessible name
+	 * carries the current choice -- "Language: English", "Taal: Nederlands".
+	 */
+	get languageTrigger(): Locator {
+		return this.page.getByRole('button', { name: /^(Language|Taal): / })
+	}
+
+	/**
 	 * The theme dropdown's trigger. Its accessible name carries the current
 	 * choice -- "Theme: Dark" -- which is what the menu shows the player, so
 	 * asserting on it is asserting on what they see.
@@ -228,6 +246,29 @@ export class GamePage {
 		await this.themeTrigger.click()
 		await this.page.getByRole('option', { name: new RegExp(`^${theme}`) }).click()
 		await expect(this.themeTrigger).toHaveAccessibleName(`Theme: ${theme}`)
+	}
+
+	// --- The menu's dropdowns ----------------------------------------------
+
+	/** The open dropdown list. There is only ever one. */
+	get listbox(): Locator {
+		return this.page.getByRole('listbox')
+	}
+
+	/**
+	 * The label of the option the open list currently points at.
+	 *
+	 * Focus stays on the listbox and the active option is named by
+	 * `aria-activedescendant`, so this is the only place the keyboard position
+	 * is readable -- and asserting on it is asserting on what a screen reader
+	 * would say.
+	 */
+	async activeOption(): Promise<string | null> {
+		return this.listbox.evaluate((list) => {
+			const id = list.getAttribute('aria-activedescendant')
+			if (!id) return null
+			return list.querySelector(`#${CSS.escape(id)}`)?.getAttribute('data-label') ?? null
+		})
 	}
 
 	/** The remembered theme, straight out of the storage the app persists it to. */

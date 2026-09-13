@@ -10,6 +10,8 @@
 	--color-text-muted: var(--color-menu-text-muted);
 	--color-border: var(--color-menu-border);
 	--color-border-subtle: var(--color-menu-border-subtle);
+	--color-focus: var(--color-menu-focus);
+	--color-focus-ring: var(--color-menu-focus);
 
 	border: 0;
 	padding: 0;

@@ -11,7 +11,26 @@ picker and all.
 The flush game is the one that exercises the flush-discard step, twelve times
 over, ending with a single option left in the picker.
 
+Alongside them are the specs that pin behaviour a game does not reach:
+
+| Spec | What it pins |
+|---|---|
+| `row-preview.e2e.mts` | A picked row keeps its preview without hover or focus. |
+| `theme-preference.e2e.mts` | The chosen theme is remembered in `localStorage`, not in a cookie the session takes with it. |
+| `menu-keyboard.e2e.mts` | Both menu dropdowns are fully operable from a keyboard: arrows, Home/End, type-ahead, Escape, and a language switch driven end to end. |
+
+`menu-keyboard.e2e.mts` is the one that would catch a regression nobody sees
+by looking: the menu is a modal `<dialog>`, so Escape inside an open dropdown
+has to close only the dropdown. Miss the `preventDefault` and the whole sheet
+goes with it.
+
 ## Running them
+
+These run in CI on every push and pull request, as their own steps in
+`.github/workflows/cd.yml`, between the unit tests and the build. A failure
+uploads the HTML report as a `playwright-report` artifact on the run.
+
+Locally:
 
 ```sh
 pnpm test:e2e:install  # download the browser (once, per checkout)

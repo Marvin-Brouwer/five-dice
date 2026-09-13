@@ -93,6 +93,7 @@ export const ThemeChooser = component({
 			return getOptions(localization.text).map(option => {
 				const disabled = option.value === 'sensor' && !sensorSupported
 				return {
+					label: option.label,
 					selected: option.value === themeStore.value,
 					disabled,
 					content: [
