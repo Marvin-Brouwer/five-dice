@@ -16,16 +16,6 @@ function pathForLocale(locale: Locale): string {
 	return `/${locale}${rest}`
 }
 
-/**
- * Set on the way out of a locale switch, read by the chooser that replaces
- * this one.
- *
- * Picking a language navigates, which rebuilds the whole menu body — so the
- * trigger the keyboard user was standing on stops existing. Without this they
- * are dropped back to the top of the sheet by their own language switch.
- */
-let focusOnMount = false
-
 export const LanguageChooser = component({
 	name: 'language-chooser',
 	styles,
@@ -74,9 +64,6 @@ export const LanguageChooser = component({
 							// on the popstate navigate() fires, rather than updating
 							// this button's own label ahead of the rest of the UI.
 							dropdown?.disableTrigger()
-							// close() has already handed focus back to the trigger,
-							// which is the element about to be replaced.
-							focusOnMount = true
 							setLocale(code)
 							navigate(href.path(pathForLocale(code)))
 						},
@@ -84,9 +71,6 @@ export const LanguageChooser = component({
 				}),
 				reference: api => {
 					dropdown = api
-					if (!focusOnMount) return
-					focusOnMount = false
-					api.focusTrigger()
 				},
 			}),
 		)

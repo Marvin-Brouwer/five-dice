@@ -32,8 +32,6 @@ export type DropDownApi = {
 	refresh(): void
 	/** Disable the trigger, for a pick that will not come back. */
 	disableTrigger(): void
-	/** Put focus on the trigger, for a caller that rebuilt around one. */
-	focusTrigger(): void
 }
 
 export type DropDownOptions = {
@@ -148,18 +146,6 @@ export const DropDown = component<DropDownOptions>({
 			on,
 		})
 
-		append(
-			element('div', {
-				classes: styles.wrap,
-				children: [
-					button,
-					list,
-				],
-			}),
-		)
-
-		// After the append, not before: an api that can focus the trigger is
-		// only worth having once the trigger is on the page.
 		options.reference?.({
 			close: () => dropdown.close(),
 			refresh() {
@@ -170,9 +156,16 @@ export const DropDown = component<DropDownOptions>({
 			disableTrigger() {
 				button.disabled = true
 			},
-			focusTrigger() {
-				button.focus()
-			},
 		})
+
+		append(
+			element('div', {
+				classes: styles.wrap,
+				children: [
+					button,
+					list,
+				],
+			}),
+		)
 	},
 })

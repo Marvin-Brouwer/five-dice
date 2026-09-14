@@ -154,7 +154,4 @@ test('the language chooser switches locale from the keyboard', async ({ page }) 
 		game.languageTrigger,
 		'and the chooser should come back naming the new one',
 	).toHaveAccessibleName('Taal: Nederlands')
-	// The switch rebuilds the whole menu body, trigger included. Focus has to
-	// land on the replacement, or it drops to the top of the sheet.
-	await expect(game.languageTrigger, 'without losing the keyboard user their place').toBeFocused()
 })
