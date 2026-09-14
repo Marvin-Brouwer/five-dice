@@ -42,6 +42,7 @@
 	--color-menu-text-muted:   var(--color-text-muted);
 	--color-menu-border:       var(--color-border);
 	--color-menu-border-subtle: var(--color-border-subtle);
+	--color-menu-focus:        var(--color-focus);
 
 	/* Legacy aliases still referenced by score-card / game components */
 	--color-bg:                var(--color-page);

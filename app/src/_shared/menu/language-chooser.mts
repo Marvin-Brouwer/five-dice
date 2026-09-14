@@ -41,6 +41,7 @@ export const LanguageChooser = component({
 				items: () => localization.supportedLocales.map(code => {
 					const selected = code === activeLocale
 					return {
+						label: localeLabels[code].long,
 						selected,
 						content: [
 							element('span', {

@@ -9,6 +9,13 @@ import checkIcon from './drop-down.check.svg?raw'
 import styles from './drop-down.css'
 
 export type DropDownItem = {
+	/**
+	 * The row's name in plain text, for type-ahead.
+	 *
+	 * Not read off the row's own text: that runs the label into whatever else
+	 * the caller puts in there -- "SystemFollow device setting", "ENEnglish".
+	 */
+	label: string
 	/** Marks the row selected and gives it the check. */
 	selected: boolean
 	/** Greys the row out and swallows its click. */
@@ -51,13 +58,11 @@ export type DropDownOptions = {
  * The listbox dropdown behind the language and theme choosers.
  *
  * Owns the trigger, the list and the option rows — the ARIA contract and the
- * markup both choosers were repeating. Open/close, outside-click dismissal and
- * positioning live a layer down in `attachDropdown`.
- *
- * No keyboard support yet: the rows are `div[role=option]` with no roving
- * tabindex, `aria-activedescendant` or arrow handling. That was true of both
- * choosers before this, and this is the one place it now needs adding.
- * https://github.com/Marvin-Brouwer/five-dice/issues/91
+ * markup both choosers were repeating. Open/close, outside-click dismissal,
+ * positioning and the whole keyboard contract live a layer down in
+ * `attachDropdown`: arrows, Home/End, Enter/Space, Escape and type-ahead over
+ * a listbox that holds focus itself and names its active row with
+ * `aria-activedescendant`.
  */
 export const DropDown = component<DropDownOptions>({
 	name: 'drop-down',
@@ -97,36 +102,40 @@ export const DropDown = component<DropDownOptions>({
 		})
 
 		function buildOptions(): Node[] {
-			return items().map(item => element('div', {
-				role: 'option',
-				aria: {
-					selected: String(item.selected),
-					disabled: item.disabled ? 'true' : undefined!,
-				},
-				classes: [
-					styles.option,
-					cssClass(item.selected, styles.optionSelected),
-					cssClass(item.disabled === true, styles.optionDisabled),
-				],
-				on: {
-					click(event) {
-						event.stopPropagation()
-						if (item.disabled) return
-						item.onSelect()
+			return items().map(item => {
+				const option = element('div', {
+					role: 'option',
+					aria: {
+						selected: String(item.selected),
+						disabled: item.disabled ? 'true' : undefined!,
 					},
-				},
-				children: [
-					...item.content,
-					optional(item.selected,
-						element('span', {
-							classes: styles.optionCheck,
-							children: create(Icon, {
-								source: checkIcon,
-							}),
-						})
-					),
-				],
-			}))
+					classes: [
+						styles.option,
+						cssClass(item.selected, styles.optionSelected),
+						cssClass(item.disabled === true, styles.optionDisabled),
+					],
+					on: {
+						click(event) {
+							event.stopPropagation()
+							if (item.disabled) return
+							item.onSelect()
+						},
+					},
+					children: [
+						...item.content,
+						optional(item.selected,
+							element('span', {
+								classes: styles.optionCheck,
+								children: create(Icon, {
+									source: checkIcon,
+								}),
+							})
+						),
+					],
+				})
+				option.dataset.label = item.label
+				return option
+			})
 		}
 
 		const dropdown = attachDropdown({

@@ -44,6 +44,9 @@
 	--color-menu-text-muted:   #a8a29b;
 	--color-menu-border:       rgba(246, 245, 240, 0.16);
 	--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
+	/* Sticker blue lifted off the dark card. The accent itself sits at
+	   1.2:1 against it, which is no focus ring at all. */
+	--color-menu-focus:        #9db8e8;
 
 	/* Paper texture: subtle warm-yellow facets instead of near-white */
 	--paper-shade-0:           #e3dfd1;
@@ -85,6 +88,7 @@
 		--color-menu-text-muted:   #a8a29b;
 		--color-menu-border:       rgba(246, 245, 240, 0.16);
 		--color-menu-border-subtle: rgba(246, 245, 240, 0.08);
+		--color-menu-focus:        #9db8e8;
 
 		--paper-shade-0:           #e3dfd1;
 		--paper-shade-1:           #dcd8ca;
