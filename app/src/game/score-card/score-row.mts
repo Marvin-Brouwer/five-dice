@@ -1,4 +1,4 @@
-import { cssClass, cssClasses, type CssClass } from '@rooted/components'
+import { choice, cssClass, cssClasses, type CssClass } from '@rooted/components'
 import type { ReadonlyState } from '@rooted/store'
 
 import type { ScoreField } from '../logic/gameConstants.ts'
@@ -33,7 +33,7 @@ function readCell(pad: ReadonlyState<ScorePad>, field: ScoreField): RowFacts {
 
 	const value = calculateScoreForPad(pad, field)
 	return {
-		scoreText: value === 0 ? emptyScoreMark : String(value),
+		scoreText: choice(value === 0, emptyScoreMark, String(value)),
 		discarded: false,
 		applied: value !== 0,
 	}

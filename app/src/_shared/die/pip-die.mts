@@ -1,4 +1,4 @@
-import { component } from '@rooted/components'
+import { choice, component, optional } from '@rooted/components'
 import type { Aria } from '@rooted/elements'
 
 import { localization } from '../i18n/localization.mts'
@@ -39,11 +39,11 @@ export const PipDie = component<PipDieOptions>({
 		// Dice faces are physically white in every theme, so pips and border
 		// use --color-die-* (dark ink) rather than --color-text, otherwise the
 		// menu / dice-keyboard's inverted palette would render invisible dots.
-		const stroke = variant === 'active' ? 'var(--color-accent)' : 'var(--color-die-border)'
-		const strokeWidth = variant === 'active' ? 2.5 : 1.5
-		const strokeDash = value === undefined && variant !== 'active' ? '3 3' : undefined
-		const pipColor = variant === 'muted' ? 'var(--color-text-muted)' : 'var(--color-die-dot)'
-		const rectFill = variant === 'muted' ? 'transparent' : 'var(--color-die-face)'
+		const stroke = choice(variant === 'active', 'var(--color-accent)', 'var(--color-die-border)')
+		const strokeWidth = choice(variant === 'active', 2.5, 1.5)
+		const strokeDash = optional(value === undefined && variant !== 'active', '3 3')
+		const pipColor = choice(variant === 'muted', 'var(--color-text-muted)', 'var(--color-die-dot)')
+		const rectFill = choice(variant === 'muted', 'transparent', 'var(--color-die-face)')
 
 		append(
 			element('span', {

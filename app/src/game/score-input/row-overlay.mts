@@ -1,4 +1,4 @@
-import { component, cssClass } from '@rooted/components'
+import { choice, component, cssClass } from '@rooted/components'
 import { resizeObserver } from '@rooted/observers'
 
 import { type ScoreField } from '../logic/gameConstants.ts'
@@ -199,7 +199,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 						cssClass(variant !== 'valid', styles.optionDiscard),
 					],
 					aria: {
-						label: localization.text`${getRowDisplayLabels()[field].title}, ${variant === 'valid' ? localization.text`apply` : localization.text`discard`}`
+						label: localization.text`${getRowDisplayLabels()[field].title}, ${choice(variant === 'valid', localization.text`apply`, localization.text`discard`)}`
 					},
 					children: radio,
 					on: {

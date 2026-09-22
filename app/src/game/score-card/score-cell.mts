@@ -1,4 +1,4 @@
-import { cssClass } from '@rooted/components'
+import { choice, cssClass } from '@rooted/components'
 
 import type { RenderContext } from '../../_shared/render-context.ts'
 
@@ -22,7 +22,7 @@ export function scoreCell(context: RenderContext, options: ScoreCellOptions): HT
 	const { text, applied, column } = options
 
 	return element('td', {
-		classes: column === 'totals' ? styles.totalsColumn : styles.scoreColumn,
+		classes: choice(column === 'totals', styles.totalsColumn, styles.scoreColumn),
 		children: element('span', {
 			classes: [
 				styles.scoreValue,
