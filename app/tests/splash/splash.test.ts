@@ -16,7 +16,8 @@ let lifetime: AbortController
 const splash = () => document.querySelector('#splash')
 const main = () => document.querySelector('#main-content')!
 
-const dismissed = () => splash()?.classList.contains('is-dismissed') === true
+/** On its way out, or already out: the fade is short and the node then goes. */
+const dismissed = () => splash() === null || splash()!.classList.contains('is-dismissed')
 
 /** Mutation records are delivered in a microtask, so nothing is synchronous here. */
 const settle = () => vi.waitFor(() => expect(dismissed()).toBe(true))
@@ -26,10 +27,15 @@ const watch = () => dismissSplashWhenPageIsUp(main(), lifetime.signal)
 
 beforeEach(() => {
 	lifetime = new AbortController()
-	document.body.innerHTML = '<div id="splash"></div><main id="main-content"></main>'
+	// The transition stands in for index.splash.css, which a happy-dom document
+	// has no way to load -- and the module reads the fade off the element, so
+	// without one here the splash would leave without ever fading.
+	document.body.innerHTML = '<div id="splash" style="transition-duration: 240ms"></div>'
+		+ '<main id="main-content"></main>'
 })
 
 afterEach(() => {
+	vi.useRealTimers()
 	lifetime.abort()
 	document.body.innerHTML = ''
 })
@@ -96,6 +102,22 @@ describe('splash', () => {
 
 		await vi.waitFor(() => expect(splash()).toBeNull())
 		expect(main()).not.toBeNull()
+	})
+
+	test('waits out the fade the stylesheet asks for, not one of its own', async () => {
+		// index.splash.css is the one place the timing is written down, so the
+		// backstop reads it. Here that is an inline style, which computes the
+		// same way -- there is no sheet in a happy-dom document.
+		splash()!.setAttribute('style', 'transition-duration: 500ms')
+		vi.useFakeTimers()
+		watch()
+		main().innerHTML = '<h1>Five dice</h1>'
+
+		await vi.advanceTimersByTimeAsync(500)
+		expect(splash(), 'gone before the fade had finished').not.toBeNull()
+
+		await vi.advanceTimersByTimeAsync(500)
+		expect(splash()).toBeNull()
 	})
 
 	test('is not a fault in a document that never had one', () => {

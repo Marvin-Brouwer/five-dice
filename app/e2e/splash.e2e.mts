@@ -114,7 +114,7 @@ test('the splash holds across the redirect off the language picker', async ({ pa
  * all, which is worse than the bare page.
  *
  * The rules that do it live in a <noscript> block in index.html, qualified by
- * `html` so they outrank index.global.css -- which this spec cannot see, since
+ * `html` so they outrank index.splash.css -- which this spec cannot see, since
  * the suite runs against the dev server, where the sheets are linked in source
  * order and the block would win on position anyway. It is the build that
  * reorders them. So what this pins is that the block is there and does its

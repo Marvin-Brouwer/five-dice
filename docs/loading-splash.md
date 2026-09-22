@@ -20,13 +20,20 @@ are guarding. A component cannot exist at all during the stretch the splash is
 covering: the whole point is the time before any module has run.
 
 So the markup is in `app/index.html` and its rules are in
-`app/index.global.css`, beside those guards. `index.html` links that sheet, and
-a render-blocking `<link>` in `<head>` is by definition there for the first
-paint, so there is no frame in which the splash is unstyled. Nothing is inlined
-into a `<style>`: it would save no round trip the page is not already making,
-and doing it *usefully* would mean copying the palette — `--color-page`,
+`app/index.splash.css`, a sheet of its own linked beside the globals — one job,
+and a short life, so it does not belong in the middle of `index.global.css`. A
+render-blocking `<link>` in `<head>` is by definition there for the first paint,
+so there is no frame in which the splash is unstyled. Nothing is inlined into a
+`<style>`: it would save no round trip the page is not already making, and doing
+it *usefully* would mean copying the palette — `--color-page`,
 `--background-page`, and their dark-theme overrides — into a second place to go
 stale.
+
+That sheet is also where the fade's length is written down, once.
+`splash.mts` reads it back off the element with `getComputedStyle`, rather than
+keeping a constant that has to be kept in step. Browsers normalize the computed
+value to seconds; happy-dom, which the unit tests run in, returns what was
+written, so the unit is read rather than assumed.
 
 The critical-path budget went somewhere it buys something instead. The Google
 Fonts sheet used to be a render-blocking cross-origin `<link>`, so nothing
@@ -109,7 +116,7 @@ without a rule falls back to the default rather than to silence.
 the one thing in the document that has to be read.
 
 The rules are qualified with `html`, not left at `#splash`. The build folds
-`index.global.css` into a bundle it links *after* that block, so at equal
+`index.splash.css` into a bundle it links *after* that block, so at equal
 specificity the sheet would win and the die would keep tossing over the message
 — measured against `pnpm preview`, not guessed at. The e2e suite runs against
 the dev server, where the sheets are still linked in source order and where
@@ -118,14 +125,10 @@ that nor the `lang` selection: `GamePage.servedAsLocale` puts the attribute back
 so the rule is at least testable, and the specificity is pinned by the comment
 beside it.
 
-## The launch colour
+## Still open: the launch colour
 
-`webManifest.background_color` in `app/vite.config.mts` was `#B3AEA1` against a
-`--color-page` of `#b8b2a6`: close enough to have been meant as the same colour,
-far enough apart to read as a flash when the launcher handed over. It is now the
-token's value.
-
-A manifest is a static file. It cannot read a custom property and it has no
-media query, so it cannot follow the theme: a player on the dark theme still
-gets the light cardboard on the startup image and a dark page after it. Keep
-this equal to `--color-page` in `app/index.tokens.css`.
+`webManifest.background_color` in `app/vite.config.mts` is `#B3AEA1`, against a
+`--color-page` of `#b8b2a6`. Close enough to have been meant as the same colour,
+far enough apart that the launcher's startup image steps a shade when it hands
+over to the splash. Deliberately left alone here — it is not what this change
+was for — but it is the last seam in the hand-over.

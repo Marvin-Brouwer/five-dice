@@ -1,12 +1,9 @@
 import { mutationObserver } from '@rooted/observers'
 
-/** Matches the `#splash` transition in index.global.css. */
-const FADE_MS = 240
-
 /**
  * Take the cold-start splash down once `<main>` has a page in it.
  *
- * The splash itself is markup in index.html, styled by index.global.css --
+ * The splash itself is markup in index.html, dressed by index.splash.css --
  * see docs/loading-splash.md for why it is neither a component nor inside
  * `#app`.
  *
@@ -72,5 +69,27 @@ function removeSplash(): void {
 	// A backstop for the cases transitionend does not come: a background tab
 	// throttles the transition, and a reader who has asked for less motion may
 	// have it cut somewhere this file cannot see.
-	setTimeout(remove, FADE_MS * 2)
+	setTimeout(remove, fadeDuration(splash) * 2)
+}
+
+/**
+ * How long the fade in index.splash.css actually runs, in milliseconds.
+ *
+ * Read rather than repeated, so the sheet stays the one place the timing is
+ * written down. The computed value is a list when several properties
+ * transition; `opacity` is the first and, here, the only one.
+ *
+ * Nothing means no fade -- an unstyled splash, or one whose transition has
+ * been taken away -- and then no `transitionend` is coming either, so zero is
+ * the answer rather than a stand-in for a missing one.
+ */
+function fadeDuration(splash: Element): number {
+	const [declared = ''] = getComputedStyle(splash).transitionDuration.split(',')
+	const time = Number.parseFloat(declared)
+	if (!Number.isFinite(time)) return 0
+
+	// A browser normalizes the computed value to seconds -- `0.24s` for a
+	// declared `240ms`. happy-dom, which the unit tests run in, hands back what
+	// was written instead, so the unit is read rather than taken on faith.
+	return declared.trim().endsWith('ms') ? time : time * 1000
 }
