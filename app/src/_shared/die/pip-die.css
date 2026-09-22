@@ -2,8 +2,8 @@
 	display: inline-block;
 	line-height: 0;
 	flex: 0 0 auto;
-	/* Callers override --dice-size on a wrapper to fix the size; unset,
-	   it follows the current font-size so the die scales with text. */
-	width: var(--dice-size, 1em);
-	height: var(--dice-size, 1em);
+	/* No width/height here: the svg carries the size and this span shrink-wraps
+	   it, so a caller still resizes a die by setting --dice-size on a wrapper —
+	   and a die stays bounded even before this stylesheet lands. See
+	   pip-die.mts. */
 }

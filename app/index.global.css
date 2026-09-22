@@ -75,3 +75,15 @@ button {
 	font: inherit;
 	cursor: pointer;
 }
+
+/* First-paint guard — see issue #97. Component stylesheets are injected by the
+   rooted CSS loader, so they arrive with the JS rather than with this file,
+   which index.html links. For those first frames the bar is unstyled, and an
+   inline svg with no intrinsic size resolves against the page width — which is
+   how the monogram used to flash as a viewport-wide die. The die carries its
+   own size now (see _shared/die/pip-die.mts); this keeps whatever the bar
+   grows later from doing it again. The styled bar is ~48px, so it never bites. */
+[r-component="app-bar"] header {
+	max-height: 4rem;
+	overflow: hidden;
+}
