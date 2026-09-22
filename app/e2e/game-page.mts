@@ -245,6 +245,18 @@ export class GamePage {
 	}
 
 	/**
+	 * Serve nothing for the splash's own stylesheet.
+	 *
+	 * The splash is the one thing on the page with no second chance: whatever
+	 * the first frame puts on screen is what the player sees on every cold
+	 * start. A sheet is a fetch, so this is the state where it has not landed
+	 * yet -- or never does, 404 behind a stale worker cache.
+	 */
+	async withoutTheSplashStyles() {
+		await this.page.route('**\/index.splash.css*', route => route.abort())
+	}
+
+	/**
 	 * Serve the document declaring the locale it would declare once built.
 	 *
 	 * The dev server hands the same index.html to every path; it is the build

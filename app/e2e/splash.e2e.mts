@@ -51,6 +51,36 @@ test('the splash is on screen before the app is', async ({ page }) => {
 	).toBeLessThan(2)
 })
 
+/**
+ * And it is in the middle from the very first frame, stylesheet or no.
+ *
+ * Everything the splash needs to be in the right place is an inline style on
+ * the element, because a sheet is a fetch: late, 404, or served stale out of a
+ * worker cache, and the die lands wherever the document happens to put it and
+ * then jumps to the middle once the sheet catches up. Blocking the sheet
+ * outright is that state, held still.
+ */
+test('the splash is centred before its own stylesheet lands', async ({ page }) => {
+	const game = new GamePage(page)
+	await game.withoutTheApp()
+	await game.withoutTheSplashStyles()
+
+	await page.goto('en/score-card/')
+	await expect(game.splashDie).toBeVisible()
+
+	const viewport = page.viewportSize()!
+	const die = (await game.splashDie.boundingBox())!
+
+	expect(
+		Math.round(die.x + die.width / 2),
+		'the die should be in the middle of the screen across',
+	).toBeCloseTo(viewport.width / 2, -1)
+	expect(
+		Math.round(die.y + die.height / 2),
+		'and in the middle of it down',
+	).toBeCloseTo(viewport.height / 2, -1)
+})
+
 /** The other end: the app arrives, and the splash leaves the document. */
 test('the splash is gone once the score card is up', async ({ page }) => {
 	const game = new GamePage(page)

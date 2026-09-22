@@ -29,6 +29,16 @@ it *usefully* would mean copying the palette — `--color-page`,
 `--background-page`, and their dark-theme overrides — into a second place to go
 stale.
 
+What the splash cannot leave to that sheet is where it sits. A sheet is a
+fetch, however small: late, 404, or served stale out of a worker cache, and the
+die lands wherever the document flow happens to put it — top-left, with both
+no-script messages showing, since `display: none` was in the sheet too — and
+then jumps to the middle once it catches up. So the box and the centring are an
+inline style on the element, and the messages are held back by the `hidden`
+attribute rather than by a rule. A style attribute is part of the element;
+there is no frame without it. It is the same split `pip-die.mts` makes for the
+same reason (#97): geometry on the element, looks in the sheet.
+
 That sheet is also where the fade's length is written down, once.
 `splash.mts` reads it back off the element with `getComputedStyle`, rather than
 keeping a constant that has to be kept in step. Browsers normalize the computed

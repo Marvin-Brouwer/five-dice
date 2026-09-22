@@ -9,18 +9,17 @@
    for it. */
 
 #splash {
-	position: fixed;
-	inset: 0;
+	/* The box it fills, and the centring inside it, are an inline style in
+	   index.html -- this is the one element that has to be right on the first
+	   frame, and a sheet is a fetch. See the comment beside it there. What is
+	   left here is what can afford to arrive a moment later. */
+
 	/* Over the app bar (999), under the row overlay (1002) and the sheets
 	   (1003). Neither of those can be open this early, but the order should
 	   still read the way the app stacks. */
 	z-index: 1000;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	/* Only bites when the message below is showing: a display:none child is no
-	   child at all here, so with JS on this centres the die and nothing else. */
+	/* Only bite when the message below is showing: a display:none child is no
+	   child at all, so with JS on this is the die and nothing else. */
 	gap: var(--space-5);
 	padding: var(--space-6);
 	/* The same cardboard the page itself wears, so handing over to the app is
@@ -52,10 +51,10 @@
 
 /* Only ever shown by the <noscript> block in index.html's head, which is the
    one case the splash has something to say rather than something to wait for.
-   Sized and coloured like the page it is sitting on, not like a warning: it is
-   the whole page at that point. */
+   Kept out of the way by `hidden` on the elements themselves, not from here --
+   see index.html. Sized and coloured like the page it is sitting on, not like
+   a warning: it is the whole page at that point. */
 .splash-message {
-	display: none;
 	margin: 0;
 	max-width: 28ch;
 	text-align: center;
