@@ -7,6 +7,7 @@ import { appRoutes } from './_routes.g.mts'
 import { localization } from './_shared/i18n/localization.mts'
 import { LocaleSync } from './_shared/i18n/locale-sync.mts'
 import { Menu } from './_shared/menu/menu.mts'
+import { dismissSplashWhenPageIsUp } from './_shared/services/splash.mts'
 import { CultureSelect } from './navigation/culture-select.mts'
 import { NotFoundPage } from './navigation/not-found.mts'
 
@@ -28,7 +29,7 @@ const Router = router({
 
 export const Application = component({
 	name: 'five-dice-application',
-	async onMount({ append, element, create }) {
+	async onMount({ append, element, create, signal }) {
 		document.title = 'Five dice'
 		localization.observeDocument({ deploymentUrl: packageJson.homepage })
 		// Menu is part of the app shell, not a per-route component. It mounts once
@@ -36,17 +37,24 @@ export const Application = component({
 		// the "Settings" section label) need the dictionary in place before this
 		// first render, same reason every route resolver awaits load() too.
 		await localization.load()
+		const main = element('main', {
+			id: 'main-content',
+			children: create(Router, {
+				viewTransition: true,
+			}),
+		})
+
 		append(
 			create(LocaleSync),
 			localization.localized(() => create(AppBar)),
-			element('main', {
-				id: 'main-content',
-				children: create(Router, {
-					viewTransition: true,
-				}),
-			}),
+			main,
 			create(Menu),
 		)
+
+		// Everything above happens behind the splash index.html paints: the
+		// bundle, the dictionary, and then the route's own chunk. This watches
+		// for the moment there is a page to hand over to.
+		dismissSplashWhenPageIsUp(main, signal)
 	},
 })
 

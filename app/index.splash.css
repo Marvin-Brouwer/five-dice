@@ -1,0 +1,81 @@
+/* The cold-start splash — see issue #98 and docs/loading-splash.md.
+
+   Its own sheet, linked by index.html beside the globals, because it has one
+   job and a short life: it dresses markup that is gone as soon as the app has
+   a page to show. Not a component stylesheet, for the reason the first-paint
+   guards in index.global.css are not either — a component's CSS is a <link>
+   appended at module load, so it arrives a fetch behind the first paint, which
+   is the whole stretch this is here to cover. What index.html links is there
+   for it. */
+
+#splash {
+	position: fixed;
+	inset: 0;
+	/* Over the app bar (999), under the row overlay (1002) and the sheets
+	   (1003). Neither of those can be open this early, but the order should
+	   still read the way the app stacks. */
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	/* Only bites when the message below is showing: a display:none child is no
+	   child at all here, so with JS on this centres the die and nothing else. */
+	gap: var(--space-5);
+	padding: var(--space-6);
+	/* The same cardboard the page itself wears, so handing over to the app is
+	   the die fading and nothing else. */
+	background: var(--background-page);
+	background-size: var(--background-page-size);
+	transition: opacity 240ms ease;
+}
+
+#splash svg {
+	width: clamp(4rem, 22vw, 6rem);
+	height: auto;
+	/* An <svg> root takes its transform-origin from the SVG rules rather than
+	   the CSS box, so without this it turns about its top-left corner. */
+	transform-origin: center;
+	animation: splash-toss 1.3s cubic-bezier(0.2, 0.8, 0.3, 1) infinite;
+}
+
+/* The masthead's `settle` put in a loop: the same toss, never landing. */
+@keyframes splash-toss {
+	0%, 100% {
+		transform: rotate(-7deg) translateY(0);
+	}
+
+	50% {
+		transform: rotate(7deg) translateY(-8%);
+	}
+}
+
+/* Only ever shown by the <noscript> block in index.html's head, which is the
+   one case the splash has something to say rather than something to wait for.
+   Sized and coloured like the page it is sitting on, not like a warning: it is
+   the whole page at that point. */
+.splash-message {
+	display: none;
+	margin: 0;
+	max-width: 28ch;
+	text-align: center;
+	font-size: var(--font-size-sm);
+	color: var(--color-text-on-page);
+}
+
+/* Set by _shared/services/splash.mts, which removes the node once the fade
+   has run. */
+#splash.is-dismissed {
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* The toss goes; the cross-fade stays. It is not the kind of motion this asks
+   about, and it is what makes transitionend fire — so the node still leaves
+   the document. masthead.css nulls its animation and nothing else, same as
+   here. */
+@media (prefers-reduced-motion: reduce) {
+	#splash svg {
+		animation: none;
+	}
+}

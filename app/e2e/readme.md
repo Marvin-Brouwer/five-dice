@@ -19,6 +19,7 @@ Alongside them are the specs that pin behaviour a game does not reach:
 | `theme-preference.e2e.mts` | The chosen theme is remembered in `localStorage`, not in a cookie the session takes with it. |
 | `menu-keyboard.e2e.mts` | Both menu dropdowns are fully operable from a keyboard: arrows, Home/End, type-ahead, Escape, and a language switch driven end to end. |
 | `app-bar.e2e.mts` | What the bar does before the component CSS lands: the dice are bounded by themselves rather than by their stylesheet, the kebab is not left to the browser to paint, and the two of them are laid out where they end up. |
+| `splash.e2e.mts` | The cold start: the splash is on screen before any of the app is, it is bounded by itself, and it hands over to a page rather than to an empty one -- including across the redirect off `/`. With scripting off, where no app is coming, it says so instead, in the language of the page it is on. |
 
 `menu-keyboard.e2e.mts` is the one that would catch a regression nobody sees
 by looking: the menu is a modal `<dialog>`, so Escape inside an open dropdown
@@ -30,6 +31,14 @@ goes with it.
 load, so every component sheet lands after the first paint; the spec blocks
 `/@rooted-css/` to hold that moment still and measures what the page looks
 like with only the globals `index.html` links.
+
+`splash.e2e.mts` looks a stage earlier again: it blocks the entry module, so
+the page has no app at all, which is what the splash in `index.html` is there
+to cover. Its other half is harder to see -- the splash has to leave on the
+beat the app is ready, and the end state looks the same whether it left then or
+a hundred milliseconds early over a blank page. `splash-spy.mts` records what
+`<main>` held at the instant the splash was told to go, so that difference is
+something a test can assert on.
 
 ## Running them
 

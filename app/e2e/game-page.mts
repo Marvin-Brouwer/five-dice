@@ -206,6 +206,65 @@ export class GamePage {
 		await expect(this.sticker).toBeVisible()
 	}
 
+	// --- The cold start -----------------------------------------------------
+
+	/**
+	 * The splash index.html paints while the app loads. Not a component, so it
+	 * has no `r-component` to go by.
+	 */
+	get splash(): Locator {
+		return this.page.locator('#splash')
+	}
+
+	/** The die tossing on the splash. */
+	get splashDie(): Locator {
+		return this.page.locator('#splash svg')
+	}
+
+	/**
+	 * The line the splash says when there is no app coming.
+	 *
+	 * Every language the app has is in the markup and CSS picks the one that
+	 * matches `<html lang>`, so this is scoped to what is actually showing:
+	 * no match at all is the answer whenever an app *is* coming.
+	 */
+	get splashMessage(): Locator {
+		return this.page.locator('#splash .splash-message:visible')
+	}
+
+	/**
+	 * Serve nothing for the entry module, so the page stays on whatever
+	 * index.html and the sheets it links can draw by themselves.
+	 *
+	 * The real thing is the gap before that module has been fetched, parsed and
+	 * run -- plus the dictionary and the route chunk it goes on to ask for.
+	 * Aborting it holds the start of that gap still.
+	 */
+	async withoutTheApp() {
+		await this.page.route('**/application.mts*', route => route.abort())
+	}
+
+	/**
+	 * Serve the document declaring the locale it would declare once built.
+	 *
+	 * The dev server hands the same index.html to every path; it is the build
+	 * that writes `<html lang>` per locale, into a copy of the file per locale.
+	 * Anything that reads that attribute is therefore untestable here without
+	 * putting it back, which is all this does.
+	 */
+	async servedAsLocale(locale: string) {
+		await this.page.route('**\/*/', async (route) => {
+			const response = await route.fetch()
+			const body = await response.text()
+			if (!body.includes('<html lang=')) return route.fulfill({ response })
+
+			await route.fulfill({
+				response,
+				body: body.replace('<html lang="en">', `<html lang="${locale}">`),
+			})
+		})
+	}
+
 	// --- The app bar --------------------------------------------------------
 
 	/**
