@@ -82,8 +82,13 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
 		const hintId = `row-overlay-hint-${instanceId}`
 
+		// Focusable by script only: the picker opens with focus on the group
+		// rather than on a row, because a focused row previews itself and
+		// reads as already picked. Tab still lands on the first row.
 		const fieldset = element('fieldset', {
 			classes: styles.fieldset,
+			tabIndex: -1,
+			autofocus: true,
 			aria: {
 				labelledBy: titleId,
 				describedBy: hintId,
@@ -103,11 +108,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 				},
 			},
 		})
-		// Focusable by script only: the picker opens with focus on the group
-		// rather than on a row, because a focused row previews itself and
-		// reads as already picked. Tab still lands on the first row.
-		fieldset.tabIndex = -1
-		fieldset.autofocus = true
 
 		const context = { element, create }
 

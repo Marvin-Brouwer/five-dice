@@ -142,9 +142,15 @@ export const Doormat = component({
 					create(ShareButton, {
 						// Shared with the sharer's locale, so a friend opens
 						// the game in the language it was recommended in.
-						url: new URL(href.for(HomeRoute, {
-							locale: localization.currentLocale
-						}).href, packageJson.homepage).href,
+						// Against the running origin rather than the package
+						// homepage, so a local or preview build shares itself;
+						// href.for already carries the app base.
+						url: href.join(
+							href.url(location.origin),
+							href.for(HomeRoute, {
+								locale: localization.currentLocale
+							}),
+						).href,
 					}),
 					links,
 					element('hr', {

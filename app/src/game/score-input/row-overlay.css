@@ -28,18 +28,22 @@
 	background: rgba(28, 29, 31, 0.28);
 }
 
+/* Spans the viewport so that, while it holds focus before a row is picked,
+   its focus ring frames the whole picker. Its own content would give it no
+   box at all: the rows' hit targets are positioned out of it. It lets the
+   pointer through; the hit targets take it back. */
 .fieldset {
+	position: fixed;
+	inset: 0;
 	border: 0;
 	padding: 0;
 	margin: 0;
+	pointer-events: none;
 }
 
-/* The group only holds focus until a row is picked. Its box is empty -- the
-   rows' hit targets are positioned out of it -- so a ring here would be a
-   stray line at the top of the screen; the visible sheet title is what names
-   the focused group. */
-.fieldset:focus {
-	outline: none;
+.fieldset:focus-visible {
+	outline: 3px solid var(--color-focus);
+	outline-offset: -3px;
 }
 
 .visually-hidden {
@@ -58,6 +62,7 @@
 .option {
 	position: fixed;
 	z-index: 1002;
+	pointer-events: auto;
 	cursor: pointer;
 	background: transparent;
 	border: 0;
