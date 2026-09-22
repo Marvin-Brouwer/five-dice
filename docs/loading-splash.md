@@ -62,6 +62,14 @@ Counting navigations instead of taking the first `end` does not help either,
 for the same reason: the redirect has not started yet when the first `end`
 fires.
 
+None of this is the framework being coy about it. `on: { navigate }` is the
+documented lifecycle hook and the rooted recipe-book example uses exactly this
+start/end pair — but for a progress bar drawn *over* a page that is already
+there, where finishing a beat early is invisible. A cover is the case where it
+is not. The early `end` is specific to `viewTransition: true`: with it off,
+`applyTransition` calls the render synchronously and `end` does land after the
+DOM has changed.
+
 So `_shared/services/splash.mts` asks the only question that actually matters —
 is there anything on the page yet? — with a `MutationObserver` on `<main>`. The
 router's host element appears there straight away and a route may render
@@ -82,18 +90,33 @@ the element still leaves the document. A timer twice the fade's length removes
 it regardless, for the cases the event does not come: a background tab throttles
 the transition.
 
-## No script, no splash
+## No script
 
-Nothing takes the splash down without JavaScript, and a die tossing over a page
-that is never going to load is worse than the bare page. A `<noscript>` block in
-`<head>` hides it.
+Nothing takes the splash down without JavaScript, and a die tossing forever over
+a page that is never going to load says nothing at all. So with scripting off
+the splash stops being a wait and becomes the page: a `<noscript>` block in
+`<head>` stills the die and reveals a line under it saying the app needs
+JavaScript.
 
-Its rule is `html #splash`, not `#splash`. The build folds `index.global.css`
-into a bundle it links *after* that block, so at equal specificity the sheet's
-own `display: grid` would win and the splash would be there for good — measured
-against `pnpm preview`, not guessed at. The e2e suite runs against the dev
-server, where the sheets are still linked in source order, so it cannot see
-this; the qualifier is the thing to leave alone.
+Every language the app has is in the markup, and the block picks one with
+`html:lang(…)`. That is the only thing the page knows about its own locale
+without the app: the build writes `<html lang>` per locale, into a copy of
+index.html per locale. `html:not(:lang(nl))` takes English, so a locale added
+without a rule falls back to the default rather than to silence.
+
+`aria-hidden` is on the die and nowhere else. With JavaScript the paragraphs are
+`display: none` and so out of the a11y tree anyway; without it the message is
+the one thing in the document that has to be read.
+
+The rules are qualified with `html`, not left at `#splash`. The build folds
+`index.global.css` into a bundle it links *after* that block, so at equal
+specificity the sheet would win and the die would keep tossing over the message
+— measured against `pnpm preview`, not guessed at. The e2e suite runs against
+the dev server, where the sheets are still linked in source order and where
+every path is served the one un-localized index.html, so it can see neither
+that nor the `lang` selection: `GamePage.servedAsLocale` puts the attribute back
+so the rule is at least testable, and the specificity is pinned by the comment
+beside it.
 
 ## The launch colour
 

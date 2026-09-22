@@ -29,6 +29,10 @@ test('the splash is on screen before the app is', async ({ page }) => {
 	// Nothing of the app has mounted -- which is the state being pinned.
 	await expect(page.locator('[r-component="app-bar"]')).toHaveCount(0)
 
+	// And it says nothing: scripting is on, so an app is still coming. The
+	// line below is for the case where one never will be.
+	await expect(game.splashMessage).toHaveCount(0)
+
 	// The viewport is 420x1000. The splash is all the player has, so it had
 	// better be all of it.
 	const viewport = page.viewportSize()!
@@ -104,28 +108,48 @@ test('the splash holds across the redirect off the language picker', async ({ pa
 /**
  * The one case nothing can take the splash down in.
  *
- * With scripting off there is no app coming, so a die tossing forever over a
- * page that is never going to load is worse than the bare page. A <noscript>
- * block in index.html hides it.
+ * With scripting off there is no app coming, so the splash stops being a wait
+ * and becomes the page: the die holds still, and a line under it says why. A
+ * die tossing forever over a page that is never going to load says nothing at
+ * all, which is worse than the bare page.
  *
- * That rule is qualified by `html` so it outranks index.global.css's own
- * `#splash` rule, which this spec cannot see: the suite runs against the dev
- * server, where the sheets are linked in source order and the block would win
- * on position anyway. It is the build that reorders them. So what this pins is
- * that the block is there and does its job; the specificity is pinned by the
- * comment beside it.
+ * The rules that do it live in a <noscript> block in index.html, qualified by
+ * `html` so they outrank index.global.css -- which this spec cannot see, since
+ * the suite runs against the dev server, where the sheets are linked in source
+ * order and the block would win on position anyway. It is the build that
+ * reorders them. So what this pins is that the block is there and does its
+ * job; the specificity is pinned by the comment beside it.
  */
 test.describe('without scripting', () => {
 	test.use({
 		javaScriptEnabled: false,
 	})
 
-	test('the splash is not left tossing over a page that never loads', async ({ page }) => {
+	test('the splash says why nothing is coming', async ({ page }) => {
 		const game = new GamePage(page)
 
 		await page.goto('en/score-card/')
 
-		await expect(game.splash).toBeHidden()
+		// Said once, though every language is in the markup: the page cannot
+		// pick one without the app, so <html lang>, which the build writes per
+		// locale, is all there is to go on.
+		await expect(game.splashMessage).toHaveCount(1)
+		await expect(game.splashMessage).toHaveText('Five dice needs JavaScript to keep score.')
+		await expect(game.splash).toBeVisible()
+
+		// The die is still there, and still: there is nothing left to wait for.
+		const animation = await game.splashDie.evaluate(die => getComputedStyle(die).animationName)
+		expect(animation, 'the toss should be off').toBe('none')
+	})
+
+	test('and says it in the language of the page it is on', async ({ page }) => {
+		const game = new GamePage(page)
+		await game.servedAsLocale('nl')
+
+		await page.goto('nl/')
+
+		await expect(game.splashMessage).toHaveCount(1)
+		await expect(game.splashMessage).toHaveText('Five dice heeft JavaScript nodig om de score bij te houden.')
 	})
 })
 

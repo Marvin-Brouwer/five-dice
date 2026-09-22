@@ -126,8 +126,14 @@ button {
 	   (1003). Neither of those can be open this early, but the order should
 	   still read the way the app stacks. */
 	z-index: 1000;
-	display: grid;
-	place-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	/* Only bites when the message below is showing: a display:none child is no
+	   child at all here, so with JS on this centres the die and nothing else. */
+	gap: var(--space-5);
+	padding: var(--space-6);
 	/* The same cardboard the page itself wears, so handing over to the app is
 	   the die fading and nothing else. */
 	background: var(--background-page);
@@ -153,6 +159,19 @@ button {
 	50% {
 		transform: rotate(7deg) translateY(-8%);
 	}
+}
+
+/* Only ever shown by the <noscript> block in index.html's head, which is the
+   one case the splash has something to say rather than something to wait for.
+   Sized and coloured like the page it is sitting on, not like a warning: it is
+   the whole page at that point. */
+.splash-message {
+	display: none;
+	margin: 0;
+	max-width: 28ch;
+	text-align: center;
+	font-size: var(--font-size-sm);
+	color: var(--color-text-on-page);
 }
 
 /* Set by _shared/services/splash.mts, which removes the node once the fade

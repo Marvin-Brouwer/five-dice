@@ -32,13 +32,20 @@
 		<noscript>
 			<link rel="stylesheet"
 				href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap" />
-			<!-- Nothing takes the splash down without JS, and a die tossing over
-			     a page that is never going to load is worse than the bare one.
-			     Qualified by `html` to outrank index.global.css's own `#splash`
-			     rule: the build folds that sheet into a bundle it links after
-			     this block, so coming later in the head is not something this
-			     can rely on. -->
-			<style>html #splash { display: none; }</style>
+			<!-- Without JS there is no app coming, so the splash stops being a
+			     wait and becomes the page: the die holds still and says why.
+			     Which language it says it in comes off <html lang>, which the
+			     build writes per locale -- nothing else here knows one.
+
+			     Qualified by `html` to outrank index.global.css's own rules:
+			     the build folds that sheet into a bundle it links after this
+			     block, so coming later in the head is not something this can
+			     rely on. -->
+			<style>
+				html #splash svg { animation: none; }
+				html:lang(nl) #splash .splash-message-nl,
+				html:not(:lang(nl)) #splash .splash-message-en { display: block; }
+			</style>
 		</noscript>
 		<script crossorigin type="module" src="/src/application.mts"></script>
 	</head>
@@ -57,8 +64,14 @@
 		     --color-die-face and --color-die-dot are pinned to exactly these
 		     values in both themes, so there is nothing here for one to change.
 		     The width and height are on the element for the same reason
-		     pip-die.mts carries its own (#97). -->
-		<div id="splash" aria-hidden="true">
+		     pip-die.mts carries its own (#97).
+
+		     The two messages below are hidden until the <noscript> block in the
+		     head reveals one of them, which is the only case anything here has
+		     something to say. Nothing carries aria-hidden but the die: with JS
+		     the paragraphs are display:none and so out of the tree anyway, and
+		     without it the message is the one thing that has to be read. -->
+		<div id="splash">
 			<svg viewBox="0 0 32 32" width="96" height="96" aria-hidden="true">
 				<rect width="32" height="32" rx="4" fill="#1c1d1f" />
 				<rect x="2.24" y="2.24" width="27.52" height="27.52" rx="3.753" fill="#ffffff" />
@@ -68,6 +81,8 @@
 				<circle cx="8.495" cy="23.505" r="2.627" fill="#1c1d1f" />
 				<circle cx="23.505" cy="23.505" r="2.627" fill="#1c1d1f" />
 			</svg>
+			<p class="splash-message splash-message-en" lang="en">Five dice needs JavaScript to keep score.</p>
+			<p class="splash-message splash-message-nl" lang="nl">Five dice heeft JavaScript nodig om de score bij te houden.</p>
 		</div>
 		<div id="app"></div>
 	</body>
