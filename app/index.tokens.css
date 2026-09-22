@@ -111,9 +111,7 @@
 	--radius-md:               8px;
 	--radius-lg:               16px;
 
-	/* Dice / layout */
-	--die-size:                clamp(2.5rem, 12vw, 4rem);
-	--die-gap:                 var(--space-2);
+	/* Layout */
 	--max-content-width:       60ch;
 	--page-padding:            clamp(var(--space-2), 2vw, var(--space-4));
 }
