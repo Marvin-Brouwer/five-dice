@@ -71,9 +71,19 @@ a {
 	top: var(--space-2);
 }
 
+/* A native control is painted by the UA, and :root pins `color-scheme: dark`
+   (index.tokens.css), so an unstyled button comes up dark grey with a white
+   glyph — the inverse of every button this app actually draws. Component
+   stylesheets are fetched as <link>s appended at module load, so they always
+   land after the first paint and cannot prevent that flash; this sheet, which
+   index.html links, can. Every button in the app sets its own chrome, so this
+   only ever shows in the gap. See issue #97. */
 button {
 	font: inherit;
 	cursor: pointer;
+	background: transparent;
+	border: 0;
+	color: inherit;
 }
 
 /* First-paint guard — see issue #97. Component stylesheets are injected by the

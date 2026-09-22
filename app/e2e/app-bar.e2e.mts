@@ -51,3 +51,33 @@ test('the app bar stays a bar before the component styles land', async ({ page }
 	const bar = await page.locator('[r-component="app-bar"] header').boundingBox()
 	expect(bar?.height, 'the unstyled bar should still be bar-sized').toBeLessThanOrEqual(64)
 })
+
+/**
+ * A native control is painted by the UA, and `:root` pins `color-scheme: dark`
+ * so that the scrollbars and an installed app's chrome come up dark. That
+ * makes an unstyled button dark grey with a white glyph -- the exact inverse
+ * of the kebab the app bar draws, which is dark ink on the cardboard page. It
+ * read as the icon flashing inverted on every refresh.
+ *
+ * `.kebab` cannot fix it: app-bar.css is one of the sheets that arrives late.
+ * The reset in index.global.css can, because index.html links it.
+ */
+test('the menu icon is not painted by the browser before the styles land', async ({ page }) => {
+	const game = new GamePage(page)
+	await game.withoutComponentStyles()
+
+	await page.goto('en/score-card/')
+	await expect(game.kebab).toBeAttached()
+
+	const painted = await game.kebab.evaluate(el => {
+		const style = getComputedStyle(el)
+		return {
+			background: style.backgroundColor,
+			color: style.color,
+			ink: getComputedStyle(document.body).color,
+		}
+	})
+
+	expect(painted.background, 'the button should not paint a surface of its own').toBe('rgba(0, 0, 0, 0)')
+	expect(painted.color, 'the glyph should follow the page ink, not the UA').toBe(painted.ink)
+})

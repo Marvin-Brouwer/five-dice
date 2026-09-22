@@ -232,6 +232,11 @@ export class GamePage {
 		return this.page.locator('[r-component="masthead"] svg').first()
 	}
 
+	/** The app bar's kebab, which opens the menu. */
+	get kebab(): Locator {
+		return this.page.locator('[r-component="app-bar"] button')
+	}
+
 	// --- The app menu -------------------------------------------------------
 
 	/** Opens the menu sheet and waits for it to be on screen. */

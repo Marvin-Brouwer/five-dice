@@ -18,7 +18,7 @@ Alongside them are the specs that pin behaviour a game does not reach:
 | `row-preview.e2e.mts` | A picked row keeps its preview without hover or focus. |
 | `theme-preference.e2e.mts` | The chosen theme is remembered in `localStorage`, not in a cookie the session takes with it. |
 | `menu-keyboard.e2e.mts` | Both menu dropdowns are fully operable from a keyboard: arrows, Home/End, type-ahead, Escape, and a language switch driven end to end. |
-| `app-bar.e2e.mts` | The dice are bounded by themselves, not by their stylesheet, so none of them paints viewport-wide before the component CSS lands. |
+| `app-bar.e2e.mts` | Nothing in the bar is left to the browser to paint before the component CSS lands: the dice are bounded by themselves rather than by their stylesheet, and the kebab is not a native control. |
 
 `menu-keyboard.e2e.mts` is the one that would catch a regression nobody sees
 by looking: the menu is a modal `<dialog>`, so Escape inside an open dropdown
