@@ -34,31 +34,33 @@ test('a picked row keeps its preview without hover or focus', async ({ page }) =
 /**
  * Opening the picker picks nothing.
  *
- * A radio group has to focus something, and a focused row previews itself,
- * so focus used to land on the first row and it read as already chosen. An
- * invisible placeholder option takes that focus instead, and drops out of the
- * group once a real row is checked.
+ * Focus used to land on the first row, and a focused row previews itself, so
+ * it read as already chosen. The group itself takes the initial focus now,
+ * and the arrow keys enter it on the first or last row.
  */
-test('the picker opens on nothing and cannot return to it', async ({ page }) => {
+test('the picker opens on the group, with no row picked', async ({ page }) => {
 	const game = new GamePage(page)
 	await game.goto()
 	await game.openRowPicker([6, 6, 5, 5, 4])
 	await page.mouse.move(0, 0)
 
-	await expect(game.placeholderOption).toBeFocused()
-	await expect(game.placeholderOption).toBeChecked()
+	await expect(game.pickerGroup).toBeFocused()
+	await expect(game.checkedOptions, 'no row should be checked on open').toHaveCount(0)
 	await expect(game.previewedRows, 'no row should preview before one is picked').toHaveCount(0)
 	await expect(game.pickerConfirm).toBeDisabled()
 
+	const fields = await game.pickerFields()
 	await page.keyboard.press('ArrowDown')
-	expect(await game.checkedOption(), 'arrowing off the placeholder should pick a row').not.toBe('')
-	await expect(game.placeholderOption, 'leaving the placeholder should take it out of the group').toHaveCount(0)
+	await expect(game.checkedOptions).toHaveAttribute('value', fields[0]!)
 	await expect(game.pickerConfirm).toBeEnabled()
+})
 
-	// Walk the whole group backwards; the placeholder is never landed on.
-	const rowCount = await page.locator('dialog.layer[open] label[data-field]').count()
-	for (let step = 0; step <= rowCount; step++) {
-		await page.keyboard.press('ArrowUp')
-		expect(await game.checkedOption()).not.toBe('')
-	}
+test('arrowing up from the group enters on the last row', async ({ page }) => {
+	const game = new GamePage(page)
+	await game.goto()
+	await game.openRowPicker([6, 6, 5, 5, 4])
+
+	const fields = await game.pickerFields()
+	await page.keyboard.press('ArrowUp')
+	await expect(game.checkedOptions).toHaveAttribute('value', fields.at(-1)!)
 })

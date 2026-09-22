@@ -34,6 +34,14 @@
 	margin: 0;
 }
 
+/* The group only holds focus until a row is picked. Its box is empty -- the
+   rows' hit targets are positioned out of it -- so a ring here would be a
+   stray line at the top of the screen; the visible sheet title is what names
+   the focused group. */
+.fieldset:focus {
+	outline: none;
+}
+
 .visually-hidden {
 	position: absolute;
 	width: 1px;

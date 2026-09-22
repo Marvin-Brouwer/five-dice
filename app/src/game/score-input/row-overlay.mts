@@ -60,6 +60,17 @@ function optionAriaLabel(field: ScoreField, variant: RowVariant): string {
 	return localization.text`${title}, ${localization.text`discard`}`
 }
 
+/**
+ * The row an arrow key enters the group on while the group itself has focus:
+ * forward lands on the first row and backward on the last, the way the arrows
+ * wrap inside a radio group.
+ */
+function entryRadio(key: string, radios: HTMLInputElement[]): HTMLInputElement | undefined {
+	if (key === 'ArrowDown' || key === 'ArrowRight') return radios.at(0)
+	if (key === 'ArrowUp' || key === 'ArrowLeft') return radios.at(-1)
+	return undefined
+}
+
 export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
@@ -69,25 +80,34 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
 		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
-		const placeholderId = `row-overlay-radio-${instanceId}-none`
-		const placeholderOptionId = `row-overlay-option-${instanceId}-none`
 		const hintId = `row-overlay-hint-${instanceId}`
 
 		const fieldset = element('fieldset', {
 			classes: styles.fieldset,
 			aria: {
-				labelledBy: titleId
+				labelledBy: titleId,
+				describedBy: hintId,
 			},
 			on: {
-				// The placeholder only stands for "nothing picked yet", so the
-				// first row to be checked takes it out of the group for good.
-				// Listened for on the fieldset because a radio's `change` fires
-				// on the one that becomes checked, never on the one it leaves.
-				change() {
-					fieldset.querySelector(`#${placeholderOptionId}`)?.remove()
+				keydown(event) {
+					// Only while the group itself holds focus; once a row does,
+					// the arrow keys are the radio group's own.
+					if (event.target !== fieldset) return
+					const radio = entryRadio(event.key, activeRadios)
+					if (!radio) return
+					event.preventDefault()
+					radio.focus()
+					// click() rather than `checked`, so `change` fires like it
+					// would for any other pick.
+					radio.click()
 				},
 			},
 		})
+		// Focusable by script only: the picker opens with focus on the group
+		// rather than on a row, because a focused row previews itself and
+		// reads as already picked. Tab still lands on the first row.
+		fieldset.tabIndex = -1
+		fieldset.autofocus = true
 
 		const context = { element, create }
 
@@ -180,36 +200,15 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		function buildRadios() {
 			const fields = availableFields()
-			const placeholderRadio = element('input', {
-				type: 'radio',
-				name: radioName,
-				value: '',
-				checked: true,
-				classes: styles.radio,
-				id: placeholderId,
-				aria: {
-					describedBy: hintId,
-				},
-			})
 			fieldset.replaceChildren(
 				element('legend', {
 					classes: styles.visuallyHidden,
 					textContent: title,
 				}),
-				element('div', {
-					id: placeholderOptionId,
+				element('span', {
+					id: hintId,
 					classes: styles.visuallyHidden,
-					children: [
-						element('label', {
-							htmlFor: placeholderId,
-							textContent: title,
-							children: placeholderRadio,
-						}),
-						element('span', {
-							id: hintId,
-							textContent: localization.text`Use the arrow keys to choose a row`,
-						}),
-					],
+					textContent: localization.text`Use the arrow keys to choose a row`,
 				}),
 			)
 			activeRadios = []
@@ -275,7 +274,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 			positioner.setLabels(labels)
 			preview.setCells(previewCells)
 			beginSelection(fields)
-			return placeholderRadio
 		}
 
 		/**
@@ -299,7 +297,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		}, { signal })
 
 		function showOverlay() {
-			const placeholderRadio = buildRadios()
+			buildRadios()
 			if (!layer.open) layer.showModal()
 			positioner.reposition()
 			rootResize = resizeObserver({
@@ -313,12 +311,9 @@ export const RowOverlay = component<RowOverlayOptions>({
 			})
 			positioner.trackSettle()
 			syncConfirm()
-			// Focus starts on the placeholder rather than the first row: a
-			// focused row previews itself, which reads as already picked.
-			// showModal autofocuses the first focusable child, which is already
-			// this radio -- asserted anyway, because that resolution differs
-			// between browsers.
-			queueMicrotask(() => placeholderRadio.focus())
+			// showModal honours the fieldset's `autofocus` -- asserted anyway,
+			// because that resolution differs between browsers.
+			queueMicrotask(() => fieldset.focus())
 		}
 
 		function hideOverlay() {

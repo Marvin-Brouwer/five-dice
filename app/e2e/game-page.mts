@@ -93,17 +93,19 @@ export class GamePage {
 		await overlay.locator(`label[data-field="${field}"]`).click()
 	}
 
-	/**
-	 * The value of the checked radio in the open picker: a row's field, or ''
-	 * for the invisible "nothing picked yet" placeholder.
-	 */
-	async checkedOption(): Promise<string | undefined> {
-		return this.openOverlay.locator('input[type="radio"]:checked').evaluate(radio => (radio as HTMLInputElement).value)
+	/** The checked radios in the open picker; none until a row is picked. */
+	get checkedOptions(): Locator {
+		return this.openOverlay.locator('input[type="radio"]:checked')
 	}
 
-	/** The picker's placeholder option, which stands for "nothing picked yet". */
-	get placeholderOption(): Locator {
-		return this.openOverlay.locator('input[type="radio"][value=""]')
+	/** The open picker's radio group, which holds focus until a row is picked. */
+	get pickerGroup(): Locator {
+		return this.openOverlay.locator('fieldset')
+	}
+
+	/** The row fields the open picker offers, in order. */
+	async pickerFields(): Promise<string[]> {
+		return this.openOverlay.locator('label[data-field]').evaluateAll(labels => labels.map(label => (label as HTMLElement).dataset.field ?? ''))
 	}
 
 	/** The rows the open picker is currently previewing or highlighting. */
