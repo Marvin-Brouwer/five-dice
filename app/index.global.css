@@ -96,4 +96,20 @@ button {
 [r-component="app-bar"] header {
 	max-height: 4rem;
 	overflow: hidden;
+	/* Only the box these two lay out in, so the kebab starts on the right
+	   instead of walking 310px across once app-bar.css lands, and the wordmark
+	   does not begin on a line of its own. Their look still settles with that
+	   sheet -- this is here to make the jump small, not to remove it, so the
+	   sizes and spacing stay where they belong and are not copied. */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-2) var(--page-padding);
+}
+
+/* The wordmark link, which holds the die and the lettering. Not the skip
+   link, the bar's other <a>, which is positioned off-screen until focused. */
+[r-component="app-bar"] a:not(.skip-link) {
+	display: inline-flex;
+	align-items: center;
 }

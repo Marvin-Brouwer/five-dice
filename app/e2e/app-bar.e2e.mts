@@ -81,3 +81,36 @@ test('the menu icon is not painted by the browser before the styles land', async
 	expect(painted.background, 'the button should not paint a surface of its own').toBe('rgba(0, 0, 0, 0)')
 	expect(painted.color, 'the glyph should follow the page ink, not the UA').toBe(painted.ink)
 })
+
+/**
+ * The bar's contents should not walk across it once app-bar.css lands.
+ *
+ * With nothing laying the <header> out, it was a block: the wordmark took a
+ * line of its own and the kebab sat wherever that left it, 310px from where
+ * it ends up. index.global.css carries the box the two of them lay out in --
+ * a flex row, split, with the page padding -- so they start in roughly their
+ * final places. Only roughly: their sizes and typography still come from
+ * app-bar.css, which is why this measures arrangement rather than position.
+ */
+test('the bar is laid out before the component styles land', async ({ page }) => {
+	const game = new GamePage(page)
+	await game.withoutComponentStyles()
+
+	await page.goto('en/score-card/')
+	await expect(game.kebab).toBeAttached()
+
+	const bar = (await page.locator('[r-component="app-bar"] header').boundingBox())!
+	const kebab = (await game.kebab.boundingBox())!
+	const die = (await game.monogram.boundingBox())!
+
+	expect(kebab.x, 'the kebab should start on the right of the bar').toBeGreaterThan(bar.x + bar.width / 2)
+	expect(die.x, 'the die should start against the left of the bar').toBeLessThan(bar.x + 24)
+
+	// Both on one row, centred on it -- not stacked, which is what a block
+	// <header> did with them.
+	const centre = (box: { y: number, height: number }) => box.y + box.height / 2
+	expect(
+		Math.abs(centre(kebab) - centre(die)),
+		'the die and the kebab should sit on the same line',
+	).toBeLessThan(4)
+})
