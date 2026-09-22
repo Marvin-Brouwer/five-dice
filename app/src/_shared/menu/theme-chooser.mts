@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import { environment } from '@rooted/util'
 
 import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
@@ -49,7 +50,7 @@ function themeLabel(value: Theme): string {
 }
 
 function isDarkNow(): boolean {
-	if (typeof document === 'undefined') return false
+	if (!environment.hasDom) return false
 	return document.documentElement.dataset.theme === 'dark'
 }
 

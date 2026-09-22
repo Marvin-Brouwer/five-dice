@@ -1,4 +1,5 @@
 import { createStore } from '@rooted/store'
+import { environment } from '@rooted/util'
 
 /**
  * The deferred install prompt, where the browser offers one.
@@ -50,7 +51,7 @@ export async function promptInstall(): Promise<void> {
 	}
 }
 
-if (typeof window !== 'undefined') {
+if (environment.is('client')) {
 	window.addEventListener('beforeinstallprompt', (event) => {
 		// Suppresses Chromium's own mini-infobar, which is the whole point of
 		// deferring: the app offers the install from the doormat instead.

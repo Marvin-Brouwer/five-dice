@@ -1,5 +1,5 @@
 import { component } from '@rooted/components'
-import { href, Link } from '@rooted/router'
+import { href, Link, navigate } from '@rooted/router'
 
 import { HomeRoute } from '../content/_routes.mts'
 import { localeLabels, localization } from '../_shared/i18n/localization.mts'
@@ -19,17 +19,10 @@ export const CultureSelect = component({
 	onMount({ append, element, create }) {
 		const remembered = getLocale()
 		if (isSupportedLocale(remembered)) {
-			// replaceState rather than navigate(), which always pushes: a pushed
-			// entry sends Back to `/`, which redirects here again, and there is
-			// no way out. The router has no replace mode yet, so the popstate it
-			// listens for is dispatched by hand.
-			// https://github.com/Marvin-Brouwer/rooted/issues/325
-			const target = href.for(HomeRoute, {
+			// replace rather than a push: a pushed entry sends Back to `/`,
+			// which redirects here again, and there is no way out.
+			navigate.replace(href.for(HomeRoute, {
 				locale: remembered,
-			})
-			history.replaceState(undefined, '', target.href)
-			window.dispatchEvent(new PopStateEvent('popstate', {
-				state: undefined,
 			}))
 			return
 		}

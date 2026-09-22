@@ -2,6 +2,7 @@ import balloonPopUrl from './458398__breviceps__balloon-pop-christmas-cracker-co
 import trumpetUrl from './383154__profcalla__re_frullato_tromba.mp3'
 import partyHornUrl from './170583__audiosmedia__party-horn.wav'
 import type { EventBuilder } from '@rooted/elements/events'
+import { environment } from '@rooted/util'
 import { createEchoDelayEffect } from './echo-delay.ts'
 
 type PitchShifter = (audioContext: AudioContext, node: AudioNode) => AudioNode
@@ -37,7 +38,7 @@ const createPartyHornEffect = (delayTime: number): PitchShifter => (audioContext
 const unlockEvents = ['pointerdown', 'keydown', 'touchstart'] as const
 
 export async function createAudioPlayer(on: EventBuilder): Promise<AudioPlayer> {
-	if (typeof window === 'undefined') {
+	if (!environment.is('client')) {
 		return { playGameEndFanfare: async () => {} }
 	}
 

@@ -1,3 +1,5 @@
+import { environment } from '@rooted/util'
+
 import { screenLockStore } from '../stores/screenLockStore.mts'
 
 type SafeWakeLockSentinel = {
@@ -14,7 +16,7 @@ let sentinel: SafeWakeLockSentinel | undefined
 let noticeShown = false
 
 function getApi(): SafeWakeLock | undefined {
-	if (typeof navigator === 'undefined') return undefined
+	if (!environment.hasDom) return undefined
 	const nav = navigator as Navigator & { wakeLock?: SafeWakeLock }
 	return nav.wakeLock
 }
@@ -53,7 +55,7 @@ async function releaseIfHeld() {
 	sentinel = undefined
 }
 
-if (typeof document !== 'undefined') {
+if (environment.is('client')) {
 	if (screenLockStore.value) void acquire()
 
 	screenLockStore.on('change', new AbortController().signal, async ({ detail }) => {

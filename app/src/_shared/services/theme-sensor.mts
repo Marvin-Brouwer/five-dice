@@ -1,3 +1,5 @@
+import { environment } from '@rooted/util'
+
 import { themeStore, type Theme } from '../stores/themeStore.mts'
 
 type SensorLike = {
@@ -20,13 +22,13 @@ let sensor: SensorLike | undefined
 let lastResolved: Resolved | undefined
 
 function apply(resolved: Resolved) {
-	if (typeof document === 'undefined') return
+	if (!environment.hasDom) return
 	document.documentElement.dataset.theme = resolved
 	lastResolved = resolved
 }
 
 function getSensorCtor(): SensorConstructor | undefined {
-	if (typeof window === 'undefined') return undefined
+	if (!environment.hasDom) return undefined
 	const w = window as unknown as { AmbientLightSensor?: SensorConstructor }
 	return w.AmbientLightSensor
 }
@@ -69,7 +71,7 @@ function startSensor() {
 }
 
 function ensureMediaListener() {
-	if (mediaQuery || typeof window === 'undefined' || !window.matchMedia) return
+	if (mediaQuery || !environment.hasDom || !window.matchMedia) return
 	mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 	mediaQuery.addEventListener('change', () => {
 		// Re-resolve if the user is still on system/sensor and no sensor is active.
@@ -81,7 +83,7 @@ function ensureMediaListener() {
 }
 
 function applyFromMatchMedia() {
-	if (typeof window === 'undefined' || !window.matchMedia) {
+	if (!environment.hasDom || !window.matchMedia) {
 		apply('light')
 		return
 	}
@@ -101,7 +103,7 @@ function resolve(mode: Theme) {
 	applyFromMatchMedia()
 }
 
-if (typeof document !== 'undefined') {
+if (environment.hasDom) {
 	ensureMediaListener()
 	resolve(themeStore.value)
 
