@@ -80,7 +80,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
 		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
-		const hintId = `row-overlay-hint-${instanceId}`
 
 		// Focusable by script only: the picker opens with focus on the group
 		// rather than on a row, because a focused row previews itself and
@@ -90,8 +89,8 @@ export const RowOverlay = component<RowOverlayOptions>({
 			tabIndex: -1,
 			autofocus: true,
 			aria: {
-				labelledBy: titleId,
-				describedBy: hintId,
+				label: title,
+				description: localization.text`Use the arrow keys to choose a row`,
 			},
 			on: {
 				keydown(event) {
@@ -204,11 +203,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 				element('legend', {
 					classes: styles.visuallyHidden,
 					textContent: title,
-				}),
-				element('span', {
-					id: hintId,
-					classes: styles.visuallyHidden,
-					textContent: localization.text`Use the arrow keys to choose a row`,
 				}),
 			)
 			activeRadios = []

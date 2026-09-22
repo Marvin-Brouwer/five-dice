@@ -150,7 +150,7 @@ export const Doormat = component({
 							href.for(HomeRoute, {
 								locale: localization.currentLocale
 							}),
-						).href,
+						),
 					}),
 					links,
 					element('hr', {
