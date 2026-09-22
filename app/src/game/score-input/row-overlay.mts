@@ -60,6 +60,17 @@ function optionAriaLabel(field: ScoreField, variant: RowVariant): string {
 	return localization.text`${title}, ${localization.text`discard`}`
 }
 
+/**
+ * The row an arrow key enters the group on while the group itself has focus:
+ * forward lands on the first row and backward on the last, the way the arrows
+ * wrap inside a radio group.
+ */
+function entryRadio(key: string, radios: HTMLInputElement[]): HTMLInputElement | undefined {
+	if (key === 'ArrowDown' || key === 'ArrowRight') return radios.at(0)
+	if (key === 'ArrowUp' || key === 'ArrowLeft') return radios.at(-1)
+	return undefined
+}
+
 export const RowOverlay = component<RowOverlayOptions>({
 	name: 'row-overlay',
 	styles,
@@ -70,10 +81,30 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const radioName = `row-overlay-selection-${instanceId}`
 		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
 
+		// Focusable by script only: the picker opens with focus on the group
+		// rather than on a row, because a focused row previews itself and
+		// reads as already picked. Tab still lands on the first row.
 		const fieldset = element('fieldset', {
 			classes: styles.fieldset,
+			tabIndex: -1,
+			autofocus: true,
 			aria: {
-				labelledBy: titleId
+				label: title,
+				description: localization.text`Use the arrow keys to choose a row`,
+			},
+			on: {
+				keydown(event) {
+					// Only while the group itself holds focus; once a row does,
+					// the arrow keys are the radio group's own.
+					if (event.target !== fieldset) return
+					const radio = entryRadio(event.key, activeRadios)
+					if (!radio) return
+					event.preventDefault()
+					radio.focus()
+					// click() rather than `checked`, so `change` fires like it
+					// would for any other pick.
+					radio.click()
+				},
 			},
 		})
 
@@ -177,7 +208,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			activeRadios = []
 			const labels: HTMLLabelElement[] = []
 			const previewCells = new Map<ScoreField, PreviewCell | undefined>()
-			fields.forEach(({ field, variant, previewCell }, index) => {
+			fields.forEach(({ field, variant, previewCell }) => {
 				previewCells.set(field, previewCell)
 				const radio = element('input', {
 					type: 'radio',
@@ -230,7 +261,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 					},
 				})
 				label.dataset.field = field
-				if (index === 0) label.dataset.firstOption = 'true'
 				activeRadios.push(radio)
 				labels.push(label)
 				fieldset.append(label)
@@ -275,10 +305,9 @@ export const RowOverlay = component<RowOverlayOptions>({
 			})
 			positioner.trackSettle()
 			syncConfirm()
-			// showModal autofocuses the first focusable child, which is already
-			// this radio -- asserted anyway, because that resolution differs
-			// between browsers.
-			queueMicrotask(() => activeRadios[0]?.focus())
+			// showModal honours the fieldset's `autofocus` -- asserted anyway,
+			// because that resolution differs between browsers.
+			queueMicrotask(() => fieldset.focus())
 		}
 
 		function hideOverlay() {

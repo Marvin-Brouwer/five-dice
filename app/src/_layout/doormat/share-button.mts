@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import type { Url } from '@rooted/router'
 import { createStore } from '@rooted/store'
 
 import { createAnnouncementStore, LiveRegion } from '../../_shared/a11y/live-region.mts'
@@ -22,7 +23,7 @@ type ShareCapableNavigator = Navigator & {
 
 export type ShareButtonOptions = {
 	/** The link handed to the share sheet, or copied when there isn't one. */
-	url: string
+	url: Url
 }
 
 /**
@@ -40,7 +41,7 @@ export type ShareButtonOptions = {
 export const ShareButton = component<ShareButtonOptions>({
 	name: 'doormat-share-button',
 	onMount({ append, create, signal, options }) {
-		const { url } = options
+		const url = options.url.href
 
 		const announcement = createAnnouncementStore()
 		function announce(text: string) {

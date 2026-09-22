@@ -93,6 +93,31 @@ export class GamePage {
 		await overlay.locator(`label[data-field="${field}"]`).click()
 	}
 
+	/** The checked radios in the open picker; none until a row is picked. */
+	get checkedOptions(): Locator {
+		return this.openOverlay.locator('input[type="radio"]:checked')
+	}
+
+	/** The open picker's radio group, which holds focus until a row is picked. */
+	get pickerGroup(): Locator {
+		return this.openOverlay.locator('fieldset')
+	}
+
+	/** The row fields the open picker offers, in order. */
+	async pickerFields(): Promise<string[]> {
+		return this.openOverlay.locator('label[data-field]').evaluateAll(labels => labels.map(label => (label as HTMLElement).dataset.field ?? ''))
+	}
+
+	/** The rows the open picker is currently previewing or highlighting. */
+	get previewedRows(): Locator {
+		return this.page.locator('#score-card [data-field][data-hover="true"]')
+	}
+
+	/** The open picker's confirm button. */
+	get pickerConfirm(): Locator {
+		return this.openOverlay.locator('button.action-primary')
+	}
+
 	/**
 	 * Take hover and focus off the picker, leaving only the checked row —
 	 * which is all Safari leaves behind after a tap, since it does not focus
