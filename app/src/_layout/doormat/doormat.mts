@@ -1,7 +1,7 @@
 import { component } from '@rooted/components'
 import { href } from '@rooted/router'
 
-import { AccessibilityRoute } from '../../content/_routes.mts'
+import { AccessibilityRoute, HomeRoute } from '../../content/_routes.mts'
 import { localization } from '../../_shared/i18n/localization.mts'
 import { installAvailableStore, promptInstall } from '../../_shared/services/install-prompt.mts'
 import { scrollPageTo } from '../../_shared/services/page-scroll.mts'
@@ -142,7 +142,9 @@ export const Doormat = component({
 					create(ShareButton, {
 						// Shared with the sharer's locale, so a friend opens
 						// the game in the language it was recommended in.
-						url: () => new URL(`${localization.currentLocale}/`, packageJson.homepage).href,
+						url: new URL(href.for(HomeRoute, {
+							locale: localization.currentLocale
+						}).href, packageJson.homepage).href,
 					}),
 					links,
 					element('hr', {

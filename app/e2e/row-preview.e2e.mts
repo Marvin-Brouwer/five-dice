@@ -52,7 +52,7 @@ test('the picker opens on nothing and cannot return to it', async ({ page }) => 
 
 	await page.keyboard.press('ArrowDown')
 	expect(await game.checkedOption(), 'arrowing off the placeholder should pick a row').not.toBe('')
-	await expect(game.placeholderOption).toBeDisabled()
+	await expect(game.placeholderOption, 'leaving the placeholder should take it out of the group').toHaveCount(0)
 	await expect(game.pickerConfirm).toBeEnabled()
 
 	// Walk the whole group backwards; the placeholder is never landed on.

@@ -70,6 +70,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const radioName = `row-overlay-selection-${instanceId}`
 		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
 		const placeholderId = `row-overlay-radio-${instanceId}-none`
+		const placeholderOptionId = `row-overlay-option-${instanceId}-none`
 		const hintId = `row-overlay-hint-${instanceId}`
 
 		const fieldset = element('fieldset', {
@@ -77,19 +78,16 @@ export const RowOverlay = component<RowOverlayOptions>({
 			aria: {
 				labelledBy: titleId
 			},
+			on: {
+				// The placeholder only stands for "nothing picked yet", so the
+				// first row to be checked takes it out of the group for good.
+				// Listened for on the fieldset because a radio's `change` fires
+				// on the one that becomes checked, never on the one it leaves.
+				change() {
+					fieldset.querySelector(`#${placeholderOptionId}`)?.remove()
+				},
+			},
 		})
-
-		/**
-		 * The placeholder only stands for "nothing picked yet", so once a row
-		 * is checked it drops out of the group for good.
-		 *
-		 * Listened for here rather than on the placeholder: a radio's `change`
-		 * fires on the one that becomes checked, never on the one that stops
-		 * being so.
-		 */
-		fieldset.addEventListener('change', () => {
-			if (placeholderRadio && !placeholderRadio.checked) placeholderRadio.disabled = true
-		}, { signal })
 
 		const context = { element, create }
 
@@ -145,7 +143,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 		})
 
 		let activeRadios: HTMLInputElement[] = []
-		let placeholderRadio: HTMLInputElement | undefined
 		let rootResize: ResizeObserver | undefined
 		function selectedField(): ScoreField | undefined {
 			const checked = activeRadios.find(r => r.checked)
@@ -183,7 +180,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		function buildRadios() {
 			const fields = availableFields()
-			placeholderRadio = element('input', {
+			const placeholderRadio = element('input', {
 				type: 'radio',
 				name: radioName,
 				value: '',
@@ -199,16 +196,20 @@ export const RowOverlay = component<RowOverlayOptions>({
 					classes: styles.visuallyHidden,
 					textContent: title,
 				}),
-				element('label', {
-					htmlFor: placeholderId,
+				element('div', {
+					id: placeholderOptionId,
 					classes: styles.visuallyHidden,
-					textContent: title,
-					children: placeholderRadio,
-				}),
-				element('span', {
-					id: hintId,
-					classes: styles.visuallyHidden,
-					textContent: localization.text`Use the arrow keys to choose a row`,
+					children: [
+						element('label', {
+							htmlFor: placeholderId,
+							textContent: title,
+							children: placeholderRadio,
+						}),
+						element('span', {
+							id: hintId,
+							textContent: localization.text`Use the arrow keys to choose a row`,
+						}),
+					],
 				}),
 			)
 			activeRadios = []
@@ -274,6 +275,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			positioner.setLabels(labels)
 			preview.setCells(previewCells)
 			beginSelection(fields)
+			return placeholderRadio
 		}
 
 		/**
@@ -297,7 +299,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		}, { signal })
 
 		function showOverlay() {
-			buildRadios()
+			const placeholderRadio = buildRadios()
 			if (!layer.open) layer.showModal()
 			positioner.reposition()
 			rootResize = resizeObserver({
@@ -316,7 +318,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			// showModal autofocuses the first focusable child, which is already
 			// this radio -- asserted anyway, because that resolution differs
 			// between browsers.
-			queueMicrotask(() => placeholderRadio?.focus())
+			queueMicrotask(() => placeholderRadio.focus())
 		}
 
 		function hideOverlay() {
@@ -335,7 +337,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 			if (selection.value.mode === mode) selection.end()
 			fieldset.replaceChildren()
 			activeRadios = []
-			placeholderRadio = undefined
 			preview.reset()
 			confirmButton.disabled = true
 		}
