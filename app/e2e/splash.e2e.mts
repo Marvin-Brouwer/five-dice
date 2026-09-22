@@ -51,6 +51,67 @@ test('the splash is on screen before the app is', async ({ page }) => {
 	).toBeLessThan(2)
 })
 
+/**
+ * And it is in the middle from the very first frame, stylesheet or no.
+ *
+ * Everything the splash needs to be in the right place is an inline style on
+ * the element, because a sheet is a fetch: late, 404, or served stale out of a
+ * worker cache, and the die lands wherever the document happens to put it and
+ * then jumps to the middle once the sheet catches up. Blocking the sheet
+ * outright is that state, held still.
+ */
+test('the splash is centred before its own stylesheet lands', async ({ page }) => {
+	const game = new GamePage(page)
+	await game.withoutTheApp()
+	await game.withoutTheSplashStyles()
+
+	await page.goto('en/score-card/')
+	await expect(game.splashDie).toBeVisible()
+
+	const viewport = page.viewportSize()!
+	const die = (await game.splashDie.boundingBox())!
+
+	expect(
+		Math.round(die.x + die.width / 2),
+		'the die should be in the middle of the screen across',
+	).toBeCloseTo(viewport.width / 2, -1)
+	expect(
+		Math.round(die.y + die.height / 2),
+		'and in the middle of it down',
+	).toBeCloseTo(viewport.height / 2, -1)
+})
+
+/**
+ * And it stays in the middle of the *screen*, not the middle of the page.
+ *
+ * `position: fixed` lays out against the layout viewport, so on a pinch-zoomed
+ * page a full-screen overlay covers more than the screen and its middle sits
+ * off toward the bottom right -- at twice the zoom, at exactly twice the
+ * centre's coordinates. Android Chrome carries the zoom across a refresh and
+ * drops it on a fresh navigation, which is why it only ever showed on reload.
+ * splash.mts lays the splash back over the visual viewport.
+ */
+test('the splash follows the screen when the page is pinch-zoomed', async ({ page }) => {
+	const game = new GamePage(page)
+	await game.withoutTheFirstPage()
+
+	await page.goto('en/score-card/')
+	await expect(game.splashDie).toBeVisible()
+
+	await game.pinchZoomTo(2)
+
+	// How far the die is from the middle of what the player can see. Zoomed to
+	// 2x and left to the layout viewport it lands at twice the centre's
+	// coordinates, which on this viewport is over 400px out; the toss itself
+	// is worth a handful.
+	await expect
+		.poll(async () => {
+			const { die, centre } = await game.splashDieAgainstTheScreen()
+			return Math.round(Math.hypot(die[0] - centre[0], die[1] - centre[1]))
+		}, { message: 'the die should be in the middle of the screen, not of the page' })
+		.toBeLessThan(24)
+})
+
 /** The other end: the app arrives, and the splash leaves the document. */
 test('the splash is gone once the score card is up', async ({ page }) => {
 	const game = new GamePage(page)

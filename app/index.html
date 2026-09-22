@@ -64,15 +64,25 @@
 		     allowed in a presentation attribute, and --color-die-border,
 		     --color-die-face and --color-die-dot are pinned to exactly these
 		     values in both themes, so there is nothing here for one to change.
-		     The width and height are on the element for the same reason
-		     pip-die.mts carries its own (#97).
+		     The width and height are on the element for the same reason the
+		     box below is laid out inline rather than left to index.splash.css,
+		     and the same reason pip-die.mts carries its own size (#97): this is
+		     the one element on the page that has to be right on the very first
+		     frame, and a style attribute is part of the element, so there is no
+		     frame without it. A sheet is a fetch, however small -- late, 404, or
+		     served stale out of a worker cache, and the splash lands wherever
+		     the document happens to put it and then jumps. Geometry here, looks
+		     in the sheet.
 
-		     The two messages below are hidden until the <noscript> block in the
-		     head reveals one of them, which is the only case anything here has
-		     something to say. Nothing carries aria-hidden but the die: with JS
+		     The two messages below are `hidden` until the <noscript> block in
+		     the head reveals one of them, which is the only case anything here
+		     has something to say. The attribute rather than a rule in the
+		     sheet, for the same reason as the box: without a stylesheet they
+		     would both show, in both languages, and shove the die off centre. Nothing carries aria-hidden but the die: with JS
 		     the paragraphs are display:none and so out of the tree anyway, and
 		     without it the message is the one thing that has to be read. -->
-		<div id="splash">
+		<div id="splash"
+			style="position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center">
 			<svg viewBox="0 0 32 32" width="96" height="96" aria-hidden="true">
 				<rect width="32" height="32" rx="4" fill="#1c1d1f" />
 				<rect x="2.24" y="2.24" width="27.52" height="27.52" rx="3.753" fill="#ffffff" />
@@ -82,8 +92,8 @@
 				<circle cx="8.495" cy="23.505" r="2.627" fill="#1c1d1f" />
 				<circle cx="23.505" cy="23.505" r="2.627" fill="#1c1d1f" />
 			</svg>
-			<p class="splash-message splash-message-en" lang="en">Five dice needs JavaScript to keep score.</p>
-			<p class="splash-message splash-message-nl" lang="nl">Five dice heeft JavaScript nodig om de score bij te houden.</p>
+			<p class="splash-message splash-message-en" lang="en" hidden>Five dice needs JavaScript to keep score.</p>
+			<p class="splash-message splash-message-nl" lang="nl" hidden>Five dice heeft JavaScript nodig om de score bij te houden.</p>
 		</div>
 		<div id="app"></div>
 	</body>
