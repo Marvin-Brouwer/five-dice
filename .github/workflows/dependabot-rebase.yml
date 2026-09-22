@@ -1,0 +1,102 @@
+# Feeds dependabot PRs through main one at a time, oldest first.
+#
+# Branch protection wants PRs up to date with main, but dependabot only rebases
+# on conflicts, so after every merge the rest sit behind. Rebasing them all at
+# once would just have each merge put the others behind again. Instead, while
+# an up-to-date dependabot PR is still being checked this waits for it, and
+# otherwise asks dependabot to rebase the oldest PR that is behind. That PR
+# auto-merges, the push to main runs this again, and the next one follows.
+#
+# A PR whose checks failed does not hold the line up; it is retried whenever it
+# is the oldest one behind again, so a fix landing on main is picked up.
+#
+# Runs as the personal token: dependabot ignores commands from bots.
+name: Dependabot rebase
+
+on:
+  push:
+    branches: ["main"]
+  # Picks the line back up after a PR fails or is closed, which does not push.
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependabot-rebase
+
+jobs:
+  rebase:
+    name: Rebase the oldest dependabot PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask dependabot to rebase the next PR
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.DEPENDABOT_APPROVE_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo
+            const base = 'main'
+
+            const pulls = (await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: 'open',
+              base,
+            }))
+              .filter(pull => pull.user.login === 'dependabot[bot]')
+              .toSorted((a, b) => a.created_at.localeCompare(b.created_at))
+
+            const behind = []
+            for (const pull of pulls) {
+              const { data: comparison } = await github.rest.repos.compareCommitsWithBasehead({
+                owner,
+                repo,
+                basehead: `${base}...${pull.head.sha}`,
+              })
+              if (comparison.behind_by > 0) {
+                behind.push(pull)
+                continue
+              }
+
+              const checkRuns = await github.paginate(github.rest.checks.listForRef, {
+                owner,
+                repo,
+                ref: pull.head.sha,
+              })
+              // No runs yet means dependabot only just pushed.
+              const inFlight = checkRuns.length === 0
+                || checkRuns.some(run => run.status !== 'completed')
+              if (inFlight) {
+                core.info(`#${pull.number} is up to date and still being checked, waiting on it.`)
+                return
+              }
+            }
+
+            for (const pull of behind) {
+              // Dependabot refuses to rebase a branch someone else pushed to,
+              // so asking would stall the line on that PR.
+              const commits = await github.paginate(github.rest.pulls.listCommits, {
+                owner,
+                repo,
+                pull_number: pull.number,
+              })
+              const edited = commits.some(commit => commit.author?.login !== 'dependabot[bot]')
+              if (edited) {
+                core.warning(`#${pull.number} has commits from someone other than dependabot; skipping it.`)
+                continue
+              }
+
+              core.info(`Asking dependabot to rebase #${pull.number}.`)
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: pull.number,
+                body: '@dependabot rebase',
+              })
+              return
+            }
+
+            core.info('No dependabot PR is behind that dependabot can rebase.')
