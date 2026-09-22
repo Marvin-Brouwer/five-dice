@@ -71,9 +71,19 @@ a {
 	top: var(--space-2);
 }
 
+/* A native control is painted by the UA, and :root pins `color-scheme: dark`
+   (index.tokens.css), so an unstyled button comes up dark grey with a white
+   glyph — the inverse of every button this app actually draws. Component
+   stylesheets are fetched as <link>s appended at module load, so they always
+   land after the first paint and cannot prevent that flash; this sheet, which
+   index.html links, can. Every button in the app sets its own chrome, so this
+   only ever shows in the gap. See issue #97. */
 button {
 	font: inherit;
 	cursor: pointer;
+	background: transparent;
+	border: 0;
+	color: inherit;
 }
 
 /* First-paint guard — see issue #97. Component stylesheets are injected by the
@@ -86,4 +96,20 @@ button {
 [r-component="app-bar"] header {
 	max-height: 4rem;
 	overflow: hidden;
+	/* Only the box these two lay out in, so the kebab starts on the right
+	   instead of walking 310px across once app-bar.css lands, and the wordmark
+	   does not begin on a line of its own. Their look still settles with that
+	   sheet -- this is here to make the jump small, not to remove it, so the
+	   sizes and spacing stay where they belong and are not copied. */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-2) var(--page-padding);
+}
+
+/* The wordmark link, which holds the die and the lettering. Not the skip
+   link, the bar's other <a>, which is positioned off-screen until focused. */
+[r-component="app-bar"] a:not(.skip-link) {
+	display: inline-flex;
+	align-items: center;
 }
