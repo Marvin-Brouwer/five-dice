@@ -1,4 +1,13 @@
 import { mutationObserver } from '@rooted/observers'
+import { environment } from '@rooted/util'
+
+/**
+ * Stops the visual-viewport listeners once the splash is gone.
+ *
+ * Module state, like the splash itself: there is one of it per document, and
+ * it never comes back.
+ */
+const onScreen = new AbortController()
 
 /**
  * Take the cold-start splash down once `<main>` has a page in it.
@@ -55,10 +64,64 @@ function showsAPage(main: Element): boolean {
 	return main.querySelector('svg, img, canvas') !== null
 }
 
+/**
+ * Keep the splash over the part of the screen the player can actually see.
+ *
+ * `position: fixed` lays out against the layout viewport, not the visual one,
+ * so on a pinch-zoomed page a full-screen overlay covers more than the screen
+ * and its middle is somewhere off toward the bottom right. Android Chrome
+ * keeps the zoom across a refresh and drops it on a fresh navigation, which is
+ * why this only ever showed on a reload.
+ *
+ * Every fixed overlay in the app does this -- the menu sheet measures the same
+ * offset -- but the splash is the one with nothing behind it to give the eye a
+ * reference, so it reads as broken rather than as zoomed.
+ *
+ * It cannot help the frames before this module has run, which is some of what
+ * the splash is there for. On a reload, where the zoom is restored and the
+ * bundle is warm, it is most of them.
+ */
+function followVisualViewport(): void {
+	const viewport = window.visualViewport
+	if (!viewport) return
+
+	sync()
+	viewport.addEventListener('resize', sync, {
+		signal: onScreen.signal,
+	})
+	viewport.addEventListener('scroll', sync, {
+		signal: onScreen.signal,
+	})
+}
+
+/** Lay the splash over the visual viewport rather than the layout one. */
+function sync(): void {
+	const splash = document.querySelector<HTMLElement>('#splash')
+	const viewport = window.visualViewport
+	if (!splash || !viewport) return
+
+	const { offsetLeft, offsetTop, scale } = viewport
+	if (scale === 1 && offsetLeft === 0 && offsetTop === 0) {
+		// Unzoomed and unpanned the two viewports are the same box, and a
+		// transform here would only cost a layer and a rounding error.
+		splash.style.transform = ''
+		return
+	}
+
+	// The visible box in layout pixels: shrink the overlay onto it from its top
+	// left corner, then move that corner to where the visible box starts.
+	splash.style.transformOrigin = '0 0'
+	splash.style.transform = `translate(${offsetLeft}px, ${offsetTop}px) scale(${1 / scale})`
+}
+
+if (environment.hasDom) followVisualViewport()
+
 /** Fades the splash out and then takes it out of the document. */
 function removeSplash(): void {
 	const splash = document.querySelector('#splash')
 	if (!splash) return
+
+	onScreen.abort()
 
 	splash.classList.add('is-dismissed')
 

@@ -98,6 +98,35 @@ end state is identical either way. `app/e2e/splash-spy.mts` records what
 `<main>` held at the instant the splash was told to go; a premature hand-over
 shows up as an empty string.
 
+## Pinch zoom, and why it only showed on a refresh
+
+`position: fixed` lays out against the *layout* viewport, not the visual one
+you are looking at when the page is pinch-zoomed. So a full-screen overlay
+covers more than the screen, and its middle sits off toward the bottom right —
+at twice the zoom, at exactly twice the centre's coordinates. Measured on a
+Pixel 5 (layout viewport 393×727):
+
+| page scale | die lands at | visible centre |
+|---|---|---|
+| 1 | 196, 363 | 197, 364 |
+| 2 | 393, 727 | 197, 364 |
+| 2.5 | 492, 896 | 196, 364 |
+
+Android Chrome carries the zoom across a refresh and drops it on a fresh
+navigation, which is why this only ever showed on a reload.
+
+Every fixed overlay in the app does it — the menu sheet measures the same
+offset at the same zoom — but the splash is the one with nothing behind it to
+give the eye a reference, so it reads as broken rather than as zoomed. Only the
+splash is corrected, in `splash.mts`, by laying it back over the visual
+viewport with a transform and keeping it there on that viewport's own `resize`
+and `scroll`. No CSS can do this: `dvh`/`svh`/`lvh` track the URL bar, not the
+zoom, and nothing in CSS follows the visual viewport.
+
+The honest limit: it is JavaScript, so it cannot help the frames before the
+module has run, which is some of what the splash is there for. On a reload —
+zoom restored, bundle warm — it is most of them.
+
 ## Reduced motion
 
 The toss is switched off under `prefers-reduced-motion: reduce`, the way

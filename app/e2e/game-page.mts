@@ -245,6 +245,54 @@ export class GamePage {
 	}
 
 	/**
+	 * Hold the score card's own chunk back, so the splash stays up with the
+	 * rest of the app already running behind it.
+	 *
+	 * `withoutTheApp` is the other half of this: that one stops the boot
+	 * entirely, which is the right state for anything index.html has to get
+	 * right by itself. This one is for what the app does *to* the splash while
+	 * it is still up.
+	 */
+	async withoutTheFirstPage() {
+		await this.page.route('**\/game.mts*', async (route) => {
+			await new Promise(resolve => setTimeout(resolve, 10_000))
+			await route.continue()
+		})
+	}
+
+	/**
+	 * Pinch-zoom the page, the way a player does on a phone.
+	 *
+	 * There is no input for this in Playwright -- a real pinch is two touch
+	 * points the renderer turns into a page scale -- so it is set through the
+	 * devtools protocol, which is where the browser keeps it.
+	 */
+	async pinchZoomTo(scale: number) {
+		const cdp = await this.page.context().newCDPSession(this.page)
+		await cdp.send('Emulation.setPageScaleFactor', {
+			pageScaleFactor: scale,
+		})
+	}
+
+	/** Where the die is, and where the middle of the screen is, both in what the player sees. */
+	async splashDieAgainstTheScreen(): Promise<{ die: [number, number], centre: [number, number] }> {
+		return this.page.evaluate(() => {
+			const box = document.querySelector('#splash svg')!.getBoundingClientRect()
+			const viewport = window.visualViewport!
+			return {
+				die: [
+					(box.x + box.width / 2 - viewport.offsetLeft) * viewport.scale,
+					(box.y + box.height / 2 - viewport.offsetTop) * viewport.scale,
+				],
+				centre: [
+					viewport.width * viewport.scale / 2,
+					viewport.height * viewport.scale / 2,
+				],
+			}
+		})
+	}
+
+	/**
 	 * Serve nothing for the splash's own stylesheet.
 	 *
 	 * The splash is the one thing on the page with no second chance: whatever
