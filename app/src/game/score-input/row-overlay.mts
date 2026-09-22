@@ -69,6 +69,8 @@ export const RowOverlay = component<RowOverlayOptions>({
 		const titleId = `row-overlay-title-${instanceId}`
 		const radioName = `row-overlay-selection-${instanceId}`
 		const radioId = (field: ScoreField) => `row-overlay-radio-${instanceId}-${field}`
+		const placeholderId = `row-overlay-radio-${instanceId}-none`
+		const hintId = `row-overlay-hint-${instanceId}`
 
 		const fieldset = element('fieldset', {
 			classes: styles.fieldset,
@@ -76,6 +78,18 @@ export const RowOverlay = component<RowOverlayOptions>({
 				labelledBy: titleId
 			},
 		})
+
+		/**
+		 * The placeholder only stands for "nothing picked yet", so once a row
+		 * is checked it drops out of the group for good.
+		 *
+		 * Listened for here rather than on the placeholder: a radio's `change`
+		 * fires on the one that becomes checked, never on the one that stops
+		 * being so.
+		 */
+		fieldset.addEventListener('change', () => {
+			if (placeholderRadio && !placeholderRadio.checked) placeholderRadio.disabled = true
+		}, { signal })
 
 		const context = { element, create }
 
@@ -131,6 +145,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		})
 
 		let activeRadios: HTMLInputElement[] = []
+		let placeholderRadio: HTMLInputElement | undefined
 		let rootResize: ResizeObserver | undefined
 		function selectedField(): ScoreField | undefined {
 			const checked = activeRadios.find(r => r.checked)
@@ -168,16 +183,38 @@ export const RowOverlay = component<RowOverlayOptions>({
 
 		function buildRadios() {
 			const fields = availableFields()
+			placeholderRadio = element('input', {
+				type: 'radio',
+				name: radioName,
+				value: '',
+				checked: true,
+				classes: styles.radio,
+				id: placeholderId,
+				aria: {
+					describedBy: hintId,
+				},
+			})
 			fieldset.replaceChildren(
 				element('legend', {
 					classes: styles.visuallyHidden,
 					textContent: title,
 				}),
+				element('label', {
+					htmlFor: placeholderId,
+					classes: styles.visuallyHidden,
+					textContent: title,
+					children: placeholderRadio,
+				}),
+				element('span', {
+					id: hintId,
+					classes: styles.visuallyHidden,
+					textContent: localization.text`Use the arrow keys to choose a row`,
+				}),
 			)
 			activeRadios = []
 			const labels: HTMLLabelElement[] = []
 			const previewCells = new Map<ScoreField, PreviewCell | undefined>()
-			fields.forEach(({ field, variant, previewCell }, index) => {
+			fields.forEach(({ field, variant, previewCell }) => {
 				previewCells.set(field, previewCell)
 				const radio = element('input', {
 					type: 'radio',
@@ -230,7 +267,6 @@ export const RowOverlay = component<RowOverlayOptions>({
 					},
 				})
 				label.dataset.field = field
-				if (index === 0) label.dataset.firstOption = 'true'
 				activeRadios.push(radio)
 				labels.push(label)
 				fieldset.append(label)
@@ -275,10 +311,12 @@ export const RowOverlay = component<RowOverlayOptions>({
 			})
 			positioner.trackSettle()
 			syncConfirm()
+			// Focus starts on the placeholder rather than the first row: a
+			// focused row previews itself, which reads as already picked.
 			// showModal autofocuses the first focusable child, which is already
 			// this radio -- asserted anyway, because that resolution differs
 			// between browsers.
-			queueMicrotask(() => activeRadios[0]?.focus())
+			queueMicrotask(() => placeholderRadio?.focus())
 		}
 
 		function hideOverlay() {
@@ -297,6 +335,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 			if (selection.value.mode === mode) selection.end()
 			fieldset.replaceChildren()
 			activeRadios = []
+			placeholderRadio = undefined
 			preview.reset()
 			confirmButton.disabled = true
 		}

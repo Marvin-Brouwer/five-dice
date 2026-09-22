@@ -94,6 +94,29 @@ export class GamePage {
 	}
 
 	/**
+	 * The value of the checked radio in the open picker: a row's field, or ''
+	 * for the invisible "nothing picked yet" placeholder.
+	 */
+	async checkedOption(): Promise<string | undefined> {
+		return this.openOverlay.locator('input[type="radio"]:checked').evaluate(radio => (radio as HTMLInputElement).value)
+	}
+
+	/** The picker's placeholder option, which stands for "nothing picked yet". */
+	get placeholderOption(): Locator {
+		return this.openOverlay.locator('input[type="radio"][value=""]')
+	}
+
+	/** The rows the open picker is currently previewing or highlighting. */
+	get previewedRows(): Locator {
+		return this.page.locator('#score-card [data-field][data-hover="true"]')
+	}
+
+	/** The open picker's confirm button. */
+	get pickerConfirm(): Locator {
+		return this.openOverlay.locator('button.action-primary')
+	}
+
+	/**
 	 * Take hover and focus off the picker, leaving only the checked row —
 	 * which is all Safari leaves behind after a tap, since it does not focus
 	 * a radio when its label is tapped.

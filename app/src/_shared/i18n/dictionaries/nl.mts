@@ -143,6 +143,7 @@ export default dictionary(
 	translation('Applied {label}.', '{label} toegepast.'),
 	translation('Select a row for this roll', 'Kies een rij voor deze worp'),
 	translation('Choose a row to discard for this flush', 'Kies een rij om weg te gooien voor deze flush'),
+	translation('Use the arrow keys to choose a row', 'Gebruik de pijltjestoetsen om een rij te kiezen'),
 	translation('Back', 'Terug'),
 	translation('Discard', 'Weggooien'),
 	translation('Confirm', 'Bevestigen'),

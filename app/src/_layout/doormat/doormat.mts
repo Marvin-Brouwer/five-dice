@@ -140,7 +140,9 @@ export const Doormat = component({
 				role: 'contentinfo',
 				children: [
 					create(ShareButton, {
-						url: packageJson.homepage,
+						// Shared with the sharer's locale, so a friend opens
+						// the game in the language it was recommended in.
+						url: () => new URL(`${localization.currentLocale}/`, packageJson.homepage).href,
 					}),
 					links,
 					element('hr', {

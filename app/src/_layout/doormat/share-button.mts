@@ -21,8 +21,12 @@ type ShareCapableNavigator = Navigator & {
 }
 
 export type ShareButtonOptions = {
-	/** The link handed to the share sheet, or copied when there isn't one. */
-	url: string
+	/**
+	 * The link handed to the share sheet, or copied when there isn't one.
+	 * Read at click time, so a link that depends on the current locale is
+	 * never the one from when the button mounted.
+	 */
+	url: () => string
 }
 
 /**
@@ -76,7 +80,7 @@ export const ShareButton = component<ShareButtonOptions>({
 				return
 			}
 			try {
-				await shareNavigator.clipboard.writeText(url)
+				await shareNavigator.clipboard.writeText(url())
 				flashCopied()
 			}
 			catch (error) {
@@ -92,7 +96,7 @@ export const ShareButton = component<ShareButtonOptions>({
 					await shareNavigator.share({
 						title: 'Five dice',
 						text: localization.text`Play a game of five dice with me.`,
-						url,
+						url: url(),
 					})
 					return
 				}
