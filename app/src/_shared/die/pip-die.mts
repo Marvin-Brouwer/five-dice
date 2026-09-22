@@ -57,10 +57,16 @@ export const PipDie = component<PipDieOptions>({
 					aria: {
 						hidden: 'true',
 					},
+					// The size lives here rather than on .die in pip-die.css. That
+					// stylesheet is injected by the rooted CSS loader, so it arrives
+					// with the JS instead of with index.html, and until it did, a
+					// `width: 100%` svg in an unstyled inline span resolved against
+					// the page and painted a viewport-wide die (#97). An inline
+					// style is part of the element, so there is no frame without it.
 					style: {
 						display: 'block',
-						width: '100%',
-						height: '100%',
+						width: 'var(--dice-size, 1em)',
+						height: 'var(--dice-size, 1em)',
 					},
 					children: [
 						element('svg:rect', {

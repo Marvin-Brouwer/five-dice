@@ -18,11 +18,18 @@ Alongside them are the specs that pin behaviour a game does not reach:
 | `row-preview.e2e.mts` | A picked row keeps its preview without hover or focus. |
 | `theme-preference.e2e.mts` | The chosen theme is remembered in `localStorage`, not in a cookie the session takes with it. |
 | `menu-keyboard.e2e.mts` | Both menu dropdowns are fully operable from a keyboard: arrows, Home/End, type-ahead, Escape, and a language switch driven end to end. |
+| `app-bar.e2e.mts` | The dice are bounded by themselves, not by their stylesheet, so none of them paints viewport-wide before the component CSS lands. |
 
 `menu-keyboard.e2e.mts` is the one that would catch a regression nobody sees
 by looking: the menu is a modal `<dialog>`, so Escape inside an open dropdown
 has to close only the dropdown. Miss the `preventDefault` and the whole sheet
 goes with it.
+
+`app-bar.e2e.mts` is the one that looks at a state the other specs never see.
+`component()` injects each component's CSS as a `<link>` it appends at module
+load, so every component sheet lands after the first paint; the spec blocks
+`/@rooted-css/` to hold that moment still and measures what the page looks
+like with only the globals `index.html` links.
 
 ## Running them
 

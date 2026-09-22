@@ -206,6 +206,32 @@ export class GamePage {
 		await expect(this.sticker).toBeVisible()
 	}
 
+	// --- The app bar --------------------------------------------------------
+
+	/**
+	 * Serve nothing for the component stylesheets, so the page renders with only
+	 * the globals index.html links.
+	 *
+	 * That is not a contrived state: `component()` injects its CSS as a
+	 * `<link rel="stylesheet">` appended to `<head>` at module load, so every
+	 * component stylesheet is a separate fetch that lands after the first paint.
+	 * Blocking them is the same condition a cold load on a slow connection puts
+	 * the app in, held still.
+	 */
+	async withoutComponentStyles() {
+		await this.page.route('**/@rooted-css/**', route => route.abort())
+	}
+
+	/** The die beside the wordmark in the app bar. */
+	get monogram(): Locator {
+		return this.page.locator('[r-component="app-bar"] svg').first()
+	}
+
+	/** The first of the five dice tossed on the masthead band. */
+	get mastheadDie(): Locator {
+		return this.page.locator('[r-component="masthead"] svg').first()
+	}
+
 	// --- The app menu -------------------------------------------------------
 
 	/** Opens the menu sheet and waits for it to be on screen. */
