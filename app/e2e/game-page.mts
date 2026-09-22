@@ -206,6 +206,33 @@ export class GamePage {
 		await expect(this.sticker).toBeVisible()
 	}
 
+	// --- The cold start -----------------------------------------------------
+
+	/**
+	 * The splash index.html paints while the app loads. Not a component, so it
+	 * has no `r-component` to go by.
+	 */
+	get splash(): Locator {
+		return this.page.locator('#splash')
+	}
+
+	/** The die tossing on the splash. */
+	get splashDie(): Locator {
+		return this.page.locator('#splash svg')
+	}
+
+	/**
+	 * Serve nothing for the entry module, so the page stays on whatever
+	 * index.html and the sheets it links can draw by themselves.
+	 *
+	 * The real thing is the gap before that module has been fetched, parsed and
+	 * run -- plus the dictionary and the route chunk it goes on to ask for.
+	 * Aborting it holds the start of that gap still.
+	 */
+	async withoutTheApp() {
+		await this.page.route('**/application.mts*', route => route.abort())
+	}
+
 	// --- The app bar --------------------------------------------------------
 
 	/**
