@@ -1,4 +1,4 @@
-import { choice, component, cssClass } from '@rooted/components'
+import { component, cssClass } from '@rooted/components'
 import { resizeObserver } from '@rooted/observers'
 
 import { type ScoreField } from '../logic/gameConstants.ts'
@@ -44,6 +44,20 @@ export type RowOverlayOptions = {
 	rows: RowRegistry
 	onConfirm: (field: ScoreField) => void
 	onCancel: () => void
+}
+
+/**
+ * What a row option is read out as: the row's own title, then what picking it
+ * does to the score.
+ *
+ * Module scope rather than inline in the `aria` block, because both halves are
+ * `localization.text` calls and nesting one inside the other made a line no
+ * one could read.
+ */
+function optionAriaLabel(field: ScoreField, variant: RowVariant): string {
+	const { title } = getRowDisplayLabels()[field]
+	if (variant === 'valid') return localization.text`${title}, ${localization.text`apply`}`
+	return localization.text`${title}, ${localization.text`discard`}`
 }
 
 export const RowOverlay = component<RowOverlayOptions>({
@@ -199,7 +213,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 						cssClass(variant !== 'valid', styles.optionDiscard),
 					],
 					aria: {
-						label: localization.text`${getRowDisplayLabels()[field].title}, ${choice(variant === 'valid', localization.text`apply`, localization.text`discard`)}`
+						label: optionAriaLabel(field, variant)
 					},
 					children: radio,
 					on: {

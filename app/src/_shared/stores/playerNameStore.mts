@@ -3,7 +3,11 @@ import { createStore } from '@rooted/store'
 
 const STORAGE_KEY = 'playerName'
 
-export const playerNameStore = createStore<string>(localStorage.get<string>(STORAGE_KEY) ?? '')
+function readInitial(): string {
+	return localStorage.get<string>(STORAGE_KEY) ?? ''
+}
+
+export const playerNameStore = createStore.from<string>(readInitial)
 
 playerNameStore.on('change', ({ detail }) => {
 	if (detail.state) localStorage.set(STORAGE_KEY, detail.state)
