@@ -1,4 +1,5 @@
 import { component, cssClass } from '@rooted/components'
+import { resizeObserver } from '@rooted/observers'
 
 import { type ScoreField } from '../logic/gameConstants.ts'
 import type { InputFlowStore, InputStep } from '../logic/input-flow-store.mts'
@@ -43,6 +44,20 @@ export type RowOverlayOptions = {
 	rows: RowRegistry
 	onConfirm: (field: ScoreField) => void
 	onCancel: () => void
+}
+
+/**
+ * What a row option is read out as: the row's own title, then what picking it
+ * does to the score.
+ *
+ * Module scope rather than inline in the `aria` block, because both halves are
+ * `localization.text` calls and nesting one inside the other made a line no
+ * one could read.
+ */
+function optionAriaLabel(field: ScoreField, variant: RowVariant): string {
+	const { title } = getRowDisplayLabels()[field]
+	if (variant === 'valid') return localization.text`${title}, ${localization.text`apply`}`
+	return localization.text`${title}, ${localization.text`discard`}`
 }
 
 export const RowOverlay = component<RowOverlayOptions>({
@@ -116,7 +131,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 		})
 
 		let activeRadios: HTMLInputElement[] = []
-		let resizeObserver: ResizeObserver | undefined
+		let rootResize: ResizeObserver | undefined
 		function selectedField(): ScoreField | undefined {
 			const checked = activeRadios.find(r => r.checked)
 			return checked?.value as ScoreField | undefined
@@ -198,7 +213,7 @@ export const RowOverlay = component<RowOverlayOptions>({
 						cssClass(variant !== 'valid', styles.optionDiscard),
 					],
 					aria: {
-						label: localization.text`${getRowDisplayLabels()[field].title}, ${variant === 'valid' ? localization.text`apply` : localization.text`discard`}`
+						label: optionAriaLabel(field, variant)
 					},
 					children: radio,
 					on: {
@@ -249,8 +264,15 @@ export const RowOverlay = component<RowOverlayOptions>({
 			buildRadios()
 			if (!layer.open) layer.showModal()
 			positioner.reposition()
-			resizeObserver = new ResizeObserver(() => positioner.reposition())
-			resizeObserver.observe(document.documentElement)
+			rootResize = resizeObserver({
+				targets: document.documentElement,
+				signal,
+				on: {
+					resize() {
+						positioner.reposition()
+					},
+				},
+			})
 			positioner.trackSettle()
 			syncConfirm()
 			// showModal autofocuses the first focusable child, which is already
@@ -264,8 +286,8 @@ export const RowOverlay = component<RowOverlayOptions>({
 				programmaticClose = true
 				layer.close()
 			}
-			resizeObserver?.disconnect()
-			resizeObserver = undefined
+			rootResize?.disconnect()
+			rootResize = undefined
 			positioner.stop()
 			// Only clear the selection if this overlay still owns it. Both
 			// pickers subscribe to the same flow store and fire in creation

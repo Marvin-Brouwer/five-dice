@@ -1,4 +1,6 @@
 import { component } from '@rooted/components'
+import { mutationObserver } from '@rooted/observers'
+import { environment } from '@rooted/util'
 
 import { Icon } from '../icon/icon.mts'
 import { localization } from '../i18n/localization.mts'
@@ -49,7 +51,7 @@ function themeLabel(value: Theme): string {
 }
 
 function isDarkNow(): boolean {
-	if (typeof document === 'undefined') return false
+	if (!environment.hasDom) return false
 	return document.documentElement.dataset.theme === 'dark'
 }
 
@@ -158,15 +160,18 @@ export const ThemeChooser = component({
 		// line text reflects the currently-resolved theme in auto modes. The
 		// icon itself is CSS-driven and repaints without JS involvement.
 		if (typeof MutationObserver !== 'undefined') {
-			const observer = new MutationObserver(() => {
-				syncStatus()
-				dropdown?.refresh()
-			})
-			observer.observe(document.documentElement, {
+			mutationObserver({
+				targets: document.documentElement,
 				attributes: true,
 				attributeFilter: ['data-theme'],
+				signal,
+				on: {
+					mutate() {
+						syncStatus()
+						dropdown?.refresh()
+					},
+				},
 			})
-			signal.addEventListener('abort', () => observer.disconnect(), { once: true })
 		}
 
 		append(statusLine, chooser)

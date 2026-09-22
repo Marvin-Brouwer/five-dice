@@ -1,3 +1,5 @@
+import { environment } from '@rooted/util'
+
 export type NavigationGuard = {
 	/**
 	 * Asked before every in-app navigation away from the guarded page.
@@ -65,7 +67,7 @@ export function guardNavigation({ ask, onConfirmed }: NavigationGuard, signal: A
  * what lets `stopImmediatePropagation` hold a navigation back: the router
  * never sees the event, and nothing is rendered to undo.
  */
-if (typeof window !== 'undefined') {
+if (environment.hasDom) {
 	window.addEventListener('popstate', (event) => {
 		const guard = activeGuard
 		if (!guard) return

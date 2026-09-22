@@ -1,5 +1,6 @@
 import { component } from '@rooted/components'
 import { localStorage } from '@rooted/storage/web'
+import { environment } from '@rooted/util'
 
 import styles from './paper-texture.css'
 
@@ -58,9 +59,16 @@ export function resolveVariant(stored: unknown, count: number, random: () => num
 	return isUsable ? stored as number : Math.floor(random() * count)
 }
 
-/** Undefined off the document: server-side there is nothing to pick for. */
+/**
+ * Undefined anywhere but a real browser: there is nothing to pick for.
+ *
+ * The pre-render has a document, so this used to run there too -- picking a
+ * mesh at build time and baking it into the HTML every device loads. One mesh
+ * for everyone is the exact thing this file exists to avoid, so the
+ * pre-rendered card carries no sheet and the client draws its own.
+ */
 function pickMesh(): number | undefined {
-	if (typeof document === 'undefined') return undefined
+	if (!environment.is('client')) return undefined
 
 	const stored = localStorage.get(storageKey)
 	const variant = resolveVariant(stored, paperTextures.length, Math.random)

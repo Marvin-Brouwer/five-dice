@@ -1,4 +1,5 @@
 import type { ComponentContext } from '@rooted/components'
+import { environment } from '@rooted/util'
 import JSConfetti from 'js-confetti'
 
 import type { ScorePadStore } from './logic/scorePadStore.mts'
@@ -21,7 +22,9 @@ export function wireGameCelebration({ signal, on, store }: CelebrationContext) {
 	// long before the game ends. Nothing is awaited -- the call returns before
 	// its first await -- so the caller stays synchronous.
 	const audioPlayer = createAudioPlayer(on)
-	const confetti = typeof window !== 'undefined' ? new JSConfetti() : undefined
+	// Constructing one appends a fixed, full-viewport canvas to the document,
+	// so the pre-render used to bake a dead one into every score card.
+	const confetti = environment.is('client') ? new JSConfetti() : undefined
 
 	// The pad store outlives this page (see scorePadStore.mts), so a remount
 	// -- a language switch, say -- can observe a game that was already over.

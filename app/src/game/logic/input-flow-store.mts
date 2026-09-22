@@ -38,7 +38,7 @@ function closedState(): InputFlowState {
  * locals, where nothing stopped two dialogs being open at once.
  */
 export function createInputFlowStore(): InputFlowStore {
-	const store = createStore<InputFlowState>(closedState())
+	const store = createStore.from<InputFlowState>(closedState)
 
 	function open() {
 		store.update(() => ({ ...closedState(), step: 'dice' as const }))

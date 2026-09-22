@@ -1,4 +1,4 @@
-import { component, cssClass, optional } from '@rooted/components'
+import { choice, component, cssClass, optional } from '@rooted/components'
 import type { ElementChild } from '@rooted/elements'
 
 import { Icon } from '../icon/icon.mts'
@@ -107,7 +107,7 @@ export const DropDown = component<DropDownOptions>({
 					role: 'option',
 					aria: {
 						selected: String(item.selected),
-						disabled: item.disabled ? 'true' : undefined!,
+						disabled: choice(item.disabled, 'true', undefined),
 					},
 					classes: [
 						styles.option,

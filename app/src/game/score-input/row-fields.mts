@@ -1,3 +1,4 @@
+import { choice } from '@rooted/util'
 import type { ReadonlyState } from '@rooted/store'
 
 import { scoreFieldOrder } from '../logic/fields.ts'
@@ -40,7 +41,7 @@ export function availableRowFields(pad: ReadonlyState<ScorePad>, dice: ReadonlyS
 		const applicable = isScoreApplicableToField(scoreValue, field)
 		return {
 			field,
-			variant: applicable ? 'valid' : 'discard',
+			variant: choice(applicable, 'valid', 'discard'),
 			// The card renders this through its normal row renderer, so the
 			// score text, the dice and the flush badge all come out of the
 			// same code path as the committed row. A row that isn't

@@ -1,3 +1,5 @@
+import { choice } from '@rooted/util'
+
 /**
  * Scroll the window to an absolute offset, at the motion the reader asked for.
  *
@@ -14,6 +16,6 @@ export function scrollPageTo(top: number) {
 	const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 	window.scrollTo({
 		top,
-		behavior: reduceMotion ? 'auto' : 'smooth',
+		behavior: choice(reduceMotion, 'auto', 'smooth'),
 	})
 }

@@ -22,7 +22,10 @@ export function scoreCell(context: RenderContext, options: ScoreCellOptions): HT
 	const { text, applied, column } = options
 
 	return element('td', {
-		classes: column === 'totals' ? styles.totalsColumn : styles.scoreColumn,
+		classes: [
+			cssClass(column === 'totals', styles.totalsColumn),
+			cssClass(column === 'score', styles.scoreColumn),
+		],
 		children: element('span', {
 			classes: [
 				styles.scoreValue,

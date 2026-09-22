@@ -1,5 +1,5 @@
 import type { ReadonlyState } from '@rooted/store'
-import { cssClass } from '@rooted/components'
+import { choice, cssClass } from '@rooted/components'
 
 import type { DieValue, ScoreField } from '../logic/gameConstants.ts'
 import { isDiscarded, isFlushScore, type ValidScore } from '../logic/score/score.ts'
@@ -71,7 +71,7 @@ function renderGrouped(context: RenderContext, groups: ScoreGroup, dimSmall: boo
 				],
 				children: small.map(die =>
 					dieNode(context, die, {
-						variant: dimSmall ? 'muted' : 'default',
+						variant: choice(dimSmall, 'muted', 'default'),
 					})
 				),
 			})

@@ -1,4 +1,5 @@
 import { component } from '@rooted/components'
+import { intersectionObserver } from '@rooted/observers'
 
 import { partOneFields, partTwoFields } from '../game/logic/fields.ts'
 import type { DiceTuple, DieValue } from '../game/logic/gameConstants.ts'
@@ -119,13 +120,18 @@ export const RollingExampleTable = component({
 		if (reducedMotion() || typeof IntersectionObserver === 'undefined') {
 			reroll()
 		} else {
-			const observer = new IntersectionObserver(entries => {
-				if (!entries.some(entry => entry.isIntersecting)) return
-				observer.disconnect()
-				reroll()
-			}, { rootMargin: '0px 0px -10% 0px' })
-			observer.observe(table)
-			signal.addEventListener('abort', () => observer.disconnect())
+			intersectionObserver({
+				targets: table,
+				rootMargin: '0px 0px -10% 0px',
+				signal,
+				on: {
+					intersect({ entries, observer }) {
+						if (!entries.some(entry => entry.isIntersecting)) return
+						observer.disconnect()
+						reroll()
+					},
+				},
+			})
 		}
 
 		replace(table)

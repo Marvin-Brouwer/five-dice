@@ -30,7 +30,7 @@ export type ScorePadStore = Store<GameState> & {
 }
 
 export function createScorePadStore(): ScorePadStore {
-	const store = createStore<GameState>(initialState())
+	const store = createStore.from<GameState>(initialState)
 
 	function apply(application: ScoreApplication) {
 		const current = store.value
