@@ -68,7 +68,7 @@ function idleState(): SelectionState {
  * render, which is what makes cleanup of injected DOM unnecessary.
  */
 export function createSelectionStore(): SelectionStore {
-	const store = createStore<SelectionState>(idleState())
+	const store = createStore.from<SelectionState>(idleState)
 
 	function begin(
 		mode: SelectionMode,
