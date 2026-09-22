@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 10
+    # pnpm 11 refuses packages younger than its minimumReleaseAge (one day by
+    # default), so dependabot waits as long before proposing a version.
+    cooldown:
+      default-days: 1
+    groups:
+      rooted:
+        patterns:
+          - "@rooted/*"
+          - "@rooted-adapters/*"
+      testing:
+        patterns:
+          - vitest
+          - happy-dom
+          - "@playwright/test"
+      vite:
+        patterns:
+          - vite
+          - vite-plugin-pwa
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
