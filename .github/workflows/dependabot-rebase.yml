@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ask dependabot to rebase the next PR
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.DEPENDABOT_APPROVE_TOKEN }}
           script: |
