@@ -114,7 +114,10 @@ function sync(): void {
 	splash.style.transform = `translate(${offsetLeft}px, ${offsetTop}px) scale(${1 / scale})`
 }
 
-if (environment.hasDom) followVisualViewport()
+// Not `hasDom`: the pre-render has a window too, one that answers a missing
+// `visualViewport` with a stub function, and throwing here at import time sinks
+// the pre-render for every page. There is no zoom to follow there anyway.
+if (environment.is('client')) followVisualViewport()
 
 /** Fades the splash out and then takes it out of the document. */
 function removeSplash(): void {
