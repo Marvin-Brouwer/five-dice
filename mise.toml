@@ -3,7 +3,7 @@
 # https://mise.jdx.dev/
 
 [tools]
-"npm:pnpm" = "latest"
+"npm:pnpm" = "11"
 node = "lts"
 "npm:typescript" = "latest"
 

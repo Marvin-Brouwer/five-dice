@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@11.28.2",
   "scripts": {
     "dev": "pnpm --filter @five-dice/app dev",
     "build": "pnpm --filter @five-dice/app build",
