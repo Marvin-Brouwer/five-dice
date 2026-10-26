@@ -43,7 +43,7 @@
 		"@rooted/seo": "1.0.0-alpha.22",
 		"@types/node": "^26.6.5",
 		"esbuild": "^0.28.2",
-		"happy-dom": "^21.0.3",
+		"happy-dom": "^21.0.4",
 		"iterative-permutation": "^1.0.0",
 		"typescript": "^7.0.2",
 		"vite": "^8.3.5",
