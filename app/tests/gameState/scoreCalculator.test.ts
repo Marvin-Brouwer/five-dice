@@ -79,3 +79,29 @@ describe('scoreCalculator', () => {
 		expect(calculateGameTotal(70, 35, 10)).toBe(115)
 	})
 })
+
+describe('scoreCalculator edge cases', () => {
+
+	test('an empty flush is worth nothing', () => {
+		expect(calculateFlush([])).toBe(0)
+	})
+
+	test('flush scores 50, 150 and 250 for one, two and three entries', () => {
+		const f = score([3, 3, 3, 3, 3])
+
+		expect(calculateFlush([f])).toBe(50)
+		expect(calculateFlush([f, f])).toBe(150)
+		expect(calculateFlush([f, f, f])).toBe(250)
+	})
+
+	test('the part one bonus starts at exactly 63', () => {
+		expect(hasPartOneBonus(62)).toBe(false)
+		expect(hasPartOneBonus(63)).toBe(true)
+		expect(calculatePartOneBonus(62)).toBe(0)
+		expect(calculatePartOneBonus(63)).toBe(35)
+	})
+
+	test('an empty pad scores nothing', () => {
+		expect(calculatePartOneSubTotal(createScorePad())).toBe(0)
+	})
+})
