@@ -151,7 +151,7 @@ describe('scoreCalculator', () => {
 	test('flush scores 0 for 0 entries', () => {
 		// Arrange
 		const yahtzee = score([3, 3, 3, 3, 3])
-		const sut = []
+		const sut: Array<ReturnType<typeof score>> = []
 
 		// Act
 		const result = calculateFlush(sut)

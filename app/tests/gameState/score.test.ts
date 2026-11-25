@@ -100,7 +100,7 @@ describe('isFlushScore', () => {
 
 	test('is true for an empty flush', () => {
 		// Arrange
-		const sut = []
+		const sut: Array<ReturnType<typeof score>> = []
 
 		// Act
 		const result = isFlushScore(sut)
