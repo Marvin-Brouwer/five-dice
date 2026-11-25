@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { discard, isDiscarded, isFlushScore, score } from '../../src/game/logic/score/score.ts'
+import { discard, isDiscarded, isFlushScore, score, type ValidScore } from '../../src/game/logic/score/score.ts'
 
 describe('score', () => {
 
@@ -100,7 +100,7 @@ describe('isFlushScore', () => {
 
 	test('is true for an empty flush', () => {
 		// Arrange
-		const sut: Array<ReturnType<typeof score>> = []
+		const sut: Array<ValidScore> = []
 
 		// Act
 		const result = isFlushScore(sut)
