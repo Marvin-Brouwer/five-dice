@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
+import { InvalidScoreError } from '../../src/game/logic/score/invalidScoreError.ts'
 import { discard, score } from '../../src/game/logic/score/score.ts'
 import { createScorePad } from '../../src/game/logic/score/scorePad.ts'
 import {
@@ -206,6 +207,18 @@ describe('scoreCalculator', () => {
 
 		// Assert
 		expect(result).toBe(0)
+	})
+
+	test('an array on a non-flush field throws', () => {
+		// Arrange
+		const sut = createScorePad()
+		;(sut as unknown as Record<string, unknown>).aces = [score([1, 1, 1, 1, 1])]
+
+		// Act
+		const act = () => calculateScoreForPad(sut, 'aces')
+
+		// Assert
+		expect(act).toThrow(InvalidScoreError)
 	})
 
 	test('part one bonus at 62: has bonus is false', () => {
