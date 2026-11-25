@@ -6,18 +6,46 @@ import { dice, roundAmount } from '../../src/game/logic/gameConstants.ts'
 describe('field lists', () => {
 
 	test('there is one field per round', () => {
-		expect(scoreFieldOrder).toHaveLength(roundAmount)
+		// Arrange
+		const sut = scoreFieldOrder
+
+		// Act
+		const result = sut.length
+
+		// Assert
+		expect(result).toBe(roundAmount)
 	})
 
 	test('score card order is part one followed by part two', () => {
-		expect(scoreFieldOrder).toEqual([...partOneFields, ...partTwoFields])
+		// Arrange
+		const sut = scoreFieldOrder
+
+		// Act
+		const result = [...partOneFields, ...partTwoFields]
+
+		// Assert
+		expect(sut).toEqual(result)
 	})
 
 	test('fields are unique', () => {
-		expect(new Set(scoreFieldOrder).size).toBe(scoreFieldOrder.length)
+		// Arrange
+		const sut = scoreFieldOrder
+
+		// Act
+		const result = new Set(sut)
+
+		// Assert
+		expect(result.size).toBe(sut.length)
 	})
 
 	test('part one fields map to die values 1 through 6 in order', () => {
-		expect(partOneFields.map(field => dice[field])).toEqual([1, 2, 3, 4, 5, 6])
+		// Arrange
+		const sut = partOneFields
+
+		// Act
+		const result = sut.map(field => dice[field])
+
+		// Assert
+		expect(result).toEqual([1, 2, 3, 4, 5, 6])
 	})
 })

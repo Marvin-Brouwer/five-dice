@@ -6,21 +6,31 @@ import { discard, score } from '../../src/game/logic/score/score.ts'
 describe('InvalidScoreError', () => {
 
 	test('normalScoreCannotBeArray names the offending field', () => {
+		// Arrange
 		const container = [score([1, 2, 3, 4, 5])]
-		const error = InvalidScoreError.normalScoreCannotBeArray(container, 'aces')
+		const sut = InvalidScoreError.normalScoreCannotBeArray
 
-		expect(error).toBeInstanceOf(Error)
-		expect(error.message).toContain('\'aces\'')
-		expect(error.field).toBe('aces')
-		expect(error.score).toBe(container)
+		// Act
+		const result = sut(container, 'aces')
+
+		// Assert
+		expect(result).toBeInstanceOf(Error)
+		expect(result.message).toContain('\'aces\'')
+		expect(result.field).toBe('aces')
+		expect(result.score).toBe(container)
 	})
 
 	test('flushCannotBeNormalScore always targets the flush field', () => {
+		// Arrange
 		const container = discard()
-		const error = InvalidScoreError.flushCannotBeNormalScore(container)
+		const sut = InvalidScoreError.flushCannotBeNormalScore
 
-		expect(error.message).toContain('flush')
-		expect(error.field).toBe('flush')
-		expect(error.score).toBe(container)
+		// Act
+		const result = sut(container)
+
+		// Assert
+		expect(result.message).toContain('flush')
+		expect(result.field).toBe('flush')
+		expect(result.score).toBe(container)
 	})
 })

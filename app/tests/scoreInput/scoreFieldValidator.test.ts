@@ -6,35 +6,167 @@ import { isScoreApplicableToField } from '../../src/game/logic/score/scoreFieldV
 describe('isScoreApplicableToField', () => {
 
 	test('a discard fits every field', () => {
-		expect(isScoreApplicableToField(discard(), 'fullHouse')).toBe(true)
+		// Arrange
+		const sut = discard()
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'fullHouse')
+
+		// Assert
+		expect(result).toBe(true)
 	})
 
-	test('part one fields need the matching die', () => {
-		expect(isScoreApplicableToField(score([1, 2, 3, 4, 6]), 'aces')).toBe(true)
-		expect(isScoreApplicableToField(score([1, 2, 3, 4, 6]), 'fives')).toBe(false)
+	test('part one fields need the matching die: matching die', () => {
+		// Arrange
+		const sut = score([1, 2, 3, 4, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'aces')
+
+		// Assert
+		expect(result).toBe(true)
 	})
 
-	test('of a kind', () => {
-		expect(isScoreApplicableToField(score([2, 2, 2, 4, 6]), 'threeOfKind')).toBe(true)
-		expect(isScoreApplicableToField(score([2, 2, 2, 4, 6]), 'fourOfKind')).toBe(false)
-		expect(isScoreApplicableToField(score([2, 2, 2, 2, 6]), 'fourOfKind')).toBe(true)
+	test('part one fields need the matching die: missing die', () => {
+		// Arrange
+		const sut = score([1, 2, 3, 4, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'fives')
+
+		// Assert
+		expect(result).toBe(false)
 	})
 
-	test('full house', () => {
-		expect(isScoreApplicableToField(score([2, 2, 3, 3, 3]), 'fullHouse')).toBe(true)
-		expect(isScoreApplicableToField(score([2, 2, 3, 3, 4]), 'fullHouse')).toBe(false)
+	test('three of a kind accepts three equal dice', () => {
+		// Arrange
+		const sut = score([2, 2, 2, 4, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'threeOfKind')
+
+		// Assert
+		expect(result).toBe(true)
 	})
 
-	test('straights', () => {
-		expect(isScoreApplicableToField(score([1, 2, 3, 4, 6]), 'smallStraight')).toBe(true)
-		expect(isScoreApplicableToField(score([1, 2, 3, 5, 6]), 'smallStraight')).toBe(false)
-		expect(isScoreApplicableToField(score([2, 3, 4, 5, 6]), 'largeStraight')).toBe(true)
-		expect(isScoreApplicableToField(score([1, 2, 3, 4, 6]), 'largeStraight')).toBe(false)
+	test('four of a kind rejects three equal dice', () => {
+		// Arrange
+		const sut = score([2, 2, 2, 4, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'fourOfKind')
+
+		// Assert
+		expect(result).toBe(false)
 	})
 
-	test('flush and chance', () => {
-		expect(isScoreApplicableToField(score([3, 3, 3, 3, 3]), 'flush')).toBe(true)
-		expect(isScoreApplicableToField(score([3, 3, 3, 3, 4]), 'flush')).toBe(false)
-		expect(isScoreApplicableToField(score([1, 2, 3, 5, 6]), 'chance')).toBe(true)
+	test('four of a kind accepts four equal dice', () => {
+		// Arrange
+		const sut = score([2, 2, 2, 2, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'fourOfKind')
+
+		// Assert
+		expect(result).toBe(true)
+	})
+
+	test('full house accepts a pair and three equal dice', () => {
+		// Arrange
+		const sut = score([2, 2, 3, 3, 3])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'fullHouse')
+
+		// Assert
+		expect(result).toBe(true)
+	})
+
+	test('full house rejects two pairs', () => {
+		// Arrange
+		const sut = score([2, 2, 3, 3, 4])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'fullHouse')
+
+		// Assert
+		expect(result).toBe(false)
+	})
+
+	test('small straight accepts four in a row', () => {
+		// Arrange
+		const sut = score([1, 2, 3, 4, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'smallStraight')
+
+		// Assert
+		expect(result).toBe(true)
+	})
+
+	test('small straight rejects a gap', () => {
+		// Arrange
+		const sut = score([1, 2, 3, 5, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'smallStraight')
+
+		// Assert
+		expect(result).toBe(false)
+	})
+
+	test('large straight accepts five in a row', () => {
+		// Arrange
+		const sut = score([2, 3, 4, 5, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'largeStraight')
+
+		// Assert
+		expect(result).toBe(true)
+	})
+
+	test('large straight rejects four in a row', () => {
+		// Arrange
+		const sut = score([1, 2, 3, 4, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'largeStraight')
+
+		// Assert
+		expect(result).toBe(false)
+	})
+
+	test('flush accepts five equal dice', () => {
+		// Arrange
+		const sut = score([3, 3, 3, 3, 3])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'flush')
+
+		// Assert
+		expect(result).toBe(true)
+	})
+
+	test('flush rejects four equal dice', () => {
+		// Arrange
+		const sut = score([3, 3, 3, 3, 4])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'flush')
+
+		// Assert
+		expect(result).toBe(false)
+	})
+
+	test('chance accepts anything', () => {
+		// Arrange
+		const sut = score([1, 2, 3, 5, 6])
+
+		// Act
+		const result = isScoreApplicableToField(sut, 'chance')
+
+		// Assert
+		expect(result).toBe(true)
 	})
 })
