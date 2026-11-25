@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 
 import { InvalidScoreError } from '../../src/game/logic/score/invalidScoreError.ts'
-import { discard, score } from '../../src/game/logic/score/score.ts'
+import { discard, score, type ValidScore } from '../../src/game/logic/score/score.ts'
 import { createScorePad } from '../../src/game/logic/score/scorePad.ts'
 import {
 	calculateFlush,
@@ -152,7 +152,7 @@ describe('scoreCalculator', () => {
 	test('flush scores 0 for 0 entries', () => {
 		// Arrange
 		const yahtzee = score([3, 3, 3, 3, 3])
-		const sut: Array<ReturnType<typeof score>> = []
+		const sut: Array<ValidScore> = []
 
 		// Act
 		const result = calculateFlush(sut)
@@ -324,7 +324,7 @@ describe('scoreCalculator edge cases', () => {
 
 	test('an empty flush is worth nothing', () => {
 		// Arrange
-		const sut: Array<ReturnType<typeof score>> = []
+		const sut: Array<ValidScore> = []
 
 		// Act
 		const result = calculateFlush(sut)
